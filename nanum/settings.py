@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'post2',
     'mogae',
     'api',
+    'service20',
 
 ]
 

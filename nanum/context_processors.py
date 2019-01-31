@@ -29,8 +29,8 @@ def gnb_menus(request):
         {
             'name': '멘토스쿨',
             'sub_menus': [
-                {'name': '멘토스쿨관리', 'url': '/admin/service01/msch/'},
-                {'name': '멘토스쿨 설정', 'url': '/admin/service01/ms_apl'},
+                {'name': '멘토스쿨관리', 'url': '/admin/service20/msch/'},
+                {'name': '멘토스쿨설정', 'url': '/admin/service20/ms_apl'},
              
             ]
         },        
