@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+    'ckeditor',
     'rest_framework',
     'member',
     'post',
@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'post2',
     'mogae',
     'api',
+    'service10',
     'service20',
 
 ]
@@ -132,7 +133,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)

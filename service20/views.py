@@ -1,10 +1,13 @@
 from django.shortcuts import render
 from rest_framework import generics, serializers
+from django.http import HttpResponse,Http404, HttpResponseRedirect
+from django.shortcuts import get_object_or_404,render
 from rest_framework.response import Response
-from django.http import JsonResponse
-
-from service20.models import msch
-from django.views import View
+from django.http import JsonResponse, HttpResponse,Http404, HttpResponseRedirect
+from django.views import generic
+from django.urls import reverse
+from service20.models import msch,ms_apl
+from polls.models import Choice, Question
 
 # api/moim 으로 get하면 이 listview로 연결
 
@@ -29,3 +32,11 @@ class Service20ListView(generics.ListAPIView):
             return self.get_paginated_response(serializer.data)
 
         return Response(serializer.data)
+
+
+def stdApplyStdView(request):
+    ms_aplAll = ms_apl.objects.all()
+    context = None
+    return render(request, 'stdApply/submit.html', context)
+
+

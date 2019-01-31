@@ -17,12 +17,17 @@ def gnb_menus(request):
         {
             'name': '홈', 'url': '/admin/',
         },    
-
+        {
+            'name': '홈페이지관리',
+            'sub_menus': [
+                {'name': '홈페이지소개', 'url': '/admin/service10/article/'},
+            ]
+        },  
         {
             'name': '공통설정',
             'sub_menus': [
-                {'name': '공통코드(대)', 'url': '/admin/service00/com_cdh/'},
-                {'name': '공통코드(하위)', 'url': '/admin/service00/com_cdd'},
+                {'name': '공통코드(대)', 'url': '/admin/service10/com_cdh/'},
+                {'name': '공통코드(하위)', 'url': '/admin/service10/com_cdd'},
              
             ]
         },          
@@ -30,7 +35,14 @@ def gnb_menus(request):
             'name': '멘토스쿨',
             'sub_menus': [
                 {'name': '멘토스쿨관리', 'url': '/admin/service20/msch/'},
-                {'name': '멘토스쿨설정', 'url': '/admin/service20/ms_apl'},
+                {'name': '멘토스쿨설정', 'url': '/admin/service20/msch/'},
+                {'name': '멘토스쿨지원자', 'url': '/admin/service20/ms_apl'},
+                {'name': '지원자답변', 'url': '/admin/service20/ms_ans'},
+                {'name': '지원서채점', 'url': '/admin/service20/ms_mrk'},
+                
+                {'name': '멘토관리', 'url': '/admin/service20/mentor'},
+                {'name': '멘토링프로그램', 'url': '/admin/service20/mpgm'},
+                {'name': '점수환산표', 'url': '/admin/service20/cm_cnv_scr'},
              
             ]
         },        
@@ -42,19 +54,19 @@ def gnb_menus(request):
                 {'name': '일반', 'url': '/admin/member/member/?permission__exact=MB'},
             ]
         },
-        {
-            'name': ' 글 ',
-            'sub_menus': [
-                {'name': 'IT', 'url': '/admin/post/post/?category__name=IT'},
-                {'name': 'GENDER', 'url': '/admin/post/post/?category__name=GENDER'},
-                {'name': 'SOCIAL', 'url': '/admin/post/post/?category__name=SOCIAL'},
-                {'name': 'POLITICS', 'url': '/admin/post/post/?category__name=POLITICS'},
-                {'name': '통계', 'url': '/admin/post/post/status/'},
-            ]
-        },
-        {
-            'name': '댓글', 'url': '/admin/post/comment/'
-        },
+        #{
+        #    'name': ' 글 ',
+        #    'sub_menus': [
+        #        {'name': 'IT', 'url': '/admin/post/post/?category__name=IT'},
+         #       {'name': 'GENDER', 'url': '/admin/post/post/?category__name=GENDER'},
+          #      {'name': 'SOCIAL', 'url': '/admin/post/post/?category__name=SOCIAL'},
+           #     {'name': 'POLITICS', 'url': '/admin/post/post/?category__name=POLITICS'},
+            #    {'name': '통계', 'url': '/admin/post/post/status/'},
+           # ]
+      #  },
+       # {
+       #     'name': '댓글', 'url': '/admin/post/comment/'
+       # },
     ]
     return {'gnb_menus': menus}
 
