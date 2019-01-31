@@ -9,6 +9,7 @@ class msch(models.Model):
 	ms_id = models.CharField(max_length=10, primary_key=True, verbose_name='멘토스쿨ID' )
 	status = models.CharField(max_length=2, null=True, blank=True, verbose_name='상태' )
 	ms_name = models.CharField(max_length=100, null=True, blank=True, verbose_name='멘토스쿨 명' )
+	img_src = models.CharField(max_length=100, null=True, blank=True, verbose_name='이미지경로' )	
 	ms_sname = models.CharField(max_length=20, null=True, blank=True, verbose_name='멘토스쿨 단명' )
 	ms_intro = models.CharField(max_length=1000, null=True, blank=True, verbose_name='멘토스쿨 소개' )
 	mng_area = models.CharField(max_length=2, null=True, blank=True, verbose_name='멘토스쿨 관리 영역' )

@@ -12,8 +12,8 @@ class Service20ListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = msch
-        fields = ('ms_id', 'ms_name')
-        
+        fields = ('ms_id', 'ms_name','img_src')
+
 class Service20ListView(generics.ListAPIView):
     queryset = msch.objects.all()
     serializer_class = Service20ListSerializer
