@@ -71,9 +71,17 @@ class ms_mrkAdmin(admin.ModelAdmin):
 class mpgmAdmin(admin.ModelAdmin):
     pass    
 
+class mp_subAdmin(admin.ModelAdmin):
+    pass    
+
+
 
 class mentorAdmin(admin.ModelAdmin):
     pass
+
+class menteeAdmin(admin.ModelAdmin):
+    pass
+    
 
 class cm_cnv_scrAdmin(admin.ModelAdmin):
     pass    
@@ -83,7 +91,10 @@ admin.site.register(ms_apl, ms_aplAdmin)
 admin.site.register(ms_ans, ms_ansAdmin)
 admin.site.register(ms_mrk, ms_mrkAdmin)
 admin.site.register(mentor, mentorAdmin)
+admin.site.register(mentee, menteeAdmin)
+
 admin.site.register(mpgm, mpgmAdmin)
+admin.site.register(mp_sub, mp_subAdmin)
 
 admin.site.register(cm_cnv_scr, cm_cnv_scrAdmin)  
 # Register your models here.
