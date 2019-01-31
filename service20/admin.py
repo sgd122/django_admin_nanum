@@ -81,7 +81,12 @@ class mentorAdmin(admin.ModelAdmin):
 
 class menteeAdmin(admin.ModelAdmin):
     pass
-    
+
+class guardianAdmin(admin.ModelAdmin):
+    pass
+
+class teacherAdmin(admin.ModelAdmin):
+    pass  
 
 class cm_cnv_scrAdmin(admin.ModelAdmin):
     pass    
@@ -92,6 +97,8 @@ admin.site.register(ms_ans, ms_ansAdmin)
 admin.site.register(ms_mrk, ms_mrkAdmin)
 admin.site.register(mentor, mentorAdmin)
 admin.site.register(mentee, menteeAdmin)
+admin.site.register(guardian, guardianAdmin)
+admin.site.register(teacher, teacherAdmin)
 
 admin.site.register(mpgm, mpgmAdmin)
 admin.site.register(mp_sub, mp_subAdmin)
