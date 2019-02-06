@@ -28,7 +28,6 @@ class MSSeasonFilter2(SimpleListFilter):
 
 class ms_aplAdmin(admin.ModelAdmin):
     change_list_template ="stdApply/submit.html"
-
     list_display = (
         'apl_no',
         'unv_nm',
@@ -62,6 +61,8 @@ class ms_aplAdmin(admin.ModelAdmin):
     	return '6.00'
     define04.short_description = '지원서(10)'   
 
+
+
 class ms_ansAdmin(admin.ModelAdmin):
     pass
 
@@ -91,8 +92,64 @@ class teacherAdmin(admin.ModelAdmin):
 class cm_cnv_scrAdmin(admin.ModelAdmin):
     pass    
 
-admin.site.register(msch, mschAdmin)   
-admin.site.register(ms_apl, ms_aplAdmin)
+
+class service20_01_Admin(admin.ModelAdmin):
+    change_list_template ="service20/Service20_01.html"
+
+
+    list_display = (
+        'ms_id',
+        'ms_name',
+        'ins_dt',
+        'ins_id',
+        'apl_term',
+        'apl_fr_dt',
+        'apl_to_dt',
+        'trn_fr_dt',
+        'trn_to_dt',
+        'tot_apl',
+        'cnt_apl',
+    )
+
+    fields = [
+        'ms_id',
+        'ms_name',
+        'img_src',
+        'ins_dt',
+        'ins_id',
+        'apl_term',
+        'apl_fr_dt',
+        'apl_to_dt',
+        'trn_fr_dt',
+        'trn_to_dt',
+        'tot_apl',
+        'cnt_apl',
+    ]
+
+
+    def define01(self,obj):
+        return '16'
+    define01.short_description = '성적(20)'
+
+    def define02(self,obj):
+        return '6'
+    define02.short_description = '봉사(10)'
+
+    def define03(self,obj):
+        return '8'
+    define03.short_description = '외국어(10)'
+
+    def define04(self,obj):
+        return '6.00'
+    define04.short_description = '지원서(10)' 
+
+
+admin.site.register(msch, service20_01_Admin)   
+#admin.site.register(ms_apl, ms_aplAdmin)
+
+#admin.site.register(ms_apl, service20_01_Admin)
+
+
 admin.site.register(ms_ans, ms_ansAdmin)
 admin.site.register(ms_mrk, ms_mrkAdmin)
 admin.site.register(mentor, mentorAdmin)

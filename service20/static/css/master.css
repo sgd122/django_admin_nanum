@@ -1,0 +1,251 @@
+/*-- Font Style --*/
+.txtC{text-align:center !important;}
+.txtR{text-align:right !important;}
+.txtL{text-align:left !important;}
+.txtB{font-weight:bold !important;}
+
+/*-- Error Font Style --*/
+.error{color:#ff0000;}
+
+/*-- Background Style --*/
+.bgGray{background-color:#efefef;}
+
+/*-- Height / Width / Padding / Margin --*/
+.w30px{width:30px !important;}
+.w40px{width:40px !important;}
+.w50px{width:50px !important;}
+.w60px{width:60px !important;}
+.w70px{width:70px !important;}
+.w80px{width:80px !important;}
+.w90px{width:90px !important;}
+.w100px{width:100px !important;}
+.w200px{width:200px !important;}
+.w400px{width:400px !important;}
+.w80per{width:80% !important;}
+.w70per{width:70% !important;}
+.w60per{width:60% !important;}
+.w50per{width:50% !important;}
+.w40per{width:40% !important;}
+.w30per{width:30% !important;}
+.w20per{width:20% !important;}
+.min-w200px{min-width:200px !important;}
+.h10px{height:10px !important;}
+.h20px{height:20px !important;}
+.h30px{height:30px !important;}
+.h40px{height:40px !important;}
+.h50px{height:50px !important;}
+.h60px{height:60px !important;}
+.h70px{height:70px !important;}
+.h80px{height:80px !important;}
+.h90px{height:90px !important;}
+.h100px{height:100px !important;}
+.h200px{height:200px !important;}
+.h300px{height:300px !important;}
+.h350px{height:350px !important;}
+.h400px{height:400px !important;}
+
+.font11px{font-size:11px;}
+.font12px{font-size:12px;}
+.font14px{font-size:14px;}
+.font18px{font-size:18px;}
+.font20px{font-size:20px;}
+.font24px{font-size:24px;}
+
+.mb20px{margin-bottom:20px !important;}
+
+.paddingT8px{padding-top:8px;}
+.paddingT5px{padding-top:5px;}
+.padding5px{padding:5px !important;}
+.padding10px{padding:10px;}
+.padding20px{padding:20px;}
+.padding0px{padding:0px;}
+
+.marginT5px{margin-top:5px !important;}
+.marginB10px{margin-bottom:10px !important;}
+.marginR10px{margin-right:10px !important;}
+.marginR20px{margin-right:20px !important;}
+
+.clear{clear:both;}
+.underBar{border-bottom:1px solid #dfdfdf;}
+.lineH20px{line-height:20px;}
+
+.panel_toolbox>li{float:right;}
+body.nav-sm .container.body .left_col{width:150px;background:#2A3F54;}
+body.nav-sm .navbar.nav_title{width:150px;}
+body.nav-sm .nav.side-menu> li{float:left;width:50%;}
+body.nav-sm .container.body .right_col{margin-left:150px;}
+input[type='text']::-ms-clear {display: none;}
+.page-title .title_left{width:100%;margin-bottom:20px;}
+.pagination{margin:0px;}
+.pagination span{line-height:1.4 !important;}
+.pagination .pageQuick{display:block;overflow:hidden;float:left;margin-left:20px;}
+table.table-striped th,table.table-striped td{text-align:center;}
+.x_panel .page-header{margin:10px 0 10px;}
+.form-group{overflow:hidden;}
+.hiddenObj{display:none;}
+body{background:#F7F7F7;}
+.contentBody{background:#F7F7F7;}
+.pull-right{margin-right:50px;}
+.radio .parsley-errors-list{display:none;}
+.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{vertical-align:middle;}
+.menu_section>.nav.side-menu>li:hover>a{color:#1ABB9C !important;cursor:pointer;}
+.parsley-errors-list{display:none;}
+.ln_solid{margin:10px 0px;}
+.imedisable{ime-mode:disabled;}
+.x_title h2{line-height:25px;}
+/*.x_title small{display:none;}가끔쓰고싶네... 숨기지말자*/
+.x_title span{font-size:11px;color:#909090;margin-left:20px;}
+.x_title button span{margin-left:0px;color:#fff;}
+
+.fColorRed{color:#ff0000 !important;}
+
+/*-- 기본 레이아웃 좀 수정.... --*/
+/*.col-md-55, .col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12{padding-left:0px;padding-right:5px;}*/
+.editPanel label{padding-left:0px;padding-right:5px;}
+
+/*-- 에디트 화면 수정 --*/
+.editPanel {margin:0px;padding:5px;}
+.editPanel .x_panel {padding:0px;}
+.editPanel .x_title{margin:10px;}
+
+/*-- 달력을 최상위로 올리기 --*/
+.daterangepicker.dropdown-menu {z-index: 10002 !important;}
+/*-- 달력 아이콘 위치 다시 잡기 --*/
+.fa.fa-calendar-o.form-control-feedback{padding:0px;line-height:20px;}
+
+.alert{padding:10px;}
+
+/*-- 테이블	여백 조절 --*/
+.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td{padding:5px !important;}
+/*-- 테이블 상단 th a 색상 조절(정렬 관련) --*/
+.table > thead > tr > th.column-title a{color:#fff;}
+
+/*-- 상단 메뉴 정의 --*/
+nav.navbar-default{background:#2A3F54;border:0px;}
+nav .navbar-header{background:#2A3F54;}
+nav .navbar-brand{background:#2A3F54;}
+nav .navbar-nav.nav > li > a{color:#fff !important;}
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus{background:#1b3044 !important;}
+.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus{background:#1b3044 !important;}
+.dropdown-menu > li > a{padding:8px 20px;color:#333;font-size:12px;}
+.dropdown-menu > li > a:hover{background:#2A3F54;color:#fff;}
+
+/*.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus*/
+@media (min-width:768px){
+	.navbar-default{}
+	.navbar-default .navbar-nav .dropdown.open > a{background:#2A3F54 !important;}
+	.navbar-default .navbar-nav .dropdown.open .dropdown-menu {display:none;}
+	.navbar-default .navbar-nav .dropdown:hover>.dropdown-menu{display:block;}
+	.navbar-default .navbar-nav .dropdown:hover>a{background:#1b3044 !important;}
+}
+
+.navbar-default .navbar-toggle {border:0px;}
+.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus{background:#1b3044;}
+.navbar-default .navbar-toggle:hover .icon-bar, .navbar-default .navbar-toggle:focus .icon-bar{background:#fff;;}
+
+/*-- 단순 컬러박스 기본형태 정의 --*/
+.colorBox{padding:5px;color:#fff;line-height:11px;margin:0px 5px;float:left;border-radius:5px;text-align:center;}
+
+/*-- 기본 사용자 사진 사이즈 정의 --*/
+img.Mphoto{width:50px;height:50px;border:2px solid #fff;margin:5px;}
+.photoBox{padding:5px;line-height:11px;margin:0px 5px;float:left;border-radius:5px;text-align:center;border:1px solid #dfdffd;}
+
+/*-- 첫화면(HOME) 게시글 스타일 정의 --*/
+.mainArticle{width:100%;border-bottom:1px solid #dfdfdf;width:100%;margin:5px;}
+.mainArticle div{float:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;word-wrap:normal;font-size:14px;padding:5px 0px;}
+
+/*-- 프로젝트 댓글 사이즈 정의 --*/
+ul.msg_list li a .time{position:static;margin-left:10px;}
+
+/*-- Tree View Style --*/
+.tree, .tree ul {margin:0;padding:0;list-style:none}
+.tree ul {margin-left:1em;position:relative}
+.tree ul ul {margin-left:.5em}
+.tree ul:before {content:"";display:block;width:0;position:absolute;top:0;bottom:0;left:0;border-left:1px solid}
+.tree li {margin:0;padding:0 1em;line-height:2em;color:#369;font-weight:700;position:relative}
+.tree ul li:before {content:"";display:block;width:10px;height:0;border-top:1px solid;margin-top:-1px;position:absolute;top:1em;left:0}
+.tree ul li:last-child:before {background:#fff;height:auto;top:1em;bottom:0}
+.indicator {margin-right:5px;}
+.tree li a {text-decoration: none;color:#369;}
+.tree li button, .tree li button:active, .tree li button:focus {text-decoration: none;color:#369;border:none;background:transparent;margin:0px 0px 0px 0px;padding:0px 0px 0px 0px;outline: 0;}
+.tree .active a{color:#0000ff;}
+.tree .active>a{color:#ff0000;}
+
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control{cursor:default;}
+
+/*-- 제품 정렬 레이아웃 --*/
+.prdBox{}
+.prdBox .prdImg{width:100%;min-height:132px;}
+.prdBox .prdImg img{width:100%;}
+.prdBox .prdName{height:70px;overflow:hidden;border-top:1px solid #ececec;font-size:11px;}
+.prdBox .prdPrice{height:18px;overflow:hidden;border-top:1px solid #ececec;text-align:right;font-size:11px;}
+
+/*-- 상담관리 > 제품검색 결과 박스 효과 --*/
+#prdSearchResult .prdBox:hover .x_panel{border:1px solid #ff6565;cursor:pointer;background:#f5f5f5;}
+
+/*-- 입력폼 수정 --*/
+form .form-group .col-sm-5,form .form-group .col-sm-4{padding-right:0px;}
+form .form-group .col-sm-4{padding-left:0px;}
+.call-header{background:#efefef;padding:8px 0px 8px 20px;font-weight:900;}
+
+/*-- 상단 탭 스타일 정의 --*/
+.tabWrap{padding:20px 0px;background: #EDEDED;}
+#tabArea{width:100%;}
+#tabArea .tabItem{background:#dfdfdf;border-right:1px solid #afafaf;color:#959595;text-align:center;height:35px;line-height:35px;overflow:hidden;float:left;cursor:pointer;width:10%;border-radius:10px 10px 0px 0px;min-width:60px;}
+#tabArea .tabItem .ttl{width:80%;overflow:hidden;display:block;float:left;}
+#tabArea .tabItem .close{width:20%;font-size:11px;line-height:35px;padding-right:10px;display:block;float:left;}
+#tabArea .tabItem:hover{background:#efefef;}
+#tabArea .tabItem.active{background:#fff;}
+#tabArea .tabItem.active .ttl{color:#333}
+#tabArea .tabItemDrag{background:#EDEDED;border:2px dashed #afafaf;}
+
+#tabFrame iframe{width:100%;display:none;}
+#tabFrame iframe.active{display:block;}
+
+/*-- 여러단계 드롭다운 메뉴 구현  참고 : http://www.bootply.com/71520 --*/
+.dropdown-submenu{position:relative;}
+.dropdown-submenu>.dropdown-menu{top:0;left:100%;margin-top:-6px;margin-left:-1px;-webkit-border-radius:0 6px 6px 6px;-moz-border-radius:0 6px 6px 6px;border-radius:0 6px 6px 6px;}
+.dropdown-submenu:hover>.dropdown-menu{display:block;}
+.dropdown-submenu>a:after{display:block;content:" ";float:right;width:0;height:0;border-color:transparent;border-style:solid;border-width:5px 0 5px 5px;border-left-color:#cccccc;margin-top:5px;margin-right:-10px;}
+.dropdown-submenu:hover>a:after{border-left-color:#ffffff;}
+.dropdown-submenu.pull-left{float:none;}.dropdown-submenu.pull-left>.dropdown-menu{left:-100%;margin-left:10px;-webkit-border-radius:6px 0 6px 6px;-moz-border-radius:6px 0 6px 6px;border-radius:6px 0 6px 6px;}
+
+/*-- 배너관리 처리 --*/
+#template{}
+#template .x_panel.editable{border:4px dashed #efefef;min-height:50px;height:100px;cursor:pointer;}
+#template .x_panel.editable:hover{border:4px dashed #ffb4b4;}
+#template .x_panel.editable.active{border:4px dashed #ff5a5a;}
+#template .x_panel img{height:100%}
+
+#template .x_panel.editable .badge{line-height:20px;}
+
+
+/*-- 상품관리 > 오픈마켓 요금관리 --*/
+#priceTable .editable{}
+#priceTable .editable:hover{background-color:#fff6d8;}
+#priceTable .focused{background:#ffc0bd;}
+
+/*-- 상품관리 > 오픈마켓관리 > 추천제품 설정 --*/
+.marketQuick{}
+.marketQuick .col-sm-3,.marketQuick .col-md-55{padding:5px;}
+.marketQuick .col-sm-3 .x_panel,.marketQuick .col-md-55 .x_panel{padding:0px;}
+.marketQuick .x_panel.editable{border:4px dashed #efefef;min-height:50px;min-height:160px;cursor:pointer;}
+.marketQuick .x_panel.editable:hover{border:4px dashed #ffb4b4;}
+.marketQuick .x_panel.editable.active{border:4px dashed #ff5a5a;}
+.marketQuick .x_panel img{width:100%;}
+.marketQuick .x_panel.editable .badge{line-height:20px;}
+
+/*-- 사이트관리 > 상품관리 효과 --*/
+.mainPrd{}
+.mainPrd .x_panel{}
+
+.mainPrd .prdBtn{display:none;}
+
+.mainPrd .x_panel {position:relative;overflow:hidden;}
+.mainPrd .prdCover{display:none;position:absolute;background:#dfdfdf;width:100%;height:100%;top:0px;left:0px;background-color:rgba( 0, 0, 0, 0.3 );text-align:center;}
+.mainPrd:hover .prdCover{display:block;}
+.mainPrd:hover .prdCover button{margin-top:100px;}
+/*
+.mainPrd:hover .prdPrice,.mainPrd:hover .prdName{display:none;}
+.mainPrd:hover .prdBtn{display:block;}
+*/

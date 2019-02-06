@@ -15,7 +15,7 @@ class Service20ListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = msch
-        fields = ('ms_id', 'ms_name','img_src')
+        fields = ('ms_id', 'ms_name','img_src','ins_dt','ins_id','apl_term','apl_fr_dt','apl_to_dt','trn_fr_dt','trn_to_dt','tot_apl','cnt_apl')
 
 class Service20ListView(generics.ListAPIView):
     queryset = msch.objects.all()
@@ -38,5 +38,11 @@ def stdApplyStdView(request):
     ms_aplAll = ms_apl.objects.all()
     context = None
     return render(request, 'stdApply/submit.html', context)
+
+
+def Service20_01_View(request):
+    ms_aplAll = ms_apl.objects.all()
+    context = None
+    return render(request, 'service20/Service20_01.html', context)    
 
 
