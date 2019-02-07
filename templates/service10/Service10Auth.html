@@ -1,0 +1,48 @@
+{% load static %} 
+
+<script src="{% static 'js/jquery.min.js' %}"></script>
+
+<script>
+alert("a");
+login();
+
+function login(){
+
+	var form_data = {
+		user_id: '201642201',
+		user_pw: '1234',
+		is_ajax: 1
+	};
+
+	alert("b");
+	$.ajax({
+		type: "POST",
+		url: "http://localhost:8000/service10/authChk/",
+		data: form_data,
+		contentType: "application/json", 
+		success: function(response) {
+			alert("a1");
+			if (window.sessionStorage) {
+                sessionStorage.setItem('login', 'Y');
+                var position = sessionStorage.getItem('login');
+                window.location.href = "/";
+                // $("#loginNoSession").css("display","none");
+                // $("#loginSession").css("display","");
+            }
+		},
+	    error: function(err) {
+	    	alert("a2");
+	        //서버로부터 응답이 정상적으로 처리되지 못햇을 때 실행
+	        // v_data = err;
+	        if (window.sessionStorage) {
+                sessionStorage.setItem('login', 'Y');
+                var position = sessionStorage.getItem('login');
+                window.location.href = "/";
+                // $("#loginNoSession").css("display","none");
+                // $("#loginSession").css("display","");
+            }
+	    }
+	});
+	return false;
+}
+</script>
