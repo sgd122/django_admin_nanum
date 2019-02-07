@@ -56,7 +56,7 @@ def post_user_info(request):
     ms_ida = request.POST.get('ms_id', None)
     #created,created_flag = vm_nanum_stdt.apl_id.get_or_create(user=request.user)
     created_flag = vm_nanum_stdt.objects.filter(apl_id=ida).exists()
-    ms_apl_flag = ms_apl.objects.filter(apl_id=ida).exists()
+    ms_apl_flag = ms_apl.objects.filter(apl_id=ida,ms_id_id=ms_ida).exists()
     if not ms_apl_flag:
         applyYn = 'N'
     else:
