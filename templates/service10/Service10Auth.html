@@ -10,13 +10,15 @@ function login(){
 
 	var form_data = {
 		"user_id": '201642201',
+		"ms_id": 'MS001',
 		"user_pw": '1234',
 		"is_ajax": 1
 	};
 
 	$.ajax({
 		type: "POST",
-		url: "http://114.202.247.167:8000/service10/authChk/",
+		/*url: "http://114.202.247.167:8000/service10/authChk/",*/
+		url: "http://localhost:8000/service20/authUserInfo/",
 		data: form_data,
 		success: function(response) {
 		

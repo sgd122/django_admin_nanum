@@ -7,7 +7,8 @@ from rest_framework.response import Response
 from django.http import JsonResponse, HttpResponse,Http404, HttpResponseRedirect
 from django.views import generic
 from django.urls import reverse
-from service20.models import msch,ms_apl
+from service10.models import *
+from service20.models import *
 from polls.models import Choice, Question
 
 # api/moim 으로 get하면 이 listview로 연결
@@ -51,6 +52,7 @@ def Service20_01_View(request):
 @csrf_exempt
 def post_user_info(request):
     ida = request.POST.get('user_id', None)
+    ms_ida = request.POST.get('ms_id', None)
     #created,created_flag = vm_nanum_stdt.apl_id.get_or_create(user=request.user)
     created_flag = vm_nanum_stdt.objects.filter(apl_id=ida).exists()
     #rows = vm_nanum_stdt.objects.filter(apl_id=ida)
@@ -62,6 +64,21 @@ def post_user_info(request):
         
         message = "Ok"
         rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
+        rows2 = mp_sub.objects.filter(ms_id=ms_ida)
+
+        for val in rows2:
+            key1 = val.att_id
+            #key2 = val.att_cdd
+
+        question01 = com_cdd.objects.filter(std_grp_code=key1)[0].rmrk
+        question02 = com_cdd.objects.filter(std_grp_code=key1)[1].rmrk
+        question03 = com_cdd.objects.filter(std_grp_code=key1)[2].rmrk
+        question04 = com_cdd.objects.filter(std_grp_code=key1)[3].rmrk
+        question05 = com_cdd.objects.filter(std_grp_code=key1)[4].rmrk
+
+
+
+
         context = {'message': message,
                     'apl_nm' : rows.apl_nm,
                     'univ_cd' : rows.univ_cd,
@@ -101,7 +118,12 @@ def post_user_info(request):
                     'score03' : rows.score03,
                     'score04' : rows.score04,
                     'score04_tp' : rows.score04_tp,
-                    'score05' : rows.score05
+                    'score05' : rows.score05,
+                    'question01' : question01,
+                    'question02' : question02,
+                    'question03' : question03,
+                    'question04' : question04,
+                    'question05' : question05
                     }
     
 
