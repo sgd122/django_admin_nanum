@@ -67,7 +67,7 @@ class Meta:
 class ms_apl(models.Model):
 	#ms_id = models.CharField(max_length=10, null=False, verbose_name='멘토스쿨ID' )
 	ms_id = models.ForeignKey(msch, verbose_name='멘토스쿨ID',on_delete=models.SET_NULL,null=True,blank=True)
-	apl_no = models.PositiveIntegerField(null=False, verbose_name='지원 NO' )
+	apl_no = models.IntegerField(null=False, verbose_name='지원 NO' )
 	apl_id = models.CharField(max_length=10, null=False, verbose_name='지원자ID(학번)' )
 	#apl_id = models.ForeignKey(Member, verbose_name='지원자ID(학번)',on_delete=models.SET_NULL,null=True,blank=True)
 	apl_nm = models.CharField(max_length=20, null=False, verbose_name='지원자 명' )

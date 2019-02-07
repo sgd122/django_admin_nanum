@@ -12,4 +12,5 @@ urlpatterns = [
     path('', Service20ListView.as_view(), name='Service20ListView'),
 
     path('authUserInfo/', post_user_info, name='post_user_info'),
+    path('msApply/', post_msApply, name='post_msApply'),
 ]

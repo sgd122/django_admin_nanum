@@ -10,6 +10,7 @@ from django.urls import reverse
 from service10.models import *
 from service20.models import *
 from polls.models import Choice, Question
+from django.db.models import Max
 
 # api/moim 으로 get하면 이 listview로 연결
 
@@ -130,3 +131,39 @@ def post_user_info(request):
     #return HttpResponse(json.dumps(context), content_type="application/json")
     return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
+
+
+
+
+@csrf_exempt
+def post_msApply(request):
+    ida = request.POST.get('memberNo', None)
+    programId = request.POST.get('programID', None)
+    que1 = request.POST.get('que1', None)
+    que2 = request.POST.get('que2', None)
+    que3 = request.POST.get('que3', None)
+    que4 = request.POST.get('que4', None)
+    que5 = request.POST.get('que5', None)
+
+    ms_ida = request.POST.get('ms_id', None)
+    #created,created_flag = vm_nanum_stdt.apl_id.get_or_create(user=request.user)
+    ms_id_id = programId
+    ms_apl_max = ms_apl.objects.all().aggregate(vlMax=Max('apl_no'))
+    #ms_apl_max = ms_apl.objects.all().last()
+    #ms_apl_max = ms_apl_max + 1
+    apl_no = ms_apl_max
+    apl_id = ida
+    apl_no = ms_apl_max['vlMax']
+    apl_no = apl_no + 1;
+    
+    
+
+
+
+    context = {'message': 'Ok'}
+    
+    model_instance = ms_apl(ms_id_id=ms_id_id, apl_no=apl_no, apl_id=apl_id,apl_nm=que1)
+    model_instance.save()
+
+    #return HttpResponse(json.dumps(context), content_type="application/json")
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
