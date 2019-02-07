@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rest_framework import generics, serializers
+from django.views.decorators.csrf import csrf_protect,csrf_exempt
 from django.http import HttpResponse,Http404, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404,render
 from rest_framework.response import Response
@@ -34,7 +35,7 @@ class Service10AuthListView(generics.ListAPIView):
 
         return Response(serializer.data)
 
-
+@csrf_exempt
 def post_login(request):
 	ida = request.POST.get('user_id', None)
 	passa = request.POST.get('user_pw', None)
