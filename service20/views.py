@@ -56,6 +56,12 @@ def post_user_info(request):
     ms_ida = request.POST.get('ms_id', None)
     #created,created_flag = vm_nanum_stdt.apl_id.get_or_create(user=request.user)
     created_flag = vm_nanum_stdt.objects.filter(apl_id=ida).exists()
+    ms_apl_flag = ms_apl.objects.filter(apl_id=ida).exists()
+    if not ms_apl_flag:
+        applyYn = 'N'
+    else:
+        applyYn = 'Y'
+
     #rows = vm_nanum_stdt.objects.filter(apl_id=ida)
     #rows2 = vm_nanum_stdt.objects.get("apl_nm")
     if not created_flag:
@@ -81,6 +87,7 @@ def post_user_info(request):
 
 
         context = {'message': message,
+                    'applyYn' : applyYn,
                     'apl_nm' : rows.apl_nm,
                     'univ_cd' : rows.univ_cd,
                     'univ_nm' : rows.univ_nm,
@@ -206,7 +213,7 @@ def post_msApply(request):
             ans_t2=anst2
             )
         model_instance2.save()
-        print("44")
+        print("44cc")
     context = {'message': 'Ok'}
 
     #return HttpResponse(json.dumps(context), content_type="application/json")
