@@ -9,26 +9,21 @@ login();
 function login(){
 
 	var form_data = {
-		user_id: '201642201',
-		user_pw: '1234',
-		is_ajax: 1
+		"user_id": '201642201',
+		"user_pw": '1234',
+		"is_ajax": 1
 	};
 
-	alert("b");
+	alert(form_data);
 	$.ajax({
 		type: "POST",
 		url: "http://localhost:8000/service10/authChk/",
 		data: form_data,
-		contentType: "json", 
 		success: function(response) {
 			alert("a1");
-			if (window.sessionStorage) {
-                sessionStorage.setItem('login', 'Y');
-                var position = sessionStorage.getItem('login');
-                window.location.href = "/";
-                // $("#loginNoSession").css("display","none");
-                // $("#loginSession").css("display","");
-            }
+			alert(JSON.stringify(response));
+			alert(JSON.stringify(response.message));
+
 		},
 	    error: function(err) {
 	    	alert("a2");
