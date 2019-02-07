@@ -14,15 +14,14 @@ function login(){
 		"is_ajax": 1
 	};
 
-	alert(form_data);
 	$.ajax({
 		type: "POST",
 		url: "http://localhost:8000/service10/authChk/",
 		data: form_data,
 		success: function(response) {
-			alert("a1");
+		
 			alert(JSON.stringify(response));
-			alert(JSON.stringify(response.message));
+			alert(JSON.stringify(response.apl_nm));
 
 		},
 	    error: function(err) {
