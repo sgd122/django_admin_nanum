@@ -28,6 +28,7 @@ class MSSeasonFilter2(SimpleListFilter):
 
 class ms_aplAdmin(admin.ModelAdmin):
     change_list_template ="stdApply/submit.html"
+
     list_display = (
         'apl_no',
         'unv_nm',
@@ -110,7 +111,7 @@ class service20_01_Admin(admin.ModelAdmin):
         'tot_apl',
         'cnt_apl',
     )
-
+    """
     fields = [
         'ms_id',
         'ms_name',
@@ -125,6 +126,7 @@ class service20_01_Admin(admin.ModelAdmin):
         'tot_apl',
         'cnt_apl',
     ]
+    """
 
 
     def define01(self,obj):
