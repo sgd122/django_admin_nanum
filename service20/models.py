@@ -350,6 +350,7 @@ class mpgm(models.Model):
 	status = models.CharField(max_length=2, null=True, blank=True, verbose_name='상태' )
 	mp_name = models.CharField(max_length=100, null=True, blank=True, verbose_name='멘토링 프로그램 명' )
 	mp_sname = models.CharField(max_length=20, null=True, blank=True, verbose_name='멘토링 프로그램 단명' )
+	img_src = models.CharField(max_length=100, null=True, blank=True, verbose_name='이미지경로' )
 	base_div = models.PositiveIntegerField(null=True, blank=True, verbose_name='기준 프로그램 여부' )
 	mp_intro = models.CharField(max_length=1000, null=True, blank=True, verbose_name='프로그램 소개, CMS ID' )
 	mng_area = models.CharField(max_length=2, null=True, blank=True, verbose_name='프로그램 관리자 영역' )
