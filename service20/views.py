@@ -223,13 +223,51 @@ def post_msApply(request):
 
 class mpmgListSerializer(serializers.ModelSerializer):
 
+    testField = serializers.SerializerMethodField()
     class Meta:
         model = mpgm
-        fields = ('mp_id','mp_name','status','img_src')
+        fields = ('mp_id','mp_name','status','img_src','testField')
+
+    def get_testField(self, obj):
+        return 'test'     
+
 
 class mpmgListView(generics.ListAPIView):
     queryset = mpgm.objects.all()
     serializer_class = mpmgListSerializer
+
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+
+
+
+
+class mpmgListPersonSerializer(serializers.ModelSerializer):
+
+    applyFlag = serializers.SerializerMethodField()
+    applyStatus = serializers.SerializerMethodField()
+    class Meta:
+        model = mpgm
+        fields = ('mp_id','mp_name','status','img_src','yr','yr_seq','sup_org','applyFlag','applyStatus','apl_fr_dt','apl_to_dt','mnt_fr_dt','mnt_to_dt','cnt_trn')
+
+    def get_applyFlag(self, obj):
+        return 'Y'     
+    def get_applyStatus(self, obj):
+        return '미지원'  
+
+class mpmgListPersionView(generics.ListAPIView):
+    queryset = mpgm.objects.all()
+    serializer_class = mpmgListPersonSerializer
 
     def list(self, request):
         queryset = self.get_queryset()
