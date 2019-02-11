@@ -12,6 +12,9 @@ urlpatterns = [
     path('', Service20ListView.as_view(), name='Service20ListView'),
 
     path('authUserInfo/', post_user_info, name='post_user_info'),
+    path('authUserInfoQuest/', post_user_info_Quest.as_view(), name='post_user_info_Quest'),
+
+
     path('msApply/', post_msApply, name='post_msApply'),
     path('mpmgListView/', mpmgListView.as_view(), name='mpmgListView'),
     path('mpmgListPersionView/', mpmgListPersionView.as_view(), name='mpmgListPersionView'),

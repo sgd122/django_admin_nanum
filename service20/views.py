@@ -113,14 +113,11 @@ def post_user_info(request):
             key1 = val.att_id
             #key2 = val.att_cdd
 
-        question01 = com_cdd.objects.filter(std_grp_code=key1)[0].rmrk
-        question02 = com_cdd.objects.filter(std_grp_code=key1)[1].rmrk
-        question03 = com_cdd.objects.filter(std_grp_code=key1)[2].rmrk
-        question04 = com_cdd.objects.filter(std_grp_code=key1)[3].rmrk
-        question05 = com_cdd.objects.filter(std_grp_code=key1)[4].rmrk
-
-
-
+        #question01 = com_cdd.objects.filter(std_grp_code=key1)[0].rmrk
+        #question02 = com_cdd.objects.filter(std_grp_code=key1)[1].rmrk
+        #question03 = com_cdd.objects.filter(std_grp_code=key1)[2].rmrk
+        #question04 = com_cdd.objects.filter(std_grp_code=key1)[3].rmrk
+        #question05 = com_cdd.objects.filter(std_grp_code=key1)[4].rmrk
 
         context = {'message': message,
                     'applyYn' : applyYn,
@@ -163,11 +160,6 @@ def post_user_info(request):
                     'score04' : rows.score04,
                     'score04_tp' : rows.score04_tp,
                     'score05' : rows.score05,
-                    'question01' : question01,
-                    'question02' : question02,
-                    'question03' : question03,
-                    'question04' : question04,
-                    'question05' : question05
                     }
     
 
@@ -175,6 +167,33 @@ def post_user_info(request):
     return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 
+class post_user_info_Quest_Serializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = com_cdd
+        fields = ('std_grp_code','std_detl_code','std_detl_code_nm','rmrk','use_indc')
+
+
+class post_user_info_Quest(generics.ListAPIView):
+    queryset = com_cdd.objects.all()
+    serializer_class = post_user_info_Quest_Serializer
+
+    def list(self, request):
+        #question01 = com_cdd.objects.filter(std_grp_code=key1)[0].rmrk
+        l_key1 = request.GET.get('std_grp_code', None)
+        queryset = self.get_queryset()
+        queryset = queryset.filter(std_grp_code=l_key1)
+
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
 
 
 
@@ -223,7 +242,7 @@ def post_msApply(request):
         h_addr=rows.h_addr
         )
     model_instance.save()
-    print("22")
+    
     for i in range(0,5):
         if i==0:
             anst2 = que1
@@ -254,6 +273,8 @@ def post_msApply(request):
 
     #return HttpResponse(json.dumps(context), content_type="application/json")
     return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+
+
 
 
 
