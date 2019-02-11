@@ -108,6 +108,8 @@ def post_user_info(request):
         message = "Ok"
         rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
         rows2 = mp_sub.objects.filter(ms_id=ms_ida)
+        rows3 = msch.objects.filter(ms_id=ms_ida)[0]
+
 
         for val in rows2:
             key1 = val.att_id
@@ -160,6 +162,8 @@ def post_user_info(request):
                     'score04' : rows.score04,
                     'score04_tp' : rows.score04_tp,
                     'score05' : rows.score05,
+                    'ms_id' : rows3.ms_id,
+                    'ms_name' : rows3.ms_name,
                     }
     
 
