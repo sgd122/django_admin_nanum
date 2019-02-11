@@ -360,7 +360,7 @@ class mpmgListPersionView(generics.ListAPIView):
 
         if l_apl_term != '':
             print(l_apl_term)
-            queryset = queryset.filter(trn_term=l_apl_term)
+            queryset = queryset.filter(apl_term=l_apl_term)
 
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
