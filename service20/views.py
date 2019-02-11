@@ -317,21 +317,51 @@ class mpmgListPersonSerializer(serializers.ModelSerializer):
 
     applyFlag = serializers.SerializerMethodField()
     applyStatus = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
+
     class Meta:
         model = mpgm
-        fields = ('mp_id','mp_name','status','img_src','yr','yr_seq','sup_org','applyFlag','applyStatus','apl_fr_dt','apl_to_dt','mnt_fr_dt','mnt_to_dt','cnt_trn')
+        fields = ('mp_id','mp_name','status','img_src','yr','yr_seq','sup_org','applyFlag','applyStatus','apl_fr_dt','apl_to_dt','mnt_fr_dt','mnt_to_dt','cnt_trn','status')
 
     def get_applyFlag(self, obj):
         return 'Y'     
     def get_applyStatus(self, obj):
         return '미지원'  
 
+    def get_status(self,obj):
+        now = datetime.datetime.today()
+        if obj.apl_fr_dt == None:
+            return '개설중'
+        elif now < obj.apl_fr_dt:
+            return '개설중'
+        elif obj.apl_fr_dt <= now < obj.apl_to_dt:
+            return '모집중'
+        elif now > obj.apl_to_dt:
+            return '모집완료'
+        else:
+            return '개설중'
+    get_status.short_description = '상태'     
+
+
+
 class mpmgListPersionView(generics.ListAPIView):
     queryset = mpgm.objects.all()
     serializer_class = mpmgListPersonSerializer
 
     def list(self, request):
+        l_yr = request.GET.get('yr', None)
+        l_apl_term = request.GET.get('apl_term', None)
+
         queryset = self.get_queryset()
+
+        if l_yr != '':
+            print(l_yr)
+            queryset = queryset.filter(yr=l_yr)
+
+        if l_apl_term != '':
+            print(l_apl_term)
+            queryset = queryset.filter(trn_term=l_apl_term)
+
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
 
