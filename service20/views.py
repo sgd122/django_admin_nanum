@@ -21,11 +21,29 @@ class Service20ListSerializer(serializers.ModelSerializer):
         fields = ('ms_id', 'ms_name','yr','yr_seq','sup_org','img_src','ins_dt','ins_id','apl_term','apl_fr_dt','apl_to_dt','trn_fr_dt','trn_to_dt','tot_apl','cnt_apl')
 
 class Service20ListView(generics.ListAPIView):
+
+
+
     queryset = msch.objects.all()
     serializer_class = Service20ListSerializer
 
     def list(self, request):
+        l_yr = request.GET.get('yr', None)
+        l_trn_term = request.GET.get('trn_term', None)
+
+        print(l_yr)
+        print(l_trn_term)
+
         queryset = self.get_queryset()
+        if l_yr != '':
+            print(l_yr)
+            queryset = queryset.filter(yr=l_yr)
+
+        if l_trn_term != '':
+            print(l_trn_term)
+            queryset = queryset.filter(trn_term=l_trn_term)
+
+
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
 
