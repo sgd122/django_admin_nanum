@@ -16,9 +16,27 @@ from django.db.models import Max
 
 class Service20ListSerializer(serializers.ModelSerializer):
 
+
+
+    status = serializers.SerializerMethodField()
     class Meta:
         model = msch
-        fields = ('ms_id', 'ms_name','yr','yr_seq','sup_org','img_src','ins_dt','ins_id','apl_term','apl_fr_dt','apl_to_dt','trn_fr_dt','trn_to_dt','tot_apl','cnt_apl')
+        fields = ('ms_id', 'ms_name','yr','yr_seq','sup_org','img_src','ins_dt','ins_id','apl_term','apl_fr_dt','apl_to_dt','trn_fr_dt','trn_to_dt','tot_apl','cnt_apl','status')
+
+
+    def get_status(self,obj):
+        now = datetime.datetime.today()
+        if obj.apl_fr_dt == None:
+            return '개설중'
+        elif now < obj.apl_fr_dt:
+            return '개설중'
+        elif obj.apl_fr_dt <= now < obj.apl_to_dt:
+            return '모집중'
+        elif now > obj.apl_to_dt:
+            return '모집완료'
+        else:
+            return '개설중'
+    get_status.short_description = '상태'        
 
 class Service20ListView(generics.ListAPIView):
 
