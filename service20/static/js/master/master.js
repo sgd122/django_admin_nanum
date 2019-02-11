@@ -388,15 +388,27 @@ function fnGoPageMode(m,qIDX,addStr){
 	검색처리
 =============================================*/
 function fnAdminSearch(){
-	alert("aabb");
+
 	p = document.location.pathname;
+	
+	var params = jQuery("#searchForm").serializeArray();
+	str = "";
+    jQuery.each( params, function( i, field ) {
+
+     	if(field.value==""){
+
+     	}else{
+     		str = str + field.name + "=" + field.value + "&"
+     	}
+    });
+	//var fields = $( ":input" ).serializeArray();
+
 	pgData = "";
 	searchStr = "pgData=" + pgData + "&page=1";
 	for(k=1;k<=15;k++){
 		obj = $("#s" + k);
 		objType = obj.prop("tagName");
 		t = obj.prop("type");
-
 		sVal="";
 		if(objType=="INPUT" || objType=="SELECT" || objType=="RADIO"){
 			/*
@@ -420,7 +432,15 @@ function fnAdminSearch(){
 			searchStr+= "&s" + k + "=" + sVal;
 		}
 	}//-- end For
-	document.location=p + "?" + searchStr;
+
+	
+	//document.location="/admin/service20/msch" + "?" + "yr=2018";
+	///admin/service20/msch/?pgData=&page=1&s1=2019&s2=&s3=10
+	//alert(p + "?" + searchStr);
+	//document.location=p + "?" + searchStr;
+	document.location="?" + str;
+
+
 }
 
 /*=======================================================================

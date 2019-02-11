@@ -5,6 +5,8 @@ from django.contrib.admin import SimpleListFilter
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from service10.models import *
 
+from service20.models import *
+
 class com_cdhAdmin(admin.ModelAdmin):
     pass
 

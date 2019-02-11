@@ -26,8 +26,8 @@ def gnb_menus(request):
         {
             'name': '공통설정',
             'sub_menus': [
-                {'name': '공통코드(대)', 'url': '/admin/service10/com_cdh/'},
-                {'name': '공통코드(하위)', 'url': '/admin/service10/com_cdd'},
+                {'name': '공통코드(대)', 'url': '/admin/service20/com_cdh/'},
+                {'name': '공통코드(하위)', 'url': '/admin/service20/com_cdd'},
              
             ]
         },          
@@ -35,7 +35,16 @@ def gnb_menus(request):
             'name': '멘토스쿨',
             'sub_menus': [
                 {'name': '멘토스쿨관리', 'url': '/admin/service20/msch/'},
-                {'name': '멘토스쿨설정', 'url': '/admin/service20/msch/'},
+
+               
+                #{'name': '멘토스쿨설정', 
+                #'sub_menus2': [
+                #        {'name': '학년관리', 'url': '/admin/service20/msch/'},
+                #    ]
+                #},
+
+
+                {'name': '멘토스쿨설정', 'url': '/admin/service20/ms_sub/'},
                 {'name': '멘토링프로그램', 'url': '/admin/service20/mpgm'},
                 {'name': '프로그램속성', 'url': '/admin/service20/mp_sub'},
                 {'name': '멘토스쿨지원자', 'url': '/admin/service20/ms_apl'},

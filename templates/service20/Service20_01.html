@@ -68,7 +68,7 @@
 			<script>nOrder1='';nOrder2='';</script>
 			<div class="page-title">
 				<div class="title_left">
-					<h3>멘토스쿨 설정</h3>
+					<h3>멘토스쿨 관리</h3>
 				</div>
 			</div>
 			<div class="row">
@@ -84,11 +84,11 @@
 							</div>
 						</div>
 						<div class="x_content">
-							<form class="form-horizontal form-label-left input_mask" novalidate="novalidate">
+							<form class="form-horizontal form-label-left input_mask" novalidate="novalidate" id="searchForm">
 								<div class="form-group col-md-4 col-sm-4 col-xs-6">
 									<label class="control-label col-md-4 col-sm-4 col-xs-12">학년도</label>
 									<div class="col-md-8 col-sm-8 col-xs-12">
-										<select name="s1" id="s1" class="form-control input-sm">
+										<select name="yr" id="s1" class="form-control input-sm">
 											<option value="">학년도</option>
 											<option value="2018">2018</option>
 											<option value="2019">2019</option>
@@ -96,9 +96,9 @@
 									</div>
 								</div>
 								<div class="form-group col-md-4 col-sm-4 col-xs-6">
-									<label class="control-label col-md-4 col-sm-4 col-xs-12">학년도</label>
+									<label class="control-label col-md-4 col-sm-4 col-xs-12">학기</label>
 									<div class="col-md-8 col-sm-8 col-xs-12">
-										<select name="s2" id="s2" class="form-control input-sm">
+										<select name="apl_term" id="s2" class="form-control input-sm">
 											<option value="">학기</option>
 											<option value="10">1학기</option>
 											<option value="20">2학기</option>
@@ -108,7 +108,8 @@
 								<div class="form-group col-md-4 col-sm-4 col-xs-6">
 									<label class="control-label col-md-4 col-sm-4 col-xs-12">상태</label>
 									<div class="col-md-8 col-sm-8 col-xs-12">
-										<select name="s3" id="s3" class="form-control input-sm">
+										<select name="status" id="s3" class="form-control input-sm">
+											<option value="">상태</option>
 											<option value="10">개설중</option>
 											<option value="20">모집중</option>
 											<option value="30">모집완료</option>
@@ -121,7 +122,7 @@
 							<div class="form-group">
 								<div class="col-sm-12 col-xs-12 col-xs-offset-5">
 									<button type="submit" class="btn btn-primary" onclick="fnAdminSearch()">검색</button>
-									<button type="submit" class="btn btn" onclick="document.location=&quot;/Product/siteEX.html&quot;">검색취소</button>
+									<!-- <button type="submit" class="btn btn" onclick="document.location=&quot;/Product/siteEX.html&quot;">검색취소</button> !-->
 								</div>
 							</div>
 						</div>

@@ -19,7 +19,13 @@
                         <a {% if menu.url %}href="{{ menu.url }}"{% endif %}>{{ menu.name }}</a>
                         <ul>
                             {% for sub_menu in menu.sub_menus %}
-                                <li><a href="{{ sub_menu.url }}">{{ sub_menu.name }}</a></li>
+                                <li><a href="{{ sub_menu.url }}">{{ sub_menu.name }}</a>
+                                    <ul>
+                                        {% for sub_menua in sub_menu.sub_menus2 %}
+                                            <li><a href="{{ sub_menua.admin_url }}">{{ sub_menua.name }}</a></li>
+                                        {% endfor %}
+                                    </ul>                                
+                                </li>
                             {% endfor %}
                         </ul>
                     </li>
