@@ -529,12 +529,7 @@ def post_mt_quest(request):
         key1 = val.att_id
         key2 = val.att_cdd
         r_com_cdd = com_cdd.objects.filter(std_grp_code=key1,std_detl_code=key2)
-        for val2 in r_com_cdd
-            print("12341")
-            print(r_com_cdd[0].std_detl_code)
-            print("12342")
-            res.append({std_detl_code:r_com_cdd.std_detl_code})
-            res.append({std_detl_code:'b'})
+
             
     print("a")
     print(json.dumps(res))
