@@ -13,10 +13,11 @@ function login(){
 		"ms_id": 'MS001'
 	};
 
+	alert(form_data);
 	$.ajax({
 		type: "POST",
 		/*url: "http://114.202.247.167:8000/service10/authChk/",*/
-		url: "http://localhost:8000/service20/authUserInfo/",
+		url: "/service20/authUserInfo/",
 		data: form_data,
 		success: function(response) {
 		

@@ -608,3 +608,31 @@ class cm_cnv_scr(models.Model):
 		unique_together=("eval_item", "eval_seq")
 
 # Create your models here.
+
+
+
+
+class mp_sub(models.Model):
+	ms_id = models.CharField(max_length=10, null=False, verbose_name='멘토스쿨ID' )
+	att_id = models.CharField(max_length=10, null=False, verbose_name='속성ID' )
+	att_seq = models.PositiveIntegerField(null=False, verbose_name='속성 SEQ' )
+	att_cdh = models.CharField(max_length=6, null=True, blank=True, verbose_name='속성 CODE HEADER' )
+	att_cdd = models.CharField(max_length=10, null=True, blank=True, verbose_name='속성 CODE' )
+	att_val = models.CharField(max_length=60, null=True, blank=True, verbose_name='속성 값' )
+	att_unit = models.CharField(max_length=10, null=True, blank=True, verbose_name='속성 단위' )
+	use_yn = models.CharField(max_length=1, null=True, blank=True, verbose_name='사용여부' )
+	sort_seq = models.PositiveIntegerField(default=1, verbose_name='정렬' )
+	ins_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='입력자ID' )
+	ins_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력자IP' )
+	ins_dt = models.DateTimeField(null=True, blank=True, verbose_name='입력일시' )
+	ins_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력프로그램ID' )
+	upd_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='수정자ID' )
+	upd_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정자IP' )
+	upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
+	upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
+
+class Meta: 
+	verbose_name = '멘토링프로그램 속성'
+	verbose_name_plural =  verbose_name
+	unique_together=("ms_id", "att_id", "att_seq")
+

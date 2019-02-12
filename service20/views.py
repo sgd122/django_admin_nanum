@@ -12,6 +12,9 @@ from service20.models import *
 from polls.models import Choice, Question
 from django.db.models import Max
 
+
+from collections  import OrderedDict
+import json
 # api/moim 으로 get하면 이 listview로 연결
 
 class Service20ListSerializer(serializers.ModelSerializer):
@@ -371,3 +374,176 @@ class mpmgListPersionView(generics.ListAPIView):
             return self.get_paginated_response(serializer.data)
 
         return Response(serializer.data)
+
+
+
+#멘토스쿨 콤보박스
+class comboMpmgListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = msch
+        fields = ('ms_id','ms_name')
+
+
+class comboMpmgListView(generics.ListAPIView):
+    queryset = msch.objects.all()
+    serializer_class = comboMpmgListSerializer
+
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+
+#멘토스쿨 콤보박스Detail
+class comboMpmgListDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = msch
+        fields = ('ms_id','ms_name')
+
+
+class comboMpmgListViewDetail(generics.ListAPIView):
+    queryset = msch.objects.all()
+    serializer_class = comboMpmgListDetailSerializer
+
+    def list(self, request):
+        l_ms_id = request.GET.get('ms_id', None)
+        print(l_ms_id)
+        queryset = self.get_queryset()
+        queryset = queryset.filter(ms_id=l_ms_id)        
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)        
+
+@csrf_exempt
+def post_user_info(request):
+    ida = request.POST.get('user_id', None)
+    ms_ida = request.POST.get('ms_id', None)
+    #created,created_flag = vm_nanum_stdt.apl_id.get_or_create(user=request.user)
+    created_flag = vm_nanum_stdt.objects.filter(apl_id=ida).exists()
+    ms_apl_flag = ms_apl.objects.filter(apl_id=ida,ms_id_id=ms_ida).exists()
+    if not ms_apl_flag:
+        applyYn = 'N'
+    else:
+        applyYn = 'Y'
+
+    #rows = vm_nanum_stdt.objects.filter(apl_id=ida)
+    #rows2 = vm_nanum_stdt.objects.get("apl_nm")
+    if not created_flag:
+        message = "Fail"
+        context = {'message': message}
+    else:
+        
+        message = "Ok"
+        rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
+        rows2 = mp_sub.objects.filter(ms_id=ms_ida)
+        rows3 = msch.objects.filter(ms_id=ms_ida)[0]
+
+
+        for val in rows2:
+            key1 = val.att_id
+            #key2 = val.att_cdd
+
+        #question01 = com_cdd.objects.filter(std_grp_code=key1)[0].rmrk
+        #question02 = com_cdd.objects.filter(std_grp_code=key1)[1].rmrk
+        #question03 = com_cdd.objects.filter(std_grp_code=key1)[2].rmrk
+        #question04 = com_cdd.objects.filter(std_grp_code=key1)[3].rmrk
+        #question05 = com_cdd.objects.filter(std_grp_code=key1)[4].rmrk
+
+        context = {'message': message,
+                    'applyYn' : applyYn,
+                    'apl_nm' : rows.apl_nm,
+                    'univ_cd' : rows.univ_cd,
+                    'univ_nm' : rows.univ_nm,
+                    'grad_div_cd' : rows.grad_div_cd,
+                    'grad_div_nm' : rows.grad_div_nm,
+                    'cllg_cd' : rows.cllg_cd,
+                    'cllg_nm' : rows.cllg_nm,
+                    'dept_cd' : rows.dept_cd,
+                    'dept_nm' : rows.dept_nm,
+                    'mjr_cd' : rows.mjr_cd,
+                    'mjr_nm' : rows.mjr_nm,
+                    'brth_dt' : rows.brth_dt,
+                    'gen_cd' : rows.gen_cd,
+                    'gen_nm' : rows.gen_nm,
+                    'yr' : rows.yr,
+                    'sch_yr' : rows.sch_yr,
+                    'term_div' : rows.term_div,
+                    'term_nm' : rows.term_nm,
+                    'stdt_div' : rows.stdt_div,
+                    'stdt_nm' : rows.stdt_nm,
+                    'mob_nm' : rows.mob_nm,
+                    'tel_no' : rows.tel_no,
+                    'tel_no_g' : rows.tel_no_g,
+                    'h_addr' : rows.h_addr,
+                    'post_no' : rows.post_no,
+                    'email_addr' : rows.email_addr,
+                    'bank_acct' : rows.bank_acct,
+                    'bank_cd' : rows.bank_cd,
+                    'bank_nm' : rows.bank_nm,
+                    'bank_dpsr' : rows.bank_dpsr,
+                    'pr_yr' : rows.pr_yr,
+                    'pr_sch_yr' : rows.pr_sch_yr,
+                    'pr_term_div' : rows.pr_term_div,
+                    'score01' : rows.score01,
+                    'score02' : rows.score02,
+                    'score03' : rows.score03,
+                    'score04' : rows.score04,
+                    'score04_tp' : rows.score04_tp,
+                    'score05' : rows.score05,
+                    'ms_id' : rows3.ms_id,
+                    'ms_name' : rows3.ms_name,
+                    }
+    
+
+    #return HttpResponse(json.dumps(context), content_type="application/json")
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+
+
+
+
+#멘토링 질문 List######################################################################
+@csrf_exempt
+def post_mt_quest(request):
+    l_ms_id = request.GET.get('ms_id', None)
+    r_mp_sub = mp_sub.objects.filter(ms_id=l_ms_id)
+    r_mp_sub = r_mp_sub.filter(use_yn='Y')
+
+    response_json = OrderedDict()
+
+    res = []
+    for val in r_mp_sub:
+        print("1234")
+        key1 = val.att_id
+        key2 = val.att_cdd
+        r_com_cdd = com_cdd.objects.filter(std_grp_code=key1,std_detl_code=key2)
+        for val2 in r_com_cdd
+            print("12341")
+            print(r_com_cdd[0].std_detl_code)
+            print("12342")
+            res.append({std_detl_code:r_com_cdd.std_detl_code})
+            res.append({std_detl_code:'b'})
+            
+    print("a")
+    print(json.dumps(res))
+
+    context = {'message': 'Ok'}
+
+
+    #return HttpResponse(json.dumps(context), content_type="application/json")
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+####################################################################################
+
+

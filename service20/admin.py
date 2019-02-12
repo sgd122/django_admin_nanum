@@ -28,41 +28,6 @@ class MSSeasonFilter2(SimpleListFilter):
             return queryset.filter(course_season=self.value())
         return queryset
 
-class ms_aplAdmin(admin.ModelAdmin):
-    change_list_template ="stdApply/submit.html"
-
-    list_display = (
-        'apl_no',
-        'unv_nm',
-        'dept_nm',
-        'apl_id',
-        'apl_nm',
-        'gen',
-        'define01',
-        'define02',
-        'define03',
-        'define04',
-    )
-
-    list_filter = (
-        MSSeasonFilter2,
-    )
-
-    def define01(self,obj):
-    	return '16'
-    define01.short_description = '성적(20)'
-
-    def define02(self,obj):
-    	return '6'
-    define02.short_description = '봉사(10)'
-
-    def define03(self,obj):
-    	return '8'
-    define03.short_description = '외국어(10)'
-
-    def define04(self,obj):
-    	return '6.00'
-    define04.short_description = '지원서(10)'   
 
 
 
@@ -97,7 +62,7 @@ class cm_cnv_scrAdmin(admin.ModelAdmin):
 
 
 class service20_01_Admin(admin.ModelAdmin):
-    change_list_template ="service20/Service20_01.html"
+    change_list_template ="service20/Service20_msch.html"
 
     list_filter = (
         'ms_id',
@@ -237,6 +202,45 @@ class service20_01_Admin(admin.ModelAdmin):
         return '6.00'
     define04.short_description = '지원서(10)' 
 
+
+class ms_aplAdmin(admin.ModelAdmin):
+    change_list_template ="service20/Service20_ms_apl.html"
+
+    list_display = (
+        'apl_no',
+        'unv_nm',
+        'dept_nm',
+        'apl_id',
+        'apl_nm',
+        'gen',
+        'define01',
+        'define02',
+        'define03',
+        'define04',
+    )
+
+    list_filter = (
+        MSSeasonFilter2,
+    )
+
+    def define01(self,obj):
+        return '16'
+    define01.short_description = '성적(20)'
+
+    def define02(self,obj):
+        return '6'
+    define02.short_description = '봉사(10)'
+
+    def define03(self,obj):
+        return '8'
+    define03.short_description = '외국어(10)'
+
+    def define04(self,obj):
+        return '6.00'
+    define04.short_description = '지원서(10)'   
+
+
+
 class ms_subAdmin(admin.ModelAdmin):
     list_display = (
         'ms_id',
@@ -260,7 +264,7 @@ class ms_subAdmin(admin.ModelAdmin):
 admin.site.register(msch, service20_01_Admin)   
 admin.site.register(ms_sub, ms_subAdmin)
 
-#admin.site.register(ms_apl, ms_aplAdmin)
+admin.site.register(ms_apl, ms_aplAdmin)
 
 #admin.site.register(ms_apl, service20_01_Admin)
 

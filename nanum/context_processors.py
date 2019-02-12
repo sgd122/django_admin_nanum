@@ -45,9 +45,13 @@ def gnb_menus(request):
 
 
                 {'name': '멘토스쿨설정', 'url': '/admin/service20/ms_sub/'},
+                {'name': '멘토스쿨전형', 'url': '/admin/service20/ms_apl'},
+
+                
                 {'name': '멘토링프로그램', 'url': '/admin/service20/mpgm'},
+
                 {'name': '프로그램속성', 'url': '/admin/service20/mp_sub'},
-                {'name': '멘토스쿨지원자', 'url': '/admin/service20/ms_apl'},
+                
                 {'name': '지원자답변', 'url': '/admin/service20/ms_ans'},
                 {'name': '지원서채점', 'url': '/admin/service20/ms_mrk'},
                 {'name': '멘토관리', 'url': '/admin/service20/mentor'},
