@@ -6,7 +6,7 @@ from django.template.response import TemplateResponse
 from django.contrib.admin import SimpleListFilter
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from service20.models import *
-
+from django.contrib.admin.views.main import ChangeList
 
 
 class mschAdmin(admin.ModelAdmin):
@@ -203,9 +203,42 @@ class service20_01_Admin(admin.ModelAdmin):
     define04.short_description = '지원서(10)' 
 
 
+#class FooChangeList(ChangeList):
+#    def url_for_result(self, result):
+        #pk = getattr(result, self.pk_attname)
+        #return "<script>alert('1')</script>"
+
+#멘토스쿨 전형
 class ms_aplAdmin(admin.ModelAdmin):
     change_list_template ="service20/Service20_ms_apl.html"
 
+    #def get_changelist(self, request, **kwargs):
+       # return FooChangeList
+
+    actions = ["persion_info"]
+
+    def persion_info(self, request, queryset):
+        print('aa')
+        print(request.POST.get('ms_id_id'))
+        print(request.POST.get('id'))
+        print(request.POST.get('_selected_action'))
+        print('bb')
+
+        context = None
+        return TemplateResponse(request, "admin/post_status.html", context)
+
+        #queryset.update(is_immortal=True)   
+
+        #for obj in queryset:
+
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+        if 'delete_selected' in actions:
+            del actions['delete_selected']
+        return actions
+
+
+    persion_info.short_description = "서류전형 상세보기"
     list_display = (
         'apl_no',
         'unv_nm',

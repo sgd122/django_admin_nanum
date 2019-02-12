@@ -219,7 +219,7 @@ class ms_sub(models.Model):
 	class Meta: 
 		verbose_name = '개설멘토스쿨 속성(질문지, 채점항목,채점자)'
 		verbose_name_plural =  verbose_name
-		unique_together=("ms_id", "att_id")
+		unique_together=("ms_id", "att_id","att_cdd")
 
 
 

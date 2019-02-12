@@ -530,7 +530,6 @@ def post_mt_quest(request):
         key2 = val.att_cdd
         r_com_cdd = com_cdd.objects.filter(std_grp_code=key1,std_detl_code=key2)
 
-            
     print("a")
     print(json.dumps(res))
 
