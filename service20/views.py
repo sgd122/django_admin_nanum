@@ -28,6 +28,10 @@ class Service20ListSerializer(serializers.ModelSerializer):
 
 
     def get_status(self,obj):
+        user_id = self.request.query_params.get('user_id', None) 
+        print(user_id)
+        print("===end===")
+
         now = datetime.datetime.today()
         if obj.apl_fr_dt == None:
             return '개설중'
@@ -41,6 +45,11 @@ class Service20ListSerializer(serializers.ModelSerializer):
             return '개설중'
     get_status.short_description = '상태'        
 
+    # def get_test(self,obj):
+    #     l_user_id = request.GET.get('user_id', None)
+    #     print("=======")
+    #     print(l_user_id)
+
 class Service20ListView(generics.ListAPIView):
 
 
@@ -51,9 +60,11 @@ class Service20ListView(generics.ListAPIView):
     def list(self, request):
         l_yr = request.GET.get('yr', None)
         l_trn_term = request.GET.get('trn_term', None)
+        l_user_id = request.GET.get('user_id', None)
 
         print(l_yr)
         print(l_trn_term)
+        print(l_user_id)
 
         queryset = self.get_queryset()
         if l_yr != '':
@@ -63,6 +74,25 @@ class Service20ListView(generics.ListAPIView):
         if l_trn_term != '':
             print(l_trn_term)
             queryset = queryset.filter(trn_term=l_trn_term)
+
+
+        # l_que_exist = ms_apl.objects.filter(apl_id=l_user_id,ms_id_id=).exists()
+
+        # rows2 = ms_apl.objects.filter(apl_id=l_user_id,yr=l_yr)
+
+
+        # for val in rows2:
+        #     key1 = val.att_id
+            
+
+        #     def apply_period(self, obj):
+        #     if not obj.apply_from or not obj.apply_to:
+        #         return None
+        #     return f"{obj.apply_from.strftime('%y.%m.%d')} ~ {obj.apply_to.strftime('%y.%m.%d')}"
+        # apply_period.short_description = '모집기간'
+        
+    
+        # return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 
         serializer_class = self.get_serializer_class()
@@ -390,7 +420,12 @@ def post_msApply(request):
         mob_no=rows.mob_nm,
         tel_no=rows.tel_no,
         tel_no_g=rows.tel_no_g,
-        h_addr=rows.h_addr
+        h_addr=rows.h_addr,
+        score1=rows.score01,
+        score2=rows.score02,
+        score3=rows.score03,
+        score4=rows.score04,
+        score5=rows.score05,
         )
     model_instance.save()
     
@@ -521,55 +556,7 @@ class mpmgListPersionView(generics.ListAPIView):
 
 
 
-#멘토스쿨 콤보박스
-class comboMpmgListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = msch
-        fields = ('ms_id','ms_name')
 
-
-class comboMpmgListView(generics.ListAPIView):
-    queryset = msch.objects.all()
-    serializer_class = comboMpmgListSerializer
-
-    def list(self, request):
-        queryset = self.get_queryset()
-        serializer_class = self.get_serializer_class()
-        serializer = serializer_class(queryset, many=True)
-
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        return Response(serializer.data)
-
-
-#멘토스쿨 콤보박스Detail
-class comboMpmgListDetailSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = msch
-        fields = ('ms_id','ms_name')
-
-
-class comboMpmgListViewDetail(generics.ListAPIView):
-    queryset = msch.objects.all()
-    serializer_class = comboMpmgListDetailSerializer
-
-    def list(self, request):
-        l_ms_id = request.GET.get('ms_id', None)
-        print(l_ms_id)
-        queryset = self.get_queryset()
-        queryset = queryset.filter(ms_id=l_ms_id)        
-        serializer_class = self.get_serializer_class()
-        serializer = serializer_class(queryset, many=True)
-
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        return Response(serializer.data)        
 
 @csrf_exempt
 def post_user_info(request):
@@ -685,3 +672,59 @@ def post_mt_quest(request):
 ####################################################################################
 
 
+
+
+
+
+
+
+
+#멘토스쿨 콤보박스
+class comboMpmgListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = msch
+        fields = ('ms_id','ms_name')
+
+
+class comboMpmgListView(generics.ListAPIView):
+    queryset = msch.objects.all()
+    serializer_class = comboMpmgListSerializer
+
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+
+#멘토스쿨 콤보박스Detail
+class comboMpmgListDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = msch
+        fields = ('ms_id','ms_name')
+
+
+class comboMpmgListViewDetail(generics.ListAPIView):
+    queryset = msch.objects.all()
+    serializer_class = comboMpmgListDetailSerializer
+
+    def list(self, request):
+        l_ms_id = request.GET.get('ms_id', None)
+        print(l_ms_id)
+        queryset = self.get_queryset()
+        queryset = queryset.filter(ms_id=l_ms_id)        
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
