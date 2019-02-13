@@ -28,6 +28,10 @@ class Service20ListSerializer(serializers.ModelSerializer):
 
 
     def get_status(self,obj):
+        user_id = self.request.query_params.get('user_id', None) 
+        print(user_id)
+        print("===end===")
+        
         now = datetime.datetime.today()
         if obj.apl_fr_dt == None:
             return '개설중'
@@ -71,7 +75,7 @@ class Service20ListView(generics.ListAPIView):
             print(l_trn_term)
             queryset = queryset.filter(trn_term=l_trn_term)
 
-        
+
         # l_que_exist = ms_apl.objects.filter(apl_id=l_user_id,ms_id_id=).exists()
 
         # rows2 = ms_apl.objects.filter(apl_id=l_user_id,yr=l_yr)
