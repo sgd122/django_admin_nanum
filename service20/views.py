@@ -28,7 +28,7 @@ class Service20ListSerializer(serializers.ModelSerializer):
 
 
     def get_status(self,obj):
-        user_id = self.context['context'].get('user_id', None) 
+        user_id = self.context['request'].get('user_id', None) 
         print(user_id)
         print("===end===")
 
