@@ -366,12 +366,12 @@ def post_msApply(request):
     print(max_no)
 
 
-    if max_no == 'None':
+    if max_no == None:
         print("::not::")
     else:
        print("::else::")
 
-    if max_no == 'None':
+    if max_no == None:
         apl_no = 0;
     else:
         apl_no = ms_apl_max['vlMax']
