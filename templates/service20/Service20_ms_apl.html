@@ -53,8 +53,6 @@
 </head>
 <body class="nav-md">
 <script>
-
-
 		historyLen = 0;
 		$(document).ready(function(){
 			//$(".side-menu").find("li a").eq(0).click();
@@ -72,17 +70,28 @@
 							$.each(data, function(key, value){
 								$("#s4").append("<option value='" + value.ms_id + "'>" + value.ms_name + "</option> ");
 							});
+							var vl_s4 = '{{request.GET.ms_id_id}}';
+		       				$("#s4").val(vl_s4); 
 						}            	
 		            }// end
+
+
 		        });// end ajax
+
+
 		        return false;
+
+
+
 		});
 
         function comboGetVal(val){
-			var form_data = "ms_id="+val.value;
+        	vl_ms_id = $("#s4").val();
+        	alert(vl_ms_id);
+			var form_data = "ms_id_id="+vl_ms_id;
 			$.ajax({  
 			  type: "GET", 
-			  url:'/service20/comboMpmgListViewDetail/',
+			  url:'/service20/msFn1/',
 			  data:  form_data, //&a=xxx 식으로 뒤에 더 붙이면 됨
 			  
 			  success: function(data) {
@@ -104,6 +113,40 @@
         }
 </script>
 
+<script>
+	function fn01(){
+
+		if (confirm('환산하시겠습니까?')) {
+		    // Save it!
+			var form_data = "ms_id="+val.value;
+			$.ajax({  
+			  type: "GET", 
+			  url:'/service20/msFn1/',
+			  data:  form_data, //&a=xxx 식으로 뒤에 더 붙이면 됨
+			  
+			  success: function(data) {
+					if(data.length > 0){
+						$.each(data, function(key, value){
+							$("#c1").html(value.ms_name);
+							
+						});
+					}      			  	
+			  	//alert(JSON.stringify(response));
+			  	//alert(JSON.stringify(response.ms_id));
+					
+			  },
+			  error: function(err) {
+			  		alert("Error");
+
+			  }
+			}); 
+
+		} else {
+		    // Do nothing!
+		}
+
+	}
+</script>
 
 <div class="container body">
 	<div class="main_container">
@@ -152,7 +195,11 @@
 								</div>
 								<div class="form-group col-md-4 col-sm-4 col-xs-6">
 									<label class="control-label col-md-4 col-sm-4 col-xs-12">상태</label>
-									<div class="col-md-8 col-sm-8 col-xs-12">
+									<div class="col-md-8 col-sm-8 col-xs-12"> 
+
+
+
+										
 										<select name="status" id="s3" class="form-control input-sm">
 											<option value="">상태</option>
 											<option value="10">개설중</option>
@@ -262,7 +309,7 @@
 						<div class="x_panel">
 							
 	                          	<div class="col-sm-12 col-xs-12 txtR">
-	                          		<button type="submit" class="btn btn-success" onclick="fnGoDataAdd()">환산</button>
+	                          		<button type="submit" class="btn btn-success" onclick="fn01()">환산</button>
 	                          		<button type="submit" class="btn btn-success" onclick="fnCheckDel()">사정</button>  
 	                          		<button type="submit" class="btn btn-success" onclick="fnCheckDel()">엑셀D</button>  
 	                          		<button type="submit" class="btn btn-success" onclick="fnCheckDel()">면접</button>  

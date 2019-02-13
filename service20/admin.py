@@ -7,6 +7,9 @@ from django.contrib.admin import SimpleListFilter
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from service20.models import *
 from django.contrib.admin.views.main import ChangeList
+from django.utils.html import format_html
+
+
 
 
 class mschAdmin(admin.ModelAdmin):
@@ -58,7 +61,14 @@ class teacherAdmin(admin.ModelAdmin):
     pass  
 
 class cm_cnv_scrAdmin(admin.ModelAdmin):
-    pass    
+    list_display = (
+        'eval_item',
+        'eval_seq',
+        'min_scr',
+        'max_scr',
+        'eval_unit',
+        'fin_scr',
+    )
 
 
 class service20_01_Admin(admin.ModelAdmin):
@@ -67,8 +77,8 @@ class service20_01_Admin(admin.ModelAdmin):
     list_filter = (
         'ms_id',
         'ms_name',
-
     )
+
 
     list_display = (
         'ms_id',
@@ -91,11 +101,7 @@ class service20_01_Admin(admin.ModelAdmin):
         ('서류전형', { 'fields': ['tot_apl','cnt_apl','cnt_doc_suc','cnt_doc_res','doc_dt','doc_mgr'] }),
         ('면접전형', { 'fields': ['cnt_intv_pl','cnt_intv_ac','intv_dt','cnt_intv_suc','cnt_iintv_res','intv_mgr'] }),
         ('교육', { 'fields': ['cnt_trn','cnt_mtr'] }),
-
         #('기본 정보', { 'fields': (('ms_id', 'ms_name','apl_term','sup_org','yr_seq','apl_fr_dt','apl_to_dt','trn_fr_dt','trn_to_dt')) }),
-
-
-     
     ]
 
 
@@ -215,6 +221,9 @@ class ms_aplAdmin(admin.ModelAdmin):
     #def get_changelist(self, request, **kwargs):
        # return FooChangeList
 
+
+
+
     actions = ["persion_info"]
 
     def persion_info(self, request, queryset):
@@ -239,6 +248,17 @@ class ms_aplAdmin(admin.ModelAdmin):
 
 
     persion_info.short_description = "서류전형 상세보기"
+
+    def detail(self, obj):
+        print(obj.apl_no)
+        print(obj.apl_id)
+        return format_html(
+            "<a onClick='{}; return false;');>Click Here</a>","window.open('http://naver.com?apl_id="+ obj.apl_id +"','popUp','heigth=500','width=500','resizable=no','location=no','toolbar=no','menubar=no')"
+            )
+
+
+#onclick="window.open('https://www.quackit.com/javascript/examples/sample_popup.cfm','popUpWindow','height=500,width=400,left=100,top=100,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no, status=yes');"
+
     list_display = (
         'apl_no',
         'unv_nm',
@@ -246,10 +266,12 @@ class ms_aplAdmin(admin.ModelAdmin):
         'apl_id',
         'apl_nm',
         'gen',
-        'define01',
-        'define02',
-        'define03',
-        'define04',
+        'score1',
+        'score2',
+        'score3',
+        'score4',
+        'detail',
+
     )
 
     list_filter = (
@@ -257,11 +279,13 @@ class ms_aplAdmin(admin.ModelAdmin):
     )
 
     def define01(self,obj):
-        return '16'
+        l_one_score1 = obj.score1
+
+        return obj.score1
     define01.short_description = '성적(20)'
 
     def define02(self,obj):
-        return '6'
+        return obj.score1
     define02.short_description = '봉사(10)'
 
     def define03(self,obj):
