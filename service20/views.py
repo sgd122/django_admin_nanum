@@ -365,12 +365,20 @@ def post_msApply(request):
     max_no = ms_apl_max['vlMax']    
     print(max_no)
 
-    if max_no == null:
-        apl_no = 0;
+
+    if not max_no:
+        print("::not::")
     else:
-        apl_no = ms_apl_max['vlMax']
-        apl_no = apl_no + 1;
+       print("::else::")
+
+    # if not max_no:
+    #     apl_no = 0;
+    # else:
+    #     apl_no = ms_apl_max['vlMax']
+    #     apl_no = apl_no + 1;
     
+    apl_no = ms_apl_max['vlMax']
+    apl_no = apl_no + 1;
     print("11")
     model_instance = ms_apl(
         ms_id_id=ms_id_id, 
