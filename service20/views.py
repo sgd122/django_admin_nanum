@@ -29,7 +29,7 @@ class Service20ListSerializer(serializers.ModelSerializer):
 
     def get_status(self,obj):
         request = self.context['request']
-        print(request.user.user_id)
+        print(request.GET.get('user_id', None))
         print("===end===")
 
         now = datetime.datetime.today()
