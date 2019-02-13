@@ -96,9 +96,7 @@ class Service20ListView(generics.ListAPIView):
             })
         print(data)
 
-       # write list to file 
-        # with open('data.json', 'w') as outfile:
-        return data
+        return JsonResponse(data)
         # return JsonResponse(json.dumps(data),json_dumps_params={'ensure_ascii': True})
         
         
