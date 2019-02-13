@@ -24,7 +24,7 @@ class Service20ListSerializer(serializers.ModelSerializer):
     status = serializers.SerializerMethodField()
     class Meta:
         model = msch
-        fields = ('ms_id', 'ms_name','yr','yr_seq','sup_org','img_src','ins_dt','ins_id','apl_term','apl_fr_dt','apl_to_dt','trn_fr_dt','trn_to_dt','tot_apl','cnt_apl','status','applyYn')
+        fields = ('ms_id', 'ms_name','yr','yr_seq','sup_org','img_src','ins_dt','ins_id','apl_term','apl_fr_dt','apl_to_dt','trn_fr_dt','trn_to_dt','tot_apl','cnt_apl','status')
 
 
     def get_status(self,obj):
@@ -42,11 +42,11 @@ class Service20ListSerializer(serializers.ModelSerializer):
             return '개설중'
     get_status.short_description = '상태'        
 
-    def get_applyYn(self,obj):
-        request = self.context['request']
-        l_user_id = request.GET.get('user_id', None)
-        print(l_user_id)
-        print("===get_end===")
+    # def get_applyYn(self,obj):
+    #     request = self.context['request']
+    #     l_user_id = request.GET.get('user_id', None)
+    #     print(l_user_id)
+    #     print("===get_end===")
 
 class Service20ListView(generics.ListAPIView):
 
@@ -75,26 +75,39 @@ class Service20ListView(generics.ListAPIView):
 
         data = []
         # append new item to data lit
-        data.append({
-          "user": "user1",
-          "id": "21780"
-        })
-        data.append({
-          "user": "user2",
-          "id": "21780"
-        })
+        for val in queryset:
+            data.append({
+              'ms_id':val.ms_id, 
+              'ms_name':val.ms_name,
+              'yr':val.yr,
+              'yr_seq':val.yr_seq,
+              'sup_org':val.sup_org,
+              'img_src':val.img_src,
+              'ins_dt':val.ins_dt,
+              'ins_id':val.ins_id,
+              'apl_term':val.apl_term,
+              'apl_fr_dt':val.apl_fr_dt,
+              'apl_to_dt':val.apl_to_dt,
+              'trn_fr_dt':val.trn_fr_dt,
+              'trn_to_dt':val.trn_to_dt,
+              'tot_apl':val.tot_apl,
+              'cnt_apl':val.cnt_apl,
+              'status':val.status,
+            })
         print(data)
 
-        serializer_class = self.get_serializer_class()
-        serializer = serializer_class(queryset, context={'request': request}, many=True)
+        return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+
+        # serializer_class = self.get_serializer_class()
+        # serializer = serializer_class(queryset, context={'request': request}, many=True)
 
 
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
+        # page = self.paginate_queryset(queryset)
+        # if page is not None:
+        #     serializer = self.get_serializer(page, many=True)
+        #     return self.get_paginated_response(serializer.data)
 
-        return Response(serializer.data)
+        # return Response(serializer.data)
 
 
         
