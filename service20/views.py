@@ -28,9 +28,9 @@ class Service20ListSerializer(serializers.ModelSerializer):
 
 
     def get_status(self,obj):
-        user_id = self.request.query_params.get('user_id', None) 
-        print(user_id)
-        print("===end===")
+        # user_id = self.request.query_params.get('user_id', None) 
+        # print(user_id)
+        # print("===end===")
 
         now = datetime.datetime.today()
         if obj.apl_fr_dt == None:
