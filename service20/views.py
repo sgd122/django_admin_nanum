@@ -363,13 +363,6 @@ def post_msApply(request):
     apl_id = ida
     
     max_no = ms_apl_max['vlMax']    
-    print(max_no)
-
-
-    if max_no == None:
-        print("::not::")
-    else:
-       print("::else::")
 
     if max_no == None:
         apl_no = 0;
@@ -378,7 +371,6 @@ def post_msApply(request):
         apl_no = apl_no + 1;
     
     
-    print("11")
     model_instance = ms_apl(
         ms_id_id=ms_id_id, 
         apl_no=apl_no, 
