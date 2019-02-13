@@ -361,8 +361,11 @@ def post_msApply(request):
     #ms_apl_max = ms_apl_max + 1
     apl_no = ms_apl_max
     apl_id = ida
-    apl_no = ms_apl_max['vlMax']
-    apl_no = apl_no + 1;
+    if not created_flag:
+        apl_no = 0;
+    else:
+        apl_no = ms_apl_max['vlMax']
+        apl_no = apl_no + 1;
     
     print("11")
     model_instance = ms_apl(
