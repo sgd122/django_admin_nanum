@@ -365,7 +365,7 @@ def post_msApply(request):
     max_no = ms_apl_max['vlMax']    
     print(max_no)
 
-    if not max_no:
+    if max_no == null:
         apl_no = 0;
     else:
         apl_no = ms_apl_max['vlMax']
