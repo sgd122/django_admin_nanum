@@ -1,6 +1,8 @@
 from django.urls import path
 from service20.views import *
+from service20.views2 import *
 from . import views
+from . import views2
 
 app_name = 'service20'
 
