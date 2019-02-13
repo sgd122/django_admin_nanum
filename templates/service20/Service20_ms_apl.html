@@ -95,6 +95,7 @@
 			  data:  form_data, //&a=xxx 식으로 뒤에 더 붙이면 됨
 			  
 			  success: function(data) {
+			  		alert(data);
 					if(data.length > 0){
 						$.each(data, function(key, value){
 							$("#c1").html(value.ms_name);
@@ -118,6 +119,9 @@
 
 		if (confirm('환산하시겠습니까?')) {
 		    // Save it!
+		   	location.reload();
+
+
 			var form_data = "ms_id="+val.value;
 			$.ajax({  
 			  type: "GET", 
@@ -146,6 +150,41 @@
 		}
 
 	}
+
+	function fn02(){
+
+		if (confirm('사정하시겠습니까?')) {
+		    // Save it!
+		    location.reload();
+
+			var form_data = "ms_id="+val.value;
+			$.ajax({  
+			  type: "GET", 
+			  url:'/service20/msFn1/',
+			  data:  form_data, //&a=xxx 식으로 뒤에 더 붙이면 됨
+			  
+			  success: function(data) {
+					if(data.length > 0){
+						$.each(data, function(key, value){
+							$("#c1").html(value.ms_name);
+							
+						});
+					}      			  	
+			  	//alert(JSON.stringify(response));
+			  	//alert(JSON.stringify(response.ms_id));
+					
+			  },
+			  error: function(err) {
+			  		alert("Error");
+
+			  }
+			}); 
+
+		} else {
+		    // Do nothing!
+		}
+
+	}	
 </script>
 
 <div class="container body">
@@ -310,12 +349,12 @@
 							
 	                          	<div class="col-sm-12 col-xs-12 txtR">
 	                          		<button type="submit" class="btn btn-success" onclick="fn01()">환산</button>
-	                          		<button type="submit" class="btn btn-success" onclick="fnCheckDel()">사정</button>  
-	                          		<button type="submit" class="btn btn-success" onclick="fnCheckDel()">엑셀D</button>  
-	                          		<button type="submit" class="btn btn-success" onclick="fnCheckDel()">면접</button>  
-	                          		<button type="submit" class="btn btn-success" onclick="fnCheckDel()">문자발송</button> 
-	                          		<button type="submit" class="btn btn-success" onclick="fnCheckDel()">결과Up</button> 
-	                          		<button type="submit" class="btn btn-success" onclick="fnCheckDel()">불참처리</button> 
+	                          		<button type="submit" class="btn btn-success" onclick="fn02()">사정</button>  
+	                          		<button type="submit" class="btn btn-success" onclick="fn03()">엑셀D</button>  
+	                          		<button type="submit" class="btn btn-success" onclick="fn04()">면접</button>  
+	                          		<button type="submit" class="btn btn-success" onclick="fn05()">문자발송</button> 
+	                          		<button type="submit" class="btn btn-success" onclick="fn06()">결과Up</button> 
+	                          		<button type="submit" class="btn btn-success" onclick="fn07()">불참처리</button> 
 	                          		           
 	                         	 </div>
                         	

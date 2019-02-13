@@ -253,7 +253,7 @@ class ms_aplAdmin(admin.ModelAdmin):
         print(obj.apl_no)
         print(obj.apl_id)
         return format_html(
-            "<a onClick='{}; return false;');>Click Here</a>","window.open('http://naver.com?apl_id="+ obj.apl_id +"','popUp','heigth=500','width=500','resizable=no','location=no','toolbar=no','menubar=no')"
+            "<a onClick='{}; return false;');>Click Here</a>","window.open('http://sgd122.cafe24.com/popup/admin/member/member_view.html?apl_id="+ obj.apl_id +"','popUp','heigth=600','width=800','resizable=no','location=no','toolbar=no','menubar=no')"
             )
 
 
