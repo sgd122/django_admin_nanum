@@ -96,11 +96,11 @@ class Service20ListView(generics.ListAPIView):
             })
         print(data)
 
-        with open('data.json', 'w') as outfile:
+       # write list to file 
+        # with open('data.json', 'w') as outfile:
+
+        return JsonResponse(json.dumps(data),json_dumps_params={'ensure_ascii': True})
         
-        
-        return JsonResponse(json.dump(data, outfile),json_dumps_params={'ensure_ascii': True})
-        # write list to file
         
         # serializer_class = self.get_serializer_class()
         # serializer = serializer_class(queryset, context={'request': request}, many=True)
