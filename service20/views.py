@@ -71,10 +71,7 @@ class Service20ListView(generics.ListAPIView):
             print(l_trn_term)
             queryset = queryset.filter(trn_term=l_trn_term)
 
-        for val_1 in queryset:
-            print("===gd===")
-            print(val_1.ms_id)
-            print(val_1.ms_name)
+        
         # l_que_exist = ms_apl.objects.filter(apl_id=l_user_id,ms_id_id=).exists()
 
         # rows2 = ms_apl.objects.filter(apl_id=l_user_id,yr=l_yr)
@@ -555,55 +552,7 @@ class mpmgListPersionView(generics.ListAPIView):
 
 
 
-#멘토스쿨 콤보박스
-class comboMpmgListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = msch
-        fields = ('ms_id','ms_name')
 
-
-class comboMpmgListView(generics.ListAPIView):
-    queryset = msch.objects.all()
-    serializer_class = comboMpmgListSerializer
-
-    def list(self, request):
-        queryset = self.get_queryset()
-        serializer_class = self.get_serializer_class()
-        serializer = serializer_class(queryset, many=True)
-
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        return Response(serializer.data)
-
-
-#멘토스쿨 콤보박스Detail
-class comboMpmgListDetailSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = msch
-        fields = ('ms_id','ms_name')
-
-
-class comboMpmgListViewDetail(generics.ListAPIView):
-    queryset = msch.objects.all()
-    serializer_class = comboMpmgListDetailSerializer
-
-    def list(self, request):
-        l_ms_id = request.GET.get('ms_id', None)
-        print(l_ms_id)
-        queryset = self.get_queryset()
-        queryset = queryset.filter(ms_id=l_ms_id)        
-        serializer_class = self.get_serializer_class()
-        serializer = serializer_class(queryset, many=True)
-
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        return Response(serializer.data)        
 
 @csrf_exempt
 def post_user_info(request):
