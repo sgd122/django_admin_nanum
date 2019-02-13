@@ -31,7 +31,7 @@ class Service20ListSerializer(serializers.ModelSerializer):
         user_id = self.request.query_params.get('user_id', None) 
         print(user_id)
         print("===end===")
-        
+
         now = datetime.datetime.today()
         if obj.apl_fr_dt == None:
             return '개설중'
@@ -671,3 +671,60 @@ def post_mt_quest(request):
     return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 ####################################################################################
 
+
+
+
+
+
+
+
+
+#멘토스쿨 콤보박스
+class comboMpmgListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = msch
+        fields = ('ms_id','ms_name')
+
+
+class comboMpmgListView(generics.ListAPIView):
+    queryset = msch.objects.all()
+    serializer_class = comboMpmgListSerializer
+
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+
+#멘토스쿨 콤보박스Detail
+class comboMpmgListDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = msch
+        fields = ('ms_id','ms_name')
+
+
+class comboMpmgListViewDetail(generics.ListAPIView):
+    queryset = msch.objects.all()
+    serializer_class = comboMpmgListDetailSerializer
+
+    def list(self, request):
+        l_ms_id = request.GET.get('ms_id', None)
+        print(l_ms_id)
+        queryset = self.get_queryset()
+        queryset = queryset.filter(ms_id=l_ms_id)        
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
