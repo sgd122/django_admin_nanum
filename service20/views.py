@@ -27,11 +27,11 @@ class Service20ListSerializer(serializers.ModelSerializer):
         fields = ('ms_id', 'ms_name','yr','yr_seq','sup_org','img_src','ins_dt','ins_id','apl_term','apl_fr_dt','apl_to_dt','trn_fr_dt','trn_to_dt','tot_apl','cnt_apl','status')
 
 
-    def get_status(self,obj):
+    def get_status(self,obj,request):
         l_user_id = request.GET.get('user_id', None)
         print("=======")
         print(l_user_id)
-        
+
         now = datetime.datetime.today()
         if obj.apl_fr_dt == None:
             return '개설중'
