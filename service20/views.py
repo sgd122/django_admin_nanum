@@ -58,7 +58,6 @@ class Service20ListView(generics.ListAPIView):
         l_trn_term = request.GET.get('trn_term', None)
         l_user_id = request.GET.get('user_id', None)
 
-        # l_que_exist = ms_apl.objects.filter(apl_id=l_user_id,ms_id_id=).exists()
         print(l_yr)
         print(l_trn_term)
         print(l_user_id)
@@ -71,6 +70,72 @@ class Service20ListView(generics.ListAPIView):
         if l_trn_term != '':
             print(l_trn_term)
             queryset = queryset.filter(trn_term=l_trn_term)
+
+        for val_1 in queryset:
+            print("===gd===")
+            print(val_1.ms_id)
+            print(val_1.ms_name)
+        # l_que_exist = ms_apl.objects.filter(apl_id=l_user_id,ms_id_id=).exists()
+
+        rows2 = ms_apl.objects.filter(apl_id=l_user_id,yr=l_yr)
+
+
+        for val in rows2:
+            key1 = val.att_id
+            
+
+        #     def apply_period(self, obj):
+        #     if not obj.apply_from or not obj.apply_to:
+        #         return None
+        #     return f"{obj.apply_from.strftime('%y.%m.%d')} ~ {obj.apply_to.strftime('%y.%m.%d')}"
+        # apply_period.short_description = '모집기간'
+        
+        context = {'message': message,
+                    'applyYn' : applyYn,
+                    'apl_nm' : rows.apl_nm,
+                    'univ_cd' : rows.univ_cd,
+                    'univ_nm' : rows.univ_nm,
+                    'grad_div_cd' : rows.grad_div_cd,
+                    'grad_div_nm' : rows.grad_div_nm,
+                    'cllg_cd' : rows.cllg_cd,
+                    'cllg_nm' : rows.cllg_nm,
+                    'dept_cd' : rows.dept_cd,
+                    'dept_nm' : rows.dept_nm,
+                    'mjr_cd' : rows.mjr_cd,
+                    'mjr_nm' : rows.mjr_nm,
+                    'brth_dt' : rows.brth_dt,
+                    'gen_cd' : rows.gen_cd,
+                    'gen_nm' : rows.gen_nm,
+                    'yr' : rows.yr,
+                    'sch_yr' : rows.sch_yr,
+                    'term_div' : rows.term_div,
+                    'term_nm' : rows.term_nm,
+                    'stdt_div' : rows.stdt_div,
+                    'stdt_nm' : rows.stdt_nm,
+                    'mob_nm' : rows.mob_nm,
+                    'tel_no' : rows.tel_no,
+                    'tel_no_g' : rows.tel_no_g,
+                    'h_addr' : rows.h_addr,
+                    'post_no' : rows.post_no,
+                    'email_addr' : rows.email_addr,
+                    'bank_acct' : rows.bank_acct,
+                    'bank_cd' : rows.bank_cd,
+                    'bank_nm' : rows.bank_nm,
+                    'bank_dpsr' : rows.bank_dpsr,
+                    'pr_yr' : rows.pr_yr,
+                    'pr_sch_yr' : rows.pr_sch_yr,
+                    'pr_term_div' : rows.pr_term_div,
+                    'score01' : rows.score01,
+                    'score02' : rows.score02,
+                    'score03' : rows.score03,
+                    'score04' : rows.score04,
+                    'score04_tp' : rows.score04_tp,
+                    'score05' : rows.score05,
+                    'ms_id' : rows3.ms_id,
+                    'ms_name' : rows3.ms_name,
+                    }
+    
+        # return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 
         serializer_class = self.get_serializer_class()
