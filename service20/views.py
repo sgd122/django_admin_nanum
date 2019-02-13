@@ -24,14 +24,11 @@ class Service20ListSerializer(serializers.ModelSerializer):
     status = serializers.SerializerMethodField()
     class Meta:
         model = msch
-        fields = ('ms_id', 'ms_name','yr','yr_seq','sup_org','img_src','ins_dt','ins_id','apl_term','apl_fr_dt','apl_to_dt','trn_fr_dt','trn_to_dt','tot_apl','cnt_apl','status')
+        fields = ('ms_id', 'ms_name','yr','yr_seq','sup_org','img_src','ins_dt','ins_id','apl_term','apl_fr_dt','apl_to_dt','trn_fr_dt','trn_to_dt','tot_apl','cnt_apl','status','applyYn')
 
 
     def get_status(self,obj):
         request = self.context['request']
-        print(request.GET.get('user_id', None))
-        print("===end===")
-
         now = datetime.datetime.today()
         if obj.apl_fr_dt == None:
             return '개설중'
@@ -45,10 +42,11 @@ class Service20ListSerializer(serializers.ModelSerializer):
             return '개설중'
     get_status.short_description = '상태'        
 
-    # def get_test(self,obj):
-    #     l_user_id = request.GET.get('user_id', None)
-    #     print("=======")
-    #     print(l_user_id)
+    def get_applyYn(self,obj):
+        request = self.context['request']
+        l_user_id = request.GET.get('user_id', None)
+        print(l_user_id)
+        print("===get_end===")
 
 class Service20ListView(generics.ListAPIView):
 
@@ -75,25 +73,17 @@ class Service20ListView(generics.ListAPIView):
             print(l_trn_term)
             queryset = queryset.filter(trn_term=l_trn_term)
 
-
-        # l_que_exist = ms_apl.objects.filter(apl_id=l_user_id,ms_id_id=).exists()
-
-        # rows2 = ms_apl.objects.filter(apl_id=l_user_id,yr=l_yr)
-
-
-        # for val in rows2:
-        #     key1 = val.att_id
-            
-
-        #     def apply_period(self, obj):
-        #     if not obj.apply_from or not obj.apply_to:
-        #         return None
-        #     return f"{obj.apply_from.strftime('%y.%m.%d')} ~ {obj.apply_to.strftime('%y.%m.%d')}"
-        # apply_period.short_description = '모집기간'
-        
-    
-        # return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
-
+        data = []
+        # append new item to data lit
+        data.append({
+          "user": "user1",
+          "id": "21780"
+        })
+        data.append({
+          "user": "user2",
+          "id": "21780"
+        })
+        print(data)
 
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, context={'request': request}, many=True)
@@ -105,6 +95,10 @@ class Service20ListView(generics.ListAPIView):
             return self.get_paginated_response(serializer.data)
 
         return Response(serializer.data)
+
+
+        
+
 
 
 def stdApplyStdView(request):
