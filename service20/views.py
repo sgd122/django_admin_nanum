@@ -77,11 +77,11 @@ class Service20ListView(generics.ListAPIView):
             print(val_1.ms_name)
         # l_que_exist = ms_apl.objects.filter(apl_id=l_user_id,ms_id_id=).exists()
 
-        rows2 = ms_apl.objects.filter(apl_id=l_user_id,yr=l_yr)
+        # rows2 = ms_apl.objects.filter(apl_id=l_user_id,yr=l_yr)
 
 
-        for val in rows2:
-            key1 = val.att_id
+        # for val in rows2:
+        #     key1 = val.att_id
             
 
         #     def apply_period(self, obj):
