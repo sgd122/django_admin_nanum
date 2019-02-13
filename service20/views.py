@@ -96,7 +96,8 @@ class Service20ListView(generics.ListAPIView):
             })
         print(data)
 
-        return Response(data)        
+        data = json.dumps(data)
+        return HttpResponse(data, mimetype='application/json')
         # return JsonResponse(json.dumps(data),json_dumps_params={'ensure_ascii': True})
         
         
