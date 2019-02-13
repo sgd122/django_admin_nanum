@@ -89,6 +89,7 @@ class msch(models.Model):
 	sup_org = models.CharField(max_length=10, null=True, blank=True, verbose_name='주관기관' )
 	yr = models.CharField(max_length=4, null=True, blank=True, verbose_name='연도' )
 	yr_seq = models.PositiveIntegerField(null=True, blank=True, verbose_name='차수' )
+	applyYn = models.PositiveIntegerField(null=True, blank=True, verbose_name='지원여부' )
 	apl_ntc_fr_dt = models.DateTimeField(null=True, blank=True, verbose_name='공지시작일' )
 	apl_ntc_to_dt = models.DateTimeField(null=True, blank=True, verbose_name='공지종료일' )	
 
