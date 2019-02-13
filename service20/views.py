@@ -392,7 +392,12 @@ def post_msApply(request):
         mob_no=rows.mob_nm,
         tel_no=rows.tel_no,
         tel_no_g=rows.tel_no_g,
-        h_addr=rows.h_addr
+        h_addr=rows.h_addr,
+        score1=rows.score01,
+        score2=rows.score02,
+        score3=rows.score03,
+        score4=rows.score04,
+        score5=rows.score05,
         )
     model_instance.save()
     
