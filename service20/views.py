@@ -361,7 +361,7 @@ def post_msApply(request):
     #ms_apl_max = ms_apl_max + 1
     apl_no = ms_apl_max
     apl_id = ida
-    if not ms_apl_max:
+    if not ms_apl_max['vlMax']:
         apl_no = 0;
     else:
         apl_no = ms_apl_max['vlMax']
