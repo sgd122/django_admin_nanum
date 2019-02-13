@@ -28,7 +28,7 @@ class Service20ListSerializer(serializers.ModelSerializer):
 
 
     def get_status(self,obj):
-        user_id = self.request.query_params.get('user_id', None) 
+        user_id = self.context['context'].get('user_id', None) 
         print(user_id)
         print("===end===")
 
@@ -97,7 +97,7 @@ class Service20ListView(generics.ListAPIView):
 
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, context={'request': request}, many=True)
-        
+
 
         page = self.paginate_queryset(queryset)
         if page is not None:
