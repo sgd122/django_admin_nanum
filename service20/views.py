@@ -71,6 +71,72 @@ class Service20ListView(generics.ListAPIView):
             print(l_trn_term)
             queryset = queryset.filter(trn_term=l_trn_term)
 
+        for val_1 in queryset:
+            print("===gd===")
+            print(val_1.ms_id)
+            print(val_1.ms_name)
+        # l_que_exist = ms_apl.objects.filter(apl_id=l_user_id,ms_id_id=).exists()
+
+        rows2 = ms_apl.objects.filter(apl_id=l_user_id,yr=l_yr)
+
+
+        for val in rows2:
+            key1 = val.att_id
+            
+
+        #     def apply_period(self, obj):
+        #     if not obj.apply_from or not obj.apply_to:
+        #         return None
+        #     return f"{obj.apply_from.strftime('%y.%m.%d')} ~ {obj.apply_to.strftime('%y.%m.%d')}"
+        # apply_period.short_description = '모집기간'
+        
+        context = {'message': message,
+                    'applyYn' : applyYn,
+                    'apl_nm' : rows.apl_nm,
+                    'univ_cd' : rows.univ_cd,
+                    'univ_nm' : rows.univ_nm,
+                    'grad_div_cd' : rows.grad_div_cd,
+                    'grad_div_nm' : rows.grad_div_nm,
+                    'cllg_cd' : rows.cllg_cd,
+                    'cllg_nm' : rows.cllg_nm,
+                    'dept_cd' : rows.dept_cd,
+                    'dept_nm' : rows.dept_nm,
+                    'mjr_cd' : rows.mjr_cd,
+                    'mjr_nm' : rows.mjr_nm,
+                    'brth_dt' : rows.brth_dt,
+                    'gen_cd' : rows.gen_cd,
+                    'gen_nm' : rows.gen_nm,
+                    'yr' : rows.yr,
+                    'sch_yr' : rows.sch_yr,
+                    'term_div' : rows.term_div,
+                    'term_nm' : rows.term_nm,
+                    'stdt_div' : rows.stdt_div,
+                    'stdt_nm' : rows.stdt_nm,
+                    'mob_nm' : rows.mob_nm,
+                    'tel_no' : rows.tel_no,
+                    'tel_no_g' : rows.tel_no_g,
+                    'h_addr' : rows.h_addr,
+                    'post_no' : rows.post_no,
+                    'email_addr' : rows.email_addr,
+                    'bank_acct' : rows.bank_acct,
+                    'bank_cd' : rows.bank_cd,
+                    'bank_nm' : rows.bank_nm,
+                    'bank_dpsr' : rows.bank_dpsr,
+                    'pr_yr' : rows.pr_yr,
+                    'pr_sch_yr' : rows.pr_sch_yr,
+                    'pr_term_div' : rows.pr_term_div,
+                    'score01' : rows.score01,
+                    'score02' : rows.score02,
+                    'score03' : rows.score03,
+                    'score04' : rows.score04,
+                    'score04_tp' : rows.score04_tp,
+                    'score05' : rows.score05,
+                    'ms_id' : rows3.ms_id,
+                    'ms_name' : rows3.ms_name,
+                    }
+    
+        # return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+
 
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
@@ -696,73 +762,3 @@ def post_mt_quest(request):
     return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 ####################################################################################
 
-
-
-
-@csrf_exempt
-def msFn1(request):
-    ms_id = request.GET.get('ms_id_id', None)
-    #l_key1 = ms_apl.objects.filter(ms_id_id=ms_id).values_list('apl_id', flat=True) 
-
-    #print(l_key1);
-    #queryset = self.get_queryset()
-    #queryset = vm_nanum_stdt.objects.filter(apl_id__in=ms_id)
-    queryset = ms_apl.objects.filter(ms_id_id=ms_id)
-
-    queryset2 = cm_cnv_scr.objects.filter(eval_item='1')
-
-    for val in queryset:
-        print("1234")
-
-        print(ms_id)
-        print(val.apl_id)
-        print(val.score1)
-        print("0000")
-        print(val.score2)  
-
-        print("1111")
-        vl_cscore1 = (val.score1 / 100) * 100
-        print("2222")
-        print(vl_cscore1)
-        print("3333")
-        queryset2 = queryset2.filter(eval_item=1,max_scr__lt=vl_cscore1)
-        
-        queryset2 = queryset2.filter(eval_item=1,max_scr__lt ='15')
-        for val2 in queryset2:
-            print(val2.max_scr)
-
-        print(queryset2);
-        queryset2 = queryset2.filter(max_scr__lt=vl_cscore1)
-        print(queryset2);
-        print("4444")
-        print(queryset2[0].fin_scr)
-        print("5555")
-        
-
-
-
-        """
-        model_instance = ms_apl(
-            ms_id_id=ms_id_id, 
-            apl_no=apl_no, 
-            apl_id=apl_id,
-            score1=apl_id,
-            score2=apl_id,
-            score3=apl_id,
-            score4=apl_id,
-            score5=apl_id,
-            )
-        model_instance.save()
-        """
-
-
-    print(queryset[0].apl_id)
-    print(queryset)
-
-    message = "Ok"
-     
-    context = {'message': message,}
-    
-
-    #return HttpResponse(json.dumps(context), content_type="application/json")
-    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
