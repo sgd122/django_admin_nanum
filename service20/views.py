@@ -377,8 +377,7 @@ def post_msApply(request):
         apl_no = ms_apl_max['vlMax']
         apl_no = apl_no + 1;
     
-    apl_no = ms_apl_max['vlMax']
-    apl_no = apl_no + 1;
+    
     print("11")
     model_instance = ms_apl(
         ms_id_id=ms_id_id, 
