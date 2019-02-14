@@ -31,7 +31,6 @@ class Service20ListSerializer(serializers.ModelSerializer):
         request = self.context['request']
         v_ms_apl = self.context['v_ms_apl']
         l_user_id = request.GET.get('user_id', None)
-        v_ms_apl= self.get_queryset()
         print("===(status)get_start===")
         print(l_user_id)
         print("===(status)get_end===")
