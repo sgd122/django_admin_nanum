@@ -96,24 +96,23 @@ class Service20ListView(generics.ListAPIView):
             })
         print(data)
 
+        return HttpResponse(json.dumps({"data": data}), content_type='application/json')
 
         # return JsonResponse(data, safe=False)
         # return JsonResponse(json.dumps(data),json_dumps_params={'ensure_ascii': True})
         
         
-        serializer_class = self.get_serializer_class()
+        # serializer_class = self.get_serializer_class()
         # serializer = serializer_class(queryset, context={'request': request}, many=True)
-
-        serializer = serializer_class(data, context={'request': request}, many=True)
 
 
         # page = self.paginate_queryset(queryset)
-        page = self.paginate_queryset(data)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
 
-        return Response(serializer.data)
+        # if page is not None:
+        #     serializer = self.get_serializer(page, many=True)
+        #     return self.get_paginated_response(serializer.data)
+
+        # return Response(serializer.data)
 
 
         
