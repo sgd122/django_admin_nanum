@@ -526,6 +526,7 @@ def post_msProgramApply(request):
     model_instance = mp_mtr(
         mp_id=ms_id_id, 
         apl_no=apl_no, 
+        mntr_id=ida,
         apl_id=apl_id,
         apl_nm=rows.apl_nm,
         unv_cd=rows.univ_cd,
