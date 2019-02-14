@@ -100,7 +100,7 @@ class Service20ListView(generics.ListAPIView):
         # return HttpResponse(json.dumps({"data": data}), content_type='application/json')
 
         # return JsonResponse(data, safe=False)
-        return JsonResponse(data,json_dumps_params={'ensure_ascii': True})
+        return JsonResponse(json.dumps(data),json_dumps_params={'ensure_ascii': True})
         
         
         # serializer_class = self.get_serializer_class()
