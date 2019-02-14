@@ -60,7 +60,7 @@ class Service20ListView(generics.ListAPIView):
         l_trn_term = request.GET.get('trn_term', None)
         l_user_id = request.GET.get('user_id', None)
 
-        v_ms_apl = ms_apl.objects.get(apl_id=l_user_id,yr=l_yr,trn_term=l_trn_term)
+        v_ms_apl = ms_apl.objects.get(apl_id=l_user_id,yr=l_yr)
         print(v_ms_apl)
 
         queryset = self.get_queryset()
