@@ -80,6 +80,9 @@ class Service20ListView(generics.ListAPIView):
             print(l_trn_term)
             queryset = queryset.filter(trn_term=l_trn_term)
 
+        # qs1 = msch.objects.extra(where=['whole_id = "ms_apl"."id"']) 
+
+
         data = []
         # append new item to data lit
         for val in queryset:
