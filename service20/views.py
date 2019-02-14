@@ -24,14 +24,16 @@ class Service20ListSerializer(serializers.ModelSerializer):
     status = serializers.SerializerMethodField()
     class Meta:
         model = msch
-        fields = ('ms_id', 'ms_name','yr','yr_seq','sup_org','img_src','ins_dt','ins_id','apl_term','apl_fr_dt','apl_to_dt','trn_fr_dt','trn_to_dt','tot_apl','cnt_apl','status')
+        fields = ('ms_id', 'ms_name','yr','yr_seq','sup_org','img_src','ins_dt','ins_id','apl_term','apl_fr_dt','apl_to_dt','trn_fr_dt','trn_to_dt','tot_apl','cnt_apl','status','applyYn')
 
 
     def get_status(self,obj):
         request = self.context['request']
-        print(request.GET.get('user_id', None))
-        print("===end===")
-
+        v_ms_apl = self.context['v_ms_apl']
+        l_user_id = request.GET.get('user_id', None)
+        print("===(status)get_start===")
+        print(l_user_id)
+        print("===(status)get_end===")
         now = datetime.datetime.today()
         if obj.apl_fr_dt == None:
             return '개설중'
@@ -45,10 +47,12 @@ class Service20ListSerializer(serializers.ModelSerializer):
             return '개설중'
     get_status.short_description = '상태'        
 
-    # def get_test(self,obj):
-    #     l_user_id = request.GET.get('user_id', None)
-    #     print("=======")
-    #     print(l_user_id)
+    def get_applyYn(self,obj):
+        request = self.context['request']
+        v_ms_apl = self.context['v_ms_apl']
+        l_user_id = request.GET.get('user_id', None)
+        print(l_user_id)
+        print("===get_end===")
 
 class Service20ListView(generics.ListAPIView):
 
@@ -62,9 +66,10 @@ class Service20ListView(generics.ListAPIView):
         l_trn_term = request.GET.get('trn_term', None)
         l_user_id = request.GET.get('user_id', None)
 
-        print(l_yr)
-        print(l_trn_term)
-        print(l_user_id)
+        v_ms_apl = ms_apl.objects.all()
+        v_ms_apl.filter(apl_id=l_user_id,yr=l_yr)
+        print("::v_ms_apl::")
+        print(v_ms_apl)
 
         queryset = self.get_queryset()
         if l_yr != '':
@@ -75,36 +80,54 @@ class Service20ListView(generics.ListAPIView):
             print(l_trn_term)
             queryset = queryset.filter(trn_term=l_trn_term)
 
-
-        # l_que_exist = ms_apl.objects.filter(apl_id=l_user_id,ms_id_id=).exists()
-
-        # rows2 = ms_apl.objects.filter(apl_id=l_user_id,yr=l_yr)
+        # qs1 = msch.objects.extra(where=['whole_id = "ms_apl"."id"']) 
 
 
-        # for val in rows2:
-        #     key1 = val.att_id
-            
+        data = []
+        # append new item to data lit
+        for val in queryset:
+            print(val.apl_term);
+            data.append({
+              'ms_id':val.ms_id, 
+              'ms_name':val.ms_name,
+              'yr':val.yr,
+              'yr_seq':val.yr_seq,
+              'sup_org':val.sup_org,
+              'img_src':val.img_src,
+              'ins_dt':val.ins_dt.strftime('%Y-%m-%d'),
+              'ins_id':val.ins_id,
+              # 'apl_term':val.apl_term,
+              'apl_fr_dt':val.apl_fr_dt.strftime('%Y-%m-%d'),
+              'apl_to_dt':val.apl_to_dt.strftime('%Y-%m-%d'),
+              'trn_fr_dt':val.trn_fr_dt.strftime('%Y-%m-%d'),
+              'trn_to_dt':val.trn_to_dt.strftime('%Y-%m-%d'),
+              'tot_apl':val.tot_apl,
+              'cnt_apl':val.cnt_apl,
+              'status':val.status,
+            })
+        print(data)
 
-        #     def apply_period(self, obj):
-        #     if not obj.apply_from or not obj.apply_to:
-        #         return None
-        #     return f"{obj.apply_from.strftime('%y.%m.%d')} ~ {obj.apply_to.strftime('%y.%m.%d')}"
-        # apply_period.short_description = '모집기간'
+        # return HttpResponse(json.dumps({"data": data}), content_type='application/json')
+
+        # return JsonResponse(data, safe=False)
+        # return JsonResponse(json.dumps(data),json_dumps_params={'ensure_ascii': True})
         
-    
-        # return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
-
-
+        
         serializer_class = self.get_serializer_class()
-        serializer = serializer_class(queryset, context={'request': request}, many=True)
+        serializer = serializer_class(queryset, context={'request': request,'v_ms_apl':v_ms_apl}, many=True)
 
 
         page = self.paginate_queryset(queryset)
+
         if page is not None:
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
 
         return Response(serializer.data)
+
+
+        
+
 
 
 def stdApplyStdView(request):
