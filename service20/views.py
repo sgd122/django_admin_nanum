@@ -31,7 +31,9 @@ class Service20ListSerializer(serializers.ModelSerializer):
         request = self.context['request']
         v_ms_apl = self.context['v_ms_apl']
         l_user_id = request.GET.get('user_id', None)
+        print("===(status)get_start===")
         print(l_user_id)
+        print(v_ms_apl.apl_nm)
         print("===(status)get_end===")
         now = datetime.datetime.today()
         if obj.apl_fr_dt == None:
