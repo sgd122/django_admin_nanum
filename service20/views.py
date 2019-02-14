@@ -76,6 +76,7 @@ class Service20ListView(generics.ListAPIView):
         data = []
         # append new item to data lit
         for val in queryset:
+            print(val.apl_term);
             data.append({
               'ms_id':val.ms_id, 
               'ms_name':val.ms_name,
@@ -85,7 +86,7 @@ class Service20ListView(generics.ListAPIView):
               'img_src':val.img_src,
               'ins_dt':val.ins_dt.strftime('%Y-%m-%d'),
               'ins_id':val.ins_id,
-              'apl_term':val.apl_term,
+              # 'apl_term':val.apl_term,
               'apl_fr_dt':val.apl_fr_dt.strftime('%Y-%m-%d'),
               'apl_to_dt':val.apl_to_dt.strftime('%Y-%m-%d'),
               'trn_fr_dt':val.trn_fr_dt.strftime('%Y-%m-%d'),
