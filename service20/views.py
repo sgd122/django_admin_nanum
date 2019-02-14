@@ -107,7 +107,7 @@ class Service20ListView(generics.ListAPIView):
             })
         print(data)
 
-        return HttpResponse(data, content_type='application/json')
+        # return HttpResponse(data, content_type='application/json')
         # return HttpResponse(json.dumps({"data": data}), content_type='application/json')
 
         # return JsonResponse(data, safe=False)
