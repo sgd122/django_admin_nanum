@@ -73,7 +73,7 @@ class Service20ListView(generics.ListAPIView):
             print(l_trn_term)
             queryset = queryset.filter(trn_term=l_trn_term)
 
-        data = {}
+        data = []
         # append new item to data lit
         for val in queryset:
             data.append({
@@ -96,6 +96,7 @@ class Service20ListView(generics.ListAPIView):
             })
         print(data)
 
+
         # return JsonResponse(data, safe=False)
         # return JsonResponse(json.dumps(data),json_dumps_params={'ensure_ascii': True})
         
@@ -103,7 +104,8 @@ class Service20ListView(generics.ListAPIView):
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, context={'request': request}, many=True)
 
-
+        serializer.serialize("json", {'data': data})
+        
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
