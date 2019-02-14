@@ -507,24 +507,24 @@ def post_msProgramApply(request):
     ms_ida = request.POST.get('ms_id', None)
     #created,created_flag = vm_nanum_stdt.apl_id.get_or_create(user=request.user)
     ms_id_id = programId
-    ms_apl_max = ms_apl.objects.all().aggregate(vlMax=Max('apl_no'))
+    mp_mtr_max = mp_mtr.objects.all().aggregate(vlMax=Max('apl_no'))
     rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
-    #ms_apl_max = ms_apl.objects.all().last()
-    #ms_apl_max = ms_apl_max + 1
-    apl_no = ms_apl_max
+    #mp_mtr_max = mp_mtr.objects.all().last()
+    #mp_mtr_max = mp_mtr_max + 1
+    apl_no = mp_mtr_max
     apl_id = ida
     
-    max_no = ms_apl_max['vlMax']    
+    max_no = mp_mtr_max['vlMax']    
 
     if max_no == None:
         apl_no = 0;
     else:
-        apl_no = ms_apl_max['vlMax']
+        apl_no = mp_mtr_max['vlMax']
         apl_no = apl_no + 1;
     
     
-    model_instance = ms_apl(
-        ms_id_id=ms_id_id, 
+    model_instance = mp_mtr(
+        mp_id=ms_id_id, 
         apl_no=apl_no, 
         apl_id=apl_id,
         apl_nm=rows.apl_nm,
@@ -565,8 +565,8 @@ def post_msProgramApply(request):
 
         print("33")
 
-        model_instance2 = ms_ans(
-            ms_id=ms_id_id, 
+        model_instance2 = mp_ans(
+            mp_id=ms_id_id, 
             test_div='10', 
             apl_no=apl_no,
             ques_no=i+1,
