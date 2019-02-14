@@ -324,7 +324,7 @@ def post_user_info_persion(request):
 
     #created,created_flag = vm_nanum_stdt.apl_id.get_or_create(user=request.user)
     created_flag = vm_nanum_stdt.objects.filter(apl_id=ida).exists()
-    ms_apl_flag = ms_apl.objects.filter(apl_id=ida,ms_id_id=ms_ida).exists()
+    ms_apl_flag = mp_mtr.objects.filter(apl_id=ida,mp_id=ms_ida).exists()
     #mp_mtr
     if not ms_apl_flag:
         applyYn = 'N'
