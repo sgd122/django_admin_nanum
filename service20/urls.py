@@ -20,6 +20,7 @@ urlpatterns = [
 
 
     path('msApply/', post_msApply, name='post_msApply'),
+
     path('mpmgListView/', mpmgListView.as_view(), name='mpmgListView'),
     path('mpmgListPersionView/', mpmgListPersionView.as_view(), name='mpmgListPersionView'),
 
@@ -27,7 +28,8 @@ urlpatterns = [
     path('authUserPersionInfo/', post_user_info_persion, name='post_user_info_persion'),
     # 멘토링 프로그램 질문유형 가져오기
     path('authUserInfoPersionQuest/', post_user_info_persion_Quest.as_view(), name='post_user_info_persion_Quest'), 
-
+    # 멘토링 프로그램 신청
+    path('msProgramApply/', post_msProgramApply, name='post_msProgramApply'),
 
 
 
