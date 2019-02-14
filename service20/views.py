@@ -54,7 +54,7 @@ class Service20ListSerializer(serializers.ModelSerializer):
         l_user_id = request.GET.get('user_id', None)
         print(l_user_id)
         print("===get_end===")
-        print(v_ms_apl.apl_nm)
+        print(v_ms_apl.objects.all())
 
 class Service20ListView(generics.ListAPIView):
 
