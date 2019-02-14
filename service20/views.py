@@ -34,7 +34,6 @@ class Service20ListSerializer(serializers.ModelSerializer):
         v_ms_apl= self.get_queryset()
         print("===(status)get_start===")
         print(l_user_id)
-        print(v_ms_apl.apl_id)
         print("===(status)get_end===")
         now = datetime.datetime.today()
         if obj.apl_fr_dt == None:
@@ -55,7 +54,6 @@ class Service20ListSerializer(serializers.ModelSerializer):
         l_user_id = request.GET.get('user_id', None)
         print(l_user_id)
         print("===get_end===")
-        print(v_ms_apl.objects.all())
 
 class Service20ListView(generics.ListAPIView):
 
@@ -71,6 +69,7 @@ class Service20ListView(generics.ListAPIView):
 
         v_ms_apl = ms_apl.objects.all()
         v_ms_apl.filter(apl_id=l_user_id,yr=l_yr)
+        print("::v_ms_apl::")
         print(v_ms_apl)
 
         queryset = self.get_queryset()
