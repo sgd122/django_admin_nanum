@@ -29,6 +29,10 @@ class Service20ListSerializer(serializers.ModelSerializer):
 
     def get_status(self,obj):
         request = self.context['request']
+        v_ms_apl = self.context['v_ms_apl']
+        l_user_id = request.GET.get('user_id', None)
+        print(l_user_id)
+        print("===(status)get_end===")
         now = datetime.datetime.today()
         if obj.apl_fr_dt == None:
             return '개설중'
@@ -44,9 +48,11 @@ class Service20ListSerializer(serializers.ModelSerializer):
 
     def get_applyYn(self,obj):
         request = self.context['request']
+        v_ms_apl = self.context['v_ms_apl']
         l_user_id = request.GET.get('user_id', None)
         print(l_user_id)
         print("===get_end===")
+        print(v_ms_apl.apl_nm)
 
 class Service20ListView(generics.ListAPIView):
 
