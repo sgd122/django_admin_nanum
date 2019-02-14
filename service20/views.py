@@ -67,9 +67,9 @@ class Service20ListView(generics.ListAPIView):
         l_user_id = request.GET.get('user_id', None)
 
         v_ms_apl = ms_apl.objects.all()
-        v_ms_apl.filter(apl_id=l_user_id,yr=l_yr)
+        v_ms_apl.filter(apl_id=l_user_id,yr=l_yr).values_list('ms_id_id', flat=True) 
         print("::v_ms_apl::")
-        print(v_ms_apl)
+        # print(v_ms_apl.ms_id_id)
 
         queryset = self.get_queryset()
         if l_yr != '':
@@ -107,6 +107,7 @@ class Service20ListView(generics.ListAPIView):
             })
         print(data)
 
+        return HttpResponse(data, content_type='application/json')
         # return HttpResponse(json.dumps({"data": data}), content_type='application/json')
 
         # return JsonResponse(data, safe=False)
@@ -147,9 +148,15 @@ def Service20_01_View(request):
 def post_user_info(request):
     ida = request.POST.get('user_id', None)
     ms_ida = request.POST.get('ms_id', None)
+    l_yr = request.POST.get('yr', None)
+    
+    
     #created,created_flag = vm_nanum_stdt.apl_id.get_or_create(user=request.user)
     created_flag = vm_nanum_stdt.objects.filter(apl_id=ida).exists()
-    ms_apl_flag = ms_apl.objects.filter(apl_id=ida,ms_id_id=ms_ida).exists()
+
+    # ms_apl_flag = ms_apl.objects.filter(apl_id=ida,ms_id_id=ms_ida).exists()
+    ms_apl_flag = ms_apl.objects.filter(apl_id=ida,yr=l_yr,ms_id_id=ms_ida).exists()
+
     if not ms_apl_flag:
         applyYn = 'N'
     else:
@@ -313,6 +320,8 @@ class post_user_info_persion_Quest(generics.ListAPIView):
 def post_user_info_persion(request):
     ida = request.POST.get('user_id', None)
     ms_ida = request.POST.get('ms_id', None)
+    l_yr = request.POST.get('yr', None)
+
     #created,created_flag = vm_nanum_stdt.apl_id.get_or_create(user=request.user)
     created_flag = vm_nanum_stdt.objects.filter(apl_id=ida).exists()
     ms_apl_flag = ms_apl.objects.filter(apl_id=ida,ms_id_id=ms_ida).exists()
@@ -332,7 +341,7 @@ def post_user_info_persion(request):
         message = "Ok"
         rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
         rows2 = mp_sub.objects.filter(ms_id=ms_ida)
-        rows3 = msch.objects.filter(ms_id=ms_ida)[0]
+        rows3 = mpgm.objects.filter(mp_id=ms_ida)[0]
 
 
         for val in rows2:
@@ -386,8 +395,8 @@ def post_user_info_persion(request):
                     'score04' : rows.score04,
                     'score04_tp' : rows.score04_tp,
                     'score05' : rows.score05,
-                    'ms_id' : rows3.ms_id,
-                    'ms_name' : rows3.ms_name,
+                    'ms_id' : rows3.mp_id,
+                    'ms_name' : rows3.mp_name,
                     }
     
 
@@ -395,9 +404,98 @@ def post_user_info_persion(request):
     return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 
-
+# 멘토스쿨 신청
 @csrf_exempt
 def post_msApply(request):
+    ida = request.POST.get('memberNo', None)
+    programId = request.POST.get('programID', None)
+    que1 = request.POST.get('que1', None)
+    que2 = request.POST.get('que2', None)
+    que3 = request.POST.get('que3', None)
+    que4 = request.POST.get('que4', None)
+    que5 = request.POST.get('que5', None)
+
+    ms_ida = request.POST.get('ms_id', None)
+    #created,created_flag = vm_nanum_stdt.apl_id.get_or_create(user=request.user)
+    ms_id_id = programId
+    ms_apl_max = ms_apl.objects.all().aggregate(vlMax=Max('apl_no'))
+    rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
+    #ms_apl_max = ms_apl.objects.all().last()
+    #ms_apl_max = ms_apl_max + 1
+    apl_no = ms_apl_max
+    apl_id = ida
+    
+    max_no = ms_apl_max['vlMax']    
+
+    if max_no == None:
+        apl_no = 0;
+    else:
+        apl_no = ms_apl_max['vlMax']
+        apl_no = apl_no + 1;
+    
+    
+    model_instance = ms_apl(
+        ms_id_id=ms_id_id, 
+        apl_no=apl_no, 
+        apl_id=apl_id,
+        apl_nm=rows.apl_nm,
+        unv_cd=rows.univ_cd,
+        unv_nm=rows.univ_nm,
+        cllg_cd=rows.cllg_cd,
+        cllg_nm=rows.cllg_nm,
+        dept_cd=rows.dept_cd,
+        dept_nm=rows.dept_nm,
+        brth_dt=rows.brth_dt,
+        gen=rows.gen_cd,
+        yr=rows.yr,
+        term_div=rows.term_div,
+        sch_yr=rows.sch_yr,
+        mob_no=rows.mob_nm,
+        tel_no=rows.tel_no,
+        tel_no_g=rows.tel_no_g,
+        h_addr=rows.h_addr,
+        score1=rows.score01,
+        score2=rows.score02,
+        score3=rows.score03,
+        score4=rows.score04,
+        score5=rows.score05,
+        )
+    model_instance.save()
+    
+    for i in range(0,5):
+        if i==0:
+            anst2 = que1
+        if i==1:
+            anst2 = que2
+        if i==2:
+            anst2 = que3
+        if i==3:
+            anst2 = que4
+        if i==4:
+            anst2 = que5
+
+        print("33")
+
+        model_instance2 = ms_ans(
+            ms_id=ms_id_id, 
+            test_div='10', 
+            apl_no=apl_no,
+            ques_no=i+1,
+            apl_id=apl_id,
+            apl_nm=rows.apl_nm,
+            sort_seq =i+1,
+            ans_t2=anst2
+            )
+        model_instance2.save()
+        print("44cc")
+    context = {'message': 'Ok'}
+
+    #return HttpResponse(json.dumps(context), content_type="application/json")
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+
+# 멘토링 프로그램 신청
+@csrf_exempt
+def post_msProgramApply(request):
     ida = request.POST.get('memberNo', None)
     programId = request.POST.get('programID', None)
     que1 = request.POST.get('que1', None)
@@ -665,7 +763,6 @@ def post_user_info(request):
 
     #return HttpResponse(json.dumps(context), content_type="application/json")
     return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
-
 
 
 
