@@ -47,12 +47,34 @@ urlpatterns = [
     # 멘토링 프로그램 질문유형 가져오기
     path('authUserInfoPersionQuest/', post_user_info_persion_Quest.as_view(), name='post_user_info_persion_Quest'), 
     # 멘토링 프로그램 신청
-    path('msProgramApply/', post_msProgramApply, name='post_msProgramApply'),    
+    path('msProgramApply/', post_msProgramApply, name='post_msProgramApply'), 
+    # authUserPersionInfo 멘토링 프로그램에서도 공동으로 사용.   
     ########################################################################################
     # 멘토링 프로그램
     #
     ########################################################################################
     
+    ########################################################################################
+    # 프로그램 수행계획서
+    #
+    ########################################################################################
+    # 프로그램 수행계획서 리스트
+    path('mpPlnh_mpgmListView/', mpPlnh_mpgmListView.as_view(), name='mpPlnh_mpgmListView'),
+    ########################################################################################
+    # 프로그램 수행계획서
+    #
+    ########################################################################################
+
+    ########################################################################################
+    # 학습외신청(멘토) 리스트
+    #
+    ########################################################################################
+    # 학습외신청(멘토) 리스트
+    path('mpSpc_ListView/', mpSpc_ListView.as_view(), name='mpSpc_ListView'),   
+    ########################################################################################
+    # 학습외신청(멘토) 리스트
+    #
+    ########################################################################################
     
     #멘토스쿨 콤보박스
     path('comboMpmgListView/', comboMpmgListView.as_view(), name='comboMpmgListView'),
@@ -62,9 +84,4 @@ urlpatterns = [
     path('msFn1/', msFn1, name='msFn1'),
 
     
-
-    # 프로그램 수행계획서 리스트
-    path('mpPlnh_mpgmListView/', mpPlnh_mpgmListView.as_view(), name='mpPlnh_mpgmListView'),
-    # 학습외신청(멘토) 리스트
-    path('mpSpc_ListView/', mpSpc_ListView.as_view(), name='mpSpc_ListView'),   
 ]
