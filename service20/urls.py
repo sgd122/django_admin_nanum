@@ -17,9 +17,10 @@ urlpatterns = [
 
     path('authUserInfo/', post_user_info, name='post_user_info'),
     path('authUserInfoQuest/', post_user_info_Quest.as_view(), name='post_user_info_Quest'),
-
+    
 
     path('msApply/', post_msApply, name='post_msApply'),
+
     path('mpmgListView/', mpmgListView.as_view(), name='mpmgListView'),
     path('mpmgListPersionView/', mpmgListPersionView.as_view(), name='mpmgListPersionView'),
 
@@ -27,8 +28,12 @@ urlpatterns = [
     path('authUserPersionInfo/', post_user_info_persion, name='post_user_info_persion'),
     # 멘토링 프로그램 질문유형 가져오기
     path('authUserInfoPersionQuest/', post_user_info_persion_Quest.as_view(), name='post_user_info_persion_Quest'), 
-
-
+    # 멘토링 프로그램 신청
+    path('msProgramApply/', post_msProgramApply, name='post_msProgramApply'),
+    # 멘토스쿨(관리자) - 질문
+    path('authUserInfoViewQuest/', post_user_info_view_Quest.as_view(), name='post_user_info_view_Quest'),
+    # 프로그램 수행계획서 리스트
+    path('mpPlnh_mpgmListView/', mpPlnh_mpgmListView.as_view(), name='mpPlnh_mpgmListView'),
 
 
     #멘토스쿨 콤보박스
