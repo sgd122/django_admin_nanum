@@ -334,7 +334,7 @@ class post_user_info_persion_view_Quest_Serializer2(serializers.ModelSerializer)
 
     class Meta:
         model = mp_ans
-        fields = ('id','ms_id','test_div','apl_no','ques_no','apl_id','apl_nm','sort_seq','ans_t1','ans_t2','ans_t3','score')        
+        fields = ('id','mp_id','test_div','apl_no','ques_no','apl_id','apl_nm','sort_seq','ans_t1','ans_t2','ans_t3','score')        
 
 # 멘토링 프로그램(관리자) - 질문
 class post_user_info_persion_view_Quest(generics.ListAPIView):
@@ -342,7 +342,7 @@ class post_user_info_persion_view_Quest(generics.ListAPIView):
     serializer_class = post_user_info_persion_view_Quest_Serializer2
     def list(self, request):
         #mp_sub 테이블에서 질문내역 조회
-        key1 = request.GET.get('ms_id', None) 
+        key1 = request.GET.get('mp_id', None) 
         l_user_id = request.GET.get('user_id', None)           
         l_exist = mp_sub.objects.filter(ms_id=key1).exists()
         
