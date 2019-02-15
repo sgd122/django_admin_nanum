@@ -34,7 +34,8 @@ urlpatterns = [
     path('authUserInfoViewQuest/', post_user_info_view_Quest.as_view(), name='post_user_info_view_Quest'),
     # 프로그램 수행계획서 리스트
     path('mpPlnh_mpgmListView/', mpPlnh_mpgmListView.as_view(), name='mpPlnh_mpgmListView'),
-
+    # 학습외신청(멘토) 리스트
+    path('mpSpc_ListView/', mpSpc_ListView.as_view(), name='mpSpc_ListView'),
 
     #멘토스쿨 콤보박스
     path('comboMpmgListView/', comboMpmgListView.as_view(), name='comboMpmgListView'),
