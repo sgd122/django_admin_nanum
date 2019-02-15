@@ -17,7 +17,7 @@ urlpatterns = [
 
     path('authUserInfo/', post_user_info, name='post_user_info'),
     path('authUserInfoQuest/', post_user_info_Quest.as_view(), name='post_user_info_Quest'),
-
+    
 
     path('msApply/', post_msApply, name='post_msApply'),
 
@@ -30,7 +30,8 @@ urlpatterns = [
     path('authUserInfoPersionQuest/', post_user_info_persion_Quest.as_view(), name='post_user_info_persion_Quest'), 
     # 멘토링 프로그램 신청
     path('msProgramApply/', post_msProgramApply, name='post_msProgramApply'),
-
+    # 멘토스쿨(관리자) - 질문
+    path('authUserInfoViewQuest/', post_user_info_view_Quest.as_view(), name='post_user_info_view_Quest'),
 
 
     #멘토스쿨 콤보박스
