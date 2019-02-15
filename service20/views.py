@@ -305,11 +305,6 @@ class post_user_info_view_Quest(generics.ListAPIView):
             queryset = query_ans
             #ms_ans 테이블에서 답변내역 조회
 
-            cars_list = sorted(
-                chain(queryset, query_ans),
-                key=lambda car: car.created, reverse=True)
-
-
 
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
