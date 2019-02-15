@@ -280,7 +280,8 @@ class post_user_info_view_Quest(generics.ListAPIView):
     serializer_class = post_user_info_Quest_Serializer
     def list(self, request):
         #ms_sub 테이블에서 질문내역 조회
-        key1 = request.GET.get('ms_id', None)           
+        key1 = request.GET.get('ms_id', None) 
+        l_user_id = request.GET.get('user_id', None)           
         l_exist = ms_sub.objects.filter(ms_id_id=key1).exists()
         
         queryset = self.get_queryset()
@@ -296,6 +297,19 @@ class post_user_info_view_Quest(generics.ListAPIView):
             else:
                 queryset = queryset.filter(std_grp_code=l_key1)
             #조회한 질문내역 기준으로 공통코드 조회
+
+
+            query_ans = ms_ans.objects.all()
+            query_ans = query_ans.filter(ms_id=key1,apl_id=l_user_id)
+
+            queryset = query_ans
+            #ms_ans 테이블에서 답변내역 조회
+
+            cars_list = sorted(
+                chain(queryset, query_ans),
+                key=lambda car: car.created, reverse=True)
+
+
 
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
