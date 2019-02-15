@@ -333,7 +333,7 @@ class post_user_info_view_Quest(generics.ListAPIView):
 class post_user_info_persion_view_Quest_Serializer2(serializers.ModelSerializer):
 
     class Meta:
-        model = ms_ans
+        model = mp_ans
         fields = ('id','ms_id','test_div','apl_no','ques_no','apl_id','apl_nm','sort_seq','ans_t1','ans_t2','ans_t3','score')        
 
 # 멘토링 프로그램(관리자) - 질문
@@ -341,18 +341,18 @@ class post_user_info_persion_view_Quest(generics.ListAPIView):
     queryset = com_cdd.objects.all()
     serializer_class = post_user_info_persion_view_Quest_Serializer2
     def list(self, request):
-        #ms_sub 테이블에서 질문내역 조회
+        #mp_sub 테이블에서 질문내역 조회
         key1 = request.GET.get('ms_id', None) 
         l_user_id = request.GET.get('user_id', None)           
-        l_exist = ms_sub.objects.filter(ms_id_id=key1).exists()
+        l_exist = mp_sub.objects.filter(ms_id=key1).exists()
         
         queryset = self.get_queryset()
         if not l_exist:
             queryset = queryset.filter(std_grp_code='')
         else:
-            l_key1 = ms_sub.objects.filter(ms_id_id=key1)[0].att_cdh
-            l_key_query = ms_sub.objects.filter(ms_id_id=key1).values_list('att_cdd_id', flat=True) 
-            #ms_sub 테이블에서 질문내역 조회
+            l_key1 = mp_sub.objects.filter(ms_id=key1)[0].att_cdh
+            l_key_query = mp_sub.objects.filter(ms_id=key1).values_list('att_cdd', flat=True) 
+            #mp_sub 테이블에서 질문내역 조회
             
             if not l_key_query:
                 queryset = queryset.filter(std_grp_code=l_key1, std_detl_code__in=l_key_query)
@@ -361,11 +361,11 @@ class post_user_info_persion_view_Quest(generics.ListAPIView):
             #조회한 질문내역 기준으로 공통코드 조회
 
 
-            query_ans = ms_ans.objects.all()
+            query_ans = mp_ans.objects.all()
             query_ans = query_ans.filter(ms_id=key1,apl_id=l_user_id)
 
             queryset = query_ans
-            #ms_ans 테이블에서 답변내역 조회
+            #mp_ans 테이블에서 답변내역 조회
 
 
         serializer_class = self.get_serializer_class()
