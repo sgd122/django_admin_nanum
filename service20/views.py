@@ -867,6 +867,41 @@ class mpPlnh_mpgmListView(generics.ListAPIView):
     queryset = mpgm.objects.all()
     serializer_class = mpPlnh_mpgmListSerializer
 
+    # mp_mtr - 프로그램 지원자(멘토) => mp_id(멘토링ID), apl_id
+    # mp_mte - 프로그램 지원자(멘티) => mp_id(멘토링ID)
+
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+######################################################################
+
+# 학습외신청(멘토) 리스트 ###################################################
+class mpSpc_ListSerializer(serializers.ModelSerializer):
+
+    testField = serializers.SerializerMethodField()
+    class Meta:
+        model = mp_spc
+        fields = ('id','mp_id','spc_no','spc_div','status','spc_name','spc_intro','yr','yr_seq','apl_ntc_fr_dt','apl_ntc_to_dt','apl_term','apl_fr_dt','apl_to_dt','mnt_term','mnt_fr_dt','mnt_to_dt','cnf_dt','appr_tm','tot_apl','cnt_apl','cnt_pln','cnt_att','use_div','pic_div','rep_div','ord_div','grd_appr_div','tch_appr_div')
+
+    def get_testField(self, obj):
+        return 'test'     
+
+
+class mpSpc_ListView(generics.ListAPIView):
+    queryset = mp_spc.objects.all()
+    serializer_class = mpPlnh_mpgmListSerializer
+
+    # mp_spc
+
     def list(self, request):
         queryset = self.get_queryset()
         serializer_class = self.get_serializer_class()
