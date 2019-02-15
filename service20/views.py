@@ -362,7 +362,7 @@ class post_user_info_persion_view_Quest(generics.ListAPIView):
 
 
             query_ans = mp_ans.objects.all()
-            query_ans = query_ans.filter(ms_id=key1,apl_id=l_user_id)
+            query_ans = query_ans.filter(mp_id=key1,apl_id=l_user_id)
 
             queryset = query_ans
             #mp_ans 테이블에서 답변내역 조회
