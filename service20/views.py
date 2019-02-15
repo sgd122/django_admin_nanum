@@ -275,9 +275,22 @@ class post_user_info_Quest(generics.ListAPIView):
         return Response(serializer.data)
 
 # 멘토스쿨(관리자) - 질문
+class post_user_info_view_Quest_Serializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = com_cdd
+        fields = ('std_grp_code','std_detl_code','std_detl_code_nm','rmrk','use_indc')
+# 멘토스쿨(관리자) - 질문2
+class post_user_info_view_Quest_Serializer2(serializers.ModelSerializer):
+
+    class Meta:
+        model = ms_ans
+        fields = ('id','ms_id','test_div','apl_no','ques_no','apl_id','apl_nm','sort_seq','ans_t1','ans_t2','ans_t3','score')        
+
+# 멘토스쿨(관리자) - 질문
 class post_user_info_view_Quest(generics.ListAPIView):
     queryset = com_cdd.objects.all()
-    serializer_class = post_user_info_Quest_Serializer
+    serializer_class = post_user_info_view_Quest_Serializer2
     def list(self, request):
         #ms_sub 테이블에서 질문내역 조회
         key1 = request.GET.get('ms_id', None) 
