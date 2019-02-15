@@ -849,3 +849,34 @@ def post_mt_quest(request):
 ####################################################################################
 
 
+
+
+# 프로그램 수행계획서 리스트 ###################################################
+class mpPlnh_mpgmListSerializer(serializers.ModelSerializer):
+
+    testField = serializers.SerializerMethodField()
+    class Meta:
+        model = mpgm
+        fields = ('mp_id','mp_name','status','img_src','testField')
+
+    def get_testField(self, obj):
+        return 'test'     
+
+
+class mpPlnh_mpgmListView(generics.ListAPIView):
+    queryset = mpgm.objects.all()
+    serializer_class = mpPlnh_mpgmListSerializer
+
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+######################################################################

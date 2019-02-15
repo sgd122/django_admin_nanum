@@ -32,6 +32,8 @@ urlpatterns = [
     path('msProgramApply/', post_msProgramApply, name='post_msProgramApply'),
     # 멘토스쿨(관리자) - 질문
     path('authUserInfoViewQuest/', post_user_info_view_Quest.as_view(), name='post_user_info_view_Quest'),
+    # 프로그램 수행계획서 리스트
+    path('mpPlnh_mpgmListView/', mpPlnh_mpgmListView.as_view(), name='mpPlnh_mpgmListView'),
 
 
     #멘토스쿨 콤보박스
