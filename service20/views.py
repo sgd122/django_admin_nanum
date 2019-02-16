@@ -668,8 +668,8 @@ def post_msProgramApply(request):
         )
     model_instance.save()
     
-    apl_max = apl_max*1
-    
+    apl_max = int(apl_max)
+
     for i in range(0,apl_max):
         if i==0:
             anst2 = que1
