@@ -582,7 +582,7 @@ def post_msApply(request):
         ques_no = request.POST.get('ques_no'+str(i+1), None)
 
         model_instance2 = ms_ans(
-            mp_id=ms_id_id, 
+            ms_id=ms_id_id, 
             test_div='10', 
             apl_no=apl_no,
             ques_no=ques_no,
