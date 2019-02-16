@@ -617,7 +617,7 @@ def post_msProgramApply(request):
     que5 = request.POST.get('que5', None)
 
     ms_ida = request.POST.get('ms_id', None)
-    apl_max = request.POST.get('apl_max', 0)
+    apl_max = request.POST.get('aplMax', 0)
     print("===>");
     print(apl_max);
     print("<===");
