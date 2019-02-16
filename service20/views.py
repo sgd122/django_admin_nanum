@@ -528,6 +528,7 @@ def post_msApply(request):
     que5 = request.POST.get('que5', None)
 
     ms_ida = request.POST.get('ms_id', None)
+    apl_max = request.POST.get('aplMax', 0)
     #created,created_flag = vm_nanum_stdt.apl_id.get_or_create(user=request.user)
     ms_id_id = programId
     ms_apl_max = ms_apl.objects.all().aggregate(vlMax=Max('apl_no'))
@@ -574,25 +575,17 @@ def post_msApply(request):
         )
     model_instance.save()
     
-    for i in range(0,5):
-        if i==0:
-            anst2 = que1
-        if i==1:
-            anst2 = que2
-        if i==2:
-            anst2 = que3
-        if i==3:
-            anst2 = que4
-        if i==4:
-            anst2 = que5
+    apl_max = int(apl_max)
 
-        print("33")
+    for i in range(0,apl_max):
+        anst2 = request.POST.get('que'+str(i+1), None)
+        ques_no = request.POST.get('ques_no'+str(i+1), None)
 
-        model_instance2 = ms_ans(
-            ms_id=ms_id_id, 
+        model_instance2 = mp_ans(
+            mp_id=ms_id_id, 
             test_div='10', 
             apl_no=apl_no,
-            ques_no=i+1,
+            ques_no=ques_no,
             apl_id=apl_id,
             apl_nm=rows.apl_nm,
             sort_seq =i+1,
