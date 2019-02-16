@@ -682,7 +682,7 @@ def post_msProgramApply(request):
         if i==4:
             anst2 = que5
 
-        anst2 = request.POST.get('que'+i, None)
+        anst2 = request.POST.get('que'+str(i), None)
         print(anst2)
 
         model_instance2 = mp_ans(
