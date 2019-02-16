@@ -332,7 +332,7 @@ class post_user_info_view_Quest(generics.ListAPIView):
 # 멘토링 프로그램(관리자) - 질문2
 class post_user_info_persion_view_Quest_Serializer2(serializers.ModelSerializer):
 
-    com_cddSerializer = post_user_info_view_Quest_Serializer(many=True, read_only=True)
+    # com_cddSerializer = post_user_info_view_Quest_Serializer(many=True, read_only=True)
     
     class Meta:
         model = mp_ans
