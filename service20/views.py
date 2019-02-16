@@ -618,6 +618,7 @@ def post_msProgramApply(request):
 
     ms_ida = request.POST.get('ms_id', None)
     apl_max = request.POST.get('apl_max', None)
+    print(apl_max)
     #created,created_flag = vm_nanum_stdt.apl_id.get_or_create(user=request.user)
     ms_id_id = programId
     mp_mtr_max = mp_mtr.objects.all().aggregate(vlMax=Max('apl_no'))
@@ -676,7 +677,7 @@ def post_msProgramApply(request):
             anst2 = que4
         if i==4:
             anst2 = que5
-            
+
         anst2 = request.POST.get('que'+i, None)
         print(anst2)
 
