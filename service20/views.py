@@ -332,13 +332,18 @@ class post_user_info_view_Quest(generics.ListAPIView):
 # 멘토링 프로그램(관리자) - 질문2
 class post_user_info_persion_view_Quest_Serializer2(serializers.ModelSerializer):
 
-    com_cddSerializer = post_user_info_view_Quest_Serializer(many=True, read_only=True)
+    comCddTable = post_user_info_view_Quest_Serializer(many=True, read_only=True)
 
     class Meta:
         model = mp_ans
-        fields = ('id','mp_id','test_div','apl_no','ques_no','apl_id','apl_nm','sort_seq','ans_t1','ans_t2','ans_t3','score','com_cddSerializer')        
+        fields = ('id','mp_id','test_div','apl_no','ques_no','apl_id','apl_nm','sort_seq','ans_t1','ans_t2','ans_t3','score','comCddTable')        
 
-    
+    # def create(self, validated_data):
+    #     profile_data = validated_data.pop('comCddTable')
+    #     user = User.objects.create(**validated_data)
+    #     Profile.objects.create(user=user, **profile_data)
+    #     return user
+
 # 멘토링 프로그램(관리자) - 질문
 class post_user_info_persion_view_Quest(generics.ListAPIView):
     queryset = com_cdd.objects.all()
