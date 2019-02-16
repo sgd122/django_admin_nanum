@@ -617,6 +617,7 @@ def post_msProgramApply(request):
     que5 = request.POST.get('que5', None)
 
     ms_ida = request.POST.get('ms_id', None)
+    apl_max = request.POST.get('apl_max', None)
     #created,created_flag = vm_nanum_stdt.apl_id.get_or_create(user=request.user)
     ms_id_id = programId
     mp_mtr_max = mp_mtr.objects.all().aggregate(vlMax=Max('apl_no'))
@@ -664,7 +665,7 @@ def post_msProgramApply(request):
         )
     model_instance.save()
     
-    for i in range(0,5):
+    for i in range(0,apl_max):
         if i==0:
             anst2 = que1
         if i==1:
@@ -675,8 +676,9 @@ def post_msProgramApply(request):
             anst2 = que4
         if i==4:
             anst2 = que5
-
-        print("33")
+            
+        anst2 = request.POST.get('que'+i, None)
+        print(anst2)
 
         model_instance2 = mp_ans(
             mp_id=ms_id_id, 
