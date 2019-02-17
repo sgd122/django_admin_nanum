@@ -67,54 +67,9 @@ class Service20ListView(generics.ListAPIView):
         l_trn_term = request.GET.get('trn_term', None)
         l_user_id = request.GET.get('user_id', None)
 
-        v_ms_apl = ms_apl.objects.all()
-        v_ms_apl.filter(apl_id=l_user_id,yr=l_yr).values_list('ms_id', flat=True) 
-        print("::v_ms_apl::")
-        # print(v_ms_apl.ms_id)
+        query = "select ifnull((select 'Y' from service20_ms_apl where yr = '"+str(l_yr)+"' and term_div = '"+str(l_apl_term)+"' and apl_id = '"+str(ida)+"' and ms_id = A.ms_id),'N') AS applyFlag,A.* from service20_msch A where A.yr='"+str(l_yr)+"' and A.apl_term='"+str(l_apl_term)+"'"
+        queryset = msch.objects.raw(query)
 
-        queryset = self.get_queryset()
-        if l_yr != '':
-            print(l_yr)
-            queryset = queryset.filter(yr=l_yr)
-
-        if l_trn_term != '':
-            print(l_trn_term)
-            queryset = queryset.filter(trn_term=l_trn_term)
-
-        # qs1 = msch.objects.extra(where=['whole_id = "ms_apl"."id"']) 
-
-
-        data = []
-        # append new item to data lit
-        for val in queryset:
-            print(val.apl_term);
-            data.append({
-              'ms_id':val.ms_id, 
-              'ms_name':val.ms_name,
-              'yr':val.yr,
-              'yr_seq':val.yr_seq,
-              'sup_org':val.sup_org,
-              'img_src':val.img_src,
-              # 'img_src':'',
-              'ins_dt':val.ins_dt.strftime('%Y-%m-%d'),
-              'ins_id':val.ins_id,
-              # 'apl_term':val.apl_term,
-              'apl_fr_dt':val.apl_fr_dt.strftime('%Y-%m-%d'),
-              'apl_to_dt':val.apl_to_dt.strftime('%Y-%m-%d'),
-              'trn_fr_dt':val.trn_fr_dt.strftime('%Y-%m-%d'),
-              'trn_to_dt':val.trn_to_dt.strftime('%Y-%m-%d'),
-              'tot_apl':val.tot_apl,
-              'cnt_apl':val.cnt_apl,
-              'status':val.status,
-            })
-        print(data)
-
-        # return HttpResponse(data, content_type='application/json')
-        # return HttpResponse(json.dumps({"data": data}), content_type='application/json')
-
-        # return JsonResponse(data, safe=False)
-        # return JsonResponse(json.dumps(data),json_dumps_params={'ensure_ascii': True})
-        
         
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, context={'request': request,'v_ms_apl':v_ms_apl}, many=True)
