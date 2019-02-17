@@ -26,8 +26,7 @@ urlpatterns = [
     ########################################################################################
     #멘토스쿨 리스트
     path('', Service20ListView.as_view(), name='Service20ListView'),
-    # 성적,봉사,어학 가져오기
-    path('authUserPersionInfo/', post_user_info_persion, name='post_user_info_persion'),
+    
     # 멘토스쿨 기본정보
     path('authUserInfo/', post_user_info, name='post_user_info'),
     # 멘토스쿨 질문유형
@@ -52,6 +51,8 @@ urlpatterns = [
     path('authUserInfoPersionQuest/', post_user_info_persion_Quest.as_view(), name='post_user_info_persion_Quest'), 
     # 멘토링 프로그램 신청
     path('msProgramApply/', post_msProgramApply, name='post_msProgramApply'), 
+    # 성적,봉사,어학 가져오기
+    path('authUserPersionInfo/', post_user_info_persion, name='post_user_info_persion'),
     # 멘토링 프로그램(관리자) - 질문
     path('authUserInfoPersionViewQuest/', post_user_info_persion_view_Quest.as_view(), name='post_user_info_persion_view_Quest'),
     # authUserPersionInfo 멘토링 프로그램에서도 공동으로 사용.   
