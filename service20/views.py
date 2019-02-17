@@ -361,18 +361,26 @@ class post_user_info_persion_Quest(generics.ListAPIView):
 
 class post_user_info_persion_Serializer(serializers.ModelSerializer):
     
-    # std_detl_code_nm = serializers.SerializerMethodField()
-    # rmrk = serializers.SerializerMethodField()
+    mp_name = serializers.SerializerMethodField()
+    pr_yr = serializers.SerializerMethodField()
+    pr_sch_yr = serializers.SerializerMethodField()
+    pr_term_div = serializers.SerializerMethodField()
 
     class Meta:
         model = mp_mtr
-        fields = ('mp_id','apl_no','mntr_id','indv_div','team_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','bank_acct','bank_cd','bank_nm','bank_dpsr','cnt_mp_a','cnt_mp_p','cnt_mp_c','cnt_mp_g','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm')
+        fields = ('mp_id','apl_no','mntr_id','indv_div','team_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','bank_acct','bank_cd','bank_nm','bank_dpsr','cnt_mp_a','cnt_mp_p','cnt_mp_c','cnt_mp_g','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','mp_name','pr_yr','pr_sch_yr','pr_term_div')
 
-    # def get_std_detl_code_nm(self,obj):
-    #     return obj.std_detl_code_nm
+    def get_mp_name(self,obj):
+        return obj.mp_name
 
-    # def get_rmrk(self,obj):
-    #     return obj.rmrk
+    def get_pr_yr(self,obj):
+        return obj.pr_yr
+
+    def get_pr_sch_yr(self,obj):
+        return obj.pr_sch_yr
+
+    def get_pr_pr_term_div(self,obj):
+        return obj.pr_term_div    
 
 # @csrf_exempt
 # def post_user_info_persion(request):
@@ -385,7 +393,8 @@ class post_user_info_persion(generics.ListAPIView):
         ms_ida = request.GET.get('ms_id', None)
         l_yr = request.GET.get('yr', None)
         
-        query = "select A.* from service20_mp_mtr A where yr='"+l_yr+"' and mp_id = '"+ms_ida+"' and apl_id='"+ida+"'"
+        # mpgm
+        query = "select C.mp_name,B.pr_yr,B.pr_sch_yr,B.pr_term_div,A.* from service20_mp_mtr A,service10_vm_nanum_stdt B,service20_mpgm C where A.apl_id=B.apl_id and A.mp_id = C.mp_id and A.yr='"+l_yr+"' and A.mp_id = '"+ms_ida+"' and A.apl_id='"+ida+"'"
         queryset = mp_mtr.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
