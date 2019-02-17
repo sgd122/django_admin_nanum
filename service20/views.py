@@ -25,7 +25,7 @@ class Service20ListSerializer(serializers.ModelSerializer):
     class Meta:
         model = msch
         fields = ('ms_id', 'ms_name','yr','yr_seq','sup_org','img_src','ins_dt','ins_id','apl_term','apl_fr_dt','apl_to_dt','trn_fr_dt','trn_to_dt','tot_apl','cnt_apl','status','applyYn')
-
+        # fields = ('ms_id', 'ms_name','yr','yr_seq','sup_org','ins_dt','ins_id','apl_term','apl_fr_dt','apl_to_dt','trn_fr_dt','trn_to_dt','tot_apl','cnt_apl','status','applyYn')
 
     def get_status(self,obj):
         request = self.context['request']
@@ -67,9 +67,9 @@ class Service20ListView(generics.ListAPIView):
         l_user_id = request.GET.get('user_id', None)
 
         v_ms_apl = ms_apl.objects.all()
-        v_ms_apl.filter(apl_id=l_user_id,yr=l_yr).values_list('ms_id_id', flat=True) 
+        v_ms_apl.filter(apl_id=l_user_id,yr=l_yr).values_list('ms_id', flat=True) 
         print("::v_ms_apl::")
-        # print(v_ms_apl.ms_id_id)
+        # print(v_ms_apl.ms_id)
 
         queryset = self.get_queryset()
         if l_yr != '':
@@ -94,6 +94,7 @@ class Service20ListView(generics.ListAPIView):
               'yr_seq':val.yr_seq,
               'sup_org':val.sup_org,
               'img_src':val.img_src,
+              # 'img_src':'',
               'ins_dt':val.ins_dt.strftime('%Y-%m-%d'),
               'ins_id':val.ins_id,
               # 'apl_term':val.apl_term,
@@ -154,8 +155,8 @@ def post_user_info(request):
     #created,created_flag = vm_nanum_stdt.apl_id.get_or_create(user=request.user)
     created_flag = vm_nanum_stdt.objects.filter(apl_id=ida).exists()
 
-    # ms_apl_flag = ms_apl.objects.filter(apl_id=ida,ms_id_id=ms_ida).exists()
-    ms_apl_flag = ms_apl.objects.filter(apl_id=ida,yr=l_yr,ms_id_id=ms_ida).exists()
+    # ms_apl_flag = ms_apl.objects.filter(apl_id=ida,ms_id=ms_ida).exists()
+    ms_apl_flag = ms_apl.objects.filter(apl_id=ida,yr=l_yr,ms_id=ms_ida).exists()
 
     if not ms_apl_flag:
         applyYn = 'N'
@@ -248,14 +249,14 @@ class post_user_info_Quest(generics.ListAPIView):
     def list(self, request):
         #ms_sub 테이블에서 질문내역 조회
         key1 = request.GET.get('ms_id', None)           
-        l_exist = ms_sub.objects.filter(ms_id_id=key1).exists()
+        l_exist = ms_sub.objects.filter(ms_id=key1).exists()
         
         queryset = self.get_queryset()
         if not l_exist:
             queryset = queryset.filter(std_grp_code='')
         else:
-            l_key1 = ms_sub.objects.filter(ms_id_id=key1)[0].att_cdh
-            l_key_query = ms_sub.objects.filter(ms_id_id=key1).values_list('att_cdd_id', flat=True) 
+            l_key1 = ms_sub.objects.filter(ms_id=key1)[0].att_cdh
+            l_key_query = ms_sub.objects.filter(ms_id=key1).values_list('att_cdd_id', flat=True) 
             #ms_sub 테이블에서 질문내역 조회
             
             if not l_key_query:
@@ -283,9 +284,19 @@ class post_user_info_view_Quest_Serializer(serializers.ModelSerializer):
 # 멘토스쿨(관리자) - 질문2
 class post_user_info_view_Quest_Serializer2(serializers.ModelSerializer):
 
+    std_detl_code_nm = serializers.SerializerMethodField()
+    rmrk = serializers.SerializerMethodField()
+
     class Meta:
         model = ms_ans
-        fields = ('id','ms_id','test_div','apl_no','ques_no','apl_id','apl_nm','sort_seq','ans_t1','ans_t2','ans_t3','score')        
+        fields = ('id','ms_id','test_div','apl_no','ques_no','apl_id','apl_nm','sort_seq','ans_t1','ans_t2','ans_t3','score','std_detl_code_nm','rmrk')        
+
+    def get_std_detl_code_nm(self,obj):
+        return obj.std_detl_code_nm
+
+    def get_rmrk(self,obj):
+        return obj.rmrk  
+
 
 # 멘토스쿨(관리자) - 질문
 class post_user_info_view_Quest(generics.ListAPIView):
@@ -295,28 +306,32 @@ class post_user_info_view_Quest(generics.ListAPIView):
         #ms_sub 테이블에서 질문내역 조회
         key1 = request.GET.get('ms_id', None) 
         l_user_id = request.GET.get('user_id', None)           
-        l_exist = ms_sub.objects.filter(ms_id_id=key1).exists()
+        # l_exist = ms_sub.objects.filter(ms_id=key1).exists()
         
-        queryset = self.get_queryset()
-        if not l_exist:
-            queryset = queryset.filter(std_grp_code='')
-        else:
-            l_key1 = ms_sub.objects.filter(ms_id_id=key1)[0].att_cdh
-            l_key_query = ms_sub.objects.filter(ms_id_id=key1).values_list('att_cdd_id', flat=True) 
-            #ms_sub 테이블에서 질문내역 조회
+        query = "select B.std_detl_code_nm,B.rmrk,A.* from service20_ms_ans A, service20_com_cdd B where A.ques_no = B.std_detl_code and B.std_grp_code in (select att_cdh from service20_ms_sub where ms_id = '"+key1+"') and A.ms_id = '"+key1+"' and apl_id = '"+l_user_id+"'"
+        queryset = ms_ans.objects.raw(query)
+
+
+        # queryset = self.get_queryset()
+        # if not l_exist:
+        #     queryset = queryset.filter(std_grp_code='')
+        # else:
+        #     l_key1 = ms_sub.objects.filter(ms_id=key1)[0].att_cdh
+        #     l_key_query = ms_sub.objects.filter(ms_id=key1).values_list('att_cdd_id', flat=True) 
+        #     #ms_sub 테이블에서 질문내역 조회
             
-            if not l_key_query:
-                queryset = queryset.filter(std_grp_code=l_key1, std_detl_code__in=l_key_query)
-            else:
-                queryset = queryset.filter(std_grp_code=l_key1)
-            #조회한 질문내역 기준으로 공통코드 조회
+        #     if not l_key_query:
+        #         queryset = queryset.filter(std_grp_code=l_key1, std_detl_code__in=l_key_query)
+        #     else:
+        #         queryset = queryset.filter(std_grp_code=l_key1)
+        #     #조회한 질문내역 기준으로 공통코드 조회
 
 
-            query_ans = ms_ans.objects.all()
-            query_ans = query_ans.filter(ms_id=key1,apl_id=l_user_id)
+        #     query_ans = ms_ans.objects.all()
+        #     query_ans = query_ans.filter(ms_id=key1,apl_id=l_user_id)
 
-            queryset = query_ans
-            #ms_ans 테이블에서 답변내역 조회
+        #     queryset = query_ans
+        #     #ms_ans 테이블에서 답변내역 조회
 
 
         serializer_class = self.get_serializer_class()
@@ -329,13 +344,61 @@ class post_user_info_view_Quest(generics.ListAPIView):
 
         return Response(serializer.data)
 
+# 멘토링 프로그램(관리자) - 질문2
+class post_user_info_persion_view_Quest_Serializer2(serializers.ModelSerializer):
+
+    
+    std_detl_code_nm = serializers.SerializerMethodField()
+    rmrk = serializers.SerializerMethodField()
+
+    class Meta:
+        model = mp_ans
+        fields = ('id','mp_id','test_div','apl_no','ques_no','apl_id','apl_nm','sort_seq','ans_t1','ans_t2','ans_t3','score','std_detl_code_nm','rmrk')
+
+    def get_std_detl_code_nm(self,obj):
+        return obj.std_detl_code_nm
+
+    def get_rmrk(self,obj):
+        return obj.rmrk
+
+# 멘토링 프로그램(관리자) - 질문
+class post_user_info_persion_view_Quest(generics.ListAPIView):
+    queryset = com_cdd.objects.all()
+    serializer_class = post_user_info_persion_view_Quest_Serializer2
+    def list(self, request):
+        #mp_sub 테이블에서 질문내역 조회
+        key1 = request.GET.get('mp_id', None) 
+        l_user_id = request.GET.get('user_id', None)           
+        l_exist = mp_sub.objects.filter(ms_id=key1).exists()
+        
+        query = "select B.std_detl_code_nm,B.rmrk,A.* from service20_mp_ans A, service20_com_cdd B where A.ques_no = B.std_detl_code and B.std_grp_code in (select att_cdh from service20_mp_sub where ms_id = '"+key1+"') and A.mp_id = '"+key1+"' and apl_id = '"+l_user_id+"'"
+        queryset = mp_ans.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+
 # 멘토링 프로그램 질문유형 가져오기
 class post_user_info_persion_Quest_Serializer(serializers.ModelSerializer):
 
+    std_detl_code_nm = serializers.SerializerMethodField()
+    rmrk = serializers.SerializerMethodField()
     class Meta:
-        model = com_cdd
-        fields = ('std_grp_code','std_detl_code','std_detl_code_nm','rmrk','use_indc')
+        model = mp_sub
+        fields = ('id','ms_id','att_id','att_seq','att_cdh','att_cdd','att_val','use_yn','sort_seq','std_detl_code_nm','rmrk')
 
+    def get_std_detl_code_nm(self,obj):
+        return obj.std_detl_code_nm
+
+    def get_rmrk(self,obj):
+        return obj.rmrk    
 
 # 멘토링 프로그램 질문유형 가져오기
 class post_user_info_persion_Quest(generics.ListAPIView):
@@ -344,21 +407,9 @@ class post_user_info_persion_Quest(generics.ListAPIView):
     def list(self, request):
         #mp_sub 테이블에서 질문내역 조회
         key1 = request.GET.get('mp_id', None)           
-        l_exist = mp_sub.objects.filter(ms_id=key1).exists()
         
-        queryset = self.get_queryset()
-        if not l_exist:
-            queryset = queryset.filter(std_grp_code='')
-        else:
-            l_key1 = mp_sub.objects.filter(ms_id=key1)[0].att_cdh
-            l_key_query = mp_sub.objects.filter(ms_id=key1).values_list('att_cdd', flat=True) 
-            #mp_sub 테이블에서 질문내역 조회
-            
-            if not l_key_query:
-                queryset = queryset.filter(std_grp_code=l_key1, std_detl_code__in=l_key_query)
-            else:
-                queryset = queryset.filter(std_grp_code=l_key1)
-            #조회한 질문내역 기준으로 공통코드 조회
+        query = "select B.std_detl_code_nm,B.rmrk,A.* from service20_mp_sub A left outer join service20_com_cdd B on (A.att_id = B.std_grp_code and A.att_cdd = B.std_detl_code) where A.ms_id = '"+key1+"'"
+        queryset = mp_sub.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
@@ -471,8 +522,9 @@ def post_msApply(request):
     que5 = request.POST.get('que5', None)
 
     ms_ida = request.POST.get('ms_id', None)
+    apl_max = request.POST.get('aplMax', 0)
     #created,created_flag = vm_nanum_stdt.apl_id.get_or_create(user=request.user)
-    ms_id_id = programId
+    ms_id = programId
     ms_apl_max = ms_apl.objects.all().aggregate(vlMax=Max('apl_no'))
     rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
     #ms_apl_max = ms_apl.objects.all().last()
@@ -490,7 +542,7 @@ def post_msApply(request):
     
     
     model_instance = ms_apl(
-        ms_id_id=ms_id_id, 
+        ms_id=ms_id, 
         apl_no=apl_no, 
         apl_id=apl_id,
         apl_nm=rows.apl_nm,
@@ -517,25 +569,17 @@ def post_msApply(request):
         )
     model_instance.save()
     
-    for i in range(0,5):
-        if i==0:
-            anst2 = que1
-        if i==1:
-            anst2 = que2
-        if i==2:
-            anst2 = que3
-        if i==3:
-            anst2 = que4
-        if i==4:
-            anst2 = que5
+    apl_max = int(apl_max)
 
-        print("33")
+    for i in range(0,apl_max):
+        anst2 = request.POST.get('que'+str(i+1), None)
+        ques_no = request.POST.get('ques_no'+str(i+1), None)
 
         model_instance2 = ms_ans(
-            ms_id=ms_id_id, 
+            ms_id=ms_id, 
             test_div='10', 
             apl_no=apl_no,
-            ques_no=i+1,
+            ques_no=ques_no,
             apl_id=apl_id,
             apl_nm=rows.apl_nm,
             sort_seq =i+1,
@@ -560,8 +604,10 @@ def post_msProgramApply(request):
     que5 = request.POST.get('que5', None)
 
     ms_ida = request.POST.get('ms_id', None)
+    apl_max = request.POST.get('aplMax', 0)
+    
     #created,created_flag = vm_nanum_stdt.apl_id.get_or_create(user=request.user)
-    ms_id_id = programId
+    ms_id = programId
     mp_mtr_max = mp_mtr.objects.all().aggregate(vlMax=Max('apl_no'))
     rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
     #mp_mtr_max = mp_mtr.objects.all().last()
@@ -579,7 +625,7 @@ def post_msProgramApply(request):
     
     
     model_instance = mp_mtr(
-        mp_id=ms_id_id, 
+        mp_id=ms_id, 
         apl_no=apl_no, 
         mntr_id=ida,
         apl_id=apl_id,
@@ -607,25 +653,17 @@ def post_msProgramApply(request):
         )
     model_instance.save()
     
-    for i in range(0,5):
-        if i==0:
-            anst2 = que1
-        if i==1:
-            anst2 = que2
-        if i==2:
-            anst2 = que3
-        if i==3:
-            anst2 = que4
-        if i==4:
-            anst2 = que5
+    apl_max = int(apl_max)
 
-        print("33")
+    for i in range(0,apl_max):
+        anst2 = request.POST.get('que'+str(i+1), None)
+        ques_no = request.POST.get('ques_no'+str(i+1), None)
 
         model_instance2 = mp_ans(
-            mp_id=ms_id_id, 
+            mp_id=ms_id, 
             test_div='10', 
             apl_no=apl_no,
-            ques_no=i+1,
+            ques_no=ques_no,
             apl_id=apl_id,
             apl_nm=rows.apl_nm,
             sort_seq =i+1,
@@ -648,6 +686,7 @@ class mpmgListSerializer(serializers.ModelSerializer):
     class Meta:
         model = mpgm
         fields = ('mp_id','mp_name','status','img_src','testField')
+        # fields = ('mp_id','mp_name','status','testField')
 
     def get_testField(self, obj):
         return 'test'     
@@ -681,14 +720,20 @@ class mpmgListPersonSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = mpgm
-        fields = ('mp_id','mp_name','status','img_src','yr','yr_seq','sup_org','applyFlag','applyStatus','apl_fr_dt','apl_to_dt','mnt_fr_dt','mnt_to_dt','cnt_trn','status')
+        fields = ('mp_id','mp_name','status','yr','yr_seq','sup_org','applyFlag','applyStatus','apl_fr_dt','apl_to_dt','mnt_fr_dt','mnt_to_dt','cnt_trn','status')
 
     def get_applyFlag(self, obj):
-        return 'Y'     
+        # return 'Y'     
+        return obj.applyFlag    
     def get_applyStatus(self, obj):
-        return '미지원'  
+        if obj.applyFlag == 'Y':
+            return '지원'
+        elif obj.applyFlag == 'N':
+            return '미지원'    
+        # return obj.applyStatus    
 
     def get_status(self,obj):
+        request = self.context['request']
         now = datetime.datetime.today()
         if obj.apl_fr_dt == None:
             return '개설중'
@@ -709,22 +754,16 @@ class mpmgListPersionView(generics.ListAPIView):
     serializer_class = mpmgListPersonSerializer
 
     def list(self, request):
-        l_yr = request.GET.get('yr', None)
-        l_apl_term = request.GET.get('apl_term', None)
+        l_yr = request.GET.get('yr', "")
+        l_apl_term = request.GET.get('apl_term', "")
+        l_status = request.GET.get('status', "")
+        ida = request.POST.get('user_id', "")
 
-        queryset = self.get_queryset()
-
-        if l_yr != '':
-            print(l_yr)
-            queryset = queryset.filter(yr=l_yr)
-
-        if l_apl_term != '':
-            print(l_apl_term)
-            queryset = queryset.filter(apl_term=l_apl_term)
+        query = "select ifnull((select 'Y' from service20_mp_mtr where yr = '"+str(l_yr)+"' and term_div = '"+str(l_apl_term)+"' and apl_id = '"+str(ida)+"' and mp_id = A.mp_id),'N') AS applyFlag,A.* from service20_mpgm A where A.yr='"+str(l_yr)+"' and A.apl_term='"+str(l_apl_term)+"'"
+        queryset = mpgm.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
-        serializer = serializer_class(queryset, many=True)
-
+        serializer = serializer_class(queryset, context={'request': request}, many=True)
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
@@ -742,7 +781,7 @@ def post_user_info(request):
     ms_ida = request.POST.get('ms_id', None)
     #created,created_flag = vm_nanum_stdt.apl_id.get_or_create(user=request.user)
     created_flag = vm_nanum_stdt.objects.filter(apl_id=ida).exists()
-    ms_apl_flag = ms_apl.objects.filter(apl_id=ida,ms_id_id=ms_ida).exists()
+    ms_apl_flag = ms_apl.objects.filter(apl_id=ida,ms_id=ms_ida).exists()
     if not ms_apl_flag:
         applyYn = 'N'
     else:
@@ -858,6 +897,7 @@ class mpPlnh_mpgmListSerializer(serializers.ModelSerializer):
     class Meta:
         model = mpgm
         fields = ('mp_id','mp_name','status','img_src','yr','yr_seq','apl_term','mp_sname','base_div','mp_intro','mng_area','mgr_id','mgr_nm','mng_org','sup_org','testField')
+        # fields = ('mp_id','mp_name','status','yr','yr_seq','apl_term','mp_sname','base_div','mp_intro','mng_area','mgr_id','mgr_nm','mng_org','sup_org','testField')
 
     def get_testField(self, obj):
         return 'test'     
@@ -866,6 +906,41 @@ class mpPlnh_mpgmListSerializer(serializers.ModelSerializer):
 class mpPlnh_mpgmListView(generics.ListAPIView):
     queryset = mpgm.objects.all()
     serializer_class = mpPlnh_mpgmListSerializer
+
+    # mp_mtr - 프로그램 지원자(멘토) => mp_id(멘토링ID), apl_id
+    # mp_mte - 프로그램 지원자(멘티) => mp_id(멘토링ID)
+
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+######################################################################
+
+# 학습외신청(멘토) 리스트 ###################################################
+class mpSpc_ListSerializer(serializers.ModelSerializer):
+
+    testField = serializers.SerializerMethodField()
+    class Meta:
+        model = mp_spc
+        fields = ('id','mp_id','spc_no','spc_div','status','spc_name','spc_intro','yr','yr_seq','apl_ntc_fr_dt','apl_ntc_to_dt','apl_term','apl_fr_dt','apl_to_dt','mnt_term','mnt_fr_dt','mnt_to_dt','cnf_dt','appr_tm','tot_apl','cnt_apl','cnt_pln','cnt_att','use_div','pic_div','rep_div','ord_div','grd_appr_div','tch_appr_div')
+
+    def get_testField(self, obj):
+        return 'test'     
+
+
+class mpSpc_ListView(generics.ListAPIView):
+    queryset = mp_spc.objects.all()
+    serializer_class = mpPlnh_mpgmListSerializer
+
+    # mp_spc
 
     def list(self, request):
         queryset = self.get_queryset()
