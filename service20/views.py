@@ -593,7 +593,7 @@ def post_msProgramApply(request):
     apl_no = mp_mtr_max
     apl_id = ida
     v_gen = ""
-    if rows.gen_cd == 1:
+    if str(rows.gen_cd) == "1":
         v_gen = "M"
     else:
         v_gen = "F"
