@@ -12,7 +12,7 @@ from service20.models import *
 from polls.models import Choice, Question
 from django.db.models import Max
 
-
+from django.db import connection
 from collections  import OrderedDict
 import json
 # api/moim 으로 get하면 이 listview로 연결
@@ -70,7 +70,100 @@ class comboMpmgListViewDetail(generics.ListAPIView):
 
         return Response(serializer.data)    
 
+
+
+
+#멘토링 콤보박스
+class mpComboListViewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = mpgm
+        fields = ('mp_id','mp_name')
+
+class mpComboListView(generics.ListAPIView):
+   
+    queryset = mpgm.objects.all()
+    queryset = queryset.filter(use_div='Y')
+    serializer_class = mpComboListViewSerializer
+
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+        print("a2")
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+
+
+#멘토스쿨 콤보박스Detail
+class mpComboListDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = mpgm
+        fields = ('mp_id','mp_name')
+
+
+class mpComboListViewDetail(generics.ListAPIView):
+    queryset = mpgm.objects.all()
+    serializer_class = mpComboListDetailSerializer
+
+    def list(self, request):
+        l_mp_id = request.GET.get('mp_id', None)
+        print(l_mp_id)
+        queryset = self.get_queryset()
+        queryset = queryset.filter(mp_id=l_mp_id)        
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)    
+
+
+@csrf_exempt
+def msFn1(request):
+    ms_id = request.GET.get('ms_id_id', None)
+    #l_key1 = ms_apl.objects.filter(ms_id_id=ms_id).values_list('apl_id', flat=True) 
+
+    #print(l_key1);
+    #queryset = self.get_queryset()
+    #queryset = vm_nanum_stdt.objects.filter(apl_id__in=ms_id)
+    queryset = ms_apl.objects.filter(ms_id_id=ms_id)
+    queryset2 = cm_cnv_scr.objects.filter(eval_item='1')
+    for val in queryset:
+        vl_cscore1 = (val.score1 / 100) * 100
+
+        queryset2 = queryset2.filter(eval_item=1,max_scr__lt=vl_cscore1)
         
+        queryset2 = queryset2.filter(eval_item=1,max_scr__lt ='15')
+        for val2 in queryset2:
+            print(val2.max_scr)
+
+        print(queryset2);
+        queryset2 = queryset2.filter(max_scr__lt=vl_cscore1)
+
+        print(queryset2[0].fin_scr)
+
+    print(queryset[0].apl_id)
+    print(queryset)
+
+    message = "Ok"
+     
+    context = {'message': message,}
+    
+
+    #return HttpResponse(json.dumps(context), content_type="application/json")
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+
+
+
+
 
 @csrf_exempt
 def msFn1(request):
