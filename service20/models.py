@@ -545,29 +545,6 @@ class Meta:
 
 
 
-class cm_cnv_scr(models.Model):
-	eval_item = models.CharField(max_length=2, null=False, verbose_name='항목' )
-	eval_seq = models.PositiveIntegerField(null=False, verbose_name='순서' )
-	min_scr = models.PositiveIntegerField(null=False, verbose_name='최소 점수' )
-	max_scr = models.PositiveIntegerField(null=False, verbose_name='최대 점수' )
-	eval_unit = models.CharField(max_length=10, null=False, verbose_name='단위' )
-	fin_scr = models.PositiveIntegerField(null=False, verbose_name='점수' )
-	ins_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='입력자ID' )
-	ins_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력자IP' )
-	ins_dt = models.DateTimeField(null=True, blank=True, verbose_name='입력일시' )
-	ins_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력프로그램ID' )
-	upd_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='수정자ID' )
-	upd_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정자IP' )
-	upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
-	upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
-	
-	class Meta:
-		verbose_name = '점수변환표'
-		verbose_name_plural =  verbose_name
-		unique_together=("eval_item", "eval_seq")
-
-# Create your models here.
-
 
 
 
@@ -997,3 +974,171 @@ class Meta:
 	verbose_name_plural =  verbose_name
 	index_together = ["mp_id", "mnte_no"]
 	index_together = ["mnte_id", "mp_id"]
+
+
+
+
+class cm_apl_q(models.Model):
+  ques_no = models.PositiveIntegerField(primary_key=True, verbose_name='질문NO' )
+  ans_type = models.CharField(max_length=1, null=False, verbose_name='질문유형' )
+  ques_desc = models.CharField(max_length=500, null=False, verbose_name='질문지' )
+  sort_seq = models.PositiveIntegerField(null=False, verbose_name='정렬' )
+  use_yn = models.CharField(max_length=1, null=False, verbose_name='사용여부' )
+  ins_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='입력자ID' )
+  ins_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력자IP' )
+  ins_dt = models.DateTimeField(null=True, blank=True, verbose_name='입력일시' )
+  ins_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력프로그램ID' )
+  upd_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='수정자ID' )
+  upd_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정자IP' )
+  upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
+  upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
+
+class Meta:
+  verbose_name = '지원서 질문'
+  verbose_name_plural =  verbose_name
+
+
+class cm_surv(models.Model):
+  ques_no = models.PositiveIntegerField(primary_key=True, verbose_name='만족도 조사 항목 ID' )
+  ansr_div = models.CharField(max_length=1, null=False, verbose_name='응답자 구분(CM0001)' )
+  ques_type = models.CharField(max_length=1, null=False, verbose_name='질문유형(CM0002)' )
+  ques_div = models.CharField(max_length=1, null=False, verbose_name='질문구분(CM0003)' )
+  ques_desc = models.CharField(max_length=500, null=False, verbose_name='질문지' )
+  use_yn = models.CharField(max_length=1, default='Y', verbose_name='사용여부(CM0005)' )
+  sort_seq = models.PositiveIntegerField(null=True, blank=True, verbose_name='정렬 순서' )
+
+  ins_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='입력자ID' )
+  ins_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력자IP' )
+  ins_dt = models.DateTimeField(null=True, blank=True, verbose_name='입력일시' )
+  ins_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력프로그램ID' )
+  upd_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='수정자ID' )
+  upd_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정자IP' )
+  upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
+  upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
+
+
+class Meta:
+  verbose_name = '만족도 조사 문항'
+  verbose_name_plural =  verbose_name
+
+
+class cm_surv_t(models.Model):
+  surv_id = models.PositiveIntegerField(primary_key=True, verbose_name='문항세트 ID' )
+  surv_nm = models.CharField(max_length=50, null=True, blank=True, verbose_name='문항세트 명' )
+  surv_desc = models.CharField(max_length=100, null=True, blank=True, verbose_name='문항세트 설명' )
+  ansr_div = models.CharField(max_length=1, null=False, verbose_name='응답자 구분(CM0001)' )
+  ques_cnt = models.PositiveIntegerField(default=0, verbose_name='만족도 조사 항목 수' )
+  use_yn = models.CharField(max_length=1, default='Y', verbose_name='사용여부(CM0005)' )
+  ins_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='입력자ID' )
+  ins_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력자IP' )
+  ins_dt = models.DateTimeField(null=True, blank=True, verbose_name='입력일시' )
+  ins_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력프로그램ID' )
+  upd_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='수정자ID' )
+  upd_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정자IP' )
+  upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
+  upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
+
+class Meta:
+  verbose_name = '만족도 조사 출제 세트'
+  verbose_name_plural =  verbose_name
+
+
+
+
+class cm_surv_q(models.Model):
+  surv_id = models.PositiveIntegerField(null=False, verbose_name='문항세트 ID' )
+  ques_no = models.PositiveIntegerField(null=False, verbose_name='만족도 조사 항목 ID' )
+  sort_seq = models.PositiveIntegerField(null=False, verbose_name='정렬 순서' )
+  ins_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='입력자ID' )
+  ins_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력자IP' )
+  ins_dt = models.DateTimeField(null=True, blank=True, verbose_name='입력일시' )
+  ins_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력프로그램ID' )
+  upd_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='수정자ID' )
+  upd_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정자IP' )
+  upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
+  upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
+
+class Meta:
+  verbose_name = '만족도 조사 출제 문항'
+  verbose_name_plural =  verbose_name
+  unique_together=("surv_id", "ques_no")
+
+
+class cm_surv_a(models.Model):
+  pgm_id = models.CharField(max_length=10, null=False, verbose_name='만족도 조사 대상(멘토스쿨, 프로그램, 학습외)' )
+  surv_seq = models.CharField(max_length=2, null=False, verbose_name='대상 내 유형' )
+  ansr_id = models.CharField(max_length=10, null=False, verbose_name='응답자 ID' )
+  ques_no = models.PositiveIntegerField(null=False, verbose_name='만족도 조사 항목 ID' )
+  ansr_div = models.CharField(max_length=1, null=False, verbose_name='응답자 구분(CM0001)' )
+  ans_t1 = models.PositiveIntegerField(null=True, blank=True, verbose_name='선다형 답' )
+  ans_t2 = models.CharField(max_length=1000, null=True, blank=True, verbose_name='수필형 답' )
+  ans_t3 = models.CharField(max_length=2, null=True, blank=True, verbose_name='선택 답' )
+  ques_dt = models.CharField(max_length=8, null=False, verbose_name='설문조사일자' )
+  ins_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='입력자ID' )
+  ins_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력자IP' )
+  ins_dt = models.DateTimeField(null=True, blank=True, verbose_name='입력일시' )
+  ins_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력프로그램ID' )
+  upd_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='수정자ID' )
+  upd_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정자IP' )
+  upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
+  upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
+
+class Meta:
+  verbose_name = '만족도 조사 답변'
+  verbose_name_plural =  verbose_name
+  unique_together=("pgm_id", "surv_seq", "ansr_id", "ques_no")
+
+
+class cm_cnv_scr(models.Model):
+  eval_item = models.CharField(max_length=2, null=False, verbose_name='항목(MS0023)' )
+  eval_seq = models.PositiveIntegerField(null=False, verbose_name='순서' )
+  min_scr = models.PositiveIntegerField(null=False, verbose_name='최소 점수' )
+  max_scr = models.PositiveIntegerField(null=False, verbose_name='최대 점수' )
+  eval_unit = models.CharField(max_length=10, null=False, verbose_name='단위' )
+  fin_scr = models.PositiveIntegerField(null=False, verbose_name='점수' )
+  ins_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='입력자ID' )
+  ins_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력자IP' )
+  ins_dt = models.DateTimeField(null=True, blank=True, verbose_name='입력일시' )
+  ins_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력프로그램ID' )
+  upd_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='수정자ID' )
+  upd_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정자IP' )
+  upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
+  upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
+  ins_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='입력자ID' )
+  ins_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력자IP' )
+  ins_dt = models.DateField(null=True, blank=True, verbose_name='입력일시' )
+  ins_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력프로그램ID' )
+  upd_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='수정자ID' )
+  upd_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정자IP' )
+  upd_dt = models.DateField(null=True, blank=True, verbose_name='수정일시' )
+  upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
+
+
+class Meta:
+  verbose_name = '점수변환표'
+  verbose_name_plural =  verbose_name
+  unique_together=("eval_item", "eval_seq")
+
+class cm_sms(models.Model):
+  sys_menu_id = models.CharField(max_length=8, null=False, verbose_name='사용 프로그램 ID' )
+  seq = models.PositiveIntegerField(null=False, verbose_name='순번' )
+  msg_gbn_nm = models.CharField(max_length=100, null=True, blank=True, verbose_name='메세지구분명' )
+  msg_ttl = models.CharField(max_length=100, null=True, blank=True, verbose_name='메세지제목' )
+  msg_ctnt = models.CharField(max_length=2000, null=True, blank=True, verbose_name='메세지내용' )
+  reply_telno = models.CharField(max_length=20, null=True, blank=True, verbose_name='회신번호' )
+  msg_fg = models.CharField(max_length=1, null=True, blank=True, verbose_name='메세지구분{E0610}' )
+  ins_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='입력자ID' )
+  ins_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력자IP' )
+  ins_dt = models.DateTimeField(null=True, blank=True, verbose_name='입력일시' )
+  ins_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력프로그램ID' )
+  upd_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='수정자ID' )
+  upd_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정자IP' )
+  upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
+  upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
+
+
+
+class Meta:
+  verbose_name = '문자메시지 형식'
+  verbose_name_plural =  verbose_name
+  unique_together=("sys_menu_id", "seq")
