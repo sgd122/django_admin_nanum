@@ -30,7 +30,6 @@ class Service20ListSerializer(serializers.ModelSerializer):
 
     def get_status(self,obj):
         request = self.context['request']
-        v_ms_apl = self.context['v_ms_apl']
         l_user_id = request.GET.get('user_id', None)
         print("===(status)get_start===")
         print(l_user_id)
@@ -50,7 +49,6 @@ class Service20ListSerializer(serializers.ModelSerializer):
 
     def get_applyYn(self,obj):
         request = self.context['request']
-        v_ms_apl = self.context['v_ms_apl']
         l_user_id = request.GET.get('user_id', None)
         print(l_user_id)
         print("===get_end===")
@@ -64,7 +62,7 @@ class Service20ListView(generics.ListAPIView):
 
     def list(self, request):
         l_yr = request.GET.get('yr', None)
-        l_trn_term = request.GET.get('trn_term', None)
+        l_apl_term = request.GET.get('trn_term', None)
         l_user_id = request.GET.get('user_id', None)
 
         query = "select ifnull((select 'Y' from service20_ms_apl where yr = '"+str(l_yr)+"' and term_div = '"+str(l_apl_term)+"' and apl_id = '"+str(ida)+"' and ms_id = A.ms_id),'N') AS applyFlag,A.* from service20_msch A where A.yr='"+str(l_yr)+"' and A.apl_term='"+str(l_apl_term)+"'"
@@ -72,7 +70,7 @@ class Service20ListView(generics.ListAPIView):
 
         
         serializer_class = self.get_serializer_class()
-        serializer = serializer_class(queryset, context={'request': request,'v_ms_apl':v_ms_apl}, many=True)
+        serializer = serializer_class(queryset, context={'request': request}, many=True)
 
 
         page = self.paginate_queryset(queryset)
