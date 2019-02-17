@@ -374,54 +374,33 @@ class post_user_info_persion_Serializer(serializers.ModelSerializer):
     # def get_rmrk(self,obj):
     #     return obj.rmrk
 
-@csrf_exempt
-def post_user_info_persion(request):
-# class post_user_info_persion(generics.ListAPIView):
+# @csrf_exempt
+# def post_user_info_persion(request):
+class post_user_info_persion(generics.ListAPIView):
     queryset = mp_mtr.objects.all()
     serializer_class = post_user_info_persion_Serializer
     
-    # def list(self, request):
-    #     ida = request.POST.get('user_id', None)
-    #     ms_ida = request.POST.get('ms_id', None)
-    #     l_yr = request.POST.get('yr', None)
+    def list(self, request):
+        ida = request.GET.get('user_id', None)
+        ms_ida = request.GET.get('ms_id', None)
+        l_yr = request.GET.get('yr', None)
         
-    #     print("====start====")
+        print("====start====")
 
-    #     query = "select A.* from service20_mp_mtr A where yr='"+l_yr+"' and mp_id = '+"+ms_ida+"+' and apl_id='"+ida+"'"
-    #     queryset = mp_mtr.objects.raw(query)
+        query = "select A.* from service20_mp_mtr A where yr='"+l_yr+"' and mp_id = '+"+ms_ida+"+' and apl_id='"+ida+"'"
+        queryset = mp_mtr.objects.raw(query)
 
-    #     print(query)
+        print(query)
 
-    #     serializer_class = self.get_serializer_class()
-    #     serializer = serializer_class(queryset, many=True)
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
 
-    #     page = self.paginate_queryset(queryset)
-    #     if page is not None:
-    #         serializer = self.get_serializer(page, many=True)
-    #         return self.get_paginated_response(serializer.data)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
 
-    #     return Response(serializer.data)
-
-    ida = request.POST.get('user_id', None)
-    ms_ida = request.POST.get('ms_id', None)
-    l_yr = request.POST.get('yr', None)
-    
-    print("====start====")
-
-    query = "select A.* from service20_mp_mtr A where yr='"+l_yr+"' and mp_id = '+"+ms_ida+"+' and apl_id='"+ida+"'"
-    queryset = mp_mtr.objects.raw(query)
-
-    print(query)
-
-    serializer_class = self.get_serializer_class()
-    serializer = serializer_class(queryset, many=True)
-
-    page = self.paginate_queryset(queryset)
-    if page is not None:
-        serializer = self.get_serializer(page, many=True)
-        return self.get_paginated_response(serializer.data)
-
-    return Response(serializer.data)
+        return Response(serializer.data)
 
     
     # created_flag = vm_nanum_stdt.objects.filter(apl_id=ida).exists()
