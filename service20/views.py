@@ -377,19 +377,21 @@ class post_user_info_persion_Serializer(serializers.ModelSerializer):
 # @csrf_exempt
 # def post_user_info_persion(request):
 class post_user_info_persion(generics.ListAPIView):
-    queryset = com_cdd.objects.all()
+    queryset = mp_mtr.objects.all()
     serializer_class = post_user_info_persion_Serializer
     
     def list(self, request):
         ida = request.POST.get('user_id', None)
         ms_ida = request.POST.get('ms_id', None)
         l_yr = request.POST.get('yr', None)
+        
+        print("====start====")
 
         query = "select A.* from service20_mp_mtr A where yr='"+l_yr+"' and mp_id = '+"+ms_ida+"+' and apl_id='"+ida+"'"
         queryset = mp_mtr.objects.raw(query)
 
         print(query)
-        
+
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
 
