@@ -288,7 +288,7 @@ class post_user_info_view_Quest_Serializer2(serializers.ModelSerializer):
 
     class Meta:
         model = ms_ans
-        fields = ('id','ms_id','test_div','apl_no','ques_no','apl_id','apl_nm','sort_seq','ans_t1','ans_t2','ans_t3','score')        
+        fields = ('id','ms_id','test_div','apl_no','ques_no','apl_id','apl_nm','sort_seq','ans_t1','ans_t2','ans_t3','score','std_detl_code_nm','rmrk')        
 
     def get_std_detl_code_nm(self,obj):
         return obj.std_detl_code_nm
