@@ -379,7 +379,7 @@ class post_user_info_persion_Serializer(serializers.ModelSerializer):
     def get_pr_sch_yr(self,obj):
         return obj.pr_sch_yr
 
-    def get_pr_pr_term_div(self,obj):
+    def get_pr_term_div(self,obj):
         return obj.pr_term_div    
 
 # @csrf_exempt
