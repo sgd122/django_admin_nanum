@@ -358,7 +358,7 @@ class post_user_info_persion_view_Quest(generics.ListAPIView):
         
 
         # query = "select B.std_detl_code_nm,B.rmrk,A.* from mp_ans A, com_cdd B where A.ques_no = B.std_detl_code and B.std_grp_code = 'MS0014' and A.mp_id = '"+key1+"' and apl_id = '"+l_user_id+"'"
-        query = "select B.std_detl_code_nm,B.rmrk,A.* from service20_mp_ans A, service20_com_cdd B where A.ques_no = B.std_detl_code and B.std_grp_code in (select att_cdh from service20_mp_sub where ms_id = "+key1+") and A.mp_id = '"+key1+"' and apl_id = '"+l_user_id+"'"
+        query = "select B.std_detl_code_nm,B.rmrk,A.* from service20_mp_ans A, service20_com_cdd B where A.ques_no = B.std_detl_code and B.std_grp_code in (select att_cdh from service20_mp_sub where ms_id = '"+key1+"') and A.mp_id = '"+key1+"' and apl_id = '"+l_user_id+"'"
         queryset = mp_ans.objects.raw(query)
 
         # queryset = self.get_queryset()
