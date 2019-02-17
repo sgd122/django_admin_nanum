@@ -22,6 +22,7 @@ class Service20ListSerializer(serializers.ModelSerializer):
 
 
     status = serializers.SerializerMethodField()
+    applyYn = serializers.SerializerMethodField()
     class Meta:
         model = msch
         fields = ('ms_id', 'ms_name','yr','yr_seq','sup_org','img_src','ins_dt','ins_id','apl_term','apl_fr_dt','apl_to_dt','trn_fr_dt','trn_to_dt','tot_apl','cnt_apl','status','applyYn')
