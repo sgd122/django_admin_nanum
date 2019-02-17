@@ -359,92 +359,118 @@ class post_user_info_persion_Quest(generics.ListAPIView):
         return Response(serializer.data)
 
 
-@csrf_exempt
-def post_user_info_persion(request):
-    ida = request.POST.get('user_id', None)
-    ms_ida = request.POST.get('ms_id', None)
-    l_yr = request.POST.get('yr', None)
+class post_user_info_persion_Serializer(serializers.ModelSerializer):
+    
+    # std_detl_code_nm = serializers.SerializerMethodField()
+    # rmrk = serializers.SerializerMethodField()
 
-    #created,created_flag = vm_nanum_stdt.apl_id.get_or_create(user=request.user)
-    created_flag = vm_nanum_stdt.objects.filter(apl_id=ida).exists()
-    ms_apl_flag = mp_mtr.objects.filter(apl_id=ida,mp_id=ms_ida).exists()
-    #mp_mtr
-    if not ms_apl_flag:
-        applyYn = 'N'
-    else:
-        applyYn = 'Y'
+    class Meta:
+        model = mp_mtr
+        fields = ('mp_id','apl_no','mntr_id','indv_div','team_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','bank_acct','bank_cd','bank_nm','bank_dpsr','cnt_mp_a','cnt_mp_p','cnt_mp_c','cnt_mp_g','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm')
 
-    #rows = vm_nanum_stdt.objects.filter(apl_id=ida)
-    #rows2 = vm_nanum_stdt.objects.get("apl_nm")
-    if not created_flag:
-        message = "Fail"
-        context = {'message': message}
-    else:
+    # def get_std_detl_code_nm(self,obj):
+    #     return obj.std_detl_code_nm
+
+    # def get_rmrk(self,obj):
+    #     return obj.rmrk
+
+# @csrf_exempt
+# def post_user_info_persion(request):
+class post_user_info_persion(generics.ListAPIView):
+    queryset = com_cdd.objects.all()
+    serializer_class = post_user_info_persion_Serializer
+    
+    def list(self, request):
+        ida = request.POST.get('user_id', None)
+        ms_ida = request.POST.get('ms_id', None)
+        l_yr = request.POST.get('yr', None)
+
+        query = "select A.* from service20_mp_mtr A where yr='"+l_yr+"' and mp_id = '+"+ms_ida+"+' and apl_id='"+ida+"'"
+        queryset = mp_mtr.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+    
+    # created_flag = vm_nanum_stdt.objects.filter(apl_id=ida).exists()
+    # ms_apl_flag = mp_mtr.objects.filter(apl_id=ida,mp_id=ms_ida).exists()
+    
+    # if not ms_apl_flag:
+    #     applyYn = 'N'
+    # else:
+    #     applyYn = 'Y'
+
+    
+    # if not created_flag:
+    #     message = "Fail"
+    #     context = {'message': message}
+    # else:
         
-        message = "Ok"
-        rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
-        rows2 = mp_sub.objects.filter(ms_id=ms_ida)
-        rows3 = mpgm.objects.filter(mp_id=ms_ida)[0]
+    #     message = "Ok"
+    #     rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
+    #     rows2 = mp_sub.objects.filter(ms_id=ms_ida)
+    #     rows3 = mpgm.objects.filter(mp_id=ms_ida)[0]
 
 
-        for val in rows2:
-            key1 = val.att_id
-            #key2 = val.att_cdd
+    #     for val in rows2:
+    #         key1 = val.att_id
+    #         #key2 = val.att_cdd
 
-        #question01 = com_cdd.objects.filter(std_grp_code=key1)[0].rmrk
-        #question02 = com_cdd.objects.filter(std_grp_code=key1)[1].rmrk
-        #question03 = com_cdd.objects.filter(std_grp_code=key1)[2].rmrk
-        #question04 = com_cdd.objects.filter(std_grp_code=key1)[3].rmrk
-        #question05 = com_cdd.objects.filter(std_grp_code=key1)[4].rmrk
 
-        context = {'message': message,
-                    'applyYn' : applyYn,
-                    'apl_nm' : rows.apl_nm,
-                    'univ_cd' : rows.univ_cd,
-                    'univ_nm' : rows.univ_nm,
-                    'grad_div_cd' : rows.grad_div_cd,
-                    'grad_div_nm' : rows.grad_div_nm,
-                    'cllg_cd' : rows.cllg_cd,
-                    'cllg_nm' : rows.cllg_nm,
-                    'dept_cd' : rows.dept_cd,
-                    'dept_nm' : rows.dept_nm,
-                    'mjr_cd' : rows.mjr_cd,
-                    'mjr_nm' : rows.mjr_nm,
-                    'brth_dt' : rows.brth_dt,
-                    'gen_cd' : rows.gen_cd,
-                    'gen_nm' : rows.gen_nm,
-                    'yr' : rows.yr,
-                    'sch_yr' : rows.sch_yr,
-                    'term_div' : rows.term_div,
-                    'term_nm' : rows.term_nm,
-                    'stdt_div' : rows.stdt_div,
-                    'stdt_nm' : rows.stdt_nm,
-                    'mob_nm' : rows.mob_nm,
-                    'tel_no' : rows.tel_no,
-                    'tel_no_g' : rows.tel_no_g,
-                    'h_addr' : rows.h_addr,
-                    'post_no' : rows.post_no,
-                    'email_addr' : rows.email_addr,
-                    'bank_acct' : rows.bank_acct,
-                    'bank_cd' : rows.bank_cd,
-                    'bank_nm' : rows.bank_nm,
-                    'bank_dpsr' : rows.bank_dpsr,
-                    'pr_yr' : rows.pr_yr,
-                    'pr_sch_yr' : rows.pr_sch_yr,
-                    'pr_term_div' : rows.pr_term_div,
-                    'score01' : rows.score01,
-                    'score02' : rows.score02,
-                    'score03' : rows.score03,
-                    'score04' : rows.score04,
-                    'score04_tp' : rows.score04_tp,
-                    'score05' : rows.score05,
-                    'ms_id' : rows3.mp_id,
-                    'ms_name' : rows3.mp_name,
-                    }
+    #     context = {'message': message,
+    #                 'applyYn' : applyYn,
+    #                 'apl_nm' : rows.apl_nm,
+    #                 'univ_cd' : rows.univ_cd,
+    #                 'univ_nm' : rows.univ_nm,
+    #                 'grad_div_cd' : rows.grad_div_cd,
+    #                 'grad_div_nm' : rows.grad_div_nm,
+    #                 'cllg_cd' : rows.cllg_cd,
+    #                 'cllg_nm' : rows.cllg_nm,
+    #                 'dept_cd' : rows.dept_cd,
+    #                 'dept_nm' : rows.dept_nm,
+    #                 'mjr_cd' : rows.mjr_cd,
+    #                 'mjr_nm' : rows.mjr_nm,
+    #                 'brth_dt' : rows.brth_dt,
+    #                 'gen_cd' : rows.gen_cd,
+    #                 'gen_nm' : rows.gen_nm,
+    #                 'yr' : rows.yr,
+    #                 'sch_yr' : rows.sch_yr,
+    #                 'term_div' : rows.term_div,
+    #                 'term_nm' : rows.term_nm,
+    #                 'stdt_div' : rows.stdt_div,
+    #                 'stdt_nm' : rows.stdt_nm,
+    #                 'mob_nm' : rows.mob_nm,
+    #                 'tel_no' : rows.tel_no,
+    #                 'tel_no_g' : rows.tel_no_g,
+    #                 'h_addr' : rows.h_addr,
+    #                 'post_no' : rows.post_no,
+    #                 'email_addr' : rows.email_addr,
+    #                 'bank_acct' : rows.bank_acct,
+    #                 'bank_cd' : rows.bank_cd,
+    #                 'bank_nm' : rows.bank_nm,
+    #                 'bank_dpsr' : rows.bank_dpsr,
+    #                 'pr_yr' : rows.pr_yr,
+    #                 'pr_sch_yr' : rows.pr_sch_yr,
+    #                 'pr_term_div' : rows.pr_term_div,
+    #                 'score01' : rows.score01,
+    #                 'score02' : rows.score02,
+    #                 'score03' : rows.score03,
+    #                 'score04' : rows.score04,
+    #                 'score04_tp' : rows.score04_tp,
+    #                 'score05' : rows.score05,
+    #                 'ms_id' : rows3.mp_id,
+    #                 'ms_name' : rows3.mp_name,
+    #                 }
     
 
-    #return HttpResponse(json.dumps(context), content_type="application/json")
-    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+    # return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 
 # 멘토스쿨 신청
