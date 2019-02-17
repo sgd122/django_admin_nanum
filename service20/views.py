@@ -704,7 +704,7 @@ class mpmgListPersonSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = mpgm
-        fields = ('mp_id','mp_name','status','img_src','yr','yr_seq','sup_org','applyFlag','applyStatus','apl_fr_dt','apl_to_dt','mnt_fr_dt','mnt_to_dt','cnt_trn','status')
+        fields = ('mp_id','mp_name','status','yr','yr_seq','sup_org','applyFlag','applyStatus','apl_fr_dt','apl_to_dt','mnt_fr_dt','mnt_to_dt','cnt_trn','status')
 
     def get_applyFlag(self, obj):
         # return 'Y'     
@@ -717,6 +717,7 @@ class mpmgListPersonSerializer(serializers.ModelSerializer):
         # return obj.applyStatus    
 
     def get_status(self,obj):
+        request = self.context['request']
         now = datetime.datetime.today()
         if obj.apl_fr_dt == None:
             return '개설중'
@@ -739,14 +740,14 @@ class mpmgListPersionView(generics.ListAPIView):
     def list(self, request):
         l_yr = request.GET.get('yr', "")
         l_apl_term = request.GET.get('apl_term', "")
+        l_status = request.GET.get('status', "")
         ida = request.POST.get('user_id', "")
 
         query = "select ifnull((select 'Y' from service20_mp_mtr where yr = '"+str(l_yr)+"' and term_div = '"+str(l_apl_term)+"' and apl_id = '"+str(ida)+"' and mp_id = A.mp_id),'N') AS applyFlag,A.* from service20_mpgm A where A.yr='"+str(l_yr)+"' and A.apl_term='"+str(l_apl_term)+"'"
         queryset = mpgm.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
-        serializer = serializer_class(queryset, many=True)
-
+        serializer = serializer_class(queryset, context={'request': request}, many=True)
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
