@@ -356,31 +356,8 @@ class post_user_info_persion_view_Quest(generics.ListAPIView):
         l_user_id = request.GET.get('user_id', None)           
         l_exist = mp_sub.objects.filter(ms_id=key1).exists()
         
-
-        # query = "select B.std_detl_code_nm,B.rmrk,A.* from mp_ans A, com_cdd B where A.ques_no = B.std_detl_code and B.std_grp_code = 'MS0014' and A.mp_id = '"+key1+"' and apl_id = '"+l_user_id+"'"
         query = "select B.std_detl_code_nm,B.rmrk,A.* from service20_mp_ans A, service20_com_cdd B where A.ques_no = B.std_detl_code and B.std_grp_code in (select att_cdh from service20_mp_sub where ms_id = '"+key1+"') and A.mp_id = '"+key1+"' and apl_id = '"+l_user_id+"'"
         queryset = mp_ans.objects.raw(query)
-
-        # queryset = self.get_queryset()
-        # if not l_exist:
-        #     queryset = queryset.filter(std_grp_code='')
-        # else:
-        #     l_key1 = mp_sub.objects.filter(ms_id=key1)[0].att_cdh
-        #     l_key_query = mp_sub.objects.filter(ms_id=key1).values_list('att_cdd', flat=True) 
-        #     #mp_sub 테이블에서 질문내역 조회
-            
-        #     if not l_key_query:
-        #         queryset = queryset.filter(std_grp_code=l_key1, std_detl_code__in=l_key_query)
-        #     else:
-        #         queryset = queryset.filter(std_grp_code=l_key1)
-        #     #조회한 질문내역 기준으로 공통코드 조회
-
-
-        #     query_ans = mp_ans.objects.all()
-        #     query_ans = query_ans.filter(mp_id=key1,apl_id=l_user_id)
-
-        #     queryset = query_ans
-        #     #mp_ans 테이블에서 답변내역 조회
 
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
@@ -391,7 +368,6 @@ class post_user_info_persion_view_Quest(generics.ListAPIView):
             return self.get_paginated_response(serializer.data)
 
         return Response(serializer.data)
-
 
 
 # 멘토링 프로그램 질문유형 가져오기
@@ -736,9 +712,14 @@ class mpmgListPersonSerializer(serializers.ModelSerializer):
         fields = ('mp_id','mp_name','status','img_src','yr','yr_seq','sup_org','applyFlag','applyStatus','apl_fr_dt','apl_to_dt','mnt_fr_dt','mnt_to_dt','cnt_trn','status')
 
     def get_applyFlag(self, obj):
-        return 'Y'     
+        # return 'Y'     
+        return obj.chk    
     def get_applyStatus(self, obj):
-        return '미지원'  
+        if obj.applyFlag == 'Y':
+            return '지원'
+        elif obj.applyFlag == 'N':
+            return '미지원'    
+        return obj.chk    
 
     def get_status(self,obj):
         now = datetime.datetime.today()
@@ -763,16 +744,10 @@ class mpmgListPersionView(generics.ListAPIView):
     def list(self, request):
         l_yr = request.GET.get('yr', None)
         l_apl_term = request.GET.get('apl_term', None)
+        ida = request.POST.get('user_id', None)
 
-        queryset = self.get_queryset()
-
-        if l_yr != '':
-            print(l_yr)
-            queryset = queryset.filter(yr=l_yr)
-
-        if l_apl_term != '':
-            print(l_apl_term)
-            queryset = queryset.filter(apl_term=l_apl_term)
+        query = "select NVL((select 'Y' from service20_ms_apl where yr = '"+yr+"' and term_div = '"+l_apl_term+"' and apl_id = '"+ida+"' and ms_id_id = A.ms_id),'N') AS applyFlag,A.* from service20_mpgm A where yr='"+l_yr+"' and apl_term='"+l_apl_term+"'"
+        queryset = mpgm.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
