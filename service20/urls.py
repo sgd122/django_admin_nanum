@@ -55,6 +55,8 @@ urlpatterns = [
     # path('authUserPersionInfo/', post_user_info_persion, name='post_user_info_persion'),
     path('authUserPersionInfo/', post_user_info_persion.as_view(), name='post_user_info_persion'),
 
+    path('authUserPersionInfoAdm/', post_user_info_persion_adm.as_view(), name='post_user_info_persion_adm'),
+
     # 멘토링 프로그램(관리자) - 질문
     path('authUserInfoPersionViewQuest/', post_user_info_persion_view_Quest.as_view(), name='post_user_info_persion_view_Quest'),
     ########################################################################################
