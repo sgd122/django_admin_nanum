@@ -713,14 +713,14 @@ class mpmgListPersonSerializer(serializers.ModelSerializer):
 
     def get_applyFlag(self, obj):
         # return 'Y'     
-        return obj.chk    
+        return obj.applyFlag    
     def get_applyStatus(self, obj):
         if obj.applyFlag == 'Y':
             return '지원'
         elif obj.applyFlag == 'N':
             return '미지원'    
-        return obj.chk    
-
+        # return obj.applyStatus    
+    
     def get_status(self,obj):
         now = datetime.datetime.today()
         if obj.apl_fr_dt == None:
