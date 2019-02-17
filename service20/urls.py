@@ -9,6 +9,10 @@ app_name = 'service20'
 urlpatterns = [
     
      #path('', views.stdApplyIns, name='stdApplyIns'),
+
+     #멘토링 질문리스트 (미사용)
+    # path('post_mt_quest/', post_mt_quest, name='post_mt_Quest'),   
+
     path('stdApplyStdView/', stdApplyStdView, name='detail'),
     path('Service20_01/', Service20_01_View, name='detail'),
 
@@ -78,6 +82,18 @@ urlpatterns = [
     #
     ########################################################################################
     
+    
+
+    
+
+
+
+
+
+    ########################################################################################
+    # view2 부분 (시작)
+    #
+    ########################################################################################
     #멘토스쿨 콤보박스
     path('comboMpmgListView/', comboMpmgListView.as_view(), name='comboMpmgListView'),
     #멘토스쿨 콤보박스 Detail
@@ -85,6 +101,15 @@ urlpatterns = [
     #멘토스쿨 환산표
     path('msFn1/', msFn1, name='msFn1'),
 
-    #멘토링 질문리스트 (미사용)
-    path('post_mt_quest/', post_mt_quest, name='post_mt_Quest'),   
+    #멘토스쿨 콤보박스
+    path('mpComboListView/', mpComboListView.as_view(), name='mpComboListView'),
+    #멘토링 콤보박스 Detail
+    path('mpComboListViewDetail/', mpComboListViewDetail.as_view(), name='mpComboListViewDetail'),
+    #환산
+    path('mpFn1/', mpComboListViewDetail.as_view(), name='mpComboListViewDetail'),
+        
+    ########################################################################################
+    # view2 부분 (종료)
+    #
+    ########################################################################################
 ]

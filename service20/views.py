@@ -26,7 +26,6 @@ class Service20ListSerializer(serializers.ModelSerializer):
     class Meta:
         model = msch
         fields = ('ms_id', 'ms_name','yr','yr_seq','sup_org','img_src','ins_dt','ins_id','apl_term','apl_fr_dt','apl_to_dt','trn_fr_dt','trn_to_dt','tot_apl','cnt_apl','status','applyYn')
-        # fields = ('ms_id', 'ms_name','yr','yr_seq','sup_org','ins_dt','ins_id','apl_term','apl_fr_dt','apl_to_dt','trn_fr_dt','trn_to_dt','tot_apl','cnt_apl','status','applyYn')
 
     def get_status(self,obj):
         request = self.context['request']
@@ -192,10 +191,19 @@ def post_user_info(request):
 
 class post_user_info_Quest_Serializer(serializers.ModelSerializer):
 
-    class Meta:
-        model = com_cdd
-        fields = ('std_grp_code','std_detl_code','std_detl_code_nm','rmrk','use_indc')
+   
+    std_detl_code_nm = serializers.SerializerMethodField()
+    rmrk = serializers.SerializerMethodField()
 
+    class Meta:
+        model = ms_sub
+        fields = ('id','ms_id','att_id','att_cdh','att_cdd','att_val','att_unit','use_yn','sort_seq','std_detl_code_nm','rmrk')        
+
+    def get_std_detl_code_nm(self,obj):
+        return obj.std_detl_code_nm
+
+    def get_rmrk(self,obj):
+        return obj.rmrk  
 
 class post_user_info_Quest(generics.ListAPIView):
     queryset = com_cdd.objects.all()
@@ -205,19 +213,8 @@ class post_user_info_Quest(generics.ListAPIView):
         key1 = request.GET.get('ms_id', None)           
         l_exist = ms_sub.objects.filter(ms_id=key1).exists()
         
-        queryset = self.get_queryset()
-        if not l_exist:
-            queryset = queryset.filter(std_grp_code='')
-        else:
-            l_key1 = ms_sub.objects.filter(ms_id=key1)[0].att_cdh
-            l_key_query = ms_sub.objects.filter(ms_id=key1).values_list('att_cdd_id', flat=True) 
-            #ms_sub 테이블에서 질문내역 조회
-            
-            if not l_key_query:
-                queryset = queryset.filter(std_grp_code=l_key1, std_detl_code__in=l_key_query)
-            else:
-                queryset = queryset.filter(std_grp_code=l_key1)
-            #조회한 질문내역 기준으로 공통코드 조회
+        query = "select B.std_detl_code_nm,B.rmrk,A.* from service20_ms_sub A left outer join service20_com_cdd B on (A.att_id = B.std_grp_code and A.att_cdd = B.std_detl_code) where A.ms_id = '"+key1+"'"
+        queryset = mp_sub.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
@@ -260,32 +257,9 @@ class post_user_info_view_Quest(generics.ListAPIView):
         #ms_sub 테이블에서 질문내역 조회
         key1 = request.GET.get('ms_id', None) 
         l_user_id = request.GET.get('user_id', None)           
-        # l_exist = ms_sub.objects.filter(ms_id=key1).exists()
         
         query = "select B.std_detl_code_nm,B.rmrk,A.* from service20_ms_ans A, service20_com_cdd B where A.ques_no = B.std_detl_code and B.std_grp_code in (select att_cdh from service20_ms_sub where ms_id = '"+key1+"') and A.ms_id = '"+key1+"' and apl_id = '"+l_user_id+"'"
         queryset = ms_ans.objects.raw(query)
-
-
-        # queryset = self.get_queryset()
-        # if not l_exist:
-        #     queryset = queryset.filter(std_grp_code='')
-        # else:
-        #     l_key1 = ms_sub.objects.filter(ms_id=key1)[0].att_cdh
-        #     l_key_query = ms_sub.objects.filter(ms_id=key1).values_list('att_cdd_id', flat=True) 
-        #     #ms_sub 테이블에서 질문내역 조회
-            
-        #     if not l_key_query:
-        #         queryset = queryset.filter(std_grp_code=l_key1, std_detl_code__in=l_key_query)
-        #     else:
-        #         queryset = queryset.filter(std_grp_code=l_key1)
-        #     #조회한 질문내역 기준으로 공통코드 조회
-
-
-        #     query_ans = ms_ans.objects.all()
-        #     query_ans = query_ans.filter(ms_id=key1,apl_id=l_user_id)
-
-        #     queryset = query_ans
-        #     #ms_ans 테이블에서 답변내역 조회
 
 
         serializer_class = self.get_serializer_class()
@@ -640,7 +614,6 @@ class mpmgListSerializer(serializers.ModelSerializer):
     class Meta:
         model = mpgm
         fields = ('mp_id','mp_name','status','img_src','testField')
-        # fields = ('mp_id','mp_name','status','testField')
 
     def get_testField(self, obj):
         return 'test'     
@@ -733,7 +706,6 @@ class mpmgListPersionView(generics.ListAPIView):
 def post_user_info(request):
     ida = request.POST.get('user_id', None)
     ms_ida = request.POST.get('ms_id', None)
-    #created,created_flag = vm_nanum_stdt.apl_id.get_or_create(user=request.user)
     created_flag = vm_nanum_stdt.objects.filter(apl_id=ida).exists()
     ms_apl_flag = ms_apl.objects.filter(apl_id=ida,ms_id=ms_ida).exists()
     if not ms_apl_flag:
@@ -741,8 +713,6 @@ def post_user_info(request):
     else:
         applyYn = 'Y'
 
-    #rows = vm_nanum_stdt.objects.filter(apl_id=ida)
-    #rows2 = vm_nanum_stdt.objects.get("apl_nm")
     if not created_flag:
         message = "Fail"
         context = {'message': message}
@@ -756,13 +726,6 @@ def post_user_info(request):
 
         for val in rows2:
             key1 = val.att_id
-            #key2 = val.att_cdd
-
-        #question01 = com_cdd.objects.filter(std_grp_code=key1)[0].rmrk
-        #question02 = com_cdd.objects.filter(std_grp_code=key1)[1].rmrk
-        #question03 = com_cdd.objects.filter(std_grp_code=key1)[2].rmrk
-        #question04 = com_cdd.objects.filter(std_grp_code=key1)[3].rmrk
-        #question05 = com_cdd.objects.filter(std_grp_code=key1)[4].rmrk
 
         context = {'message': message,
                     'applyYn' : applyYn,
@@ -851,7 +814,6 @@ class mpPlnh_mpgmListSerializer(serializers.ModelSerializer):
     class Meta:
         model = mpgm
         fields = ('mp_id','mp_name','status','img_src','yr','yr_seq','apl_term','mp_sname','base_div','mp_intro','mng_area','mgr_id','mgr_nm','mng_org','sup_org','testField')
-        # fields = ('mp_id','mp_name','status','yr','yr_seq','apl_term','mp_sname','base_div','mp_intro','mng_area','mgr_id','mgr_nm','mng_org','sup_org','testField')
 
     def get_testField(self, obj):
         return 'test'     
