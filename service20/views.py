@@ -720,7 +720,7 @@ class mpmgListPersonSerializer(serializers.ModelSerializer):
         elif obj.applyFlag == 'N':
             return '미지원'    
         # return obj.applyStatus    
-    
+
     def get_status(self,obj):
         now = datetime.datetime.today()
         if obj.apl_fr_dt == None:
@@ -746,7 +746,7 @@ class mpmgListPersionView(generics.ListAPIView):
         l_apl_term = request.GET.get('apl_term', "")
         ida = request.POST.get('user_id', "")
 
-        query = "select ifnull((select 'Y' from service20_ms_apl where yr = '"+str(l_yr)+"' and term_div = '"+str(l_apl_term)+"' and apl_id = '"+str(ida)+"' and ms_id_id = A.mp_id),'N') AS applyFlag,A.* from service20_mpgm A where A.yr='"+str(l_yr)+"' and A.apl_term='"+str(l_apl_term)+"'"
+        query = "select ifnull((select 'Y' from service20_mp_mtr where yr = '"+str(l_yr)+"' and term_div = '"+str(l_apl_term)+"' and apl_id = '"+str(ida)+"' and mp_id = A.mp_id),'N') AS applyFlag,A.* from service20_mpgm A where A.yr='"+str(l_yr)+"' and A.apl_term='"+str(l_apl_term)+"'"
         queryset = mpgm.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
