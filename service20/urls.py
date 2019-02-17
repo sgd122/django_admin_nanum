@@ -52,8 +52,8 @@ urlpatterns = [
     # 멘토링 프로그램 신청
     path('msProgramApply/', post_msProgramApply, name='post_msProgramApply'), 
     # 성적,봉사,어학 가져오기
-    # path('authUserPersionInfo/', post_user_info_persion, name='post_user_info_persion'),
-    path('authUserPersionInfo/', post_user_info_persion.as_view(), name='post_user_info_persion'),
+    path('authUserPersionInfo/', post_user_info_persion, name='post_user_info_persion'),
+    # path('authUserPersionInfo/', post_user_info_persion.as_view(), name='post_user_info_persion'),
 
     # 멘토링 프로그램(관리자) - 질문
     path('authUserInfoPersionViewQuest/', post_user_info_persion_view_Quest.as_view(), name='post_user_info_persion_view_Quest'),
