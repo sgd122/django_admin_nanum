@@ -193,11 +193,15 @@ class post_user_info_Quest_Serializer(serializers.ModelSerializer):
 
    
     std_detl_code_nm = serializers.SerializerMethodField()
+    std_detl_code = serializers.SerializerMethodField()
     rmrk = serializers.SerializerMethodField()
 
     class Meta:
         model = ms_sub
-        fields = ('id','ms_id','att_id','att_cdh','att_cdd','att_val','att_unit','use_yn','sort_seq','std_detl_code_nm','rmrk')        
+        fields = ('id','ms_id','att_id','att_cdh','att_cdd','att_val','att_unit','use_yn','sort_seq','std_detl_code','std_detl_code_nm','rmrk')        
+
+    def get_std_detl_code(self,obj):
+        return obj.std_detl_code
 
     def get_std_detl_code_nm(self,obj):
         return obj.std_detl_code_nm
@@ -213,7 +217,7 @@ class post_user_info_Quest(generics.ListAPIView):
         key1 = request.GET.get('ms_id', None)           
         l_exist = ms_sub.objects.filter(ms_id=key1).exists()
         
-        query = "select B.std_detl_code_nm,B.rmrk,A.* from service20_ms_sub A left outer join service20_com_cdd B on (A.att_id = B.std_grp_code and A.att_cdd = B.std_detl_code) where A.ms_id = '"+key1+"'"
+        query = "select B.std_detl_code,B.std_detl_code_nm,B.rmrk,A.* from service20_ms_sub A left outer join service20_com_cdd B on (A.att_id = B.std_grp_code and A.att_cdd = B.std_detl_code) where A.ms_id = '"+key1+"'"
         queryset = mp_sub.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
@@ -242,6 +246,7 @@ class post_user_info_view_Quest_Serializer2(serializers.ModelSerializer):
         model = ms_ans
         fields = ('id','ms_id','test_div','apl_no','ques_no','apl_id','apl_nm','sort_seq','ans_t1','ans_t2','ans_t3','score','std_detl_code_nm','rmrk')        
 
+    
     def get_std_detl_code_nm(self,obj):
         return obj.std_detl_code_nm
 
@@ -317,11 +322,16 @@ class post_user_info_persion_view_Quest(generics.ListAPIView):
 class post_user_info_persion_Quest_Serializer(serializers.ModelSerializer):
 
     std_detl_code_nm = serializers.SerializerMethodField()
+    std_detl_code = serializers.SerializerMethodField()
     rmrk = serializers.SerializerMethodField()
     class Meta:
         model = mp_sub
-        fields = ('id','ms_id','att_id','att_seq','att_cdh','att_cdd','att_val','use_yn','sort_seq','std_detl_code_nm','rmrk')
+        fields = ('id','ms_id','att_id','att_seq','att_cdh','att_cdd','att_val','use_yn','sort_seq','std_detl_code','std_detl_code_nm','rmrk')
 
+        
+    def get_std_detl_code(self,obj):
+        return obj.std_detl_code
+        
     def get_std_detl_code_nm(self,obj):
         return obj.std_detl_code_nm
 
@@ -336,7 +346,7 @@ class post_user_info_persion_Quest(generics.ListAPIView):
         #mp_sub 테이블에서 질문내역 조회
         key1 = request.GET.get('mp_id', None)           
         
-        query = "select B.std_detl_code_nm,B.rmrk,A.* from service20_mp_sub A left outer join service20_com_cdd B on (A.att_id = B.std_grp_code and A.att_cdd = B.std_detl_code) where A.ms_id = '"+key1+"'"
+        query = "select B.std_detl_code,B.std_detl_code_nm,B.rmrk,A.* from service20_mp_sub A left outer join service20_com_cdd B on (A.att_id = B.std_grp_code and A.att_cdd = B.std_detl_code) where A.ms_id = '"+key1+"'"
         queryset = mp_sub.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
