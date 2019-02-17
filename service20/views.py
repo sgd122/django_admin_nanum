@@ -25,7 +25,7 @@ class Service20ListSerializer(serializers.ModelSerializer):
     class Meta:
         model = msch
         fields = ('ms_id', 'ms_name','yr','yr_seq','sup_org','img_src','ins_dt','ins_id','apl_term','apl_fr_dt','apl_to_dt','trn_fr_dt','trn_to_dt','tot_apl','cnt_apl','status','applyYn')
-
+        # fields = ('ms_id', 'ms_name','yr','yr_seq','sup_org','ins_dt','ins_id','apl_term','apl_fr_dt','apl_to_dt','trn_fr_dt','trn_to_dt','tot_apl','cnt_apl','status','applyYn')
 
     def get_status(self,obj):
         request = self.context['request']
@@ -94,6 +94,7 @@ class Service20ListView(generics.ListAPIView):
               'yr_seq':val.yr_seq,
               'sup_org':val.sup_org,
               'img_src':val.img_src,
+              # 'img_src':'',
               'ins_dt':val.ins_dt.strftime('%Y-%m-%d'),
               'ins_id':val.ins_id,
               # 'apl_term':val.apl_term,
@@ -685,6 +686,7 @@ class mpmgListSerializer(serializers.ModelSerializer):
     class Meta:
         model = mpgm
         fields = ('mp_id','mp_name','status','img_src','testField')
+        # fields = ('mp_id','mp_name','status','testField')
 
     def get_testField(self, obj):
         return 'test'     
@@ -895,6 +897,7 @@ class mpPlnh_mpgmListSerializer(serializers.ModelSerializer):
     class Meta:
         model = mpgm
         fields = ('mp_id','mp_name','status','img_src','yr','yr_seq','apl_term','mp_sname','base_div','mp_intro','mng_area','mgr_id','mgr_nm','mng_org','sup_org','testField')
+        # fields = ('mp_id','mp_name','status','yr','yr_seq','apl_term','mp_sname','base_div','mp_intro','mng_area','mgr_id','mgr_nm','mng_org','sup_org','testField')
 
     def get_testField(self, obj):
         return 'test'     
