@@ -742,11 +742,11 @@ class mpmgListPersionView(generics.ListAPIView):
     serializer_class = mpmgListPersonSerializer
 
     def list(self, request):
-        l_yr = request.GET.get('yr', None)
-        l_apl_term = request.GET.get('apl_term', None)
-        ida = request.POST.get('user_id', None)
+        l_yr = request.GET.get('yr', "")
+        l_apl_term = request.GET.get('apl_term', "")
+        ida = request.POST.get('user_id', "")
 
-        query = "select ifnull((select 'Y' from service20_ms_apl where yr = '"+l_yr+"' and term_div = '"+l_apl_term+"' and apl_id = '"+ida+"' and ms_id_id = A.mp_id),'N') AS applyFlag,A.* from service20_mpgm A where A.yr='"+l_yr+"' and A.apl_term='"+l_apl_term+"'"
+        query = "select ifnull((select 'Y' from service20_ms_apl where yr = '"+str(l_yr)+"' and term_div = '"+str(l_apl_term)+"' and apl_id = '"+str(ida)+"' and ms_id_id = A.mp_id),'N') AS applyFlag,A.* from service20_mpgm A where A.yr='"+str(l_yr)+"' and A.apl_term='"+str(l_apl_term)+"'"
         queryset = mpgm.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
