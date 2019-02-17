@@ -359,7 +359,7 @@ class post_user_info_persion_Quest(generics.ListAPIView):
         return Response(serializer.data)
 
 
-class post_user_info_persion_Serializer(serializers.ModelSerializer):
+class post_user_info_persion_adm_Serializer(serializers.ModelSerializer):
     
     mp_name = serializers.SerializerMethodField()
     pr_yr = serializers.SerializerMethodField()
@@ -384,9 +384,9 @@ class post_user_info_persion_Serializer(serializers.ModelSerializer):
 
 # @csrf_exempt
 # def post_user_info_persion(request):
-class post_user_info_persion(generics.ListAPIView):
+class post_user_info_persion_adm(generics.ListAPIView):
     queryset = mp_mtr.objects.all()
-    serializer_class = post_user_info_persion_Serializer
+    serializer_class = post_user_info_persion_adm_Serializer
     
     def list(self, request):
         ida = request.GET.get('user_id', None)
@@ -407,79 +407,85 @@ class post_user_info_persion(generics.ListAPIView):
 
         return Response(serializer.data)
 
+@csrf_exempt
+def post_user_info_persion(request):    
+
+    ida = request.POST.get('user_id', None)
+    ms_ida = request.POST.get('ms_id', None)
+    l_yr = request.POST.get('yr', None)
+
+    created_flag = vm_nanum_stdt.objects.filter(apl_id=ida).exists()
+    ms_apl_flag = mp_mtr.objects.filter(apl_id=ida,mp_id=ms_ida).exists()
     
-    # created_flag = vm_nanum_stdt.objects.filter(apl_id=ida).exists()
-    # ms_apl_flag = mp_mtr.objects.filter(apl_id=ida,mp_id=ms_ida).exists()
-    
-    # if not ms_apl_flag:
-    #     applyYn = 'N'
-    # else:
-    #     applyYn = 'Y'
+    if not ms_apl_flag:
+        applyYn = 'N'
+    else:
+        applyYn = 'Y'
 
     
-    # if not created_flag:
-    #     message = "Fail"
-    #     context = {'message': message}
-    # else:
+    if not created_flag:
+        message = "Fail"
+        context = {'message': message}
+    else:
         
-    #     message = "Ok"
-    #     rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
-    #     rows2 = mp_sub.objects.filter(ms_id=ms_ida)
-    #     rows3 = mpgm.objects.filter(mp_id=ms_ida)[0]
+        message = "Ok"
+        rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
+        rows2 = mp_sub.objects.filter(ms_id=ms_ida)
+        rows3 = mpgm.objects.filter(mp_id=ms_ida)[0]
 
 
-    #     for val in rows2:
-    #         key1 = val.att_id
-    #         #key2 = val.att_cdd
+        for val in rows2:
+            key1 = val.att_id
+            #key2 = val.att_cdd
 
 
-    #     context = {'message': message,
-    #                 'applyYn' : applyYn,
-    #                 'apl_nm' : rows.apl_nm,
-    #                 'univ_cd' : rows.univ_cd,
-    #                 'univ_nm' : rows.univ_nm,
-    #                 'grad_div_cd' : rows.grad_div_cd,
-    #                 'grad_div_nm' : rows.grad_div_nm,
-    #                 'cllg_cd' : rows.cllg_cd,
-    #                 'cllg_nm' : rows.cllg_nm,
-    #                 'dept_cd' : rows.dept_cd,
-    #                 'dept_nm' : rows.dept_nm,
-    #                 'mjr_cd' : rows.mjr_cd,
-    #                 'mjr_nm' : rows.mjr_nm,
-    #                 'brth_dt' : rows.brth_dt,
-    #                 'gen_cd' : rows.gen_cd,
-    #                 'gen_nm' : rows.gen_nm,
-    #                 'yr' : rows.yr,
-    #                 'sch_yr' : rows.sch_yr,
-    #                 'term_div' : rows.term_div,
-    #                 'term_nm' : rows.term_nm,
-    #                 'stdt_div' : rows.stdt_div,
-    #                 'stdt_nm' : rows.stdt_nm,
-    #                 'mob_nm' : rows.mob_nm,
-    #                 'tel_no' : rows.tel_no,
-    #                 'tel_no_g' : rows.tel_no_g,
-    #                 'h_addr' : rows.h_addr,
-    #                 'post_no' : rows.post_no,
-    #                 'email_addr' : rows.email_addr,
-    #                 'bank_acct' : rows.bank_acct,
-    #                 'bank_cd' : rows.bank_cd,
-    #                 'bank_nm' : rows.bank_nm,
-    #                 'bank_dpsr' : rows.bank_dpsr,
-    #                 'pr_yr' : rows.pr_yr,
-    #                 'pr_sch_yr' : rows.pr_sch_yr,
-    #                 'pr_term_div' : rows.pr_term_div,
-    #                 'score01' : rows.score01,
-    #                 'score02' : rows.score02,
-    #                 'score03' : rows.score03,
-    #                 'score04' : rows.score04,
-    #                 'score04_tp' : rows.score04_tp,
-    #                 'score05' : rows.score05,
-    #                 'ms_id' : rows3.mp_id,
-    #                 'ms_name' : rows3.mp_name,
-    #                 }
+        context = {'message': message,
+                    'applyYn' : applyYn,
+                    'apl_nm' : rows.apl_nm,
+                    'univ_cd' : rows.univ_cd,
+                    'univ_nm' : rows.univ_nm,
+                    'grad_div_cd' : rows.grad_div_cd,
+                    'grad_div_nm' : rows.grad_div_nm,
+                    'cllg_cd' : rows.cllg_cd,
+                    'cllg_nm' : rows.cllg_nm,
+                    'dept_cd' : rows.dept_cd,
+                    'dept_nm' : rows.dept_nm,
+                    'mjr_cd' : rows.mjr_cd,
+                    'mjr_nm' : rows.mjr_nm,
+                    'brth_dt' : rows.brth_dt,
+                    'gen_cd' : rows.gen_cd,
+                    'gen_nm' : rows.gen_nm,
+                    'yr' : rows.yr,
+                    'sch_yr' : rows.sch_yr,
+                    'term_div' : rows.term_div,
+                    'term_nm' : rows.term_nm,
+                    'stdt_div' : rows.stdt_div,
+                    'stdt_nm' : rows.stdt_nm,
+                    'mob_nm' : rows.mob_nm,
+                    'tel_no' : rows.tel_no,
+                    'tel_no_g' : rows.tel_no_g,
+                    'h_addr' : rows.h_addr,
+                    'post_no' : rows.post_no,
+                    'email_addr' : rows.email_addr,
+                    'bank_acct' : rows.bank_acct,
+                    'bank_cd' : rows.bank_cd,
+                    'bank_nm' : rows.bank_nm,
+                    'bank_dpsr' : rows.bank_dpsr,
+                    'pr_yr' : rows.pr_yr,
+                    'pr_sch_yr' : rows.pr_sch_yr,
+                    'pr_term_div' : rows.pr_term_div,
+                    'score01' : rows.score01,
+                    'score02' : rows.score02,
+                    'score03' : rows.score03,
+                    'score04' : rows.score04,
+                    'score04_tp' : rows.score04_tp,
+                    'score05' : rows.score05,
+                    'ms_id' : rows3.mp_id,
+                    'ms_name' : rows3.mp_name,
+                    }
     
 
-    # return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 
 # 멘토스쿨 신청
