@@ -1329,4 +1329,41 @@ class Meta:
   index_together = ["apl_no", "mp_id"]
   index_together = ["apl_no", "att_sts"]
 
+class mp_exp(models.Model):
+  mp_id = models.CharField(max_length=10, null=False, verbose_name='멘토링 프로그램ID' )
+  apl_no = models.PositiveIntegerField(null=False, verbose_name='멘토 지원 NO' )
+  exp_no = models.PositiveIntegerField(null=False, verbose_name='활동비 NO' )
+  exp_mon = models.CharField(max_length=6, null=False, verbose_name='활동비 월' )
+  exp_div = models.CharField(max_length=1, null=False, verbose_name='활동비 구분' )
+  exp_ttl = models.CharField(max_length=200, null=True, blank=True, verbose_name='활동비 제목' )
+  exp_dt = models.DateTimeField(null=True, blank=True, verbose_name='활동비 작성일' )
+  bank_dt = models.DateTimeField(null=True, blank=True, verbose_name='은행 자료 작성일' )
+  elap_tm = models.TimeField(null=True, blank=True, verbose_name='활동시간 합계' )
+  unit_price = models.DecimalField(max_digits=10, decimal_places=0, null=True, blank=True, verbose_name='시급(단가)' )
+  appr_tm = models.PositiveIntegerField(null=True, blank=True, verbose_name='인정시간 합계' )
+  sum_exp = models.DecimalField(max_digits=10, decimal_places=0, null=True, blank=True, verbose_name='활동비=APPR_TM * UNIT_PRICE' )
+  bank_acct = models.CharField(max_length=20, null=True, blank=True, verbose_name='은행 계좌 번호' )
+  bank_cd = models.CharField(max_length=10, null=True, blank=True, verbose_name='은행 코드' )
+  bank_nm = models.CharField(max_length=50, null=True, blank=True, verbose_name='은행 명' )
+  bank_dpsr = models.CharField(max_length=20, null=True, blank=True, verbose_name='예금주' )
+  mp_sname = models.CharField(max_length=20, null=True, blank=True, verbose_name='입금자명-멘토링 프로그램 단명' )
+  mgr_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='관리자ID' )
+  mgr_dt = models.DateTimeField(null=True, blank=True, verbose_name='관리자 승인일시' )
+  ins_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='입력자ID' )
+  ins_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력자IP' )
+  ins_dt = models.DateTimeField(null=True, blank=True, verbose_name='입력일시' )
+  ins_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력프로그램ID' )
+  upd_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='수정자ID' )
+  upd_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정자IP' )
+  upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
+  upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
 
+
+
+class Meta:
+  verbose_name = '프로그램 활동비'
+  verbose_name_plural =  verbose_name
+  unique_together=("mp_id", "apl_no", "exp_no")
+
+  index_together = ["apl_no", "mp_id"]
+  index_together = ["apl_no", "att_sts"]
