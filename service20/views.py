@@ -304,7 +304,7 @@ class post_user_info_persion_view_Quest(generics.ListAPIView):
         query = "select B.std_detl_code_nm,B.rmrk,A.* from service20_mp_ans A, service20_com_cdd B where A.ques_no = B.std_detl_code and B.std_grp_code in (select att_cdh from service20_mp_sub where ms_id = '"+str(key1)+"') and A.mp_id = '"+str(key1)+"' and apl_id = '"+str(l_user_id)+"'"
         queryset = mp_ans.objects.raw(query)
 
-        print(query)
+        
 
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
@@ -388,6 +388,8 @@ class post_user_info_persion(generics.ListAPIView):
         query = "select A.* from service20_mp_mtr A where yr='"+l_yr+"' and mp_id = '+"+ms_ida+"+' and apl_id='"+ida+"'"
         queryset = mp_mtr.objects.raw(query)
 
+        print(query)
+        
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
 
