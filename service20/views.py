@@ -67,9 +67,9 @@ class Service20ListView(generics.ListAPIView):
         l_user_id = request.GET.get('user_id', None)
 
         v_ms_apl = ms_apl.objects.all()
-        v_ms_apl.filter(apl_id=l_user_id,yr=l_yr).values_list('ms_id_id', flat=True) 
+        v_ms_apl.filter(apl_id=l_user_id,yr=l_yr).values_list('ms_id', flat=True) 
         print("::v_ms_apl::")
-        # print(v_ms_apl.ms_id_id)
+        # print(v_ms_apl.ms_id)
 
         queryset = self.get_queryset()
         if l_yr != '':
@@ -154,8 +154,8 @@ def post_user_info(request):
     #created,created_flag = vm_nanum_stdt.apl_id.get_or_create(user=request.user)
     created_flag = vm_nanum_stdt.objects.filter(apl_id=ida).exists()
 
-    # ms_apl_flag = ms_apl.objects.filter(apl_id=ida,ms_id_id=ms_ida).exists()
-    ms_apl_flag = ms_apl.objects.filter(apl_id=ida,yr=l_yr,ms_id_id=ms_ida).exists()
+    # ms_apl_flag = ms_apl.objects.filter(apl_id=ida,ms_id=ms_ida).exists()
+    ms_apl_flag = ms_apl.objects.filter(apl_id=ida,yr=l_yr,ms_id=ms_ida).exists()
 
     if not ms_apl_flag:
         applyYn = 'N'
@@ -248,14 +248,14 @@ class post_user_info_Quest(generics.ListAPIView):
     def list(self, request):
         #ms_sub 테이블에서 질문내역 조회
         key1 = request.GET.get('ms_id', None)           
-        l_exist = ms_sub.objects.filter(ms_id_id=key1).exists()
+        l_exist = ms_sub.objects.filter(ms_id=key1).exists()
         
         queryset = self.get_queryset()
         if not l_exist:
             queryset = queryset.filter(std_grp_code='')
         else:
-            l_key1 = ms_sub.objects.filter(ms_id_id=key1)[0].att_cdh
-            l_key_query = ms_sub.objects.filter(ms_id_id=key1).values_list('att_cdd_id', flat=True) 
+            l_key1 = ms_sub.objects.filter(ms_id=key1)[0].att_cdh
+            l_key_query = ms_sub.objects.filter(ms_id=key1).values_list('att_cdd_id', flat=True) 
             #ms_sub 테이블에서 질문내역 조회
             
             if not l_key_query:
@@ -295,14 +295,14 @@ class post_user_info_view_Quest(generics.ListAPIView):
         #ms_sub 테이블에서 질문내역 조회
         key1 = request.GET.get('ms_id', None) 
         l_user_id = request.GET.get('user_id', None)           
-        l_exist = ms_sub.objects.filter(ms_id_id=key1).exists()
+        l_exist = ms_sub.objects.filter(ms_id=key1).exists()
         
         queryset = self.get_queryset()
         if not l_exist:
             queryset = queryset.filter(std_grp_code='')
         else:
-            l_key1 = ms_sub.objects.filter(ms_id_id=key1)[0].att_cdh
-            l_key_query = ms_sub.objects.filter(ms_id_id=key1).values_list('att_cdd_id', flat=True) 
+            l_key1 = ms_sub.objects.filter(ms_id=key1)[0].att_cdh
+            l_key_query = ms_sub.objects.filter(ms_id=key1).values_list('att_cdd_id', flat=True) 
             #ms_sub 테이블에서 질문내역 조회
             
             if not l_key_query:
@@ -509,7 +509,7 @@ def post_msApply(request):
     ms_ida = request.POST.get('ms_id', None)
     apl_max = request.POST.get('aplMax', 0)
     #created,created_flag = vm_nanum_stdt.apl_id.get_or_create(user=request.user)
-    ms_id_id = programId
+    ms_id = programId
     ms_apl_max = ms_apl.objects.all().aggregate(vlMax=Max('apl_no'))
     rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
     #ms_apl_max = ms_apl.objects.all().last()
@@ -527,7 +527,7 @@ def post_msApply(request):
     
     
     model_instance = ms_apl(
-        ms_id_id=ms_id_id, 
+        ms_id=ms_id, 
         apl_no=apl_no, 
         apl_id=apl_id,
         apl_nm=rows.apl_nm,
@@ -561,7 +561,7 @@ def post_msApply(request):
         ques_no = request.POST.get('ques_no'+str(i+1), None)
 
         model_instance2 = ms_ans(
-            ms_id=ms_id_id, 
+            ms_id=ms_id, 
             test_div='10', 
             apl_no=apl_no,
             ques_no=ques_no,
@@ -592,7 +592,7 @@ def post_msProgramApply(request):
     apl_max = request.POST.get('aplMax', 0)
     
     #created,created_flag = vm_nanum_stdt.apl_id.get_or_create(user=request.user)
-    ms_id_id = programId
+    ms_id = programId
     mp_mtr_max = mp_mtr.objects.all().aggregate(vlMax=Max('apl_no'))
     rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
     #mp_mtr_max = mp_mtr.objects.all().last()
@@ -610,7 +610,7 @@ def post_msProgramApply(request):
     
     
     model_instance = mp_mtr(
-        mp_id=ms_id_id, 
+        mp_id=ms_id, 
         apl_no=apl_no, 
         mntr_id=ida,
         apl_id=apl_id,
@@ -645,7 +645,7 @@ def post_msProgramApply(request):
         ques_no = request.POST.get('ques_no'+str(i+1), None)
 
         model_instance2 = mp_ans(
-            mp_id=ms_id_id, 
+            mp_id=ms_id, 
             test_div='10', 
             apl_no=apl_no,
             ques_no=ques_no,
@@ -765,7 +765,7 @@ def post_user_info(request):
     ms_ida = request.POST.get('ms_id', None)
     #created,created_flag = vm_nanum_stdt.apl_id.get_or_create(user=request.user)
     created_flag = vm_nanum_stdt.objects.filter(apl_id=ida).exists()
-    ms_apl_flag = ms_apl.objects.filter(apl_id=ida,ms_id_id=ms_ida).exists()
+    ms_apl_flag = ms_apl.objects.filter(apl_id=ida,ms_id=ms_ida).exists()
     if not ms_apl_flag:
         applyYn = 'N'
     else:
