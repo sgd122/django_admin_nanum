@@ -385,12 +385,8 @@ class post_user_info_persion(generics.ListAPIView):
         ms_ida = request.GET.get('ms_id', None)
         l_yr = request.GET.get('yr', None)
         
-        print("====start====")
-
-        query = "select A.* from service20_mp_mtr A where yr='"+l_yr+"' and mp_id = '+"+ms_ida+"+' and apl_id='"+ida+"'"
+        query = "select A.* from service20_mp_mtr A where yr='"+l_yr+"' and mp_id = '"+ms_ida+"' and apl_id='"+ida+"'"
         queryset = mp_mtr.objects.raw(query)
-
-        print(query)
 
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
