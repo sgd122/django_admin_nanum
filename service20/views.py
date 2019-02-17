@@ -30,9 +30,7 @@ class Service20ListSerializer(serializers.ModelSerializer):
     def get_status(self,obj):
         request = self.context['request']
         l_user_id = request.GET.get('user_id', None)
-        print("===(status)get_start===")
-        print(l_user_id)
-        print("===(status)get_end===")
+        
         now = datetime.datetime.today()
         if obj.apl_fr_dt == None:
             return '개설중'
@@ -49,8 +47,7 @@ class Service20ListSerializer(serializers.ModelSerializer):
     def get_applyYn(self,obj):
         request = self.context['request']
         l_user_id = request.GET.get('user_id', None)
-        print(l_user_id)
-        print("===get_end===")
+        
 
 class Service20ListView(generics.ListAPIView):
 
@@ -307,6 +304,8 @@ class post_user_info_persion_view_Quest(generics.ListAPIView):
         query = "select B.std_detl_code_nm,B.rmrk,A.* from service20_mp_ans A, service20_com_cdd B where A.ques_no = B.std_detl_code and B.std_grp_code in (select att_cdh from service20_mp_sub where ms_id = '"+str(key1)+"') and A.mp_id = '"+str(key1)+"' and apl_id = '"+str(l_user_id)+"'"
         queryset = mp_ans.objects.raw(query)
 
+        print(query)
+
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
 
@@ -524,7 +523,7 @@ def post_msApply(request):
             ans_t2=anst2
             )
         model_instance2.save()
-        print("44cc")
+        
     context = {'message': 'Ok'}
 
     #return HttpResponse(json.dumps(context), content_type="application/json")
@@ -608,7 +607,7 @@ def post_msProgramApply(request):
             ans_t2=anst2
             )
         model_instance2.save()
-        print("44cc")
+        
     context = {'message': 'Ok'}
 
     #return HttpResponse(json.dumps(context), content_type="application/json")
@@ -717,8 +716,7 @@ class mpmgListPersionView(generics.ListAPIView):
 def post_user_info(request):
     ida = request.POST.get('user_id', None)
     ms_ida = request.POST.get('ms_id', None)
-    print(ida)
-    print(ms_ida)
+    
     created_flag = vm_nanum_stdt.objects.filter(apl_id=ida).exists()
     ms_apl_flag = ms_apl.objects.filter(apl_id=ida,ms_id=ms_ida).exists()
     if not ms_apl_flag:
@@ -802,14 +800,11 @@ def post_mt_quest(request):
 
     res = []
     for val in r_mp_sub:
-        print("1234")
         key1 = val.att_id
         key2 = val.att_cdd
         r_com_cdd = com_cdd.objects.filter(std_grp_code=key1,std_detl_code=key2)
 
-    print("a")
-    print(json.dumps(res))
-
+    
     context = {'message': 'Ok'}
 
 
