@@ -192,10 +192,19 @@ def post_user_info(request):
 
 class post_user_info_Quest_Serializer(serializers.ModelSerializer):
 
-    class Meta:
-        model = com_cdd
-        fields = ('std_grp_code','std_detl_code','std_detl_code_nm','rmrk','use_indc')
+   
+    std_detl_code_nm = serializers.SerializerMethodField()
+    rmrk = serializers.SerializerMethodField()
 
+    class Meta:
+        model = ms_sub
+        fields = ('id','ms_id','att_id','att_cdh','att_cdd','att_val','att_unit','use_yn','sort_seq','std_detl_code_nm','rmrk')        
+
+    def get_std_detl_code_nm(self,obj):
+        return obj.std_detl_code_nm
+
+    def get_rmrk(self,obj):
+        return obj.rmrk  
 
 class post_user_info_Quest(generics.ListAPIView):
     queryset = com_cdd.objects.all()
@@ -205,19 +214,23 @@ class post_user_info_Quest(generics.ListAPIView):
         key1 = request.GET.get('ms_id', None)           
         l_exist = ms_sub.objects.filter(ms_id=key1).exists()
         
-        queryset = self.get_queryset()
-        if not l_exist:
-            queryset = queryset.filter(std_grp_code='')
-        else:
-            l_key1 = ms_sub.objects.filter(ms_id=key1)[0].att_cdh
-            l_key_query = ms_sub.objects.filter(ms_id=key1).values_list('att_cdd_id', flat=True) 
-            #ms_sub 테이블에서 질문내역 조회
+        query = "select B.std_detl_code_nm,B.rmrk,A.* from service20_ms_sub A left outer join service20_com_cdd B on (A.att_id = B.std_grp_code and A.att_cdd = B.std_detl_code) where A.ms_id = '"+key1+"'"
+        queryset = mp_sub.objects.raw(query)
+
+
+        # queryset = self.get_queryset()
+        # if not l_exist:
+        #     queryset = queryset.filter(std_grp_code='')
+        # else:
+        #     l_key1 = ms_sub.objects.filter(ms_id=key1)[0].att_cdh
+        #     l_key_query = ms_sub.objects.filter(ms_id=key1).values_list('att_cdd_id', flat=True) 
+        #     #ms_sub 테이블에서 질문내역 조회
             
-            if not l_key_query:
-                queryset = queryset.filter(std_grp_code=l_key1, std_detl_code__in=l_key_query)
-            else:
-                queryset = queryset.filter(std_grp_code=l_key1)
-            #조회한 질문내역 기준으로 공통코드 조회
+        #     if not l_key_query:
+        #         queryset = queryset.filter(std_grp_code=l_key1, std_detl_code__in=l_key_query)
+        #     else:
+        #         queryset = queryset.filter(std_grp_code=l_key1)
+        #     #조회한 질문내역 기준으로 공통코드 조회
 
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
