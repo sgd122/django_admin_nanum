@@ -586,6 +586,11 @@ def post_msProgramApply(request):
     #mp_mtr_max = mp_mtr_max + 1
     apl_no = mp_mtr_max
     apl_id = ida
+    v_gen = ""
+    if rows.gen_cd = 1:
+        v_gen = "M"
+    else:
+        v_gen = "F"
     
     max_no = mp_mtr_max['vlMax']    
 
@@ -609,7 +614,7 @@ def post_msProgramApply(request):
         dept_cd=rows.dept_cd,
         dept_nm=rows.dept_nm,
         brth_dt=rows.brth_dt,
-        gen=rows.gen_cd,
+        gen=v_gen,
         yr=rows.yr,
         term_div=rows.term_div,
         sch_yr=rows.sch_yr,
