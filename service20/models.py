@@ -131,76 +131,31 @@ class msch(models.Model):
 
 
 
-
-
 class ms_sub(models.Model):
-	ms_id = models.CharField(max_length=10, null=False, verbose_name='멘토스쿨ID' )
+  ms_id = models.CharField(max_length=10, null=False, verbose_name='멘토스쿨ID' )
+  att_id = models.CharField(max_length=10, null=False, verbose_name='속성ID' )
+  att_seq = models.PositiveIntegerField(null=False, verbose_name='속성 SEQ → PK 자동생성 시 필요없음' )
+  att_cdh = models.CharField(max_length=6, null=True, blank=True, verbose_name='속성 CODE HEADER' )
+  att_cdd = models.CharField(max_length=10, null=True, blank=True, verbose_name='속성 CODE' )
+  att_val = models.CharField(max_length=60, null=True, blank=True, verbose_name='속성 값' )
+  att_unit = models.CharField(max_length=10, null=True, blank=True, verbose_name='속성 단위' )
+  use_yn = models.CharField(max_length=1, null=True, blank=True, verbose_name='사용여부' )
+  sort_seq = models.PositiveIntegerField(default=1, verbose_name='정렬' )
+  ins_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='입력자ID' )
+  ins_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력자IP' )
+  ins_dt = models.DateTimeField(null=True, blank=True, verbose_name='입력일시' )
+  ins_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력프로그램ID' )
+  upd_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='수정자ID' )
+  upd_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정자IP' )
+  upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
+  upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
 
-	"""
-	ms_id = models.ForeignKey(
-		to='msch',
-		on_delete=models.CASCADE,
-		null=True, 
-		blank=True, 
-		verbose_name='멘토스쿨ID' ,
-		#limit_choices_to={'std_grp_code' : 'MS0022'}
-	)
-	"""
-
-	att_id = models.CharField(max_length=10, null=False, verbose_name='속성ID' )
-
-	"""
-	att_id = models.ForeignKey(
-		to='com_cdh',
-		on_delete=models.CASCADE,
-		null=True, 
-		blank=True, 
-		verbose_name='속성ID' ,
-		#limit_choices_to=f_std_grp_code,
-		#limit_choices_to = Q(std_grp_code='MS0010') | Q(std_grp_code='MS0011')
-		#choices=(('MS0010', '지원학년'), ('MS0011', '지원학기'), ('MS0012', '지원성별')),
-		#limit_choices_to={'std_grp_code' : 'MS0010'}
-		#limit_choices_to={'std_grp_code' : 'MS0022'}
-	)
-	"""
-	#att_seq = models.PositiveIntegerField(max_length=1, null=True, blank=True,verbose_name='속성 SEQ → PK 자동생성 시 필요없음' )
-	att_cdh = models.CharField(max_length=6, null=True, blank=True, verbose_name='속성 CODE HEADER' )
-	"""
-	att_cdd = models.ForeignKey(
-		to='com_cdd',
-		on_delete=models.CASCADE,
-		null=True, 
-		blank=True, 
-		verbose_name='속성 CODE' ,
-		#limit_choices_to=f_std_grp_code,
-		#limit_choices_to = Q(std_grp_code='MS0010') | Q(std_grp_code='MS0011')
-		#choices=(('MS0010', '지원학년'), ('MS0011', '지원학기'), ('MS0012', '지원성별')),
-		#limit_choices_to={'std_grp_code' : 'MS0010'}
-		#limit_choices_to={'std_grp_code' : 'MS0022'}
-	)
-	"""
-	att_cdd = models.CharField(max_length=10, null=True, blank=True, verbose_name='속성 CODE' )
+  class Meta:
+    verbose_name = '개설멘토스쿨 속성(질문지, 채점항목,채점자)'
+    verbose_name_plural =  verbose_name
+    unique_together=("ms_id", "att_id", "att_seq")
 
 
-	att_val = models.CharField(max_length=60, null=True, blank=True, verbose_name='속성 값' )
-
-
-	att_unit = models.CharField(max_length=10, null=True, blank=True, verbose_name='속성 단위' )
-	use_yn = models.CharField(max_length=1, null=True, blank=True, verbose_name='사용여부' )
-	sort_seq = models.PositiveIntegerField(default=1, verbose_name='정렬' )
-	ins_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='입력자ID' )
-	ins_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력자IP' )
-	ins_dt = models.DateTimeField(null=True, blank=True, verbose_name='입력일시' )
-	ins_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력프로그램ID' )
-	upd_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='수정자ID' )
-	upd_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정자IP' )
-	upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
-	upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
-
-	class Meta: 
-		verbose_name = '개설멘토스쿨 속성(질문지, 채점항목,채점자)'
-		verbose_name_plural =  verbose_name
-		unique_together=("ms_id", "att_id","att_cdd")
 
 
 
@@ -757,9 +712,6 @@ class mp_mrk(models.Model):
 
 
 
-
-
-
 class mp_spc(models.Model):
 	mp_id = models.CharField(max_length=10, null=False, verbose_name='멘토링 프로그램ID' )
 	spc_no = models.PositiveIntegerField(null=False, verbose_name='학습외 프로그램NO' )
@@ -930,7 +882,7 @@ class mp_mte(models.Model):
 	term_div = models.CharField(max_length=2, null=False, verbose_name='학기' )
 	sch_yr = models.CharField(max_length=1, null=False, verbose_name='학년' )
 	mob_no = models.CharField(max_length=20, null=True, blank=True, verbose_name='휴대전화' )
-	tel_no = models.CharField(max_length=12, null=True, blank=True, verbose_name='집전화' )
+	tel_no = models.CharField(max_length=12, null=True, blank=True	, verbose_name='집전화' )
 	grd_id = models.CharField(max_length=10, null=False, verbose_name='주 보호자 ID' )
 	grd_nm = models.CharField(max_length=20, null=True, blank=True, verbose_name='보호자명' )
 	grd_tel = models.CharField(max_length=20, null=True, blank=True, verbose_name='보호자 연락처' )
