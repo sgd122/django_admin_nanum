@@ -42,7 +42,7 @@ urlpatterns = [
 
     #멘토스쿨 리스트
     # 멘토스쿨 기본정보
-    path('MS0101M/save/', post_user_info, name='post_user_info'),
+    path('MS0101M/list/', post_user_info, name='post_user_info'),
     # 멘토스쿨 질문유형
     path('MS0101M/quest/', post_user_info_Quest.as_view(), name='post_user_info_Quest'),
     # 멘토스쿨 신청
