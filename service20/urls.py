@@ -33,7 +33,7 @@ urlpatterns = [
     # 멘토스쿨 신청
     path('MS0101M/save/', post_msApply, name='post_msApply'),
     # 멘토스쿨(관리자) - 기본정보
-    path('MS0101M/admin/list/', post_user_info_adm, name='post_user_info_adm'),
+    path('MS0101M/admin/list/', post_user_info_adm.as_view(), name='post_user_info_adm'),
     # 멘토스쿨(관리자) - 질문
     path('MS0101M/admin/quest/', post_user_info_view_Quest.as_view(), name='post_user_info_view_Quest'),
     ########################################################################################
