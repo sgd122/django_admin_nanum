@@ -67,7 +67,9 @@ urlpatterns = [
     #
     ########################################################################################
     # 프로그램 수행계획서 리스트
-    path('mpPlnh_mpgmListView/', mpPlnh_mpgmListView.as_view(), name='mpPlnh_mpgmListView'),
+    path('MP0103M/list/', mpPlnh_mpgmListView.as_view(), name='mpPlnh_mpgmListView'),
+    # 프로그램 수행계획서 상세
+    path('MP0103M/detail/', mpPlnh_mpgmDetailView.as_view(), name='mpPlnh_mpgmDetailView'),
     ########################################################################################
     # 프로그램 수행계획서
     #
