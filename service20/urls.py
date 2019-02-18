@@ -94,6 +94,7 @@ urlpatterns = [
 
 
 
+    
     ########################################################################################
     # view2 부분 (시작)
     #
@@ -103,15 +104,21 @@ urlpatterns = [
     #멘토스쿨 콤보박스 Detail
     path('comboMpmgListViewDetail/', comboMpmgListViewDetail.as_view(), name='comboMpmgListViewDetail'),
     #멘토스쿨 환산표
-    path('msFn1/', msFn1, name='msFn1'),
+    #path('msFn1/', msFn1, name='msFn1'),
 
     #멘토스쿨 콤보박스
     path('mpComboListView/', mpComboListView.as_view(), name='mpComboListView'),
     #멘토링 콤보박스 Detail
     path('mpComboListViewDetail/', mpComboListViewDetail.as_view(), name='mpComboListViewDetail'),
     #환산
-    path('mpFn1/', mpComboListViewDetail.as_view(), name='mpComboListViewDetail'),
-        
+    path('mpFn1/', mpFn1, name='mpFn1'),
+    #사정
+    path('mpFn2/', mpFn2, name='mpFn2'),
+    #엑셀
+    path('mpFn3/', mpFn3, name='mpFn3'),    
+
+    #멘토링 팝업1
+    path('mpPop1/', mpPop1, name='mpPop1'),    
     ########################################################################################
     # view2 부분 (종료)
     #
