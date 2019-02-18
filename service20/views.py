@@ -867,7 +867,7 @@ class mpPlnh_mpgmListSerializer(serializers.ModelSerializer):
     testField = serializers.SerializerMethodField()
     class Meta:
         model = mpgm
-        fields = ('mp_id','mp_name','status','img_src','yr','yr_seq','apl_term','mp_sname','base_div','mp_intro','mng_area','mgr_id','mgr_nm','mng_org','sup_org','testField')
+        fields = ('mp_id','status','mp_name','mp_sname','base_div','mp_intro','mng_area','mgr_id','mgr_nm','mng_org','sup_org','yr','yr_seq','apl_ntc_fr_dt','apl_ntc_to_dt','apl_term','apl_fr_dt','apl_to_dt','mnt_term','mnt_fr_dt','mnt_to_dt','tot_apl','cnt_apl','cnt_doc_suc','cnt_doc_res','cnt_intv_pl','cnt_intv_ac','intv_dt','cnt_intv_suc','cnt_iintv_res','cnt_trn','cnt_mtr','doc_dt','doc_mgr','intv_in_dt','intv_in_mgr','fin_dt','fin_mgr','use_div','img_src','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','testField')
 
     def get_testField(self, obj):
         return 'test'     
@@ -880,8 +880,13 @@ class mpPlnh_mpgmListView(generics.ListAPIView):
     # mp_mtr - 프로그램 지원자(멘토) => mp_id(멘토링ID), apl_id
     # mp_mte - 프로그램 지원자(멘티) => mp_id(멘토링ID)
 
+
     def list(self, request):
         queryset = self.get_queryset()
+        
+        query = "select * from service20_mpgm";
+        queryset = mpgm.objects.raw(query)
+
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
 
