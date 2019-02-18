@@ -122,7 +122,7 @@ def post_user_info(request):
         
         message = "Ok"
         rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
-        rows2 = mp_sub.objects.filter(ms_id=ms_ida)
+        rows2 = mp_sub.objects.filter(mp_id=ms_ida)
         rows3 = msch.objects.filter(ms_id=ms_ida)[0]
 
 
@@ -215,7 +215,7 @@ class post_user_info_Quest(generics.ListAPIView):
         l_exist = ms_sub.objects.filter(ms_id=key1).exists()
         
         query = "select B.std_detl_code,B.std_detl_code_nm,B.rmrk,A.* from service20_ms_sub A left outer join service20_com_cdd B on (A.att_id = B.std_grp_code and A.att_cdd = B.std_detl_code) where A.ms_id = '"+key1+"'"
-        queryset = mp_sub.objects.raw(query)
+        queryset = ms_sub.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
@@ -299,9 +299,9 @@ class post_user_info_persion_view_Quest(generics.ListAPIView):
         #mp_sub 테이블에서 질문내역 조회
         key1 = request.GET.get('mp_id', None) 
         l_user_id = request.GET.get('user_id', None)           
-        l_exist = mp_sub.objects.filter(ms_id=key1).exists()
+        l_exist = mp_sub.objects.filter(mp_id=key1).exists()
         
-        query = "select B.std_detl_code_nm,B.rmrk,A.* from service20_mp_ans A, service20_com_cdd B where A.ques_no = B.std_detl_code and B.std_grp_code in (select att_cdh from service20_mp_sub where ms_id = '"+str(key1)+"') and A.mp_id = '"+str(key1)+"' and apl_id = '"+str(l_user_id)+"'"
+        query = "select B.std_detl_code_nm,B.rmrk,A.* from service20_mp_ans A, service20_com_cdd B where A.ques_no = B.std_detl_code and B.std_grp_code in (select att_cdh from service20_mp_sub where mp_id = '"+str(key1)+"') and A.mp_id = '"+str(key1)+"' and apl_id = '"+str(l_user_id)+"'"
         queryset = mp_ans.objects.raw(query)
 
         
@@ -325,7 +325,7 @@ class post_user_info_persion_Quest_Serializer(serializers.ModelSerializer):
     rmrk = serializers.SerializerMethodField()
     class Meta:
         model = mp_sub
-        fields = ('id','ms_id','att_id','att_seq','att_cdh','att_cdd','att_val','use_yn','sort_seq','std_detl_code','std_detl_code_nm','rmrk')
+        fields = ('id','mp_id','att_id','att_seq','att_cdh','att_cdd','att_val','use_yn','sort_seq','std_detl_code','std_detl_code_nm','rmrk')
 
         
     def get_std_detl_code(self,obj):
@@ -777,7 +777,7 @@ def post_user_info(request):
         
         message = "Ok"
         rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
-        rows2 = mp_sub.objects.filter(ms_id=ms_ida)
+        rows2 = mp_sub.objects.filter(mp_id=ms_ida)
         rows3 = msch.objects.filter(ms_id=ms_ida)[0]
 
 
@@ -839,7 +839,7 @@ def post_user_info(request):
 @csrf_exempt
 def post_mt_quest(request):
     l_ms_id = request.GET.get('ms_id', None)
-    r_mp_sub = mp_sub.objects.filter(ms_id=l_ms_id)
+    r_mp_sub = mp_sub.objects.filter(mp_id=l_ms_id)
     r_mp_sub = r_mp_sub.filter(use_yn='Y')
 
     response_json = OrderedDict()
