@@ -36,6 +36,21 @@ urlpatterns = [
     # path('authUserInfoAdm/', post_user_info_adm, name='post_user_info_adm'),
     # 멘토스쿨(관리자) - 질문
     path('authUserInfoViewQuest/', post_user_info_view_Quest.as_view(), name='post_user_info_view_Quest'),
+
+
+    
+
+    #멘토스쿨 리스트
+    # 멘토스쿨 기본정보
+    path('MS0101M/save/', post_user_info, name='post_user_info'),
+    # 멘토스쿨 질문유형
+    path('MS0101M/quest/', post_user_info_Quest.as_view(), name='post_user_info_Quest'),
+    # 멘토스쿨 신청
+    path('MS0101M/save/', post_msApply, name='post_msApply'),
+    # 멘토스쿨(관리자) - 기본정보
+    # path('MS0101M/admin/list/', post_user_info_adm, name='post_user_info_adm'),
+    # 멘토스쿨(관리자) - 질문
+    path('MS0101M/admin/quest/', post_user_info_view_Quest.as_view(), name='post_user_info_view_Quest'),
     ########################################################################################
     # 멘토스쿨
     #
@@ -57,6 +72,21 @@ urlpatterns = [
     path('authUserPersionInfoAdm/', post_user_info_persion_adm.as_view(), name='post_user_info_persion_adm'),
     # 멘토링 프로그램(관리자) - 질문
     path('authUserInfoPersionViewQuest/', post_user_info_persion_view_Quest.as_view(), name='post_user_info_persion_view_Quest'),
+
+
+
+    # 멘토링 프로그램 리스트 조회
+    path('MP0101M/list/', mpmgListPersionView.as_view(), name='mpmgListPersionView'),
+    # 멘토링 프로그램 질문유형 가져오기
+    path('MP0101M/quest/', post_user_info_persion_Quest.as_view(), name='post_user_info_persion_Quest'), 
+    # 멘토링 프로그램 신청
+    path('MP0101M/save/', post_msProgramApply, name='post_msProgramApply'), 
+    # 성적,봉사,어학 가져오기
+    path('MP0101M/detail/', post_user_info_persion, name='post_user_info_persion'),
+    # 멘토링 프로그램(관리자) - 기보정보
+    path('MP0101M/admin/list/', post_user_info_persion_adm.as_view(), name='post_user_info_persion_adm'),
+    # 멘토링 프로그램(관리자) - 질문
+    path('MP0101M/admin/quest/', post_user_info_persion_view_Quest.as_view(), name='post_user_info_persion_view_Quest'),
     ########################################################################################
     # 멘토링 프로그램
     #
