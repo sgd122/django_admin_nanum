@@ -15,6 +15,9 @@ from django.db.models import Max
 from django.db import connection
 from collections  import OrderedDict
 import json
+import csv
+
+
 # api/moim 으로 get하면 이 listview로 연결
 
 
@@ -57,7 +60,6 @@ class comboMpmgListViewDetail(generics.ListAPIView):
 
     def list(self, request):
         l_ms_id = request.GET.get('ms_id', None)
-        print(l_ms_id)
         queryset = self.get_queryset()
         queryset = queryset.filter(ms_id=l_ms_id)        
         serializer_class = self.get_serializer_class()
@@ -89,7 +91,6 @@ class mpComboListView(generics.ListAPIView):
         queryset = self.get_queryset()
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
-        print("a2")
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
@@ -103,7 +104,7 @@ class mpComboListView(generics.ListAPIView):
 class mpComboListDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = mpgm
-        fields = ('mp_id','mp_name')
+        fields = ('mp_id','mp_name','apl_term','yr_seq','mng_org','sup_org','tot_apl','apl_fr_dt','apl_to_dt','mnt_fr_dt','mnt_to_dt')
 
 
 class mpComboListViewDetail(generics.ListAPIView):
@@ -112,7 +113,6 @@ class mpComboListViewDetail(generics.ListAPIView):
 
     def list(self, request):
         l_mp_id = request.GET.get('mp_id', None)
-        print(l_mp_id)
         queryset = self.get_queryset()
         queryset = queryset.filter(mp_id=l_mp_id)        
         serializer_class = self.get_serializer_class()
@@ -127,108 +127,155 @@ class mpComboListViewDetail(generics.ListAPIView):
 
 
 @csrf_exempt
-def msFn1(request):
-    ms_id = request.GET.get('ms_id_id', None)
-    #l_key1 = ms_apl.objects.filter(ms_id_id=ms_id).values_list('apl_id', flat=True) 
+def mpFn1(request):
+    mp_id = request.GET.get('mp_id', None)  
+    
+    queryset2 = cm_cnv_scr.objects.all()
+    query = "select * from service20_mp_mtr where mp_id = '" +str(mp_id)+"'"
+    queryset = mpgm.objects.raw(query)
 
-    #print(l_key1);
-    #queryset = self.get_queryset()
-    #queryset = vm_nanum_stdt.objects.filter(apl_id__in=ms_id)
-    queryset = ms_apl.objects.filter(ms_id_id=ms_id)
-    queryset2 = cm_cnv_scr.objects.filter(eval_item='1')
+    vl_cscore1=''
+    vl_cscore2=''
+    vl_cscore3=''
+    vl_cscore4=''
+    #
     for val in queryset:
-        vl_cscore1 = (val.score1 / 100) * 100
 
-        queryset2 = queryset2.filter(eval_item=1,max_scr__lt=vl_cscore1)
+        if val.score1==None:
+            vl_cscore1 = 0
+        elif val.score2==None:
+            vl_cscore1 = 0
+        else:
+            vl_cscore1 = (val.score1 / val.score2) * 100
+
+        query2 = "select id, eval_item, fin_scr from service20_cm_cnv_scr  where eval_item = '1'  and (min_scr <= '" +str(vl_cscore1)+"' and  '" +str(vl_cscore1)+"' < max_scr)"
+        queryset2 = cm_cnv_scr.objects.raw(query2)
+
         
-        queryset2 = queryset2.filter(eval_item=1,max_scr__lt ='15')
-        for val2 in queryset2:
-            print(val2.max_scr)
+        for var2 in queryset2:
+            #print(var2.fin_scr)
+            vl_cscore1 = var2.fin_scr
+            #queryset1 = mp_mtr.objects.all()  
+            mp_mtr.objects.filter(id=val.id,mp_id=val.mp_id).update(cscore1=vl_cscore1)
 
-        print(queryset2);
-        queryset2 = queryset2.filter(max_scr__lt=vl_cscore1)
+    for val in queryset:
+        vl_cscore2 = val.score3
 
-        print(queryset2[0].fin_scr)
 
-    print(queryset[0].apl_id)
-    print(queryset)
+        query2 = "select id, eval_item, fin_scr from service20_cm_cnv_scr  where eval_item = '2'  and (min_scr <= '" +str(vl_cscore2)+"' and  '" +str(vl_cscore2)+"' < max_scr)"
+        queryset2 = cm_cnv_scr.objects.raw(query2)
 
-    message = "Ok"
-     
+        for var2 in queryset2:
+            #print(var2.fin_scr)
+            vl_cscore2 = var2.fin_scr
+            #mp_mtr.objects.filter(id=val.id,mp_id=val.mp_id).update(cscore2=vl_cscore2)
+
+    for val in queryset:
+        vl_cscore2 = val.score3
+        query3 = "select id, eval_item, fin_scr from service20_cm_cnv_scr  where eval_item = '3'  and (min_scr <= '" +str(vl_cscore3)+"' and  '" +str(vl_cscore3)+"' < max_scr)"
+        queryset2 = cm_cnv_scr.objects.raw(query3)
+
+        for var2 in queryset2:
+            #print(var2.fin_scr)
+            vl_cscore3 = var2.fin_scr
+
+    #봉사
+    for val in queryset:
+        vl_cscore4 = val.score4
+        query3 = "select id, eval_item, fin_scr from service20_cm_cnv_scr  where eval_item = '2'  and (min_scr <= '" +str(vl_cscore4)+"' and  '" +str(vl_cscore4)+"' < max_scr)"
+        queryset2 = cm_cnv_scr.objects.raw(query3)
+
+        for var2 in queryset2:
+            #print(var2.fin_scr)
+            vl_cscore3 = var2.fin_scr
+            mp_mtr.objects.filter(id=val.id,mp_id=val.mp_id).update(cscore3=vl_cscore3)
+
+
+
+    #mp_mtr.objects.filter(id=val.id,mp_id=val.mp_id).update(cscore3=vl_cscore3)
+
+
+
+
+        #query2 = "select * from service20_cm_cnv_scr where eval_item = '1'"
+        #queryset2 = cm_cnv_scr.objects.raw(query2)     
+        #queryset1 = mp_mtr.objects.all()  
+        #queryset1.filter(id=val.id,mp_id=val.mp_id).update(cscore1=vl_cscore1)
+
+        """
+        model_instance = mp_mtr(
+            id=val.id, 
+            mp_id=val.mp_id, 
+            apl_no=val.apl_no, 
+            apl_id=val.apl_id,
+            cscore1=vl_cscore1,
+            cscore2=vl_cscore2,
+            cscore3=vl_cscore3
+            )
+        model_instance.save()
+        """
+    message = "Ok" 
     context = {'message': message,}
     
 
     #return HttpResponse(json.dumps(context), content_type="application/json")
     return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+
+
+
+
+@csrf_exempt
+def mpFn2(request):
+    mp_id = request.GET.get('mp_id', None)  
+    
+    queryset2 = cm_cnv_scr.objects.all()
+    query = "select * from service20_mp_mtr where mp_id = '" +str(mp_id)+"' order by (cscore1+cscore2+cscore3+cscore4+cscore5+cscore5) desc"
+    rank = 1
+    queryset = mpgm.objects.raw(query)
+
+
+    #
+    for val in queryset:
+        mp_mtr.objects.filter(id=val.id,mp_id=val.mp_id).update(doc_rank=rank)
+        rank = rank + 1
+
+
+    message = "Ok" 
+    context = {'message': message,}
+    
+
+    #return HttpResponse(json.dumps(context), content_type="application/json")
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+
+
+
+@csrf_exempt
+def mpFn3(request):
+    mp_id = request.GET.get('mp_id', None)  
+    query = "select * from service20_mp_mtr where mp_id = '" +str(mp_id)+"'"
+    queryset = mp_mtr.objects.raw(query)
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="users.csv"'
+
+ 
+    writer = csv.writer(response)
+    writer.writerow(['apl_no', 'unv_nm', 'dept_nm', 'apl_id', 'apl_nm', 'gen', 'cscore1', 'cscore2', 'cscore3', 'cscore4', 'cscore5', 'doc_rslt', 'doc_rank', 'intv_team', 'intv_dt', 'intv_part_pl','intv_part_ac'])
+
+    if mp_id == None:
+        users = mp_mtr.objects.all().values_list('apl_no', 'unv_nm', 'dept_nm', 'apl_id', 'apl_nm', 'gen', 'cscore1', 'cscore2', 'cscore3', 'cscore4', 'cscore5', 'doc_rslt', 'doc_rank', 'intv_team', 'intv_dt', 'intv_part_pl','intv_part_ac')
+    else:
+        users = mp_mtr.objects.filter(mp_id=mp_id).values_list('apl_no', 'unv_nm', 'dept_nm', 'apl_id', 'apl_nm', 'gen', 'cscore1', 'cscore2', 'cscore3', 'cscore4', 'cscore5', 'doc_rslt', 'doc_rank', 'intv_team', 'intv_dt', 'intv_part_pl','intv_part_ac')
+
+    for user in users:
+        writer.writerow(user)
+    return response
 
 
 
 
 
 @csrf_exempt
-def msFn1(request):
-    ms_id = request.GET.get('ms_id_id', None)
-    #l_key1 = ms_apl.objects.filter(ms_id_id=ms_id).values_list('apl_id', flat=True) 
-
-    #print(l_key1);
-    #queryset = self.get_queryset()
-    #queryset = vm_nanum_stdt.objects.filter(apl_id__in=ms_id)
-    queryset = ms_apl.objects.filter(ms_id_id=ms_id)
-
-    queryset2 = cm_cnv_scr.objects.filter(eval_item='1')
-
-    for val in queryset:
-        print("1234")
-
-        print(ms_id)
-        print(val.apl_id)
-        print(val.score1)
-        print("0000")
-        print(val.score2)  
-
-        print("1111")
-        vl_cscore1 = (val.score1 / 100) * 100
-        print("2222")
-        print(vl_cscore1)
-        print("3333")
-        queryset2 = queryset2.filter(eval_item=1,max_scr__lt=vl_cscore1)
-        
-        queryset2 = queryset2.filter(eval_item=1,max_scr__lt ='15')
-        for val2 in queryset2:
-            print(val2.max_scr)
-
-        print(queryset2);
-        queryset2 = queryset2.filter(max_scr__lt=vl_cscore1)
-        print(queryset2);
-        print("4444")
-        print(queryset2[0].fin_scr)
-        print("5555")
-        
-
-
-
-        """
-        model_instance = ms_apl(
-            ms_id_id=ms_id_id, 
-            apl_no=apl_no, 
-            apl_id=apl_id,
-            score1=apl_id,
-            score2=apl_id,
-            score3=apl_id,
-            score4=apl_id,
-            score5=apl_id,
-            )
-        model_instance.save()
-        """
-
-
-    print(queryset[0].apl_id)
-    print(queryset)
-
-    message = "Ok"
-     
-    context = {'message': message,}
-    
-
-    #return HttpResponse(json.dumps(context), content_type="application/json")
-    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+def mpPop1(request):
+    posts = None
+    return render(request, 'popup/mento/mpPop1.html', { 'posts': posts })
