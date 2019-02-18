@@ -74,59 +74,59 @@ class com_cdd(models.Model):
 		return self.std_detl_code_nm		
 
 class msch(models.Model):
-  ms_id = models.CharField(max_length=10, primary_key=True, verbose_name='멘토스쿨ID' )
-  status = models.CharField(max_length=2, null=True, blank=True, verbose_name='상태(MS0001)' )
-  ms_name = models.CharField(max_length=100, null=True, blank=True, verbose_name='멘토스쿨 명' )
-  ms_sname = models.CharField(max_length=20, null=True, blank=True, verbose_name='멘토스쿨 단명' )
-  ms_intro = models.CharField(max_length=1000, null=True, blank=True, verbose_name='멘토스쿨 소개' )
-  mng_area = models.CharField(max_length=2, null=True, blank=True, verbose_name='멘토스쿨 관리 영역(MP0002)' )
-  mgr_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='멘토스쿨 관리자 ID' )
-  mgr_nm = models.CharField(max_length=20, null=True, blank=True, verbose_name='멘토스쿨 관리자 명' )
-  mng_org = models.CharField(max_length=10, null=True, blank=True, verbose_name='관리기관(MP0003)' )
-  sup_org = models.CharField(max_length=10, null=True, blank=True, verbose_name='주관기관(MP0004)' )
-  yr = models.CharField(max_length=4, null=True, blank=True, verbose_name='연도' )
-  yr_seq = models.PositiveIntegerField(null=True, blank=True, verbose_name='차수' )
-  apl_ntc_fr_dt = models.DateTimeField(null=True, blank=True, verbose_name='공지시작일' )
-  apl_ntc_to_dt = models.DateTimeField(null=True, blank=True, verbose_name='공지종료일' )
-  apl_term = models.CharField(max_length=2, null=True, blank=True, verbose_name='모집시기(MS0022)' )
-  apl_fr_dt = models.DateTimeField(null=True, blank=True, verbose_name='모집기간-시작' )
-  apl_to_dt = models.DateTimeField(null=True, blank=True, verbose_name='모집기간-종료' )
-  trn_term = models.CharField(max_length=2, null=True, blank=True, verbose_name='교육시기(MS0022)' )
-  trn_fr_dt = models.DateTimeField(null=True, blank=True, verbose_name='교육기간-시작' )
-  trn_to_dt = models.DateTimeField(null=True, blank=True, verbose_name='교육기간-종료' )
-  tot_apl = models.PositiveIntegerField(default=0, verbose_name='모집인원(정원)-합격' )
-  cnt_apl = models.PositiveIntegerField(default=0, verbose_name='지원인원' )
-  cnt_doc_suc = models.PositiveIntegerField(default=0, verbose_name='서류전형 합격인원' )
-  cnt_doc_res = models.PositiveIntegerField(default=0, verbose_name='서류전형 예비인원(실제 없음)' )
-  cnt_intv_pl = models.PositiveIntegerField(default=0, verbose_name='면접전형 참여 계획 인원' )
-  cnt_intv_ac = models.PositiveIntegerField(default=0, verbose_name='면접전형 참여 인원' )
-  intv_dt = models.DateField(null=True, blank=True, verbose_name='면접일' )
-  cnt_intv_suc = models.PositiveIntegerField(default=0, verbose_name='면접전형 합격인원' )
-  cnt_iintv_res = models.PositiveIntegerField(default=0, verbose_name='면접전형 예비합격인원' )
-  cnt_trn = models.PositiveIntegerField(default=0, verbose_name='교육인원' )
-  cnt_mtr = models.PositiveIntegerField(default=0, verbose_name='최종합격 멘토인원' )
-  doc_dt = models.DateTimeField(null=True, blank=True, verbose_name='서류전형일' )
-  doc_mgr = models.CharField(max_length=10, null=True, blank=True, verbose_name='서류전형 수행자' )
-  intv_in_dt = models.DateTimeField(null=True, blank=True, verbose_name='면접전형-입력-일' )
-  intv_in_mgr = models.CharField(max_length=10, null=True, blank=True, verbose_name='면접전형-입력-자' )
-  fin_dt = models.DateTimeField(null=True, blank=True, verbose_name='최종합격-입력-일' )
-  fin_mgr = models.CharField(max_length=10, null=True, blank=True, verbose_name='최종합격-입력-자' )
-  img_src = models.CharField(max_length=100, null=True, blank=True, verbose_name='소개 사진' )
-  ins_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='입력자ID' )
-  ins_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력자IP' )
-  ins_dt = models.DateTimeField(null=True, blank=True, verbose_name='입력일시' )
-  ins_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력프로그램ID' )
-  upd_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='수정자ID' )
-  upd_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정자IP' )
-  upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
-  upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
+	ms_id = models.CharField(max_length=10, primary_key=True, verbose_name='멘토스쿨ID' )
+	status = models.CharField(max_length=2, null=True, blank=True, verbose_name='상태(MS0001)' )
+	ms_name = models.CharField(max_length=100, null=True, blank=True, verbose_name='멘토스쿨 명' )
+	ms_sname = models.CharField(max_length=20, null=True, blank=True, verbose_name='멘토스쿨 단명' )
+	ms_intro = models.CharField(max_length=1000, null=True, blank=True, verbose_name='멘토스쿨 소개' )
+	mng_area = models.CharField(max_length=2, null=True, blank=True, verbose_name='멘토스쿨 관리 영역(MP0002)' )
+	mgr_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='멘토스쿨 관리자 ID' )
+	mgr_nm = models.CharField(max_length=20, null=True, blank=True, verbose_name='멘토스쿨 관리자 명' )
+	mng_org = models.CharField(max_length=10, null=True, blank=True, verbose_name='관리기관(MP0003)' )
+	sup_org = models.CharField(max_length=10, null=True, blank=True, verbose_name='주관기관(MP0004)' )
+	yr = models.CharField(max_length=4, null=True, blank=True, verbose_name='연도' )
+	yr_seq = models.PositiveIntegerField(null=True, blank=True, verbose_name='차수' )
+	apl_ntc_fr_dt = models.DateTimeField(null=True, blank=True, verbose_name='공지시작일' )
+	apl_ntc_to_dt = models.DateTimeField(null=True, blank=True, verbose_name='공지종료일' )
+	apl_term = models.CharField(max_length=2, null=True, blank=True, verbose_name='모집시기(MS0022)' )
+	apl_fr_dt = models.DateTimeField(null=True, blank=True, verbose_name='모집기간-시작' )
+	apl_to_dt = models.DateTimeField(null=True, blank=True, verbose_name='모집기간-종료' )
+	trn_term = models.CharField(max_length=2, null=True, blank=True, verbose_name='교육시기(MS0022)' )
+	trn_fr_dt = models.DateTimeField(null=True, blank=True, verbose_name='교육기간-시작' )
+	trn_to_dt = models.DateTimeField(null=True, blank=True, verbose_name='교육기간-종료' )
+	tot_apl = models.PositiveIntegerField(default=0, verbose_name='모집인원(정원)-합격' )
+	cnt_apl = models.PositiveIntegerField(default=0, verbose_name='지원인원' )
+	cnt_doc_suc = models.PositiveIntegerField(default=0, verbose_name='서류전형 합격인원' )
+	cnt_doc_res = models.PositiveIntegerField(default=0, verbose_name='서류전형 예비인원(실제 없음)' )
+	cnt_intv_pl = models.PositiveIntegerField(default=0, verbose_name='면접전형 참여 계획 인원' )
+	cnt_intv_ac = models.PositiveIntegerField(default=0, verbose_name='면접전형 참여 인원' )
+	intv_dt = models.DateField(null=True, blank=True, verbose_name='면접일' )
+	cnt_intv_suc = models.PositiveIntegerField(default=0, verbose_name='면접전형 합격인원' )
+	cnt_iintv_res = models.PositiveIntegerField(default=0, verbose_name='면접전형 예비합격인원' )
+	cnt_trn = models.PositiveIntegerField(default=0, verbose_name='교육인원' )
+	cnt_mtr = models.PositiveIntegerField(default=0, verbose_name='최종합격 멘토인원' )
+	doc_dt = models.DateTimeField(null=True, blank=True, verbose_name='서류전형일' )
+	doc_mgr = models.CharField(max_length=10, null=True, blank=True, verbose_name='서류전형 수행자' )
+	intv_in_dt = models.DateTimeField(null=True, blank=True, verbose_name='면접전형-입력-일' )
+	intv_in_mgr = models.CharField(max_length=10, null=True, blank=True, verbose_name='면접전형-입력-자' )
+	fin_dt = models.DateTimeField(null=True, blank=True, verbose_name='최종합격-입력-일' )
+	fin_mgr = models.CharField(max_length=10, null=True, blank=True, verbose_name='최종합격-입력-자' )
+	img_src = models.CharField(max_length=100, null=True, blank=True, verbose_name='소개 사진' )
+	ins_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='입력자ID' )
+	ins_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력자IP' )
+	ins_dt = models.DateTimeField(null=True, blank=True, verbose_name='입력일시' )
+	ins_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력프로그램ID' )
+	upd_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='수정자ID' )
+	upd_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정자IP' )
+	upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
+	upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
 
-  def __str__(self):
-  	return self.ms_name
+	def __str__(self):
+		return self.ms_name
 
-class Meta:
-  verbose_name = '개설멘토스쿨'
-  verbose_name_plural =  verbose_name
+	class Meta:
+		verbose_name = '개설멘토스쿨'
+		verbose_name_plural =  verbose_name
 
 
 
@@ -275,12 +275,12 @@ class ms_apl(models.Model):
   def __str__(self):
   	return self.apl_nm
 
-class Meta:
-  verbose_name = '멘토스쿨 지원자'
-  verbose_name_plural =  verbose_name
-  unique_together=("ms_id", "apl_no")
-  index_together = ["apl_id"]
-  index_together = ["apl_nm"]
+  class Meta:
+    verbose_name = '멘토스쿨 지원자'
+    verbose_name_plural =  verbose_name
+    unique_together=("ms_id", "apl_no")
+    index_together = ["apl_id"]
+    index_together = ["apl_nm"]
 
 
 class ms_ans(models.Model):
@@ -309,26 +309,32 @@ class ms_ans(models.Model):
 		unique_together=("ms_id", "test_div", "apl_no", "ques_no")
 
 class ms_mrk(models.Model):
-	ms_id = models.CharField(max_length=10, null=False, verbose_name='멘토스쿨ID' )
-	test_div = models.CharField(max_length=10, null=False, verbose_name='전형구분(서류/면접)' )
-	apl_no = models.CharField(max_length=10, null=False, verbose_name='지원 NO' )
-	mrk_seq = models.PositiveIntegerField(null=False, verbose_name='채점 항목 SEQ(NO)' )
-	mrk_no = models.PositiveIntegerField(null=False, verbose_name='채점자 NO' )
-	mrk_id = models.CharField(max_length=10, null=False, verbose_name='채점자 ID' )
-	mak_nm = models.CharField(max_length=20, null=False, verbose_name='채점자 명' )
-	score = models.PositiveIntegerField(null=True, blank=True, verbose_name='점수' )
-	ins_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='입력자ID' )
-	ins_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력자IP' )
-	ins_dt = models.DateTimeField(null=True, blank=True, verbose_name='입력일시' )
-	ins_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력프로그램ID' )
-	upd_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='수정자ID' )
-	upd_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정자IP' )
-	upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
-	upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
-	class Meta:
-		verbose_name = '지원서 채점'
-		verbose_name_plural =  verbose_name
-		unique_together=("ms_id", "test_div", "apl_no", "mrk_seq", "mrk_no")
+  ms_id = models.CharField(max_length=10, null=False, verbose_name='멘토스쿨ID' )
+  test_div = models.CharField(max_length=10, null=False, verbose_name='전형구분(서류/면접)' )
+  apl_no = models.CharField(max_length=10, null=False, verbose_name='지원 NO' )
+  mrk_seq = models.PositiveIntegerField(null=False, verbose_name='채점 항목 SEQ(NO)' )
+  mrk_no = models.PositiveIntegerField(null=False, verbose_name='채점자 NO' )
+  mrk_id = models.CharField(max_length=10, null=False, verbose_name='채점자 ID' )
+  mak_nm = models.CharField(max_length=20, null=False, verbose_name='채점자 명' )
+  score = models.PositiveIntegerField(null=True, blank=True, verbose_name='점수' )
+  item_cd = models.CharField(max_length=10, null=True, blank=True, verbose_name='채점항목코드-SEQ별' )
+  item_nm = models.CharField(max_length=60, null=True, blank=True, verbose_name='채점항목명' )
+  ins_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='입력자ID' )
+  ins_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력자IP' )
+  ins_dt = models.DateTimeField(null=True, blank=True, verbose_name='입력일시' )
+  ins_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력프로그램ID' )
+  upd_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='수정자ID' )
+  upd_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정자IP' )
+  upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
+  upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
+
+
+  class Meta:
+    verbose_name = '지원서 채점'
+    verbose_name_plural =  verbose_name
+    unique_together=("ms_id", "test_div", "apl_no", "mrk_seq", "mrk_no")
+
+
 
 
 class mentor(models.Model):
@@ -375,9 +381,9 @@ class mentor(models.Model):
   upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
   upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
 
-class Meta:
-  verbose_name = '멘토'
-  verbose_name_plural =  verbose_name
+  class Meta:
+    verbose_name = '멘토'
+    verbose_name_plural =  verbose_name
 
 class mentee(models.Model):
   mnte_id = models.CharField(max_length=10, primary_key=True, verbose_name='멘티ID' )
@@ -427,9 +433,9 @@ class mentee(models.Model):
   upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
 
 
-class Meta:
-  verbose_name = '멘티'
-  verbose_name_plural =  verbose_name
+  class Meta:
+    verbose_name = '멘티'
+    verbose_name_plural =  verbose_name
 
 
 
@@ -457,6 +463,9 @@ class guardian(models.Model):
 	upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
 	upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
 
+	class Meta:
+		verbose_name = '학부모(보호자 Gardian)'
+		verbose_name_plural =  verbose_name
 
 class teacher(models.Model):
 	tchr_id = models.CharField(max_length=10, primary_key=True, verbose_name='교사 ID(학교별 부여)' )
@@ -483,14 +492,12 @@ class teacher(models.Model):
 	upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
 	upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
 
-class Meta:
-	verbose_name = '교사(학교)'
-	verbose_name_plural =  verbose_name
+	class Meta:
+		verbose_name = '교사(학교)'
+		verbose_name_plural =  verbose_name
 
 
-class Meta:
-	verbose_name = '학부모(보호자 Gardian)'
-	verbose_name_plural =  verbose_name
+
 
 
 
@@ -545,10 +552,9 @@ class mpgm(models.Model):
   upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
 
 
-class Meta:
-  verbose_name = '멘토링프로그램'
-  verbose_name_plural =  verbose_name
-
+  class Meta:
+    verbose_name = '멘토링프로그램'
+    verbose_name_plural =  verbose_name
 
 
 
@@ -556,7 +562,7 @@ class Meta:
 
 
 class mp_sub(models.Model):
-	ms_id = models.CharField(max_length=10, null=False, verbose_name='멘토스쿨ID' )
+	mp_id = models.CharField(max_length=10, null=False, verbose_name='멘토스쿨ID' )
 	att_id = models.CharField(max_length=10, null=False, verbose_name='속성ID' )
 	att_seq = models.PositiveIntegerField(null=False, verbose_name='속성 SEQ' )
 	att_cdh = models.CharField(max_length=6, null=True, blank=True, verbose_name='속성 CODE HEADER' )
@@ -574,10 +580,11 @@ class mp_sub(models.Model):
 	upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
 	upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
 
-class Meta: 
-	verbose_name = '멘토링프로그램 속성'
-	verbose_name_plural =  verbose_name
-	unique_together=("ms_id", "att_id", "att_seq")
+	class Meta: 
+		verbose_name = '멘토링프로그램 속성'
+		verbose_name_plural =  verbose_name
+		unique_together=("mp_id", "att_id", "att_seq")
+
 
 
 class mp_mtr(models.Model):
@@ -656,11 +663,11 @@ class mp_mtr(models.Model):
   upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
   upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
 
-class Meta:
-  verbose_name = '프로그램 지원자(멘토)'
-  verbose_name_plural =  verbose_name
-  unique_together=("mp_id", "apl_no")
-  index_together = ["mntr_id"]
+  class Meta:
+    verbose_name = '프로그램 지원자(멘토)'
+    verbose_name_plural =  verbose_name
+    unique_together=("mp_id", "apl_no")
+    index_together = ["mntr_id"]
 
 
 
@@ -682,11 +689,11 @@ class mp_mtr_log(models.Model):
 	upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
 	upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
 
-class Meta:
-	verbose_name = '프로그램 지원자(멘토) 로그'
-	verbose_name_plural =  verbose_name
-	index_together = ["mp_id", "apl_no"]
-	index_together = ["mntr_id", "mp_id"]
+	class Meta:
+		verbose_name = '프로그램 지원자(멘토) 로그'
+		verbose_name_plural =  verbose_name
+		index_together = ["mp_id", "apl_no"]
+		index_together = ["mntr_id", "mp_id"]
 
 
 
@@ -716,23 +723,24 @@ class mp_ans(models.Model):
 	upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
 	upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
 
-class Meta: 
-	verbose_name = '멘토링 프로그램 지원서 답변'
-	verbose_name_plural =  verbose_name
-	unique_together=("mp_id", "test_div", "apl_no", "ques_no")
+	class Meta: 
+		verbose_name = '멘토링 프로그램 지원서 답변'
+		verbose_name_plural =  verbose_name
+		unique_together=("mp_id", "test_div", "apl_no", "ques_no")
+
 
 
 class mp_mrk(models.Model):
 	mp_id = models.CharField(max_length=10, null=False, verbose_name='멘토링프로그램ID' )
-	test_div = models.CharField(max_length=10, null=False, verbose_name='전형구분(서류/면접)' )
+	test_div = models.CharField(max_length=10, null=False, verbose_name='전형구분(서류/면접)MP0039' )
 	apl_no = models.CharField(max_length=10, null=False, verbose_name='지원 NO' )
 	mrk_seq = models.PositiveIntegerField(null=False, verbose_name='채점 항목 SEQ(NO)' )
 	mrk_no = models.PositiveIntegerField(null=False, verbose_name='채점자 NO' )
 	mrk_id = models.CharField(max_length=10, null=False, verbose_name='채점자 ID' )
 	mak_nm = models.CharField(max_length=20, null=False, verbose_name='채점자 명' )
 	score = models.PositiveIntegerField(null=True, blank=True, verbose_name='점수' )
-	item_cd = models.Field(null=True, blank=True, verbose_name='채점항목코드-SEQ별' )
-	item_nm = models.Field(null=True, blank=True, verbose_name='채점항목명' )
+	item_cd = models.CharField(max_length=10, null=True, blank=True, verbose_name='채점항목코드-SEQ별' )
+	item_nm = models.CharField(max_length=60, null=True, blank=True, verbose_name='채점항목명' )
 	ins_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='입력자ID' )
 	ins_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력자IP' )
 	ins_dt = models.DateTimeField(null=True, blank=True, verbose_name='입력일시' )
@@ -742,11 +750,13 @@ class mp_mrk(models.Model):
 	upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
 	upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
 
+	class Meta:
+		verbose_name = '멘토링 프로그램 지원서 채점'
+		verbose_name_plural =  verbose_name
+		unique_together=("mp_id", "test_div", "apl_no", "mrk_seq", "mrk_no")
 
-class Meta:
-	verbose_name = '멘토링 프로그램 지원서 채점'
-	verbose_name_plural =  verbose_name
-	unique_together=("mp_id", "test_div", "apl_no", "mrk_seq", "mrk_no")
+
+
 
 
 
@@ -788,10 +798,10 @@ class mp_spc(models.Model):
 	upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
 	upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
 
-class Meta:
-	verbose_name = '학습외 프로그램'
-	verbose_name_plural =  verbose_name
-	unique_together=("mp_id", "spc_no")
+	class Meta:
+		verbose_name = '학습외 프로그램'
+		verbose_name_plural =  verbose_name
+		unique_together=("mp_id", "spc_no")
 
 
 
@@ -815,10 +825,10 @@ class mp_spc_sub(models.Model):
 	upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
 	upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
 
-class Meta:
-	verbose_name = '학습외 프로그램 속성'
-	verbose_name_plural =  verbose_name
-	unique_together=("mp_id", "spc_no", "att_id", "att_seq")
+	class Meta:
+		verbose_name = '학습외 프로그램 속성'
+		verbose_name_plural =  verbose_name
+		unique_together=("mp_id", "spc_no", "att_id", "att_seq")
 
 
 
@@ -841,12 +851,11 @@ class mp_spc_mtr(models.Model):
 	upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
 	upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
 
-class Meta: 
-	verbose_name = '학습외 프로그램 참여 멘토'
-	verbose_name_plural =  verbose_name
-	unique_together=("mp_id", "apl_no", "spc_no", "spc_apl_no")
-	index_together = ["mntr_id"]
-
+	class Meta:
+		verbose_name = '학습외 프로그램 참여 멘토'
+		verbose_name_plural =  verbose_name
+		unique_together=("mp_id", "apl_no", "spc_no", "spc_apl_no")
+		#index_together = ["mntr_id"]
 
 
 
@@ -897,63 +906,63 @@ class mp_spc_mte(models.Model):
 	upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
 	upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
 
-class Meta:
-	verbose_name = '학습외 프로그램 참여 멘티'
-	verbose_name_plural =  verbose_name
-	unique_together=("mp_id", "mnte_no")
+	class Meta:
+		verbose_name = '학습외 프로그램 참여 멘티'
+		verbose_name_plural =  verbose_name
+		unique_together=("mp_id", "mnte_no")
 
 class mp_mte(models.Model):
-  mp_id = models.CharField(max_length=10, null=False, verbose_name='멘토링 프로그램ID' )
-  mnte_no = models.PositiveIntegerField(null=False, verbose_name='지원 NO' )
-  mnte_id = models.CharField(max_length=10, null=False, verbose_name='멘티ID' )
-  mnte_nm = models.CharField(max_length=20, null=False, verbose_name='멘티 명' )
-  mnte_nm_e = models.CharField(max_length=20, null=False, verbose_name='멘티 영문명' )
-  apl_no = models.PositiveIntegerField(null=False, verbose_name='멘토 지원 NO' )
-  brth_dt = models.CharField(max_length=8, null=False, verbose_name='생년월일(+ 멘티명 → 동일인 찾기)' )
-  mp_hm = models.CharField(max_length=50, null=True, blank=True, verbose_name='멘토링 가능 시간' )
-  mp_plc = models.CharField(max_length=1, null=True, blank=True, verbose_name='멘토링 장소 구분(MP0052)' )
-  mp_addr = models.CharField(max_length=200, null=True, blank=True, verbose_name='멘토링 주소' )
-  sch_grd = models.CharField(max_length=1, null=False, verbose_name='학교구분' )
-  sch_cd = models.CharField(max_length=10, null=False, verbose_name='학교' )
-  sch_nm = models.CharField(max_length=30, null=False, verbose_name='학교명' )
-  gen = models.CharField(max_length=1, null=False, verbose_name='성별(MS0012)' )
-  yr = models.CharField(max_length=4, null=False, verbose_name='학년도' )
-  term_div = models.CharField(max_length=2, null=False, verbose_name='학기' )
-  sch_yr = models.CharField(max_length=1, null=False, verbose_name='학년' )
-  mob_no = models.CharField(max_length=20, null=True, blank=True, verbose_name='휴대전화' )
-  tel_no = models.CharField(max_length=12, null=True, blank=True, verbose_name='집전화' )
-  grd_id = models.CharField(max_length=10, null=False, verbose_name='주 보호자 ID' )
-  grd_nm = models.CharField(max_length=20, null=True, blank=True, verbose_name='보호자명' )
-  grd_tel = models.CharField(max_length=20, null=True, blank=True, verbose_name='보호자 연락처' )
-  grd_rel = models.CharField(max_length=2, null=True, blank=True, verbose_name='보호자 관계(MP0047)' )
-  prnt_nat_cd = models.CharField(max_length=10, null=False, verbose_name='부모출신국가코드' )
-  prnt_nat_nm = models.CharField(max_length=20, null=False, verbose_name='부모출신국가명' )
-  tchr_id = models.CharField(max_length=10, null=False, verbose_name='지도교사 ID' )
-  tchr_nm = models.CharField(max_length=20, null=False, verbose_name='지도교사 명' )
-  tchr_tel = models.CharField(max_length=20, null=False, verbose_name='지도교사 전화번호' )
-  area_city = models.CharField(max_length=10, null=False, verbose_name='시/도(MP0048)' )
-  area_gu = models.CharField(max_length=10, null=False, verbose_name='지역구(MP0049)-시/군' )
-  h_addr = models.CharField(max_length=200, null=False, verbose_name='집주소' )
-  h_post_no = models.CharField(max_length=6, null=True, blank=True, verbose_name='우편번호' )
-  s_addr = models.CharField(max_length=200, null=False, verbose_name='학교주소' )
-  s_post_no = models.CharField(max_length=6, null=True, blank=True, verbose_name='우편번호' )
-  email_addr = models.CharField(max_length=50, null=False, verbose_name='이메일 주소' )
-  apl_dt = models.DateTimeField(null=True, blank=True, verbose_name='접수일(지원서 저장)' )
-  status = models.CharField(max_length=2, null=True, blank=True, verbose_name='상태(MP0054)' )
-  ins_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='입력자ID' )
-  ins_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력자IP' )
-  ins_dt = models.DateTimeField(null=True, blank=True, verbose_name='입력일시' )
-  ins_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력프로그램ID' )
-  upd_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='수정자ID' )
-  upd_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정자IP' )
-  upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
-  upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
+	mp_id = models.CharField(max_length=10, null=False, verbose_name='멘토링 프로그램ID' )
+	mnte_no = models.PositiveIntegerField(null=False, verbose_name='지원 NO' )
+	mnte_id = models.CharField(max_length=10, null=False, verbose_name='멘티ID' )
+	mnte_nm = models.CharField(max_length=20, null=False, verbose_name='멘티 명' )
+	mnte_nm_e = models.CharField(max_length=20, null=False, verbose_name='멘티 영문명' )
+	apl_no = models.PositiveIntegerField(null=False, verbose_name='멘토 지원 NO' )
+	brth_dt = models.CharField(max_length=8, null=False, verbose_name='생년월일(+ 멘티명 → 동일인 찾기)' )
+	mp_hm = models.CharField(max_length=50, null=True, blank=True, verbose_name='멘토링 가능 시간' )
+	mp_plc = models.CharField(max_length=1, null=True, blank=True, verbose_name='멘토링 장소 구분(MP0052)' )
+	mp_addr = models.CharField(max_length=200, null=True, blank=True, verbose_name='멘토링 주소' )
+	sch_grd = models.CharField(max_length=1, null=False, verbose_name='학교구분' )
+	sch_cd = models.CharField(max_length=10, null=False, verbose_name='학교' )
+	sch_nm = models.CharField(max_length=30, null=False, verbose_name='학교명' )
+	gen = models.CharField(max_length=1, null=False, verbose_name='성별(MS0012)' )
+	yr = models.CharField(max_length=4, null=False, verbose_name='학년도' )
+	term_div = models.CharField(max_length=2, null=False, verbose_name='학기' )
+	sch_yr = models.CharField(max_length=1, null=False, verbose_name='학년' )
+	mob_no = models.CharField(max_length=20, null=True, blank=True, verbose_name='휴대전화' )
+	tel_no = models.CharField(max_length=12, null=True, blank=True, verbose_name='집전화' )
+	grd_id = models.CharField(max_length=10, null=False, verbose_name='주 보호자 ID' )
+	grd_nm = models.CharField(max_length=20, null=True, blank=True, verbose_name='보호자명' )
+	grd_tel = models.CharField(max_length=20, null=True, blank=True, verbose_name='보호자 연락처' )
+	grd_rel = models.CharField(max_length=2, null=True, blank=True, verbose_name='보호자 관계(MP0047)' )
+	prnt_nat_cd = models.CharField(max_length=10, null=False, verbose_name='부모출신국가코드' )
+	prnt_nat_nm = models.CharField(max_length=20, null=False, verbose_name='부모출신국가명' )
+	tchr_id = models.CharField(max_length=10, null=False, verbose_name='지도교사 ID' )
+	tchr_nm = models.CharField(max_length=20, null=False, verbose_name='지도교사 명' )
+	tchr_tel = models.CharField(max_length=20, null=False, verbose_name='지도교사 전화번호' )
+	area_city = models.CharField(max_length=10, null=False, verbose_name='시/도(MP0048)' )
+	area_gu = models.CharField(max_length=10, null=False, verbose_name='지역구(MP0049)-시/군' )
+	h_addr = models.CharField(max_length=200, null=False, verbose_name='집주소' )
+	h_post_no = models.CharField(max_length=6, null=True, blank=True, verbose_name='우편번호' )
+	s_addr = models.CharField(max_length=200, null=False, verbose_name='학교주소' )
+	s_post_no = models.CharField(max_length=6, null=True, blank=True, verbose_name='우편번호' )
+	email_addr = models.CharField(max_length=50, null=False, verbose_name='이메일 주소' )
+	apl_dt = models.DateTimeField(null=True, blank=True, verbose_name='접수일(지원서 저장)' )
+	status = models.CharField(max_length=2, null=True, blank=True, verbose_name='상태(MP0054)' )
+	ins_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='입력자ID' )
+	ins_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력자IP' )
+	ins_dt = models.DateTimeField(null=True, blank=True, verbose_name='입력일시' )
+	ins_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력프로그램ID' )
+	upd_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='수정자ID' )
+	upd_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정자IP' )
+	upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
+	upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
 
 
-class Meta:
-  verbose_name = '프로그램 지원자(멘티)'
-  verbose_name_plural =  verbose_name
-  unique_together=("mp_id", "mnte_no")
+	class Meta:
+		verbose_name = '프로그램 지원자(멘티)'
+		verbose_name_plural =  verbose_name
+		unique_together=("mp_id", "mnte_no")
 
 
 
@@ -976,11 +985,11 @@ class mp_mte_log(models.Model):
 	upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
 	upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
 
-class Meta: 
-	verbose_name = '프로그램 지원자(멘티) 로그'
-	verbose_name_plural =  verbose_name
-	index_together = ["mp_id", "mnte_no"]
-	index_together = ["mnte_id", "mp_id"]
+	class Meta: 
+		verbose_name = '프로그램 지원자(멘티) 로그'
+		verbose_name_plural =  verbose_name
+		index_together = ["mp_id", "mnte_no"]
+		index_together = ["mnte_id", "mp_id"]
 
 
 
@@ -1000,9 +1009,9 @@ class cm_apl_q(models.Model):
   upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
   upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
 
-class Meta:
-  verbose_name = '지원서 질문'
-  verbose_name_plural =  verbose_name
+  class Meta:
+    verbose_name = '지원서 질문'
+    verbose_name_plural =  verbose_name
 
 
 class cm_surv(models.Model):
@@ -1024,9 +1033,9 @@ class cm_surv(models.Model):
   upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
 
 
-class Meta:
-  verbose_name = '만족도 조사 문항'
-  verbose_name_plural =  verbose_name
+  class Meta:
+    verbose_name = '만족도 조사 문항'
+    verbose_name_plural =  verbose_name
 
 
 class cm_surv_t(models.Model):
@@ -1045,9 +1054,9 @@ class cm_surv_t(models.Model):
   upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
   upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
 
-class Meta:
-  verbose_name = '만족도 조사 출제 세트'
-  verbose_name_plural =  verbose_name
+  class Meta:
+    verbose_name = '만족도 조사 출제 세트'
+    verbose_name_plural =  verbose_name
 
 
 
@@ -1065,10 +1074,10 @@ class cm_surv_q(models.Model):
   upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
   upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
 
-class Meta:
-  verbose_name = '만족도 조사 출제 문항'
-  verbose_name_plural =  verbose_name
-  unique_together=("surv_id", "ques_no")
+  class Meta:
+    verbose_name = '만족도 조사 출제 문항'
+    verbose_name_plural =  verbose_name
+    unique_together=("surv_id", "ques_no")
 
 
 class cm_surv_a(models.Model):
@@ -1090,10 +1099,10 @@ class cm_surv_a(models.Model):
   upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
   upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
 
-class Meta:
-  verbose_name = '만족도 조사 답변'
-  verbose_name_plural =  verbose_name
-  unique_together=("pgm_id", "surv_seq", "ansr_id", "ques_no")
+  class Meta:
+    verbose_name = '만족도 조사 답변'
+    verbose_name_plural =  verbose_name
+    unique_together=("pgm_id", "surv_seq", "ansr_id", "ques_no")
 
 
 class cm_cnv_scr(models.Model):
@@ -1121,10 +1130,10 @@ class cm_cnv_scr(models.Model):
   upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
 
 
-class Meta:
-  verbose_name = '점수변환표'
-  verbose_name_plural =  verbose_name
-  unique_together=("eval_item", "eval_seq")
+  class Meta:
+    verbose_name = '점수변환표'
+    verbose_name_plural =  verbose_name
+    unique_together=("eval_item", "eval_seq")
 
 class cm_sms(models.Model):
   sys_menu_id = models.CharField(max_length=8, null=False, verbose_name='사용 프로그램 ID' )
@@ -1145,10 +1154,10 @@ class cm_sms(models.Model):
 
 
 
-class Meta:
-  verbose_name = '문자메시지 형식'
-  verbose_name_plural =  verbose_name
-  unique_together=("sys_menu_id", "seq")
+  class Meta:
+    verbose_name = '문자메시지 형식'
+    verbose_name_plural =  verbose_name
+    unique_together=("sys_menu_id", "seq")
 
 
 
@@ -1175,12 +1184,12 @@ class mp_plnh(models.Model):
   upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
 
 
-class Meta:
-  verbose_name = '프로그램 수행 계획서'
-  verbose_name_plural =  verbose_name
-  unique_together=("mp_id", "apl_no")
-  index_together = ["apl_no"]
-  index_together = ["mnte_no"]
+  class Meta:
+    verbose_name = '프로그램 수행 계획서'
+    verbose_name_plural =  verbose_name
+    unique_together=("mp_id", "apl_no")
+    index_together = ["apl_no"]
+
 
 
 class mp_plnd(models.Model):
@@ -1200,13 +1209,13 @@ class mp_plnd(models.Model):
   upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
   upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
 
-class Meta:
-  verbose_name = '프로그램 수행 계획서 상세'
-  verbose_name_plural =  verbose_name
-  unique_together=("mp_id", "apl_no", "pln_no")
+  class Meta:
+    verbose_name = '프로그램 수행 계획서 상세'
+    verbose_name_plural =  verbose_name
+    unique_together=("mp_id", "apl_no", "pln_no")
 
-  index_together = ["apl_no"]
-  index_together = ["mnte_no"]
+    index_together = ["apl_no"]
+   
 
 
 class mp_att(models.Model):
@@ -1249,12 +1258,11 @@ class mp_att(models.Model):
 
 
 
-class Meta:
-  verbose_name = '프로그램 출석부(멘토)'
-  verbose_name_plural =  verbose_name
-  unique_together=("mp_id", "apl_no", "att_no")
-
-  index_together = ["apl_no"]
+  class Meta:
+    verbose_name = '프로그램 출석부(멘토)'
+    verbose_name_plural =  verbose_name
+    unique_together=("mp_id", "apl_no", "att_no")
+    index_together = ["apl_no"]
 
 
 class mp_att_mte(models.Model):
@@ -1282,14 +1290,13 @@ class mp_att_mte(models.Model):
   upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
   upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
 
-class Meta:
-  verbose_name = '프로그램 출석부(멘티)'
-  verbose_name_plural =  verbose_name
-  unique_together=("mp_id", "mnte_no", "apl_no", "att_no")
+  class Meta:
+    verbose_name = '프로그램 출석부(멘티)'
+    verbose_name_plural =  verbose_name
+    unique_together=("mp_id", "mnte_no", "apl_no", "att_no")
 
-  index_together = ["apl_no"]
-  index_together = ["mnte_no"]
-
+    index_together = ["apl_no"]
+    index_together = ["mnte_no"]
 
 
 class mp_rep(models.Model):
@@ -1310,7 +1317,7 @@ class mp_rep(models.Model):
   appr_dt = models.DateTimeField(null=True, blank=True, verbose_name='보호자 승인일시' )
   mgr_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='관리자ID' )
   mgr_dt = models.DateTimeField(null=True, blank=True, verbose_name='관리자 승인일시' )
-  status = models.CharField(max_length=1, null=True, blank=True, verbose_name='상태(MP0070)' )
+  status = models.CharField(max_length=2, null=True, blank=True, verbose_name='상태(MP0070)' )
   ins_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='입력자ID' )
   ins_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력자IP' )
   ins_dt = models.DateTimeField(null=True, blank=True, verbose_name='입력일시' )
@@ -1320,14 +1327,17 @@ class mp_rep(models.Model):
   upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
   upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
 
+  class Meta:
+    verbose_name = '프로그램 보고서'
+    verbose_name_plural =  verbose_name
+    unique_together=("mp_id", "apl_no", "rep_no")
 
-class Meta:
-  verbose_name = '프로그램 보고서'
-  verbose_name_plural =  verbose_name
-  unique_together=("mp_id", "apl_no", "rep_no")
+    index_together = ["apl_no", "mp_id"]
+    index_together = ["apl_no"]
 
-  index_together = ["apl_no", "mp_id"]
-  index_together = ["apl_no", "att_sts"]
+
+
+
 
 class mp_exp(models.Model):
   mp_id = models.CharField(max_length=10, null=False, verbose_name='멘토링 프로그램ID' )
@@ -1360,10 +1370,9 @@ class mp_exp(models.Model):
 
 
 
-class Meta:
-  verbose_name = '프로그램 활동비'
-  verbose_name_plural =  verbose_name
-  unique_together=("mp_id", "apl_no", "exp_no")
-
-  index_together = ["apl_no", "mp_id"]
-  index_together = ["apl_no", "att_sts"]
+  class Meta:
+    verbose_name = '프로그램 활동비'
+    verbose_name_plural =  verbose_name
+    unique_together=("mp_id", "apl_no", "exp_no")
+    index_together = ["apl_no", "mp_id"]
+    index_together = ["apl_no"]
