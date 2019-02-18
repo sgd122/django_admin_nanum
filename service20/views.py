@@ -430,7 +430,7 @@ def post_user_info_persion(request):
         
         message = "Ok"
         rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
-        rows2 = mp_sub.objects.filter(ms_id=ms_ida)
+        rows2 = mp_sub.objects.filter(mp_id=ms_ida)
         rows3 = mpgm.objects.filter(mp_id=ms_ida)[0]
 
 
