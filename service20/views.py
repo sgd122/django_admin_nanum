@@ -382,8 +382,6 @@ class post_user_info_persion_adm_Serializer(serializers.ModelSerializer):
     def get_pr_term_div(self,obj):
         return obj.pr_term_div    
 
-# @csrf_exempt
-# def post_user_info_persion(request):
 class post_user_info_persion_adm(generics.ListAPIView):
     queryset = mp_mtr.objects.all()
     serializer_class = post_user_info_persion_adm_Serializer
@@ -406,6 +404,54 @@ class post_user_info_persion_adm(generics.ListAPIView):
             return self.get_paginated_response(serializer.data)
 
         return Response(serializer.data)
+
+
+class post_user_info_adm_Serializer(serializers.ModelSerializer):
+    
+    ms_name = serializers.SerializerMethodField()
+    pr_yr = serializers.SerializerMethodField()
+    pr_sch_yr = serializers.SerializerMethodField()
+    pr_term_div = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ms_apl
+        fields = ('ms_id','apl_no','mntr_id','indv_div','team_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','ms_name','pr_yr','pr_sch_yr','pr_term_div')
+
+    def get_ms_name(self,obj):
+        return obj.ms_name
+
+    def get_pr_yr(self,obj):
+        return obj.pr_yr
+
+    def get_pr_sch_yr(self,obj):
+        return obj.pr_sch_yr
+
+    def get_pr_term_div(self,obj):
+        return obj.pr_term_div    
+
+class post_user_info_adm(generics.ListAPIView):
+    queryset = ms_apl.objects.all()
+    serializer_class = post_user_info_persion_adm_Serializer
+    
+    def list(self, request):
+        ida = request.GET.get('user_id', None)
+        ms_ida = request.GET.get('ms_id', None)
+        l_yr = request.GET.get('yr', None)
+        
+        # msch
+        query = "select C.ms_name,B.pr_yr,B.pr_sch_yr,B.pr_term_div,A.* from service20_ms_apl A,service10_vm_nanum_stdt B,service20_msch C where A.apl_id=B.apl_id and A.ms_id = C.ms_id and A.yr='"+l_yr+"' and A.ms_id = '"+ms_ida+"' and A.apl_id='"+ida+"'"
+        queryset = ms_apl.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
 
 @csrf_exempt
 def post_user_info_persion(request):    
