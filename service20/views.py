@@ -882,6 +882,11 @@ class mpPlnh_mpgmListView(generics.ListAPIView):
 
 
     def list(self, request):
+        l_yr = request.GET.get('yr', "")
+        l_apl_term = request.GET.get('apl_term', "")
+        l_status = request.GET.get('status', "")
+        ida = request.GET.get('user_id', "")
+
         queryset = self.get_queryset()
         
         query = "select * from service20_mpgm";
@@ -918,7 +923,16 @@ class mpSpc_ListView(generics.ListAPIView):
     # mp_spc
 
     def list(self, request):
+        l_yr = request.GET.get('yr', "")
+        l_apl_term = request.GET.get('apl_term', "")
+        l_status = request.GET.get('status', "")
+        ida = request.GET.get('user_id', "")
+        
         queryset = self.get_queryset()
+        
+        query = "select * from service20_mp_spc";
+        queryset = mpgm.objects.raw(query)
+
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
 
