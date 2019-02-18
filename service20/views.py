@@ -442,8 +442,6 @@ class post_user_info_adm(generics.ListAPIView):
         query = "select C.ms_name,B.pr_yr,B.pr_sch_yr,B.pr_term_div,A.* from service20_ms_apl A,service10_vm_nanum_stdt B,service20_msch C where A.apl_id=B.apl_id and A.ms_id = C.ms_id and A.yr='"+l_yr+"' and A.ms_id = '"+ms_ida+"' and A.apl_id='"+ida+"'"
         queryset = ms_apl.objects.raw(query)
 
-        print(query)
-        
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
 
@@ -795,8 +793,6 @@ class mpmgListPersionView(generics.ListAPIView):
         # query = "select ifnull((select 'Y' from service20_mp_mtr where yr = '"+str(l_yr)+"' and apl_id = '"+str(ida)+"' and mp_id = A.mp_id),'N') AS applyFlag,A.* from service20_mpgm A where A.yr='"+str(l_yr)+"' and A.apl_term='"+str(l_apl_term)+"' and (select count(1) from service20_mentor where mntr_id = '"+ida+"') > 0 "
 
         queryset = mpgm.objects.raw(query)
-
-        print(query)
 
 
         serializer_class = self.get_serializer_class()
