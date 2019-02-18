@@ -790,13 +790,12 @@ class MP0103M_list_Serializer(serializers.ModelSerializer):
     apl_nm = serializers.SerializerMethodField()
     tchr_nm = serializers.SerializerMethodField()
     pln_dt = serializers.SerializerMethodField()
+    mtr_sub = serializers.SerializerMethodField()
+    pln_sedt = serializers.SerializerMethodField()
 
     class Meta:
         model = mpgm
-        # fields = ('mp_id','status','mp_name','mp_sname','base_div','mp_intro','mng_area','mgr_id','mgr_nm','mng_org','sup_org','yr','yr_seq','apl_ntc_fr_dt','apl_ntc_to_dt','apl_term','apl_fr_dt','apl_to_dt','mnt_term','mnt_fr_dt','mnt_to_dt','tot_apl','cnt_apl','cnt_doc_suc','cnt_doc_res','cnt_intv_pl','cnt_intv_ac','intv_dt','cnt_intv_suc','cnt_iintv_res','cnt_trn','cnt_mtr','doc_dt','doc_mgr','intv_in_dt','intv_in_mgr','fin_dt','fin_mgr','use_div','img_src','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','testField')
-
-
-        fields = ('mp_id','mp_name','apl_term','yr_seq','mnte_nm','sch_nm','sch_yr','pln_dt','appr_id','appr_dt','mgr_id','mgr_dt','apl_id','apl_nm','tchr_nm','pln_dt')
+        fields = ('mp_id','mp_name','apl_term','yr_seq','mnte_nm','sch_nm','sch_yr','pln_dt','appr_id','appr_dt','mgr_id','mgr_dt','apl_id','apl_nm','tchr_nm','pln_dt','mtr_sub','pln_sedt')
     
     def get_mnte_nm(self,obj):
         return obj.mnte_nm  
@@ -822,8 +821,10 @@ class MP0103M_list_Serializer(serializers.ModelSerializer):
         return obj.tchr_nm
     def get_pln_dt(self,obj):
         return obj.pln_dt
-    
-
+    def get_mtr_sub(self,obj):
+        return obj.mtr_sub
+    def get_pln_sedt(self,obj):
+        return obj.pln_sedt
 
 
 
@@ -860,7 +861,8 @@ class MP0103M_list(generics.ListAPIView):
         query += " , d.apl_id     AS apl_id ";
         query += " , d.apl_nm     AS apl_nm ";
         query += " , c.tchr_nm    AS tchr_nm ";
-        query += " , (SELECT concat(pln_sdt, CONCAT('~', pln_edt)) FROM service20_mp_plnd WHERE mp_id = a.mp_id AND apl_no = a.apl_no LIMIT 1) AS pln_dt ";
+        query += " , a.mtr_sub     AS mtr_sub ";
+        query += " , (SELECT concat(pln_sdt, CONCAT('~', pln_edt)) FROM service20_mp_plnd WHERE mp_id = a.mp_id AND apl_no = a.apl_no LIMIT 1) AS pln_sedt ";
         query += " from service20_mp_plnh a ";
         query += " , service20_mpgm b ";
         query += " , service20_mp_mte c ";
@@ -876,7 +878,6 @@ class MP0103M_list(generics.ListAPIView):
         query += " AND a.mp_id = d.mp_id ";
         query += " AND a.apl_no = d.apl_no ";
 
-        # query = "select * from service20_mpgm";
 
         queryset = mpgm.objects.raw(query)
 
