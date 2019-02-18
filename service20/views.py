@@ -745,7 +745,7 @@ class mpmgListPersionView(generics.ListAPIView):
         
         # 멘토만 조회가능.
         # query = "select ifnull((select 'Y' from service20_mp_mtr where yr = '"+str(l_yr)+"' and apl_id = '"+str(ida)+"' and mp_id = A.mp_id),'N') AS applyFlag,A.* from service20_mpgm A where A.yr='"+str(l_yr)+"' and A.apl_term='"+str(l_apl_term)+"' and (select count(1) from service20_mentor where mntr_id = '"+ida+"') > 0 "
-        
+
         queryset = mpgm.objects.raw(query)
 
         print(query)
@@ -897,6 +897,62 @@ class mpPlnh_mpgmListView(generics.ListAPIView):
         
         query = "select * from service20_mpgm";
         queryset = mpgm.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+
+# 프로그램 수행계획서 상 ###################################################
+class mpPlnh_mpgmDetailViewSerializer(serializers.ModelSerializer):
+
+    testField = serializers.SerializerMethodField()
+    class Meta:
+        model = mp_plnd
+        fields = ('mp_id','apl_no','pln_no','pln_sdt','pln_edt','mtr_desc','testField')
+
+    def get_testField(self, obj):
+        return 'test'     
+
+
+class mpPlnh_mpgmDetailView(generics.ListAPIView):
+    queryset = mpgm.objects.all()
+    serializer_class = mpPlnh_mpgmListSerializer
+
+    # mp_mtr - 프로그램 지원자(멘토) => mp_id(멘토링ID), apl_id
+    # mp_mte - 프로그램 지원자(멘티) => mp_id(멘토링ID)
+
+
+    def list(self, request):
+        l_yr = request.GET.get('yr', "")
+        l_apl_term = request.GET.get('apl_term', "")
+        l_mp_id = request.GET.get('mp_id', "")
+        l_mntr_id = request.GET.get('mntr_id', "")
+        ida = request.GET.get('user_id', "")
+
+        queryset = self.get_queryset()
+        
+
+        query = " select b.*";
+        query += " from service20_mp_plnh a";
+        query += " , service20_mp_plnd b";
+        query += " , (SELECT mp_id";
+        query += " , apl_no";
+        query += " FROM service20_mp_mtr";
+        query += " WHERE mp_id = '"+l_mp_id+"'";
+        query += " AND mntr_id = '"+l_mntr_id+"') c";
+        query += " WHERE a.mp_id = b.mp_id";
+        query += "    AND a.mp_id = c.mp_id";
+        query += "    AND a.apl_no = b.apl_no";
+        query += "    AND a.apl_no = c.apl_no";
+
+        queryset = mp_plnd.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
