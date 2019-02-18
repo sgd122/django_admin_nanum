@@ -431,7 +431,7 @@ class post_user_info_adm_Serializer(serializers.ModelSerializer):
 
 class post_user_info_adm(generics.ListAPIView):
     queryset = ms_apl.objects.all()
-    serializer_class = post_user_info_persion_adm_Serializer
+    serializer_class = post_user_info_adm_Serializer
     
     def list(self, request):
         ida = request.GET.get('user_id', None)
