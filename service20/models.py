@@ -1112,11 +1112,11 @@ class cm_sms(models.Model):
     unique_together=("sys_menu_id", "seq")
 
 
-
 class mp_plnh(models.Model):
   mp_id = models.CharField(max_length=10, null=False, verbose_name='멘토링 프로그램ID' )
   apl_no = models.PositiveIntegerField(null=False, verbose_name='멘토 지원 NO' )
   pln_weeks = models.PositiveIntegerField(null=False, verbose_name='계획 주차 수' )
+  mtr_sub = models.CharField(max_length=50, null=True, blank=True, verbose_name='지도과목' )
   mtr_obj = models.CharField(max_length=1000, null=True, blank=True, verbose_name='학습목표' )
   pln_dt = models.DateTimeField(null=True, blank=True, verbose_name='계획작성일' )
   req_dt = models.DateTimeField(null=True, blank=True, verbose_name='승인요청일' )
@@ -1134,13 +1134,14 @@ class mp_plnh(models.Model):
   upd_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정자IP' )
   upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
   upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
-
-
   class Meta:
     verbose_name = '프로그램 수행 계획서'
     verbose_name_plural =  verbose_name
     unique_together=("mp_id", "apl_no")
+
     index_together = ["apl_no"]
+    
+
 
 
 
