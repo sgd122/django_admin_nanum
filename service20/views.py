@@ -798,11 +798,45 @@ class MP0103M_list(generics.ListAPIView):
         l_yr = request.GET.get('yr', "")
         l_apl_term = request.GET.get('apl_term', "")
         l_status = request.GET.get('status', "")
+        l_mp_id = request.GET.get('mp_id', "")
+        l_mntr_id = request.GET.get('mntr_id', "")
         ida = request.GET.get('user_id', "")
 
         queryset = self.get_queryset()
-        
+
+        query = " select a.mp_id      AS mp_id ";
+        query += " , b.mp_name    AS mp_name ";
+        query += " , b.apl_term   AS apl_term ";
+        query += " , b.yr_seq     AS yr_seq ";
+        query += " , c.mnte_nm    AS mnte_nm ";
+        query += " , c.sch_nm     AS sch_nm ";
+        query += " , c.sch_yr     AS sch_yr ";
+        query += " , a.pln_dt     AS pln_dt ";
+        query += " , a.appr_id    AS appr_id ";
+        query += " , a.appr_dt    AS appr_dt ";
+        query += " , a.mgr_id     AS mgr_id ";
+        query += " , a.mgr_dt     AS mgr_dt ";
+        query += " , d.apl_id     AS apl_id ";
+        query += " , d.apl_nm     AS apl_nm ";
+        query += " , c.tchr_nm    AS tchr_nm ";
+        query += " , (SELECT concat(pln_sdt, CONCAT('~', pln_edt)) FROM service20_mp_plnd WHERE mp_id = a.mp_id AND apl_no = a.apl_no LIMIT 1) AS pln_dt ";
+        query += " from service20_mp_plnh a ";
+        query += " , service20_mpgm b ";
+        query += " , service20_mp_mte c ";
+        query += " , (SELECT mp_id ";
+        query += " , apl_no ";
+        query += " , apl_id ";
+        query += " , apl_nm ";
+        query += " FROM service20_mp_mtr ";
+        query += " WHERE mp_id = '"+l_mp_id+"' ";
+        query += " AND mntr_id = '"+l_mntr_id+"') d ";
+        query += " WHERE a.mp_id = b.mp_id ";
+        query += " AND a.mp_id = c.mp_id ";
+        query += " AND a.mp_id = d.mp_id ";
+        query += " AND a.apl_no = d.apl_no ";
+
         query = "select * from service20_mpgm";
+
         queryset = mpgm.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
