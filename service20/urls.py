@@ -26,14 +26,14 @@ urlpatterns = [
     ########################################################################################
     #멘토스쿨 리스트
     path('', Service20ListView.as_view(), name='Service20ListView'),
-    
     # 멘토스쿨 기본정보
     path('authUserInfo/', post_user_info, name='post_user_info'),
     # 멘토스쿨 질문유형
     path('authUserInfoQuest/', post_user_info_Quest.as_view(), name='post_user_info_Quest'),
     # 멘토스쿨 신청
     path('msApply/', post_msApply, name='post_msApply'),
-
+    # 멘토스쿨(관리자) - 기본정보
+    # path('authUserInfoAdm/', post_user_info_adm, name='post_user_info_adm'),
     # 멘토스쿨(관리자) - 질문
     path('authUserInfoViewQuest/', post_user_info_view_Quest.as_view(), name='post_user_info_view_Quest'),
     ########################################################################################
@@ -53,10 +53,8 @@ urlpatterns = [
     path('msProgramApply/', post_msProgramApply, name='post_msProgramApply'), 
     # 성적,봉사,어학 가져오기
     path('authUserPersionInfo/', post_user_info_persion, name='post_user_info_persion'),
-    # path('authUserPersionInfo/', post_user_info_persion.as_view(), name='post_user_info_persion'),
-
+    # 멘토링 프로그램(관리자) - 기보정보
     path('authUserPersionInfoAdm/', post_user_info_persion_adm.as_view(), name='post_user_info_persion_adm'),
-
     # 멘토링 프로그램(관리자) - 질문
     path('authUserInfoPersionViewQuest/', post_user_info_persion_view_Quest.as_view(), name='post_user_info_persion_view_Quest'),
     ########################################################################################
