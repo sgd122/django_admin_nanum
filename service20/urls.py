@@ -25,18 +25,18 @@ urlpatterns = [
     #
     ########################################################################################
     #멘토스쿨 리스트
-    # path('', Service20ListView.as_view(), name='post_user_info'),
-    path('MS0101M/list/', Service20ListView.as_view(), name='post_user_info'),
+    # path('', MS0101M_list.as_view(), name='MS0101M_list'),
+    path('MS0101M/list/', MS0101M_list.as_view(), name='MS0101M_list'),
     # 멘토스쿨 기본정보
-    path('MS0101M/detail/', post_user_info, name='post_user_info'),
+    path('MS0101M/detail/', MS0101M_detail, name='MS0101M_detail'),
     # 멘토스쿨 질문유형
-    path('MS0101M/quest/', post_user_info_Quest.as_view(), name='post_user_info_Quest'),
+    path('MS0101M/quest/', MS0101M_quest.as_view(), name='MS0101M_quest'),
     # 멘토스쿨 신청
-    path('MS0101M/save/', post_msApply, name='post_msApply'),
+    path('MS0101M/save/', MS0101M_save, name='MS0101M_save'),
     # 멘토스쿨(관리자) - 기본정보
-    path('MS0101M/admin/list/', post_user_info_adm.as_view(), name='post_user_info_adm'),
+    path('MS0101M/admin/list/', MS0101M_adm_list.as_view(), name='MS0101M_adm_list'),
     # 멘토스쿨(관리자) - 질문
-    path('MS0101M/admin/quest/', post_user_info_view_Quest.as_view(), name='post_user_info_view_Quest'),
+    path('MS0101M/admin/quest/', MS0101M_adm_quest.as_view(), name='MS0101M_adm_quest'),
     ########################################################################################
     # 멘토스쿨
     #
@@ -68,9 +68,9 @@ urlpatterns = [
     #
     ########################################################################################
     # 프로그램 수행계획서 리스트
-    path('MP0103M/list/', mpPlnh_mpgmListView.as_view(), name='mpPlnh_mpgmListView'),
+    path('MP0103M/list/', MP0103M_list.as_view(), name='MP0103M_list'),
     # 프로그램 수행계획서 상세
-    path('MP0103M/detail/', mpPlnh_mpgmDetailView.as_view(), name='mpPlnh_mpgmDetailView'),
+    path('MP0103M/detail/', MP0103M_Detail.as_view(), name='MP0103M_Detail'),
     ########################################################################################
     # 프로그램 수행계획서
     #
@@ -81,7 +81,7 @@ urlpatterns = [
     #
     ########################################################################################
     # 학습외신청(멘토) 리스트
-    path('MP0102M/list/', mpSpc_ListView.as_view(), name='mpSpc_ListView'),   
+    path('MP0102M/list/', MP0102M_list.as_view(), name='MP0102M_list'),   
     ########################################################################################
     # 학습외신청(멘토) 리스트
     #
