@@ -438,10 +438,12 @@ class post_user_info_adm(generics.ListAPIView):
         ms_ida = request.GET.get('ms_id', None)
         l_yr = request.GET.get('yr', None)
         
-        # msch
+        # ms_apl
         query = "select C.ms_name,B.pr_yr,B.pr_sch_yr,B.pr_term_div,A.* from service20_ms_apl A,service10_vm_nanum_stdt B,service20_msch C where A.apl_id=B.apl_id and A.ms_id = C.ms_id and A.yr='"+l_yr+"' and A.ms_id = '"+ms_ida+"' and A.apl_id='"+ida+"'"
         queryset = ms_apl.objects.raw(query)
 
+        print(query)
+        
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
 
