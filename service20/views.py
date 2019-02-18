@@ -345,7 +345,7 @@ class post_user_info_persion_Quest(generics.ListAPIView):
         #mp_sub 테이블에서 질문내역 조회
         key1 = request.GET.get('mp_id', None)           
         
-        query = "select B.std_detl_code,B.std_detl_code_nm,B.rmrk,A.* from service20_mp_sub A left outer join service20_com_cdd B on (A.att_id = B.std_grp_code and A.att_cdd = B.std_detl_code) where A.ms_id = '"+key1+"'"
+        query = "select B.std_detl_code,B.std_detl_code_nm,B.rmrk,A.* from service20_mp_sub A left outer join service20_com_cdd B on (A.att_id = B.std_grp_code and A.att_cdd = B.std_detl_code) where A.mp_id = '"+key1+"'"
         queryset = mp_sub.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
