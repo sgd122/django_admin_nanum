@@ -1006,8 +1006,8 @@ def MP0103M_Insert(request):
     mp_id = request.POST.get('mp_id', "")
     apl_no = request.POST.get('apl_no', "")
     pln_no = request.POST.get('pln_no', 0)
-    pln_sdt = request.POST.get('pln_sdt', SYSDATE())
-    pln_edt = request.POST.get('pln_edt', SYSDATE())
+    pln_sdt = request.POST.get('pln_sdt', "SYSDATE()")
+    pln_edt = request.POST.get('pln_edt', "SYSDATE()")
     mtr_desc = request.POST.get('mtr_desc', "")
 
     ins_id = request.POST.get('ins_id', "")
