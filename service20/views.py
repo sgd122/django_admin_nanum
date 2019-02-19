@@ -1185,7 +1185,8 @@ class MP0105M_list(generics.ListAPIView):
 
         queryset = self.get_queryset()
 
-        query = " select t1.mp_id     /* 멘토링 프로그램id */ ";
+        query = " select t1.id, ";
+        query += " , t1.mp_id     /* 멘토링 프로그램id */ ";
         query += " , t2.unv_nm          /* 지원자 대학교 명 */ ";
         query += " , t2.cllg_nm         /* 지원자 대학 명 */ ";
         query += " , t2.dept_nm         /* 지원자 학부/학과 명 */ ";
