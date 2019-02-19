@@ -100,18 +100,37 @@ urlpatterns = [
 
 
     
+    
     ########################################################################################
     # view2 부분 (시작)
     #
     ########################################################################################
     #멘토스쿨 콤보박스
-    path('comboMpmgListView/', comboMpmgListView.as_view(), name='comboMpmgListView'),
+    path('msComboListView/', msComboListView.as_view(), name='msComboListView'),
     #멘토스쿨 콤보박스 Detail
-    path('comboMpmgListViewDetail/', comboMpmgListViewDetail.as_view(), name='comboMpmgListViewDetail'),
+    path('msComboListViewDetail/', msComboListViewDetail.as_view(), name='comboMpmgListViewDetail'),
+       #환산
+    path('msFn1/', msFn1, name='msFn1'),
+    #사정
+    path('msFn2/', msFn2, name='msFn2'),
+    #엑셀
+    path('msFn3/', msFn3, name='msFn3'),    
+    #멘토스쿨 팝업1
+    path('msPop1/', msPop1, name='msPop1'),    
+    #멘토스쿨 핍압1_조회1
+    path('msPop1_Det1/', msPop1_Det1.as_view(), name='msPop1_Det1'), 
+    #멘토스쿨 핍압1_조회2
+    path('msPop1_Det2/', mpPop1_Det2, name='msPop1_Det2'), 
+
+    #멘토스쿨 핍압1_조회3_채점자 교수 조회
+    path('msPop1_Det3/', msPop1_Det3.as_view(), name='msPop1_Det3'), 
+
+
+
     #멘토스쿨 환산표
     #path('msFn1/', msFn1, name='msFn1'),
 
-    #멘토스쿨 콤보박스
+    #멘토링 콤보박스
     path('mpComboListView/', mpComboListView.as_view(), name='mpComboListView'),
     #멘토링 콤보박스 Detail
     path('mpComboListViewDetail/', mpComboListViewDetail.as_view(), name='mpComboListViewDetail'),
@@ -124,6 +143,10 @@ urlpatterns = [
 
     #멘토링 팝업1
     path('mpPop1/', mpPop1, name='mpPop1'),    
+    #멘토랑핍압1_조회1
+    path('mpPop1_Det1/', mpPop1_Det1.as_view(), name='mpPop1_Det1'), 
+    #멘토랑핍압1_조회2   
+    path('mpPop1_Det2/', mpPop1_Det2, name='mpPop1_Det2'), 
     ########################################################################################
     # view2 부분 (종료)
     #
