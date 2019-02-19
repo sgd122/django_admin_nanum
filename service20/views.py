@@ -1052,8 +1052,8 @@ def MP0103M_Insert(request):
     insert_text += " '"+str(mp_id)+"' ";
     insert_text += " , '"+str(apl_no)+"' ";
     insert_text += " , '"+str(pln_no)+"' ";
-    insert_text += " , ifnull(trim('"+str(pln_sdt)+"'),SYSDATE()) ";
-    insert_text += " , ifnull(trim('"+str(pln_edt)+"'),SYSDATE()) ";
+    insert_text += " , ifnull(trim(NULLIF('"+str(pln_sdt)+"','')),SYSDATE()) ";
+    insert_text += " , ifnull(trim(NULLIF('"+str(pln_edt)+"','')),SYSDATE()) ";
     insert_text += " , '"+str(mtr_desc)+"' ";
     insert_text += " , '"+str(ins_id)+"' ";
     insert_text += " , '"+str(ins_ip)+"' ";
