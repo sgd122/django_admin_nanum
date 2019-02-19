@@ -433,6 +433,11 @@ class MP0101M_list_Serializer(serializers.ModelSerializer):
             return '모집완료'
         else:
             return '개설중'
+    def get_apl_fr_dt(self,obj):
+        return obj.apl_fr_dt.strftime('%Y-%m-%d %H')
+    def get_apl_to_dt(self,obj):
+        return obj.apl_to_dt.strftime('%Y-%m-%d %H')
+        
     get_status.short_description = '상태'     
 
 
