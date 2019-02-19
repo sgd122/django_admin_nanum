@@ -1006,8 +1006,8 @@ def MP0103M_Insert(request):
     mp_id = request.POST.get('mp_id', "")
     apl_no = request.POST.get('apl_no', "")
     pln_no = request.POST.get('pln_no', 0)
-    pln_sdt = request.POST.get('pln_sdt', "SYSDATE()")
-    pln_edt = request.POST.get('pln_edt', "SYSDATE()")
+    pln_sdt = request.POST.get('pln_sdt', "")
+    pln_edt = request.POST.get('pln_edt', "")
     mtr_desc = request.POST.get('mtr_desc', "")
 
     ins_id = request.POST.get('ins_id', "")
@@ -1052,8 +1052,8 @@ def MP0103M_Insert(request):
     insert_text += " '"+str(mp_id)+"' ";
     insert_text += " , '"+str(apl_no)+"' ";
     insert_text += " , '"+str(pln_no)+"' ";
-    insert_text += " , '"+str(pln_sdt)+"' ";
-    insert_text += " , '"+str(pln_edt)+"' ";
+    insert_text += " , ifnull('"+str(pln_sdt)+"',SYSDATE()) ";
+    insert_text += " , ifnull('"+str(pln_edt)+"',SYSDATE()) ";
     insert_text += " , '"+str(mtr_desc)+"' ";
     insert_text += " , '"+str(ins_id)+"' ";
     insert_text += " , '"+str(ins_ip)+"' ";
