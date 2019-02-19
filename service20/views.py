@@ -1020,7 +1020,7 @@ def MP0103M_Insert(request):
     
     mp_plnd_max = mp_plnd.objects.all().aggregate(vlMax=Max('apl_no'))
     
-    apl_no = ms_apl_max
+    apl_no = 0;
     
     max_no = mp_plnd_max['vlMax']    
 
