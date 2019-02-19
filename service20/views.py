@@ -844,10 +844,11 @@ class MP0103M_list_Serializer(serializers.ModelSerializer):
     pln_dt = serializers.SerializerMethodField()
     mtr_sub = serializers.SerializerMethodField()
     pln_sedt = serializers.SerializerMethodField()
+    appr_nm = serializers.SerializerMethodField()
 
     class Meta:
         model = mpgm
-        fields = ('mp_id','mp_name','apl_term','yr_seq','mnte_nm','sch_nm','sch_yr','pln_dt','appr_id','appr_dt','mgr_id','mgr_dt','apl_id','apl_nm','tchr_nm','pln_dt','mtr_sub','pln_sedt')
+        fields = ('mp_id','mp_name','apl_term','yr_seq','mnte_nm','sch_nm','sch_yr','pln_dt','appr_id','appr_dt','mgr_id','mgr_dt','apl_id','apl_nm','tchr_nm','pln_dt','mtr_sub','pln_sedt','appr_nm')
     
     def get_mnte_nm(self,obj):
         return obj.mnte_nm  
@@ -877,7 +878,8 @@ class MP0103M_list_Serializer(serializers.ModelSerializer):
         return obj.mtr_sub
     def get_pln_sedt(self,obj):
         return obj.pln_sedt
-
+    def get_appr_nm(self,obj):
+        return obj.appr_nm
 
 
 class MP0103M_list(generics.ListAPIView):
@@ -901,7 +903,7 @@ class MP0103M_list(generics.ListAPIView):
         query += " , c.sch_nm     AS sch_nm ";
         query += " , c.sch_yr     AS sch_yr ";
         query += " , a.pln_dt     AS pln_dt ";
-        query += " , a.appr_id    AS appr_id ";
+        query += " , a.appr_id    AS appr_nm ";
         query += " , a.appr_dt    AS appr_dt ";
         query += " , a.mgr_id     AS mgr_id ";
         query += " , a.mgr_dt     AS mgr_dt ";
