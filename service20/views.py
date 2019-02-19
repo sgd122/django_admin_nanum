@@ -518,7 +518,7 @@ class MP0101M_quest(generics.ListAPIView):
         #mp_sub 테이블에서 질문내역 조회
         key1 = request.GET.get('mp_id', None)           
         
-        query = "select B.std_detl_code,B.std_detl_code_nm,B.rmrk,A.* from service20_mp_sub A left outer join service20_com_cdd B on (A.att_id = B.std_grp_code and A.att_cdd = B.std_detl_code) where A.mp_id = '"+key1+"'"
+        query = "select B.std_detl_code,B.std_detl_code_nm,B.rmrk,A.* from service20_mp_sub A left outer join service20_com_cdd B on (A.att_id = B.std_grp_code and A.att_cdd = B.std_detl_code) where A.att_id='MS0014' and A.mp_id = '"+key1+"'"
         queryset = mp_sub.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
@@ -773,7 +773,7 @@ class MP0101M_adm_quest(generics.ListAPIView):
         l_user_id = request.GET.get('user_id', None)           
         l_exist = mp_sub.objects.filter(mp_id=key1).exists()
         
-        query = "select B.std_detl_code_nm,B.rmrk,A.* from service20_mp_ans A, service20_com_cdd B where A.ques_no = B.std_detl_code and B.std_grp_code in (select att_cdh from service20_mp_sub where mp_id = '"+str(key1)+"') and A.mp_id = '"+str(key1)+"' and apl_id = '"+str(l_user_id)+"'"
+        query = "select B.std_detl_code_nm,B.rmrk,A.* from service20_mp_ans A, service20_com_cdd B where A.ques_no = B.std_detl_code and B.std_grp_code in (select att_cdh from service20_mp_sub where att_id='MS0014' and mp_id = '"+str(key1)+"') and A.mp_id = '"+str(key1)+"' and apl_id = '"+str(l_user_id)+"'"
         queryset = mp_ans.objects.raw(query)
 
         print(query)
