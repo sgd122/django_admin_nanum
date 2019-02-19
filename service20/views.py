@@ -1050,7 +1050,7 @@ def MP0103M_Insert(request):
     insert_text += " ) ";
     insert_text += " VALUES ( ";
     insert_text += " '"+str(mp_id)+"' ";
-    insert_text += " , "+apl_no+" ";
+    insert_text += " , '"+str(apl_no)+"'' ";
     insert_text += " , "+pln_no+" ";
     insert_text += " , '"+str(pln_sdt)+"' ";
     insert_text += " , '"+str(pln_edt)+"' ";
