@@ -12,7 +12,7 @@ from service20.models import *
 from polls.models import Choice, Question
 from django.db.models import Max
 
-
+from django.db import connection
 from collections  import OrderedDict
 import json
 # api/moim 으로 get하면 이 listview로 연결
