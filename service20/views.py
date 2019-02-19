@@ -1065,6 +1065,7 @@ def MP0103M_Insert(request):
     insert_text += " , '"+str(upd_pgm)+"' ";
     insert_text += " )";
 
+    print(insert_text)
     cursor = connection.cursor()
     cursor.execute(insert_text)    
     
