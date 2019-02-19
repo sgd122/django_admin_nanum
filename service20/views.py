@@ -1005,11 +1005,11 @@ class MP0103M_Detail(generics.ListAPIView):
 def MP0103M_Insert(request):
     mp_id = request.POST.get('mp_id', "")
     apl_no = request.POST.get('apl_no', "")
-    pln_no = request.POST.get('pln_no', "")
+    pln_no = request.POST.get('pln_no', 0)
     pln_sdt = request.POST.get('pln_sdt', "")
     pln_edt = request.POST.get('pln_edt', "")
     mtr_desc = request.POST.get('mtr_desc', "")
-    
+
     ins_id = request.POST.get('ins_id', "")
     ins_ip = request.POST.get('ins_ip', "")
     ins_dt = request.POST.get('ins_dt', "")
@@ -1050,8 +1050,8 @@ def MP0103M_Insert(request):
     insert_text += " ) ";
     insert_text += " VALUES ( ";
     insert_text += " '"+str(mp_id)+"' ";
-    insert_text += " , '"+str(apl_no)+"' ";
-    insert_text += " , '"+str(pln_no)+"' ";
+    insert_text += " , "+apl_no+" ";
+    insert_text += " , "+pln_no+" ";
     insert_text += " , '"+str(pln_sdt)+"' ";
     insert_text += " , '"+str(pln_edt)+"' ";
     insert_text += " , '"+str(mtr_desc)+"' ";
