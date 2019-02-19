@@ -74,7 +74,7 @@ urlpatterns = [
     # 프로그램 수행계획서 Insert
     path('MP0103M/insert/', MP0103M_Insert, name='MP0103M_Insert'),
     # 프로그램 수행계획서 Update
-    path('MP0103M/update/', MP0103M_Update.as_view(), name='MP0103M_Update'),
+    path('MP0103M/update/', MP0103M_Update, name='MP0103M_Update'),
     ########################################################################################
     # 프로그램 수행계획서
     #
