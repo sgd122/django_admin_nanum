@@ -1215,18 +1215,18 @@ class MP0105M_list(generics.ListAPIView):
         query += " , t1.appr_dt   /* 보호자 승인일시 */ ";
         query += " , t1.mgr_id    /* 관리자id */ ";
         query += " , t1.mgr_dt    /* 관리자 승인일시 */ ";
-        query += " FROM service20_mp_rep T1     /* 프로그램 보고서 */ ";
-        query += " LEFT JOIN service20_mp_mtr T2 ON (T2.MP_ID   = T1.MP_ID ";
-        query += " AND T2.APL_NO = T1.APL_NO)       /* 지원 멘토 */ ";
-        query += " LEFT JOIN service20_com_cdd C1 ON (C1.STD_GRP_CODE  = 'MP0070'  /* 상태(MP0070) */ ";
-        query += " AND C1.STD_DETL_CODE = T1.STATUS) ";
-        query += " LEFT JOIN service20_com_cdd C2 ON (C2.STD_GRP_CODE  = 'MP0062'  /* 보고서 구분(MP0062) */ ";
-        query += " AND C2.STD_DETL_CODE = T1.REP_DIV) ";
-        query += " WHERE 1=1 ";
-        query += " AND T1.MP_ID     = 'P182015'     /* 멘토링 프로그램ID */ ";
-        query += " AND T1.REP_DIV   = 'M' ";
-        query += " AND T1.STATUS    =  '20' /* 제출, 40 완료 */ ";
-        query += " AND T2.APL_ID    =  '201521237' ";
+        query += " from service20_mp_rep t1     /* 프로그램 보고서 */ ";
+        query += " left join service20_mp_mtr t2 on (t2.mp_id   = t1.mp_id ";
+        query += " and t2.apl_no = t1.apl_no)       /* 지원 멘토 */ ";
+        query += " left join service20_com_cdd c1 on (c1.std_grp_code  = 'MP0070'  /* 상태(mp0070) */ ";
+        query += " and c1.std_detl_code = t1.status) ";
+        query += " left join service20_com_cdd c2 on (c2.std_grp_code  = 'MP0062'  /* 보고서 구분(mp0062) */ ";
+        query += " and c2.std_detl_code = t1.rep_div) ";
+        query += " where 1=1 ";
+        query += " and t1.mp_id     = 'P182015'     /* 멘토링 프로그램id */ ";
+        query += " and t1.rep_div   = 'M' ";
+        query += " and t1.status    =  '20' /* 제출, 40 완료 */ ";
+        query += " and t2.apl_id    =  '201521237' ";
 
 
         queryset = mp_rep.objects.raw(query)
