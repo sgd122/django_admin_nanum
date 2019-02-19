@@ -826,7 +826,7 @@ class MP0102M_list(generics.ListAPIView):
         
         queryset = self.get_queryset()
         
-        query = "select * from service20_mp_spc where yr='"+l_yr+"' and apl_term='"l_apl_term++"'";
+        query = "select * from service20_mp_spc where yr='"+l_yr+"' and apl_term='"+l_apl_term+"'";
         queryset = mp_spc.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
