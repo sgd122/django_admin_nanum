@@ -71,6 +71,10 @@ urlpatterns = [
     path('MP0103M/list/', MP0103M_list.as_view(), name='MP0103M_list'),
     # 프로그램 수행계획서 상세
     path('MP0103M/detail/', MP0103M_Detail.as_view(), name='MP0103M_Detail'),
+    # 프로그램 수행계획서 Insert
+    path('MP0103M/insert/', MP0103M_Insert.as_view(), name='MP0103M_Insert'),
+    # 프로그램 수행계획서 Update
+    # path('MP0103M/update/', MP0103M_Update.as_view(), name='MP0103M_Update'),
     ########################################################################################
     # 프로그램 수행계획서
     #

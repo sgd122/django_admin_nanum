@@ -770,6 +770,58 @@ class MP0101M_adm_quest(generics.ListAPIView):
 
 
 
+
+#####################################################################################
+# MP0102M - START
+#####################################################################################
+
+# 학습외신청(멘토) 리스트 ###################################################
+class MP0102M_list_Serializer(serializers.ModelSerializer):
+
+    testField = serializers.SerializerMethodField()
+    class Meta:
+        model = mp_spc
+        fields = ('id','mp_id','spc_no','spc_div','status','spc_name','spc_intro','yr','yr_seq','apl_ntc_fr_dt','apl_ntc_to_dt','apl_term','apl_fr_dt','apl_to_dt','mnt_term','mnt_fr_dt','mnt_to_dt','cnf_dt','appr_tm','tot_apl','cnt_apl','cnt_pln','cnt_att','use_div','pic_div','rep_div','ord_div','grd_appr_div','tch_appr_div')
+
+    def get_testField(self, obj):
+        return 'test'     
+
+
+class MP0102M_list(generics.ListAPIView):
+    queryset = mp_spc.objects.all()
+    serializer_class = MP0102M_list_Serializer
+
+    # mp_spc
+
+    def list(self, request):
+        l_yr = request.GET.get('yr', "")
+        l_apl_term = request.GET.get('apl_term', "")
+        l_status = request.GET.get('status', "")
+        ida = request.GET.get('user_id', "")
+        
+        queryset = self.get_queryset()
+        
+        query = "select * from service20_mp_spc";
+        queryset = mpgm.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+######################################################################
+
+#####################################################################################
+# MP0102M - END
+#####################################################################################
+
+
+
 #####################################################################################
 # MP0103M - START
 #####################################################################################
@@ -947,63 +999,85 @@ class MP0103M_Detail(generics.ListAPIView):
 
         return Response(serializer.data)
 
+
+# 프로그램 수행계획서 Insert
+@csrf_exempt
+def MP0103M_Insert(request):
+    mp_id = request.POST.get('mp_id', None)
+    apl_no = request.POST.get('apl_no', None)
+    pln_no = request.POST.get('pln_no', None)
+    pln_sdt = request.POST.get('pln_sdt', None)
+    pln_edt = request.POST.get('pln_edt', None)
+    mtr_desc = request.POST.get('mtr_desc', None)
+    ins_id = request.POST.get('ins_id', "")
+    ins_ip = request.POST.get('ins_ip', "")
+    ins_dt = request.POST.get('ins_dt', "")
+    ins_pgm = request.POST.get('ins_pgm', "")
+    upd_id = request.POST.get('upd_id', "")
+    upd_ip = request.POST.get('upd_ip', "")
+    upd_dt = request.POST.get('upd_dt', "")
+    upd_pgm = request.POST.get('upd_pgm', "")
+    
+    mp_plnd_max = mp_plnd.objects.all().aggregate(vlMax=Max('apl_no'))
+    
+    apl_no = ms_apl_max
+    
+    max_no = mp_plnd_max['vlMax']    
+
+    if max_no == None:
+        apl_no = 0;
+    else:
+        apl_no = mp_plnd_max['vlMax']
+        apl_no = apl_no + 1;
+
+
+    insert_text = " insert into service20_mp_plnd ( ";
+    insert_text += " mp_id ";
+    insert_text += " , apl_no ";
+    insert_text += " , pln_no ";
+    insert_text += " , pln_sdt ";
+    insert_text += " , pln_edt ";
+    insert_text += " , mtr_desc ";
+    insert_text += " , ins_id ";
+    insert_text += " , ins_ip ";
+    insert_text += " , ins_dt ";
+    insert_text += " , ins_pgm ";
+    insert_text += " , upd_id ";
+    insert_text += " , upd_ip ";
+    insert_text += " , upd_dt ";
+    insert_text += " , upd_pgm ";
+    insert_text += " ) ";
+    insert_text += " VALUES ( ";
+    insert_text += " '"+mp_id+"' ";
+    insert_text += " , '"+apl_no+"' ";
+    insert_text += " , '"+pln_no+"' ";
+    insert_text += " , '"+pln_sdt+"' ";
+    insert_text += " , '"+pln_edt+"' ";
+    insert_text += " , '"+mtr_desc+"' ";
+    insert_text += " , '"+ins_id+"' ";
+    insert_text += " , '"+ins_ip+"' ";
+    insert_text += " , SYSDATE() ";
+    insert_text += " , '"+ins_pgm+"' ";
+    insert_text += " , '"+upd_id+"' ";
+    insert_text += " , '"+upd_ip+"' ";
+    insert_text += " , SYSDATE() ";
+    insert_text += " , '"+upd_pgm+"' ";
+    insert_text += " )";
+
+    cursor = connection.cursor()
+    cursor.execute(insert_text)    
+    
+        
+    context = {'message': 'Ok'}
+
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+
+
 ######################################################################
 
 #####################################################################################
 # MP0103M - END 
 #####################################################################################
-
-
-#####################################################################################
-# MP0102M - START
-#####################################################################################
-
-# 학습외신청(멘토) 리스트 ###################################################
-class MP0102M_list_Serializer(serializers.ModelSerializer):
-
-    testField = serializers.SerializerMethodField()
-    class Meta:
-        model = mp_spc
-        fields = ('id','mp_id','spc_no','spc_div','status','spc_name','spc_intro','yr','yr_seq','apl_ntc_fr_dt','apl_ntc_to_dt','apl_term','apl_fr_dt','apl_to_dt','mnt_term','mnt_fr_dt','mnt_to_dt','cnf_dt','appr_tm','tot_apl','cnt_apl','cnt_pln','cnt_att','use_div','pic_div','rep_div','ord_div','grd_appr_div','tch_appr_div')
-
-    def get_testField(self, obj):
-        return 'test'     
-
-
-class MP0102M_list(generics.ListAPIView):
-    queryset = mp_spc.objects.all()
-    serializer_class = MP0102M_list_Serializer
-
-    # mp_spc
-
-    def list(self, request):
-        l_yr = request.GET.get('yr', "")
-        l_apl_term = request.GET.get('apl_term', "")
-        l_status = request.GET.get('status', "")
-        ida = request.GET.get('user_id', "")
-        
-        queryset = self.get_queryset()
-        
-        query = "select * from service20_mp_spc";
-        queryset = mpgm.objects.raw(query)
-
-        serializer_class = self.get_serializer_class()
-        serializer = serializer_class(queryset, many=True)
-
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        return Response(serializer.data)
-
-######################################################################
-
-#####################################################################################
-# MP0102M - END
-#####################################################################################
-
-
 
 
 
