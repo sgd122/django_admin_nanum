@@ -19,6 +19,61 @@ import json
 
 
 #####################################################################################
+# 공통 - START
+#####################################################################################
+
+# 년도 콤보박스 ###################################################
+class com_combo_yr_Serializer(serializers.ModelSerializer):
+
+    code = serializers.SerializerMethodField()
+    name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = com_cdd
+        fields = ('code','name')
+
+    def get_code(self, obj):
+        return obj.code
+    def get_name(self, obj):
+        return obj.name
+
+class com_combo_yr(generics.ListAPIView):
+    queryset = com_cdd.objects.all()
+    serializer_class = com_combo_yr_Serializer
+
+    def list(self, request):
+        l_yr = request.GET.get('yr', "")
+        l_apl_term = request.GET.get('apl_term', "")
+        l_mp_id = request.GET.get('mp_id', "")
+        l_user_id = request.GET.get('user_id', "")
+        
+
+        queryset = self.get_queryset()
+        
+        query = " select DATE_FORMAT(now(),'%Y')-1 as code,DATE_FORMAT(now(),'%Y')-1 as name ";
+        query += " union ";
+        query += " select DATE_FORMAT(now(),'%Y') as code,DATE_FORMAT(now(),'%Y') as name ";
+        query += " union ";
+        query += " select DATE_FORMAT(now(),'%Y')+1 as code,DATE_FORMAT(now(),'%Y')+1 as name ";
+
+        queryset = com_cdd.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+#####################################################################################
+# 공통 - END
+#####################################################################################
+
+
+#####################################################################################
 # MS0101M - START
 #####################################################################################
 
@@ -203,7 +258,7 @@ class MS0101M_quest(generics.ListAPIView):
         key1 = request.GET.get('ms_id', None)           
         l_exist = ms_sub.objects.filter(ms_id=key1).exists()
         
-        query = "select B.std_detl_code,B.std_detl_code_nm,B.rmrk,A.* from service20_ms_sub A left outer join service20_com_cdd B on (A.att_id = B.std_grp_code and A.att_cdd = B.std_detl_code) where A.ms_id = '"+key1+"'"
+        query = "select B.std_detl_code,B.std_detl_code_nm,B.rmrk,A.* from service20_ms_sub A left outer join service20_com_cdd B on (A.att_id = B.std_grp_code and A.att_cdd = B.std_detl_code) where A.att_id = 'MS0014' and A.ms_id = '"+key1+"'"
         queryset = ms_sub.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
@@ -375,7 +430,7 @@ class MS0101M_adm_quest(generics.ListAPIView):
         key1 = request.GET.get('ms_id', None) 
         l_user_id = request.GET.get('user_id', None)           
         
-        query = "select B.std_detl_code_nm,B.rmrk,A.* from service20_ms_ans A, service20_com_cdd B where A.ques_no = B.std_detl_code and B.std_grp_code in (select att_cdh from service20_ms_sub where ms_id = '"+key1+"') and A.ms_id = '"+key1+"' and apl_id = '"+l_user_id+"'"
+        query = "select B.std_detl_code_nm,B.rmrk,A.* from service20_ms_ans A, service20_com_cdd B where A.ques_no = B.std_detl_code and B.std_grp_code in (select att_cdh from service20_ms_sub where att_id = 'MS0014' and ms_id = '"+key1+"') and A.ms_id = '"+key1+"' and apl_id = '"+l_user_id+"'"
         queryset = ms_ans.objects.raw(query)
 
 
@@ -860,7 +915,7 @@ class MP0103M_list_Serializer(serializers.ModelSerializer):
     pln_dt = serializers.SerializerMethodField()
     appr_nm = serializers.SerializerMethodField()
     appr_dt = serializers.SerializerMethodField()
-    mgr_id = serializers.SerializerMethodField()
+    mgr_nm = serializers.SerializerMethodField()
     mgr_dt = serializers.SerializerMethodField()
     apl_id = serializers.SerializerMethodField()
     apl_nm = serializers.SerializerMethodField()
@@ -869,10 +924,14 @@ class MP0103M_list_Serializer(serializers.ModelSerializer):
     mtr_sub = serializers.SerializerMethodField()
     pln_sedt = serializers.SerializerMethodField()
     
+    mgr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+    pln_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+    appr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+    pln_sedt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
 
     class Meta:
         model = mpgm
-        fields = ('mp_id','mp_name','apl_term','yr_seq','mnte_nm','sch_nm','sch_yr','pln_dt','appr_nm','appr_dt','mgr_id','mgr_dt','apl_id','apl_nm','tchr_nm','pln_dt','mtr_sub','pln_sedt')
+        fields = ('mp_id','mp_name','apl_term','yr_seq','mnte_nm','sch_nm','sch_yr','pln_dt','appr_nm','appr_dt','mgr_nm','mgr_dt','apl_id','apl_nm','tchr_nm','pln_dt','mtr_sub','pln_sedt')
     
     def get_mnte_nm(self,obj):
         return obj.mnte_nm  
@@ -886,8 +945,8 @@ class MP0103M_list_Serializer(serializers.ModelSerializer):
         return obj.appr_nm
     def get_appr_dt(self,obj):
         return obj.appr_dt
-    def get_mgr_id(self,obj):
-        return obj.mgr_id
+    def get_mgr_nm(self,obj):
+        return obj.mgr_nm
     def get_mgr_dt(self,obj):
         return obj.mgr_dt
     def get_apl_id(self,obj):
@@ -926,9 +985,9 @@ class MP0103M_list(generics.ListAPIView):
         query += " , c.sch_nm     AS sch_nm ";
         query += " , c.sch_yr     AS sch_yr ";
         query += " , a.pln_dt     AS pln_dt ";
-        query += " , a.appr_id    AS appr_nm ";
+        query += " , a.appr_nm    AS appr_nm ";
         query += " , a.appr_dt    AS appr_dt ";
-        query += " , a.mgr_id     AS mgr_id ";
+        query += " , a.mgr_nm     AS mgr_nm ";
         query += " , a.mgr_dt     AS mgr_dt ";
         query += " , d.apl_id     AS apl_id ";
         query += " , d.apl_nm     AS apl_nm ";
@@ -1025,6 +1084,7 @@ class MP0103M_Detail(generics.ListAPIView):
 @csrf_exempt
 def MP0103M_Insert(request):
     mp_id = request.POST.get('mp_id', "")
+    apl_id = request.POST.get('apl_id', "")
     apl_no = request.POST.get('apl_no', "")
     pln_no = request.POST.get('pln_no', 0)
     pln_sdt = request.POST.get('pln_sdt', "")
@@ -1039,57 +1099,65 @@ def MP0103M_Insert(request):
     upd_ip = request.POST.get('upd_ip', "")
     upd_dt = request.POST.get('upd_dt', "")
     upd_pgm = request.POST.get('upd_pgm', "")
-    
-    mp_plnd_max = mp_plnd.objects.all().aggregate(vlMax=Max('apl_no'))
-    
-    apl_no = 0;
-    
-    max_no = mp_plnd_max['vlMax']    
 
-    if max_no == None:
+    maxRow = request.POST.get('maxRow', 0)
+
+
+    row_max = int(maxRow)
+
+    for i in range(0,row_max):
+    
+        mp_plnd_max = mp_plnd.objects.all().aggregate(vlMax=Max('apl_no'))
+        
         apl_no = 0;
-    else:
-        apl_no = mp_plnd_max['vlMax']
-        apl_no = apl_no + 1;
+        
+        max_no = mp_plnd_max['vlMax']    
 
+        if max_no == None:
+            apl_no = 0;
+        else:
+            apl_no = mp_plnd_max['vlMax']
+            apl_no = apl_no + 1;
 
-    insert_text = " insert into service20_mp_plnd ( ";
-    insert_text += " mp_id ";
-    insert_text += " , apl_no ";
-    insert_text += " , pln_no ";
-    insert_text += " , pln_sdt ";
-    insert_text += " , pln_edt ";
-    insert_text += " , mtr_desc ";
-    insert_text += " , ins_id ";
-    insert_text += " , ins_ip ";
-    insert_text += " , ins_dt ";
-    insert_text += " , ins_pgm ";
-    insert_text += " , upd_id ";
-    insert_text += " , upd_ip ";
-    insert_text += " , upd_dt ";
-    insert_text += " , upd_pgm ";
-    insert_text += " ) ";
-    insert_text += " VALUES ( ";
-    insert_text += " '"+str(mp_id)+"' ";
-    insert_text += " , '"+str(apl_no)+"' ";
-    insert_text += " , '"+str(pln_no)+"' ";
-    insert_text += " , ifnull(trim(NULLIF('"+str(pln_sdt)+"','')),DATE_FORMAT(now(),'%Y-%m-%d')) ";
-    insert_text += " , ifnull(trim(NULLIF('"+str(pln_edt)+"','')),DATE_FORMAT(now(),'%Y-%m-%d')) ";
-    insert_text += " , '"+str(mtr_desc)+"' ";
-    insert_text += " , '"+str(ins_id)+"' ";
-    insert_text += " , '"+str(ins_ip)+"' ";
-    insert_text += " , now() ";
-    insert_text += " , '"+str(ins_pgm)+"' ";
-    insert_text += " , '"+str(upd_id)+"' ";
-    insert_text += " , '"+str(upd_ip)+"' ";
-    insert_text += " , now() ";
-    insert_text += " , '"+str(upd_pgm)+"' ";
-    insert_text += " )";
+        mtr_desc = request.POST.get('mtr_desc'+str(i), "")
 
-    print(insert_text)
-    cursor = connection.cursor()
-    query_result = cursor.execute(insert_text)    
-    print(query_result)
+        insert_text = " insert into service20_mp_plnd ( ";
+        insert_text += " mp_id ";
+        insert_text += " , apl_no ";
+        insert_text += " , pln_no ";
+        insert_text += " , pln_sdt ";
+        insert_text += " , pln_edt ";
+        insert_text += " , mtr_desc ";
+        insert_text += " , ins_id ";
+        insert_text += " , ins_ip ";
+        insert_text += " , ins_dt ";
+        insert_text += " , ins_pgm ";
+        insert_text += " , upd_id ";
+        insert_text += " , upd_ip ";
+        insert_text += " , upd_dt ";
+        insert_text += " , upd_pgm ";
+        insert_text += " ) ";
+        insert_text += " VALUES ( ";
+        insert_text += " '"+str(mp_id)+"' ";
+        insert_text += " , '"+str(apl_no)+"' ";
+        insert_text += " , '"+str(pln_no)+"' ";
+        insert_text += " , ifnull(trim(NULLIF('"+str(pln_sdt)+"','')),DATE_FORMAT(now(),'%Y-%m-%d')) ";
+        insert_text += " , ifnull(trim(NULLIF('"+str(pln_edt)+"','')),DATE_FORMAT(now(),'%Y-%m-%d')) ";
+        insert_text += " , '"+str(mtr_desc)+"' ";
+        insert_text += " , '"+str(ins_id)+"' ";
+        insert_text += " , '"+str(ins_ip)+"' ";
+        insert_text += " , now() ";
+        insert_text += " , '"+str(ins_pgm)+"' ";
+        insert_text += " , '"+str(upd_id)+"' ";
+        insert_text += " , '"+str(upd_ip)+"' ";
+        insert_text += " , now() ";
+        insert_text += " , '"+str(upd_pgm)+"' ";
+        insert_text += " )";
+
+        print(insert_text)
+        cursor = connection.cursor()
+        query_result = cursor.execute(insert_text)    
+        print(query_result)
         
     context = {'message': 'Ok'}
 
@@ -1100,11 +1168,13 @@ def MP0103M_Insert(request):
 @csrf_exempt
 def MP0103M_Update(request):
     mp_id = request.POST.get('mp_id', "")
+    apl_id = request.POST.get('apl_id', "")
     apl_no = request.POST.get('apl_no', "")
     pln_no = request.POST.get('pln_no', 0)
     mtr_pln_sdt = request.POST.get('mtr_pln_sdt', "")
     mtr_pln_edt = request.POST.get('mtr_pln_edt', "")
     mtr_desc = request.POST.get('mtr_desc', "")
+    mtr_sub = request.POST.get('mtr_sub', "")
 
     ins_id = request.POST.get('ins_id', "")
     ins_ip = request.POST.get('ins_ip', "")
@@ -1116,23 +1186,64 @@ def MP0103M_Update(request):
     upd_pgm = request.POST.get('upd_pgm', "")
     
 
-    update_text = " update service20_mp_plnd ";
-    update_text += " SET mtr_desc = '"+str(mtr_desc)+"' ";
-    update_text += " , pln_sdt = ifnull(trim(NULLIF('"+str(mtr_pln_sdt)+"','')),DATE_FORMAT(now(),'%Y-%m-%d')) ";
-    update_text += " , pln_edt = ifnull(trim(NULLIF('"+str(mtr_pln_edt)+"','')),DATE_FORMAT(now(),'%Y-%m-%d')) ";
+    maxRow = request.POST.get('maxRow', 0)
+
+
+    row_max = int(maxRow)
+
+
+    ####################################
+    # 1번쿼리
+    ####################################
+    update_text = " update service20_mp_plnh ";
+    update_text += " SET mtr_sub = '"+str(mtr_sub)+"' ";
+    # update_text += " , pln_sdt = ifnull(trim(NULLIF('"+str(mtr_pln_sdt)+"','')),DATE_FORMAT(now(),'%Y-%m-%d')) ";
+    # update_text += " , pln_edt = ifnull(trim(NULLIF('"+str(mtr_pln_edt)+"','')),DATE_FORMAT(now(),'%Y-%m-%d')) ";
     update_text += " , upd_id = '"+str(upd_id)+"' ";
     update_text += " , upd_ip = '"+str(upd_ip)+"' ";
     update_text += " , upd_dt = now() ";
     update_text += " , upd_pgm = '"+str(upd_pgm)+"' ";
     update_text += " WHERE mp_id = '"+str(mp_id)+"' ";
-    update_text += " AND apl_no = '"+str(apl_no)+"' ";
-    update_text += " AND pln_no = '"+str(pln_no)+"' ";
+    # update_text += " AND apl_no = '"+str(apl_no)+"' ";
+    update_text += " AND apl_no IN (SELECT apl_no FROM service20_mp_mtr WHERE apl_id = '"+str(apl_id)+"') ";
 
     print(update_text)
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)    
     print(query_result)
-        
+    ####################################
+    # 1번쿼리
+    ####################################
+
+
+    for i in range(0,row_max):
+
+        mtr_desc = request.POST.get('mtr_desc'+str(i), "")
+
+        ####################################
+        # 2번쿼리
+        ####################################
+        update_text = " update service20_mp_plnd ";
+        update_text += " SET mtr_desc = '"+str(mtr_desc)+"' ";
+        # update_text += " , pln_sdt = ifnull(trim(NULLIF('"+str(mtr_pln_sdt)+"','')),DATE_FORMAT(now(),'%Y-%m-%d')) ";
+        # update_text += " , pln_edt = ifnull(trim(NULLIF('"+str(mtr_pln_edt)+"','')),DATE_FORMAT(now(),'%Y-%m-%d')) ";
+        update_text += " , upd_id = '"+str(upd_id)+"' ";
+        update_text += " , upd_ip = '"+str(upd_ip)+"' ";
+        update_text += " , upd_dt = now() ";
+        update_text += " , upd_pgm = '"+str(upd_pgm)+"' ";
+        update_text += " WHERE mp_id = '"+str(mp_id)+"' ";
+        # update_text += " AND apl_no = '"+str(apl_no)+"' ";
+        update_text += " AND apl_no IN (SELECT apl_no FROM service20_mp_mtr WHERE apl_id = '"+str(apl_id)+"') ";
+        update_text += " AND pln_no = '"+str(pln_no)+"' ";
+
+        print(update_text)
+        cursor = connection.cursor()
+        query_result = cursor.execute(update_text)    
+        print(query_result)
+        ####################################
+        # 2번쿼리
+        ####################################
+
     context = {'message': 'Ok'}
 
     return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
@@ -1212,7 +1323,9 @@ class MP0105M_list_Serializer(serializers.ModelSerializer):
     appr_dt_sub = serializers.SerializerMethodField()
     mgr_dt_sub = serializers.SerializerMethodField()
 
-
+    req_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+    appr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+    mgr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     class Meta:
         model = mp_rep
         fields = ('mp_id','apl_no','rep_no','rep_div','rep_ttl','mtr_obj','rep_dt','req_dt','mtr_desc','coatching','spcl_note','mtr_revw','appr_id','appr_nm','appr_dt','mgr_id','mgr_dt','status','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','unv_nm','cllg_nm','dept_nm','apl_id','apl_nm','rep_div_nm','status_nm','req_dt_sub','appr_dt_sub','mgr_dt_sub')
