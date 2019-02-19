@@ -929,6 +929,7 @@ class MP0103M_list(generics.ListAPIView):
         query += " AND a.mp_id = d.mp_id ";
         query += " AND a.apl_no = d.apl_no ";
 
+        print(query)
 
         queryset = mpgm.objects.raw(query)
 
@@ -1177,11 +1178,11 @@ class MP0105M_list(generics.ListAPIView):
 
     def list(self, request):
         l_yr = request.GET.get('yr', "")
-        l_apl_term = request.GET.get('apl_term', "")
-        l_status = request.GET.get('status', "")
         l_mp_id = request.GET.get('mp_id', "")
-        l_mntr_id = request.GET.get('mntr_id', "")
-        ida = request.GET.get('user_id', "")
+        l_apl_id = request.GET.get('apl_id', "")
+
+
+
 
         queryset = self.get_queryset()
 
@@ -1224,10 +1225,10 @@ class MP0105M_list(generics.ListAPIView):
         query += " left join service20_com_cdd c2 on (c2.std_grp_code  = 'MP0062'  /* 보고서 구분(mp0062) */ ";
         query += " and c2.std_detl_code = t1.rep_div) ";
         query += " where 1=1 ";
-        query += " and t1.mp_id     = 'P182015'     /* 멘토링 프로그램id */ ";
+        query += " and t1.mp_id     = '"+l_mp_id+"'     /* 멘토링 프로그램id */ ";
         query += " and t1.rep_div   = 'M' ";
         query += " and t1.status    =  '20' /* 제출, 40 완료 */ ";
-        query += " and t2.apl_id    =  '201521237' ";
+        query += " and t2.apl_id    =  '"+l_apl_id+"' ";
 
 
         queryset = mp_rep.objects.raw(query)
