@@ -1329,3 +1329,36 @@ class mp_exp(models.Model):
     unique_together=("mp_id", "apl_no", "exp_no")
     index_together = ["apl_no", "mp_id"]
     index_together = ["apl_no"]
+
+
+
+
+class mp_mtr_fe(models.Model):
+  mp_id = models.CharField(max_length=10, null=False, verbose_name='멘토링 프로그램ID' )
+  apl_no = models.CharField(max_length=10, null=False, verbose_name='지원 NO' )
+  apl_id = models.CharField(max_length=50, null=True, blank=True, verbose_name='학번' )
+  apl_nm = models.CharField(max_length=4, null=False, verbose_name='성명' )
+  lang_kind_cd = models.CharField(max_length=100, null=False, verbose_name='어학종류코드' )
+  lang_kind_nm = models.CharField(max_length=3, null=False, verbose_name='어학종류명' )
+  lang_cd = models.CharField(max_length=100, null=False, verbose_name='어학상위코드' )
+  lang_nm = models.CharField(max_length=2, null=False, verbose_name='어학상위코드명' )
+  lang_detail_cd = models.CharField(max_length=100, null=False, verbose_name='어학하위코드' )
+  lang_detail_nm = models.CharField(max_length=10, null=False, verbose_name='어학하위코드명' )
+  frexm_cd = models.CharField(max_length=200, null=False, verbose_name='외국어시험 코드' )
+  frexm_nm = models.CharField(max_length=30, null=False, verbose_name='외국어시험명' )
+  score = models.CharField(max_length=50, null=False, verbose_name='시험점수' )
+  grade = models.CharField(max_length=30, null=False, verbose_name='시험등급' )
+  ins_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='입력자ID' )
+  ins_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력자IP' )
+  ins_dt = models.DateTimeField(null=True, blank=True, verbose_name='입력일시' )
+  ins_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력프로그램ID' )
+  upd_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='수정자ID' )
+  upd_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정자IP' )
+  upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
+  upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
+
+
+  class Meta:
+    verbose_name = '프로그램 지원자(멘토) 어학 점수'
+    verbose_name_plural =  verbose_name
+    unique_together=("mp_id", "apl_no")
