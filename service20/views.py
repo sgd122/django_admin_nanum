@@ -834,7 +834,7 @@ class MP0103M_list_Serializer(serializers.ModelSerializer):
     sch_nm = serializers.SerializerMethodField()
     sch_yr = serializers.SerializerMethodField()
     pln_dt = serializers.SerializerMethodField()
-    appr_id = serializers.SerializerMethodField()
+    # appr_id = serializers.SerializerMethodField()
     appr_dt = serializers.SerializerMethodField()
     mgr_id = serializers.SerializerMethodField()
     mgr_dt = serializers.SerializerMethodField()
@@ -858,8 +858,8 @@ class MP0103M_list_Serializer(serializers.ModelSerializer):
         return obj.sch_yr
     def get_pln_dt(self,obj):
         return obj.pln_dt
-    def get_appr_id(self,obj):
-        return obj.appr_id
+    # def get_appr_id(self,obj):
+    #     return obj.appr_id
     def get_appr_dt(self,obj):
         return obj.appr_dt
     def get_mgr_id(self,obj):
