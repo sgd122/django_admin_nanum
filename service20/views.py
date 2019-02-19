@@ -1217,7 +1217,7 @@ class MP0105M_list(generics.ListAPIView):
         query += " , T1.MGR_DT    /* 관리자 승인일시 */ ";
         query += " FROM service20_mp_rep T1     /* 프로그램 보고서 */ ";
         query += " LEFT JOIN service20_mp_mtr T2 ON (T2.MP_ID   = T1.MP_ID ";
-        query += " AND T2.APL_NO = T1.APL_NO)       /* 지원 멘토 ";
+        query += " AND T2.APL_NO = T1.APL_NO)       /* 지원 멘토 */ ";
         query += " LEFT JOIN service20_com_cdd C1 ON (C1.STD_GRP_CODE  = 'MP0070'  /* 상태(MP0070) */ ";
         query += " AND C1.STD_DETL_CODE = T1.STATUS) ";
         query += " LEFT JOIN service20_com_cdd C2 ON (C2.STD_GRP_CODE  = 'MP0062'  /* 보고서 구분(MP0062) */ ";
