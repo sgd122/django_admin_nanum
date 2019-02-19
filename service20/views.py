@@ -923,8 +923,7 @@ class MP0103M_list(generics.ListAPIView):
         query += " , apl_id ";
         query += " , apl_nm ";
         query += " FROM service20_mp_mtr ";
-        query += " WHERE mp_id = '"+l_mp_id+"' ";
-        query += " AND mntr_id = '"+l_mntr_id+"') d ";
+        query += " WHERE mntr_id = '"+l_mntr_id+"') d ";
         query += " WHERE a.mp_id = b.mp_id ";
         query += " AND a.mp_id = c.mp_id ";
         query += " AND a.mp_id = d.mp_id ";
@@ -1122,6 +1121,129 @@ def MP0103M_Update(request):
 #####################################################################################
 
 
+
+#####################################################################################
+# MP0105M - START
+#####################################################################################
+
+# 프로그램 수행계획서 리스트 ###################################################
+class MP0105M_list_Serializer(serializers.ModelSerializer):
+
+    # testField = serializers.SerializerMethodField()
+    unv_nm = serializers.SerializerMethodField()
+    cllg_nm = serializers.SerializerMethodField()
+    dept_nm = serializers.SerializerMethodField()
+    apl_id = serializers.SerializerMethodField()
+    apl_nm = serializers.SerializerMethodField()
+    rep_div_nm = serializers.SerializerMethodField()
+    status_nm = serializers.SerializerMethodField()
+    req_dt_sub = serializers.SerializerMethodField()
+    appr_dt_sub = serializers.SerializerMethodField()
+    mgr_dt_sub = serializers.SerializerMethodField()
+
+
+    class Meta:
+        model = mp_rep
+        fields = ('mp_id','apl_no','rep_no','rep_div','rep_ttl','mtr_obj','rep_dt','req_dt','mtr_desc','coatching','spcl_note','mtr_revw','appr_id','appr_nm','appr_dt','mgr_id','mgr_dt','status','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm',,'unv_nm','cllg_nm','dept_nm','apl_id','apl_nm','rep_div_nm','status_nm','req_dt_sub','appr_dt_sub','mgr_dt_sub')
+    
+    def get_unv_nm(self,obj):
+        return obj.unv_nm  
+    def get_cllg_nm(self,obj):
+        return obj.cllg_nm
+    def get_dept_nm(self,obj):
+        return obj.dept_nm
+    def get_apl_id(self,obj):
+        return obj.apl_id
+    def get_appr_id(self,obj):
+        return obj.appr_id
+    def get_apl_nm(self,obj):
+        return obj.apl_nm
+    def get_rep_div_nm(self,obj):
+        return obj.rep_div_nm
+    def get_status_nm(self,obj):
+        return obj.status_nm
+    def get_req_dt_sub(self,obj):
+        return obj.req_dt_sub
+    def get_appr_dt_sub(self,obj):
+        return obj.appr_dt_sub
+    def get_mgr_dt_sub(self,obj):
+        return obj.mgr_dt_sub
+
+
+class MP0105M_list(generics.ListAPIView):
+    # queryset = mpgm.objects.all()
+    serializer_class = MP0105M_list_Serializer
+
+
+    def list(self, request):
+        l_yr = request.GET.get('yr', "")
+        l_apl_term = request.GET.get('apl_term', "")
+        l_status = request.GET.get('status', "")
+        l_mp_id = request.GET.get('mp_id', "")
+        l_mntr_id = request.GET.get('mntr_id', "")
+        ida = request.GET.get('user_id', "")
+
+        queryset = self.get_queryset()
+
+        query = " select T1.MP_ID     /* 멘토링 프로그램ID */ ";
+        query += " , T2.UNV_NM          /* 지원자 대학교 명 */ ";
+        query += " , T2.CLLG_NM         /* 지원자 대학 명 */ ";
+        query += " , T2.DEPT_NM         /* 지원자 학부/학과 명 */ ";
+        query += " , T2.APL_ID          /* 지원자(멘토,학생) 학번 */ ";
+        query += " , T2.APL_NM          /* 지원자(멘토,학생) 명 */ ";
+        query += " , T1.REP_DIV         /* 보고서 구분(MP0062) */ ";
+        query += " , C2.STD_DETL_CODE_NM   AS REP_DIV_NM ";
+        query += " , T1.STATUS          /* 상태(MP0070) */ ";
+        query += " , C1.STD_DETL_CODE_NM   AS STATUS_NM ";
+        query += " , SUBSTRING(T1.REQ_DT,  1, 10) REQ_DT_SUB    /* 승인요청일 */ ";
+        query += " , SUBSTRING(T1.APPR_DT, 1, 10) APPR_DT_SUB   /* 보호자 승인일시 */ ";
+        query += " , SUBSTRING(T1.MGR_DT,  1, 10) MGR_DT_SUB   /* 관리자 승인일시 */ ";
+        query += " , T1.REP_TTL   /* 보고서 제목 : 내용 */ ";
+        query += " , T1.APL_NO    /* 멘토 지원 NO */ ";
+        query += " , T1.REP_NO    /* 보고서 NO */ ";
+        query += " , T1.REP_DIV   /* 보고서 구분(MP0062) */ ";
+        query += " , T1.REP_TTL   /* 보고서 제목 */ ";
+        query += " , T1.MTR_OBJ   /* 학습목표 */ ";
+        query += " , T1.REP_DT    /* 보고서작성일 */ ";
+        query += " , T1.REQ_DT    /* 승인요청일 */ ";
+        query += " , T1.MTR_DESC  /* 학습내용 */ ";
+        query += " , T1.COATCHING /* 학습외 지도(상담) */ ";
+        query += " , T1.SPCL_NOTE /* 특이사항 */ ";
+        query += " , T1.MTR_REVW  /* 소감문 */ ";
+        query += " , T1.APPR_ID   /* 승인자ID */ ";
+        query += " , T1.APPR_NM   /* 승인자명 */ ";
+        query += " , T1.APPR_DT   /* 보호자 승인일시 */ ";
+        query += " , T1.MGR_ID    /* 관리자ID */ ";
+        query += " , T1.MGR_DT    /* 관리자 승인일시 */ ";
+        query += " FROM service20_mp_rep T1     /* 프로그램 보고서 */ ";
+        query += " LEFT JOIN service20_mp_mtr T2 ON (T2.MP_ID   = T1.MP_ID ";
+        query += " AND T2.APL_NO = T1.APL_NO)       /* 지원 멘토 ";
+        query += " LEFT JOIN service20_com_cdd C1 ON (C1.STD_GRP_CODE  = 'MP0070'  /* 상태(MP0070) */ ";
+        query += " AND C1.STD_DETL_CODE = T1.STATUS) ";
+        query += " LEFT JOIN service20_com_cdd C2 ON (C2.STD_GRP_CODE  = 'MP0062'  /* 보고서 구분(MP0062) */ ";
+        query += " AND C2.STD_DETL_CODE = T1.REP_DIV) ";
+        query += " WHERE 1=1 ";
+        query += " AND T1.MP_ID     = 'P182015'     /* 멘토링 프로그램ID */ ";
+        query += " AND T1.REP_DIV   = 'M' ";
+        query += " AND T1.STATUS    =  '20' /* 제출, 40 완료 */ ";
+        query += " AND T2.APL_ID    =  '201521237' ";
+
+
+        queryset = mp_rep.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+#####################################################################################
+# MP0105M - END
+#####################################################################################
 
 
 @csrf_exempt
