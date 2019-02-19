@@ -1052,23 +1052,23 @@ def MP0103M_Insert(request):
     insert_text += " '"+str(mp_id)+"' ";
     insert_text += " , '"+str(apl_no)+"' ";
     insert_text += " , '"+str(pln_no)+"' ";
-    insert_text += " , ifnull(trim(NULLIF('"+str(pln_sdt)+"','')),SYSDATE()) ";
-    insert_text += " , ifnull(trim(NULLIF('"+str(pln_edt)+"','')),SYSDATE()) ";
+    insert_text += " , ifnull(trim(NULLIF('"+str(pln_sdt)+"','')),now()) ";
+    insert_text += " , ifnull(trim(NULLIF('"+str(pln_edt)+"','')),now()) ";
     insert_text += " , '"+str(mtr_desc)+"' ";
     insert_text += " , '"+str(ins_id)+"' ";
     insert_text += " , '"+str(ins_ip)+"' ";
-    insert_text += " , SYSDATE() ";
+    insert_text += " , now() ";
     insert_text += " , '"+str(ins_pgm)+"' ";
     insert_text += " , '"+str(upd_id)+"' ";
     insert_text += " , '"+str(upd_ip)+"' ";
-    insert_text += " , SYSDATE() ";
+    insert_text += " , now() ";
     insert_text += " , '"+str(upd_pgm)+"' ";
     insert_text += " )";
 
     print(insert_text)
     cursor = connection.cursor()
-    cursor.execute(insert_text)    
-    
+    query_result = cursor.execute(insert_text)    
+    print(query_result)
         
     context = {'message': 'Ok'}
 
