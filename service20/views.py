@@ -829,12 +829,11 @@ class MP0102M_list(generics.ListAPIView):
 # 프로그램 수행계획서 리스트 ###################################################
 class MP0103M_list_Serializer(serializers.ModelSerializer):
 
-    # testField = serializers.SerializerMethodField()
     mnte_nm = serializers.SerializerMethodField()
     sch_nm = serializers.SerializerMethodField()
     sch_yr = serializers.SerializerMethodField()
     pln_dt = serializers.SerializerMethodField()
-    # appr_id = serializers.SerializerMethodField()
+    appr_nm = serializers.SerializerMethodField()
     appr_dt = serializers.SerializerMethodField()
     mgr_id = serializers.SerializerMethodField()
     mgr_dt = serializers.SerializerMethodField()
@@ -844,7 +843,7 @@ class MP0103M_list_Serializer(serializers.ModelSerializer):
     pln_dt = serializers.SerializerMethodField()
     mtr_sub = serializers.SerializerMethodField()
     pln_sedt = serializers.SerializerMethodField()
-    appr_nm = serializers.SerializerMethodField()
+    
 
     class Meta:
         model = mpgm
@@ -858,8 +857,8 @@ class MP0103M_list_Serializer(serializers.ModelSerializer):
         return obj.sch_yr
     def get_pln_dt(self,obj):
         return obj.pln_dt
-    # def get_appr_id(self,obj):
-    #     return obj.appr_id
+    def get_appr_nm(self,obj):
+        return obj.appr_nm
     def get_appr_dt(self,obj):
         return obj.appr_dt
     def get_mgr_id(self,obj):
@@ -878,8 +877,7 @@ class MP0103M_list_Serializer(serializers.ModelSerializer):
         return obj.mtr_sub
     def get_pln_sedt(self,obj):
         return obj.pln_sedt
-    def get_appr_nm(self,obj):
-        return obj.appr_nm
+    
 
 
 class MP0103M_list(generics.ListAPIView):
@@ -925,6 +923,7 @@ class MP0103M_list(generics.ListAPIView):
         query += " AND a.mp_id = c.mp_id ";
         query += " AND a.mp_id = d.mp_id ";
         query += " AND a.apl_no = d.apl_no ";
+        query += " AND d.apl_no = c.apl_no ";
 
         print(query)
 
