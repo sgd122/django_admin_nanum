@@ -406,8 +406,8 @@ class MP0101M_list_Serializer(serializers.ModelSerializer):
     applyStatus = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
     
-    apl_fr_dt = serializers.DateTimeField(format='%Y-%m-%d %H')
-    apl_to_dt = serializers.DateTimeField(format='%Y-%m-%d %H')
+    apl_fr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+    apl_to_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
 
     class Meta:
         model = mpgm
