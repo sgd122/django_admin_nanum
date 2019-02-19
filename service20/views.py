@@ -1003,7 +1003,7 @@ class MP0103M_Detail(generics.ListAPIView):
 # 프로그램 수행계획서 Insert
 @csrf_exempt
 def MP0103M_Insert(request):
-    mp_id = request.POST.get('mp_id', "test")
+    mp_id = request.POST.get('mp_id', "")
     apl_no = request.POST.get('apl_no', "")
     pln_no = request.POST.get('pln_no', 0)
     pln_sdt = request.POST.get('pln_sdt', "")
@@ -1075,6 +1075,46 @@ def MP0103M_Insert(request):
     return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 
+# 프로그램 수행계획서 Update
+@csrf_exempt
+def MP0103M_Update(request):
+    mp_id = request.POST.get('mp_id', "")
+    apl_no = request.POST.get('apl_no', "")
+    pln_no = request.POST.get('pln_no', 0)
+    mtr_pln_sdt = request.POST.get('mtr_pln_sdt', "")
+    mtr_pln_edt = request.POST.get('mtr_pln_edt', "")
+    mtr_desc = request.POST.get('mtr_desc', "")
+
+    ins_id = request.POST.get('ins_id', "")
+    ins_ip = request.POST.get('ins_ip', "")
+    ins_dt = request.POST.get('ins_dt', "")
+    ins_pgm = request.POST.get('ins_pgm', "")
+    upd_id = request.POST.get('upd_id', "")
+    upd_ip = request.POST.get('upd_ip', "")
+    upd_dt = request.POST.get('upd_dt', "")
+    upd_pgm = request.POST.get('upd_pgm', "")
+    
+
+    update_text = " update service20_mp_plnd ";
+    update_text += " SET mtr_desc = '"+str(mtr_desc)+"' ";
+    update_text += " , pln_sdt = ifnull(trim(NULLIF('"+str(mtr_pln_sdt)+"','')),DATE_FORMAT(now(),'%Y-%m-%d')) ";
+    update_text += " , pln_edt = ifnull(trim(NULLIF('"+str(mtr_pln_edt)+"','')),DATE_FORMAT(now(),'%Y-%m-%d')) ";
+    update_text += " , upd_id = '"+str(upd_id)+"' ";
+    update_text += " , upd_ip = '"+str(upd_ip)+"' ";
+    update_text += " , upd_dt = now() ";
+    update_text += " , upd_pgm = '"+str(upd_pgm)+"' ";
+    update_text += " WHERE mp_id = '"+str(mp_id)+"' ";
+    update_text += " AND apl_no = '"+str(apl_no)+"' ";
+    update_text += " AND pln_no = '"+str(pln_no)+"' ";
+
+    print(update_text)
+    cursor = connection.cursor()
+    query_result = cursor.execute(update_text)    
+    print(query_result)
+        
+    context = {'message': 'Ok'}
+
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 ######################################################################
 
 #####################################################################################
