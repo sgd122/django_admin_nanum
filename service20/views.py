@@ -1171,7 +1171,7 @@ class MP0105M_list_Serializer(serializers.ModelSerializer):
 
 
 class MP0105M_list(generics.ListAPIView):
-    # queryset = mpgm.objects.all()
+    queryset = mp_rep.objects.all()
     serializer_class = MP0105M_list_Serializer
 
 
