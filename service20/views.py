@@ -1003,12 +1003,13 @@ class MP0103M_Detail(generics.ListAPIView):
 # 프로그램 수행계획서 Insert
 @csrf_exempt
 def MP0103M_Insert(request):
-    mp_id = request.POST.get('mp_id', None)
-    apl_no = request.POST.get('apl_no', None)
-    pln_no = request.POST.get('pln_no', None)
-    pln_sdt = request.POST.get('pln_sdt', None)
-    pln_edt = request.POST.get('pln_edt', None)
-    mtr_desc = request.POST.get('mtr_desc', None)
+    mp_id = request.POST.get('mp_id', "")
+    apl_no = request.POST.get('apl_no', "")
+    pln_no = request.POST.get('pln_no', "")
+    pln_sdt = request.POST.get('pln_sdt', "")
+    pln_edt = request.POST.get('pln_edt', "")
+    mtr_desc = request.POST.get('mtr_desc', "")
+    
     ins_id = request.POST.get('ins_id', "")
     ins_ip = request.POST.get('ins_ip', "")
     ins_dt = request.POST.get('ins_dt', "")
