@@ -1528,10 +1528,10 @@ class MP0105M_detail(generics.ListAPIView):
         query += " left join service20_com_cdd c2 on (c2.std_grp_code  = 'MP0062'   "
         query += " and c2.std_detl_code = t1.rep_div) "
         query += " where 1=1 "
-        query += " and t1.mp_id     = 'P182015'     "
-        query += " and t2.apl_id    =  '201521237' "
-        query += " and t1.apl_no    = '47' "
-        query += " and t1.rep_no    = '3' "
+        # query += " and t1.mp_id     = 'P182015'     "
+        # query += " and t2.apl_id    =  '201521237' "
+        # query += " and t1.apl_no    = '47' "
+        # query += " and t1.rep_no    = '3' "
 
 
         print("===start====")
