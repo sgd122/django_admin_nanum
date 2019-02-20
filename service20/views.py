@@ -1486,6 +1486,8 @@ class MP0105M_detail(generics.ListAPIView):
         l_yr = request.GET.get('yr', "")
         l_mp_id = request.GET.get('mp_id', "")
         l_apl_id = request.GET.get('apl_id', "")
+        l_apl_no = request.GET.get('apl_no', "")
+        l_rep_no = request.GET.get('rep_no', "")
 
         queryset = self.get_queryset()
 
@@ -1526,14 +1528,11 @@ class MP0105M_detail(generics.ListAPIView):
         query += " left join service20_com_cdd c1 on (c1.std_grp_code  = 'MP0070'  and c1.std_detl_code = t1.status)  "
         query += " left join service20_com_cdd c2 on (c2.std_grp_code  = 'MP0062'  and c2.std_detl_code = t1.rep_div)  "
         query += " where 1=1 "
-        query += " and t1.mp_id     = 'P182015'     "
-        query += " and t2.apl_id    =  '201521237' "
-        query += " and t1.apl_no    = '47' "
-        query += " and t1.rep_no    = '3' "
+        query += " and t1.mp_id     = '"+l_mp_id+"'     "
+        query += " and t2.apl_id    =  '"+l_apl_id+"' "
+        query += " and t1.apl_no    = '"+l_apl_no+"' "
+        query += " and t1.rep_no    = '"+l_rep_no+"' "
 
-        print("===start.====")
-        print(query)
-        print("===end.====")
         queryset = mp_rep.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
