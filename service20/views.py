@@ -915,7 +915,7 @@ class MP0103M_list_Serializer(serializers.ModelSerializer):
     pln_dt = serializers.SerializerMethodField()
     appr_nm = serializers.SerializerMethodField()
     appr_dt = serializers.SerializerMethodField()
-    mgr_nm = serializers.SerializerMethodField()
+    mgr_id = serializers.SerializerMethodField()
     mgr_dt = serializers.SerializerMethodField()
     apl_id = serializers.SerializerMethodField()
     apl_nm = serializers.SerializerMethodField()
