@@ -1794,6 +1794,7 @@ class MP0104M_list(generics.ListAPIView):
         query += " , sum(t1.appr_tm)   cum_appr_tm /* 누적시간*/ ";
         query += " , t3.bank_nm         /* 은행 명*/ ";
         query += " , t3.bank_acct       /* 은행 계좌 번호*/ ";
+        query += " , t3.apl_id ";
         query += " from service20_mp_att t1     /* 프로그램 출석부(멘토)*/ ";
         query += " left join service20_mp_mtr t3 on (t3.mp_id    = t1.mp_id ";
         query += " and t3.apl_no   = t1.apl_no) ";
