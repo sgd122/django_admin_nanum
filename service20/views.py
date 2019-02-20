@@ -1104,7 +1104,7 @@ def MP0103M_Insert(request):
 
 
     row_max = int(maxRow)
-
+    row_max = 1
     for i in range(0,row_max):
     
         mp_plnd_max = mp_plnd.objects.all().aggregate(vlMax=Max('apl_no'))
