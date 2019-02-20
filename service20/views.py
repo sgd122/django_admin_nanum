@@ -1737,7 +1737,6 @@ def MP0103M_Update(request):
 # 출석관리 리스트 ###################################################
 class MP0104M_list_Serializer(serializers.ModelSerializer):
 
-    mp_id = serializers.SerializerMethodField()
     apl_no = serializers.SerializerMethodField()
     sum_elap_tm = serializers.SerializerMethodField()
     sum_appr_tm = serializers.SerializerMethodField()
@@ -1753,8 +1752,6 @@ class MP0104M_list_Serializer(serializers.ModelSerializer):
         model = mp_mtr
         fields = ('mp_id','apl_no','mntr_id','indv_div','team_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','bank_acct','bank_cd','bank_nm','bank_dpsr','cnt_mp_a','cnt_mp_p','cnt_mp_c','cnt_mp_g','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','mp_name','pr_yr','pr_sch_yr','pr_term_div','mp_name')
     
-    def get_mp_id(self,obj):
-        return obj.mp_id
     def get_apl_no(self,obj):
         return obj.apl_no
     def get_sum_elap_tm(self,obj):
@@ -1782,7 +1779,7 @@ class MP0104M_list(generics.ListAPIView):
 
         queryset = self.get_queryset()
 
-        query = " select t1.mp_id     /* 멘토링 프로그램id*/ ";
+        query = " select t3.id,t3.mp_id     /* 멘토링 프로그램id*/ ";
         query += " , t1.apl_no    /* 멘토 지원 no*/ ";
         query += " , t3.mntr_id         /* 멘토id*/ ";
         query += " , t3.apl_nm          /* 지원자(멘토,학생) 명*/ ";
