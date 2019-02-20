@@ -1443,13 +1443,14 @@ class MP0105M_detail_Serializer(serializers.ModelSerializer):
     unv_nm  = serializers.SerializerMethodField()
     cllg_nm = serializers.SerializerMethodField()
     dept_nm = serializers.SerializerMethodField()
+    mgr_nm = serializers.SerializerMethodField()
 
     req_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     appr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     mgr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     class Meta:
         model = mp_rep
-        fields = ('mp_id','apl_no','rep_no','rep_div','rep_ttl','mtr_obj','rep_dt','req_dt','mtr_desc','coatching','spcl_note','mtr_revw','appr_id','appr_nm','appr_dt','mgr_id','mgr_dt','status','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','rep_div_nm','apl_m','teacher','mte_nm','sch_yr','obj_sub','aaa','status_nm','unv_nm','cllg_nm','dept_nm')
+        fields = ('mp_id','apl_no','rep_no','rep_div','rep_ttl','mtr_obj','rep_dt','req_dt','mtr_desc','coatching','spcl_note','mtr_revw','appr_id','appr_nm','appr_dt','mgr_id','mgr_dt','status','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','rep_div_nm','apl_m','teacher','mte_nm','sch_yr','obj_sub','aaa','status_nm','unv_nm','cllg_nm','dept_nm','mgr_nm')
     
     def get_rep_div_nm(self,obj):
         return rep_div_nm   
@@ -1473,7 +1474,8 @@ class MP0105M_detail_Serializer(serializers.ModelSerializer):
         return cllg_nm
     def get_dept_nm(self,obj):
         return dept_nm
-
+    def get_mgr_nm(self,obj):
+        return mgr_nm
 
 class MP0105M_detail(generics.ListAPIView):
     queryset = mp_rep.objects.all()
@@ -1485,7 +1487,6 @@ class MP0105M_detail(generics.ListAPIView):
         l_mp_id = request.GET.get('mp_id', "")
         l_apl_id = request.GET.get('apl_id', "")
 
-
         queryset = self.get_queryset()
 
         # /*보고서 상세*/
@@ -1493,8 +1494,7 @@ class MP0105M_detail(generics.ListAPIView):
         query += " , t1.rep_div                                       /* 보고서 구분(mp0062) */ "
         query += " , t1.rep_ttl                                       /* 보고서 제목 : 내용  */ "
         query += " , c2.std_detl_code_nm               as rep_div_nm    "
-        # query += " , concat(t2.apl_id, '/', t2.apl_nm) as apl_m       /* 지원자(멘토,학생) 명*/ "
-        query += " , '11' apl_m "
+        query += " , concat(t2.apl_id, '/', t2.apl_nm) as apl_m       /* 지원자(멘토,학생) 명*/ "
         query += " , '교사'                            as teacher       "
         query += " , '멘티'                            as mte_nm       "
         query += " , '교/학년'                         as sch_yr       "
