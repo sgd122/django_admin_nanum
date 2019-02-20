@@ -1493,7 +1493,8 @@ class MP0105M_detail(generics.ListAPIView):
         query += " , t1.rep_div                                       /* 보고서 구분(mp0062) */ "
         query += " , t1.rep_ttl                                       /* 보고서 제목 : 내용  */ "
         query += " , c2.std_detl_code_nm               as rep_div_nm    "
-        query += " , concat(t2.apl_id, '/', t2.apl_nm) as apl_m       /* 지원자(멘토,학생) 명*/ "
+        # query += " , concat(t2.apl_id, '/', t2.apl_nm) as apl_m       /* 지원자(멘토,학생) 명*/ "
+        query += " , '11' apl_m "
         query += " , '교사'                            as teacher       "
         query += " , '멘티'                            as mte_nm       "
         query += " , '교/학년'                         as sch_yr       "
@@ -1528,10 +1529,10 @@ class MP0105M_detail(generics.ListAPIView):
         query += " left join service20_com_cdd c2 on (c2.std_grp_code  = 'MP0062'   "
         query += " and c2.std_detl_code = t1.rep_div) "
         query += " where 1=1 "
-        # query += " and t1.mp_id     = 'P182015'     "
-        # query += " and t2.apl_id    =  '201521237' "
-        # query += " and t1.apl_no    = '47' "
-        # query += " and t1.rep_no    = '3' "
+        query += " and t1.mp_id     = 'P182015'     "
+        query += " and t2.apl_id    =  '201521237' "
+        query += " and t1.apl_no    = '47' "
+        query += " and t1.rep_no    = '3' "
 
 
         print("===start====")
