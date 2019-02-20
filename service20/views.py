@@ -1769,10 +1769,6 @@ class MP0104M_list(generics.ListAPIView):
     queryset = mpgm.objects.all()
     serializer_class = MP0104M_list_Serializer
 
-    # mp_mtr - 프로그램 지원자(멘토) => mp_id(멘토링ID), apl_id
-    # mp_mte - 프로그램 지원자(멘티) => mp_id(멘토링ID)
-
-
     def list(self, request):
         l_mp_id = request.GET.get('mp_id', "")
         l_apl_id = request.GET.get('apl_id', "")
@@ -1861,10 +1857,6 @@ class MP0104M_Detail_Serializer(serializers.ModelSerializer):
 class MP0104M_Detail(generics.ListAPIView):
     queryset = mpgm.objects.all()
     serializer_class = MP0104M_Detail_Serializer
-
-    # mp_mtr - 프로그램 지원자(멘토) => mp_id(멘토링ID), apl_id
-    # mp_mte - 프로그램 지원자(멘티) => mp_id(멘토링ID)
-
 
     def list(self, request):
         l_mp_id = request.GET.get('mp_id', "")
