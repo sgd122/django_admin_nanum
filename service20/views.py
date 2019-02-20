@@ -1742,7 +1742,7 @@ class MP0104M_list_Serializer(serializers.ModelSerializer):
     sum_appr_tm = serializers.SerializerMethodField()
     sum_exp_amt = serializers.SerializerMethodField()
     cum_appr_tm = serializers.SerializerMethodField()
-    mp_name =  = serializers.SerializerMethodField()
+    mp_name =  serializers.SerializerMethodField()
     
     # mgr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     # pln_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
