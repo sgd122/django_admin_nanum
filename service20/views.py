@@ -1453,29 +1453,29 @@ class MP0105M_detail_Serializer(serializers.ModelSerializer):
         fields = ('mp_id','apl_no','rep_no','rep_div','rep_ttl','mtr_obj','rep_dt','req_dt','mtr_desc','coatching','spcl_note','mtr_revw','appr_id','appr_nm','appr_dt','mgr_id','mgr_dt','status','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','rep_div_nm','apl_m','teacher','mte_nm','sch_yr','obj_sub','aaa','status_nm','unv_nm','cllg_nm','dept_nm','mgr_nm')
     
     def get_rep_div_nm(self,obj):
-        return rep_div_nm   
+        return obj.rep_div_nm   
     def get_apl_m(self,obj):
-        return apl_m
+        return obj.apl_m
     def get_teacher(self,obj):      
-        return teacher
+        return obj.teacher
     def get_mte_nm(self,obj):      
-        return mte_nm
+        return obj.mte_nm
     def get_sch_yr(self,obj):      
-        return sch_yr
+        return obj.sch_yr
     def get_obj_sub(self,obj):      
-        return obj_sub
+        return obj.obj_sub
     def get_aaa(self,obj):         
-        return aaa
+        return obj.aaa
     def get_status_nm(self,obj):   
-        return status_nm
+        return obj.status_nm
     def get_unv_nm(self,obj):
-        return unv_nm
+        return obj.unv_nm
     def get_cllg_nm(self,obj):
-        return cllg_nm
+        return obj.cllg_nm
     def get_dept_nm(self,obj):
-        return dept_nm
+        return obj.dept_nm
     def get_mgr_nm(self,obj):
-        return mgr_nm
+        return obj.mgr_nm
 
 class MP0105M_detail(generics.ListAPIView):
     queryset = mp_rep.objects.all()
