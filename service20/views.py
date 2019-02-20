@@ -386,21 +386,25 @@ def MS0101M_save(request):
     return JsonResponse(context,json_dumss_params={'ensure_ascii': True})
 
 @csrf_exempt
-def MS0101M_detail(request):    
-
+def MS0101M_detail(request):
     ida = request.POST.get('user_id', None)
     ms_ida = request.POST.get('ms_id', None)
     l_yr = request.POST.get('yr', None)
-
-    created_flag = vm_nanum_stdt.objects.filter(apl_id=ida).exists()
-    ms_apl_flag = ms_apl.objects.filter(apl_id=ida,ms_id=ms_ida).exists()
     
+    
+    #created,created_flag = vm_nanum_stdt.apl_id.get_or_create(user=request.user)
+    created_flag = vm_nanum_stdt.objects.filter(apl_id=ida).exists()
+
+    # ms_apl_flag = ms_apl.objects.filter(apl_id=ida,ms_id=ms_ida).exists()
+    ms_apl_flag = ms_apl.objects.filter(apl_id=ida,yr=l_yr,ms_id=ms_ida).exists()
+
     if not ms_apl_flag:
         applyYn = 'N'
     else:
         applyYn = 'Y'
 
-    
+    #rows = vm_nanum_stdt.objects.filter(apl_id=ida)
+    #rows2 = vm_nanum_stdt.objects.get("apl_nm")
     if not created_flag:
         message = "Fail"
         context = {'message': message}
@@ -408,7 +412,7 @@ def MS0101M_detail(request):
         
         message = "Ok"
         rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
-        rows2 = ms_sub.objects.filter(ms_id=ms_ida)
+        rows2 = mp_sub.objects.filter(mp_id=ms_ida)
         rows3 = msch.objects.filter(ms_id=ms_ida)[0]
 
 
@@ -416,6 +420,11 @@ def MS0101M_detail(request):
             key1 = val.att_id
             #key2 = val.att_cdd
 
+        #question01 = com_cdd.objects.filter(std_grp_code=key1)[0].rmrk
+        #question02 = com_cdd.objects.filter(std_grp_code=key1)[1].rmrk
+        #question03 = com_cdd.objects.filter(std_grp_code=key1)[2].rmrk
+        #question04 = com_cdd.objects.filter(std_grp_code=key1)[3].rmrk
+        #question05 = com_cdd.objects.filter(std_grp_code=key1)[4].rmrk
 
         context = {'message': message,
                     'applyYn' : applyYn,
@@ -463,7 +472,8 @@ def MS0101M_detail(request):
                     }
     
 
-    return JsonResponse(context,json_dumss_params={'ensure_ascii': True})
+    #return HttpResponse(json.dumps(context), content_type="application/json")
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 class MS0101M_adm_list_Serializer(serializers.ModelSerializer):
     
