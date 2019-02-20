@@ -333,8 +333,6 @@ def MS0101M_save(request):
         apl_no = apl_no + 1;
     
     
-    # mp_mntr/ms_apl  -> mp_id만 조건 걸어서 count(*)
-    # 해당 cnt값을 mpgm/msch -> cnt_apl
 
     model_instance = ms_apl(
         ms_id=ms_id, 
@@ -382,6 +380,18 @@ def MS0101M_save(request):
             ans_t2=anst2
             )
         model_instance2.save()
+
+    
+    # mp_mntr/ms_apl  -> mp_id만 조건 걸어서 count(*)
+    # 해당 cnt값을 mpgm/msch -> cnt_apl
+
+    update_text = " update service20_msch a ";
+    update_text += " SET a.cnt_apl = (select count(*) from service20_ms_apl where ms_id = '"+mp_id+"') ";
+    update_text += " WHERE 1=1 ";
+    update_text += " AND a.ms_id = '"+mp_id+"' ";
+    print(update_text)
+    cursor = connection.cursor()
+    query_result = cursor.execute(update_text)    
         
     context = {'message': 'Ok'}
 
@@ -862,7 +872,7 @@ def MP0101M_save(request):
     apl_max = request.POST.get('aplMax', 0)
     
     #created,created_flag = vm_nanum_stdt.apl_id.get_or_create(user=request.user)
-    ms_id = programId
+    mp_id = programId
     mp_mtr_max = mp_mtr.objects.all().aggregate(vlMax=Max('apl_no'))
     rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
     #mp_mtr_max = mp_mtr.objects.all().last()
@@ -883,11 +893,10 @@ def MP0101M_save(request):
         apl_no = mp_mtr_max['vlMax']
         apl_no = apl_no + 1;
     
-    # mp_mntr/ms_apl  -> mp_id만 조건 걸어서 count(*)
-    # 해당 cnt값을 mpgm/msch -> cnt_apl
+    
     
     model_instance = mp_mtr(
-        mp_id=ms_id, 
+        mp_id=mp_id, 
         apl_no=apl_no, 
         mntr_id=ida,
         apl_id=apl_id,
@@ -922,7 +931,7 @@ def MP0101M_save(request):
         ques_no = request.POST.get('ques_no'+str(i+1), None)
 
         model_instance2 = mp_ans(
-            mp_id=ms_id, 
+            mp_id=mp_id, 
             test_div='10', 
             apl_no=apl_no,
             ques_no=ques_no,
@@ -932,8 +941,21 @@ def MP0101M_save(request):
             ans_t2=anst2
             )
         model_instance2.save()
-        
+
+
+    # mp_mntr/ms_apl  -> mp_id만 조건 걸어서 count(*)
+    # 해당 cnt값을 mpgm/msch -> cnt_apl
+
+    update_text = " update service20_mpgm a ";
+    update_text += " SET a.cnt_apl = (select count(*) from service20_mp_mntr where mp_id = '"+mp_id+"') ";
+    update_text += " WHERE 1=1 ";
+    update_text += " AND a.mp_id = '"+mp_id+"' ";
+    print(update_text)
+    cursor = connection.cursor()
+    query_result = cursor.execute(update_text)    
+
     context = {'message': 'Ok'}
+
 
     #return HttpResponse(json.dumps(context), content_type="application/json")
     return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
@@ -2440,3 +2462,34 @@ class mpmgListView(generics.ListAPIView):
             return self.get_paginated_response(serializer.data)
 
         return Response(serializer.data)
+
+class main_list_mento_count_Serializer(serializers.ModelSerializer):
+
+    cnt = serializers.SerializerMethodField()
+    class Meta:
+        model = mentor
+        fields = ('mntr_id','cnt')
+
+    def get_cnt(self, obj):
+        return obj.cnt     
+
+
+class main_list_mento_count(generics.ListAPIView):
+    queryset = mpgm.objects.all()
+    serializer_class = main_list_mento_count_Serializer
+
+    def list(self, request):
+        queryset = self.get_queryset()
+
+        query = "select count(*) as cnt from service20_mentor";
+        queryset = mentor.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)        
