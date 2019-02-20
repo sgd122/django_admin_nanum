@@ -89,8 +89,8 @@ class com_list_my_mentee(generics.ListAPIView):
         l_mp_id = request.GET.get('mp_id', "")
         l_apl_id = request.GET.get('apl_id', "")
         
-        l_mp_id = "P182014"
-        l_apl_id = "201610101"
+        # l_mp_id = "P182014"
+        # l_apl_id = "201610101"
 
         queryset = self.get_queryset()
         
