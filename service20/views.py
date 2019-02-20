@@ -1187,7 +1187,8 @@ def MP0103M_Update(request):
     
 
     maxRow = request.POST.get('maxRow', 0)
-
+    print("::maxRow::")
+    print(maxRow)
 
     row_max = int(maxRow)
 
