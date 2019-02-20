@@ -30,7 +30,7 @@ class com_combo_yr_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = com_cdd
-        fields = ('code','name')
+        fields = ('std_grp_code','std_detl_code','std_detl_code_nm','rmrk','sort_seq_no')
 
     def get_code(self, obj):
         return obj.code
@@ -50,11 +50,11 @@ class com_combo_yr(generics.ListAPIView):
 
         queryset = self.get_queryset()
         
-        query = " select '1'id,DATE_FORMAT(now(),'%Y')-1 as code,DATE_FORMAT(now(),'%Y')-1 as name ";
+        query = " select '1'id,DATE_FORMAT(now(),'%Y')-1 as std_detl_code,DATE_FORMAT(now(),'%Y')-1 as std_detl_code_nm ";
         query += " union ";
-        query += " select '2'id,DATE_FORMAT(now(),'%Y') as code,DATE_FORMAT(now(),'%Y') as name ";
+        query += " select '2'id,DATE_FORMAT(now(),'%Y') as std_detl_code,DATE_FORMAT(now(),'%Y') as std_detl_code_nm ";
         query += " union ";
-        query += " select '3'id,DATE_FORMAT(now(),'%Y')+1 as code,DATE_FORMAT(now(),'%Y')+1 as name ";
+        query += " select '3'id,DATE_FORMAT(now(),'%Y')+1 as std_detl_code,DATE_FORMAT(now(),'%Y')+1 as std_detl_code_nm ";
 
         queryset = com_cdd.objects.raw(query)
 
