@@ -2251,7 +2251,7 @@ class MP0106M_list(generics.ListAPIView):
 
         queryset = self.get_queryset()
 
-        query = " select t1.mp_id                              /*멘토링 프로그램id     */ ";
+        query = " select t1.id,t1.mp_id                              /*멘토링 프로그램id     */ ";
         query += " , t1.apl_no                             /*멘토 지원 no        */ ";
         query += " , t1.exp_no                             /*활동비 no        */ ";
         query += " , substring(t1.exp_mon,5,2) as exp_mon  /*활동비 월        */ ";
