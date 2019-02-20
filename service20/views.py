@@ -952,7 +952,7 @@ def MP0101M_adm_acpt_save(request):
     update_text += " SET a.acpt_dt = NOW() ";
     update_text += " , a.acpt_div = 'Y' ";
     update_text += " , a.acpt_cncl_rsn = null ";
-    update_text += " WHERE a.mp_id = b.mp_id ";
+    update_text += " WHERE 1=1 ";
     update_text += " AND a.mp_id = '"+mp_id+"' ";
     update_text += " AND a.apl_no = '"+apl_no+"' ";
     print(update_text)
@@ -985,7 +985,7 @@ def MP0101M_adm_acpt_cancle(request):
     update_text += " SET a.acpt_dt = null ";
     update_text += " , a.acpt_div = 'N' ";
     update_text += " , a.acpt_cncl_rsn = '"+acpt_cncl_rsn+"' ";
-    update_text += " WHERE a.mp_id = b.mp_id ";
+    update_text += " WHERE 1=1 ";
     update_text += " AND a.mp_id = '"+mp_id+"' ";
     update_text += " AND a.apl_no = '"+apl_no+"' ";
     print(update_text)
