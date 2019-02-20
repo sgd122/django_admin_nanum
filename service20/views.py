@@ -952,7 +952,7 @@ def MP0101M_adm_acpt_save(request):
     update_text += " SET a.acpt_dt = NOW() ";
     update_text += " , a.acpt_div = 'Y' ";
     update_text += " , a.acpt_cncl_rsn = null ";
-    update_text += " WHERE a.mp_id = b.mp_id ";
+    update_text += " WHERE 1=1 ";
     update_text += " AND a.mp_id = '"+mp_id+"' ";
     update_text += " AND a.apl_no = '"+apl_no+"' ";
     print(update_text)
@@ -985,7 +985,7 @@ def MP0101M_adm_acpt_cancle(request):
     update_text += " SET a.acpt_dt = null ";
     update_text += " , a.acpt_div = 'N' ";
     update_text += " , a.acpt_cncl_rsn = '"+acpt_cncl_rsn+"' ";
-    update_text += " WHERE a.mp_id = b.mp_id ";
+    update_text += " WHERE 1=1 ";
     update_text += " AND a.mp_id = '"+mp_id+"' ";
     update_text += " AND a.apl_no = '"+apl_no+"' ";
     print(update_text)
@@ -1732,13 +1732,13 @@ class MP0105M_detail(generics.ListAPIView):
         query += " , c2.std_detl_code_nm               as rep_div_nm    "
         query += " , concat(t2.apl_id, '/', t2.apl_nm) as apl_m       /* 지원자(멘토,학생) 명*/ "
         
-        query += " , t1.tchr_id                                       /* 담당멘티id*/ ";
-        query += " , t1.tchr_nm                        as teacher     /* 담당멘티명*/ ";
-        query += " , t1.mnte_id                                       /* 담당멘티id*/ ";
-        query += " , t1.mnte_nm                        as mte_nm        /* 담당멘티명*/ ";
-        query += " , t1.sch_nm                         as sch_yr        /* 학교명*/ ";
-        query += " , t1.mtr_sub                        as obj_sub     /* 지도과목*/ "; 
-        query += " , t1.att_desc                       as aaa          /* 출석현황/ ";
+        query += " , t1.tchr_id                                       /* 담당멘티id*/ "
+        query += " , t1.tchr_nm                        as teacher     /* 담당멘티명*/ "
+        query += " , t1.mnte_id                                       /* 담당멘티id*/ "
+        query += " , t1.mnte_nm                        as mte_nm        /* 담당멘티명*/ "
+        query += " , t1.sch_nm                         as sch_yr        /* 학교명*/ "
+        query += " , t1.mtr_sub                        as obj_sub     /* 지도과목*/ " 
+        query += " , t1.att_desc                       as aaa          /* 출석현황*/ "
 
         query += " , substring(t1.rep_dt,  1, 10)      as rep_dt      /* 보고서작성일         */ "
         query += " , substring(t1.req_dt,  1, 10)      as req_dt      /* 승인요청일         */ "
