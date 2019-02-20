@@ -1895,13 +1895,10 @@ class MP0104M_Detail(generics.ListAPIView):
         query += " , t1.exp_amt   /* 지급 활동비 */  ";
         query += " , t3.apl_id /* 학번 ";
         query += " from service20_mp_att t1     /* 프로그램 출석부(멘토) */ ";
-        query += " left join service20_mp_mte t2  on (t2.mp_id  = t1.mp_id ";
-        query += " and t2.apl_no = t1.apl_no) ";
-        query += " left join service20_mp_mtr t3 on (t3.mp_id    = t1.mp_id ";
-        query += " and t3.apl_no   = t1.apl_no) ";
+        query += " left join service20_mp_mte t2  on (t2.mp_id  = t1.mp_id and t2.apl_no = t1.apl_no)  ";
+        query += " left join service20_mp_mtr t3 on (t3.mp_id    = t1.mp_id and t3.apl_no   = t1.apl_no) ";
         query += " left join service20_mpgm   t4 on (t4.mp_id    = t1.mp_id) ";
-        query += " left join service20_com_cdd c1 on (c1.std_grp_code  = 'mp0059'  ";
-        query += " and c1.std_detl_code = t1.mp_div) ";
+        query += " left join service20_com_cdd c1 on (c1.std_grp_code  = 'mp0059' and c1.std_detl_code = t1.mp_div) ";
         query += " where 1=1 ";
         query += " and t1.mp_id    = '"+l_mp_id+"'   /* 멘토링 프로그램id */ ";
         query += " and t3.apl_id   = '"+l_apl_id+"' ";
