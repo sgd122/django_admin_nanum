@@ -1079,6 +1079,53 @@ class MP0103M_Detail(generics.ListAPIView):
 
         return Response(serializer.data)
 
+# 계획서 최초 작성 시 주차 수를 셋팅
+class MP0103M_list_v1_Serializer(serializers.ModelSerializer):
+
+    
+    class Meta:
+        model = mp_sub
+        fields = ('id','mp_id','att_id','att_seq','att_cdh','att_cdd','att_val','use_yn','sort_seq','std_detl_code','std_detl_code_nm','rmrk')
+    
+
+class MP0103M_list_v1(generics.ListAPIView):
+    queryset = mpgm.objects.all()
+    serializer_class = MP0103M_list_v1_Serializer
+
+    # mp_mtr - 프로그램 지원자(멘토) => mp_id(멘토링ID), apl_id
+    # mp_mte - 프로그램 지원자(멘티) => mp_id(멘토링ID)
+
+
+    def list(self, request):
+        l_user_id = request.GET.get('user_id', "")
+        l_apl_id = request.GET.get('apl_id', "")
+        l_mp_id = request.GET.get('mp_id', "")
+
+        queryset = self.get_queryset()
+
+        query = " select t2.id,t2.att_val AS att_val ";
+        query += " FROM service20_mp_mtr t1 ";
+        query += " LEFT JOIN service20_mp_sub t2 ON (t2.mp_id = t1.mp_id ";
+        query += " AND t2.att_id= 'MP0013' ";
+        query += " AND t2.att_cdh = 'MP0013' ";
+        query += " AND t2.att_cdd = '20') ";
+        query += " WHERE t1.mp_id = '"+l_mp_id+"' ";
+        query += " AND t1.apl_id='"+l_apl_id+"' ";
+
+        print(query)
+
+        queryset = mp_sub.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
 
 # 프로그램 수행계획서 Insert
 @csrf_exempt
