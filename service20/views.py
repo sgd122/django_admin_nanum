@@ -80,7 +80,7 @@ class com_list_my_mentee_Serializer(serializers.ModelSerializer):
         return obj.mp_plc_nm
     def get_grd_rel_nm(self, obj):
         return obj.grd_rel_nm
-        
+
 class com_list_my_mentee(generics.ListAPIView):
     queryset = mp_mte.objects.all()
     serializer_class = com_list_my_mentee_Serializer
@@ -974,6 +974,7 @@ class MP0103M_list_Serializer(serializers.ModelSerializer):
     pln_dt = serializers.SerializerMethodField()
     mtr_sub = serializers.SerializerMethodField()
     pln_sedt = serializers.SerializerMethodField()
+    apl_no = serializers.SerializerMethodField()
     
     mgr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     pln_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
@@ -982,7 +983,7 @@ class MP0103M_list_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = mpgm
-        fields = ('mp_id','mp_name','apl_term','yr_seq','mnte_nm','sch_nm','sch_yr','pln_dt','appr_nm','appr_dt','mgr_id','mgr_dt','apl_id','apl_nm','tchr_nm','pln_dt','mtr_sub','pln_sedt')
+        fields = ('mp_id','mp_name','apl_term','yr_seq','mnte_nm','sch_nm','sch_yr','pln_dt','appr_nm','appr_dt','mgr_id','mgr_dt','apl_id','apl_nm','tchr_nm','pln_dt','mtr_sub','pln_sedt','apl_no')
     
     def get_mnte_nm(self,obj):
         return obj.mnte_nm  
@@ -1012,6 +1013,8 @@ class MP0103M_list_Serializer(serializers.ModelSerializer):
         return obj.mtr_sub
     def get_pln_sedt(self,obj):
         return obj.pln_sedt
+    def get_apl_no(self,obj):
+        return obj.apl_no    
     
 
 
@@ -1044,6 +1047,7 @@ class MP0103M_list(generics.ListAPIView):
         query += " , d.apl_nm     AS apl_nm ";
         query += " , c.tchr_nm    AS tchr_nm ";
         query += " , a.mtr_sub     AS mtr_sub ";
+        query += " , d.apl_no     AS apl_no ";
         query += " , (SELECT concat(pln_sdt, CONCAT('~', pln_edt)) FROM service20_mp_plnd WHERE mp_id = a.mp_id AND apl_no = a.apl_no LIMIT 1) AS pln_sedt ";
         query += " from service20_mp_plnh a ";
         query += " , service20_mpgm b ";
@@ -1200,6 +1204,26 @@ def MP0103M_Insert(request):
 
     maxRow = request.POST.get('maxRow', 0)
 
+    update_text = " update service20_mp_plnh a ";
+    update_text += " , service20_mpgm b ";
+    update_text += " , service20_mp_mte c ";
+    update_text += " , (SELECT mp_id ";
+    update_text += " , apl_no ";
+    update_text += " , apl_id ";
+    update_text += " , apl_nm ";
+    update_text += " FROM service20_mp_mtr ";
+    update_text += " WHERE apl_id = '"+apl_id+"' ";
+    update_text += " AND apl_no = '"+apl_no+"') d ";
+    update_text += " SET a.pln_dt = NOW() ";
+    update_text += " WHERE a.mp_id = b.mp_id ";
+    update_text += " AND a.mp_id = c.mp_id ";
+    update_text += " AND a.mp_id = d.mp_id ";
+    update_text += " AND a.apl_no = d.apl_no ";
+    update_text += " AND d.apl_no = c.apl_no ";
+    print(update_text)
+    cursor = connection.cursor()
+    query_result = cursor.execute(update_text)
+        
 
     row_max = int(maxRow)
     for i in range(0,row_max):
