@@ -482,7 +482,7 @@ class MS0101M_adm_list_Serializer(serializers.ModelSerializer):
     pr_sch_yr = serializers.SerializerMethodField()
     pr_term_div = serializers.SerializerMethodField()
 
-    acpt_dt = serializers.DateTimeField(format='%Y-%m-%d')
+    # acpt_dt = serializers.DateTimeField(format='%Y-%m-%d')
 
     class Meta:
         model = ms_apl
