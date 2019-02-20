@@ -38,6 +38,8 @@ urlpatterns = [
     ########################################################################################
     # 현재 모집중인 멘토링 프로그램
     path('main/list/1/', mpmgListView.as_view(), name='mpmgListView'),
+    # 현재 등록된 멘토건수
+    path('main/list/mento_count/', main_list_mento_count.as_view(), name='main_list_mento_count'),
     ########################################################################################
     # MainPage
     #
