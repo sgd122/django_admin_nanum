@@ -82,6 +82,10 @@ urlpatterns = [
     path('MP0101M/admin/list/', MP0101M_adm_list.as_view(), name='MP0101M_adm_list'),
     # 멘토링 프로그램(관리자) - 질문
     path('MP0101M/admin/quest/', MP0101M_adm_quest.as_view(), name='MP0101M_adm_quest'),
+    # 멘토링 프로그램 수락
+    path('MP0101M/admin/acpt_save/', MP0101M_adm_acpt_save, name='MP0101M_adm_acpt_save'), 
+    # 멘토링 프로그램 수락취소
+    path('MP0101M/admin/acpt_cancle/', MP0101M_adm_acpt_cancle, name='MP0101M_adm_acpt_cancle'), 
     ########################################################################################
     # 멘토링 프로그램(MP0101M - END )
     #
