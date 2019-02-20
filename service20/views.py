@@ -70,10 +70,17 @@ class com_combo_yr(generics.ListAPIView):
 
 class com_list_my_mentee_Serializer(serializers.ModelSerializer):
 
+    mp_plc_nm = serializers.SerializerMethodField()
+    grd_rel_nm = serializers.SerializerMethodField()
     class Meta:
         model = mp_mte
-        fields = ('mp_id','mnte_no','mnte_id','mnte_nm','mnte_nm_e','apl_no','brth_dt','mp_hm','mp_plc','mp_addr','sch_grd','sch_cd','sch_nm','gen','yr','term_div','sch_yr','mob_no','tel_no','grd_id','grd_nm','grd_tel','grd_rel','prnt_nat_cd','prnt_nat_nm','tchr_id','tchr_nm','tchr_tel','area_city','area_gu','h_addr','h_post_no','s_addr','s_post_no','email_addr','apl_dt','status','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm')
-
+        fields = ('mp_id','mnte_no','mnte_id','mnte_nm','mnte_nm_e','apl_no','brth_dt','mp_hm','mp_plc','mp_addr','sch_grd','sch_cd','sch_nm','gen','yr','term_div','sch_yr','mob_no','tel_no','grd_id','grd_nm','grd_tel','grd_rel','prnt_nat_cd','prnt_nat_nm','tchr_id','tchr_nm','tchr_tel','area_city','area_gu','h_addr','h_post_no','s_addr','s_post_no','email_addr','apl_dt','status','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','mp_plc_nm','grd_rel_nm')
+    
+    def get_mp_plc_nm(self, obj):
+        return obj.mp_plc_nm
+    def get_grd_rel_nm(self, obj):
+        return obj.grd_rel_nm
+        
 class com_list_my_mentee(generics.ListAPIView):
     queryset = mp_mte.objects.all()
     serializer_class = com_list_my_mentee_Serializer
@@ -87,8 +94,9 @@ class com_list_my_mentee(generics.ListAPIView):
 
         queryset = self.get_queryset()
         
-        query = " select ";
-        query += " S2.* ";
+        query = " select (select std_detl_code_nm from service20_com_cdd where std_grp_code = 'MP0052' and std_detl_code = S2.mp_plc) mp_plc_nm";
+        query += " ,(select std_detl_code_nm from service20_com_cdd where std_grp_code = 'MP0047' and std_detl_code = S2.grd_rel) grd_rel_nm ";
+        query += " , S2.* ";
         query += " FROM service20_mp_mtr S1 ";
         query += " LEFT JOIN service20_mp_mte S2  ON (S2.MP_ID  = S1.MP_ID ";
         query += " AND S2.APL_NO = S1.APL_NO) ";
