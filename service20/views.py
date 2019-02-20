@@ -333,6 +333,9 @@ def MS0101M_save(request):
         apl_no = apl_no + 1;
     
     
+    # mp_mntr/ms_apl  -> mp_id만 조건 걸어서 count(*)
+    # 해당 cnt값을 mpgm/msch -> cnt_apl
+
     model_instance = ms_apl(
         ms_id=ms_id, 
         apl_no=apl_no, 
@@ -880,6 +883,8 @@ def MP0101M_save(request):
         apl_no = mp_mtr_max['vlMax']
         apl_no = apl_no + 1;
     
+    # mp_mntr/ms_apl  -> mp_id만 조건 걸어서 count(*)
+    # 해당 cnt값을 mpgm/msch -> cnt_apl
     
     model_instance = mp_mtr(
         mp_id=ms_id, 
