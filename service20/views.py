@@ -997,7 +997,73 @@ def MP0101M_adm_acpt_cancle(request):
         
     context = {'message': 'Ok'}
 
-    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})    
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True}) 
+
+# 멘토링 프로그램 update
+@csrf_exempt
+def MP0101M_adm_update(request):
+    mp_id = request.POST.get('mp_id', "")
+    apl_id = request.POST.get('apl_id', "")
+    apl_no = request.POST.get('apl_no', "")
+    acpt_cncl_rsn = request.POST.get('acpt_cncl_rsn', "")
+
+    ins_id = request.POST.get('ins_id', "")
+    ins_ip = request.POST.get('ins_ip', "")
+    ins_dt = request.POST.get('ins_dt', "")
+    ins_pgm = request.POST.get('ins_pgm', "")
+    upd_id = request.POST.get('upd_id', "")
+    upd_ip = request.POST.get('upd_ip', "")
+    upd_dt = request.POST.get('upd_dt', "")
+    upd_pgm = request.POST.get('upd_pgm', "")
+
+    update_text = " update service20_mp_mtr a ";
+    update_text += " SET a.acpt_dt = null ";
+    update_text += " , a.acpt_div = 'N' ";
+    update_text += " , a.acpt_cncl_rsn = '"+acpt_cncl_rsn+"' ";
+    update_text += " WHERE 1=1 ";
+    update_text += " AND a.mp_id = '"+mp_id+"' ";
+    update_text += " AND a.apl_no = '"+apl_no+"' ";
+    print(update_text)
+    cursor = connection.cursor()
+    query_result = cursor.execute(update_text)
+
+        
+    context = {'message': 'Ok'}
+
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True}) 
+
+# 멘토링 프로그램 cancle
+@csrf_exempt
+def MP0101M_adm_cancle(request):
+    mp_id = request.POST.get('mp_id', "")
+    apl_id = request.POST.get('apl_id', "")
+    apl_no = request.POST.get('apl_no', "")
+    acpt_cncl_rsn = request.POST.get('acpt_cncl_rsn', "")
+
+    ins_id = request.POST.get('ins_id', "")
+    ins_ip = request.POST.get('ins_ip', "")
+    ins_dt = request.POST.get('ins_dt', "")
+    ins_pgm = request.POST.get('ins_pgm', "")
+    upd_id = request.POST.get('upd_id', "")
+    upd_ip = request.POST.get('upd_ip', "")
+    upd_dt = request.POST.get('upd_dt', "")
+    upd_pgm = request.POST.get('upd_pgm', "")
+
+    update_text = " update service20_mp_mtr a ";
+    update_text += " SET a.acpt_dt = null ";
+    update_text += " , a.acpt_div = 'N' ";
+    update_text += " , a.acpt_cncl_rsn = '"+acpt_cncl_rsn+"' ";
+    update_text += " WHERE 1=1 ";
+    update_text += " AND a.mp_id = '"+mp_id+"' ";
+    update_text += " AND a.apl_no = '"+apl_no+"' ";
+    print(update_text)
+    cursor = connection.cursor()
+    query_result = cursor.execute(update_text)
+
+        
+    context = {'message': 'Ok'}
+
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})            
 
 #####################################################################################
 # MP0101M - END 
