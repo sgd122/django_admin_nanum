@@ -1205,7 +1205,7 @@ def MP0103M_Update(request):
     update_text += " , upd_pgm = '"+str(upd_pgm)+"' ";
     update_text += " WHERE mp_id = '"+str(mp_id)+"' ";
     # update_text += " AND apl_no = '"+str(apl_no)+"' ";
-    update_text += " AND apl_no IN (SELECT apl_no FROM service20_mp_mtr WHERE apl_id = '"+str(apl_id)+"') ";
+    update_text += " AND apl_no IN (SELECT apl_no FROM service20_mp_mtr WHERE mntr_id='"+str(apl_id)+"' or apl_id = '"+str(apl_id)+"') ";
 
     print(update_text)
     cursor = connection.cursor()
@@ -1233,7 +1233,7 @@ def MP0103M_Update(request):
         update_text += " , upd_pgm = '"+str(upd_pgm)+"' ";
         update_text += " WHERE mp_id = '"+str(mp_id)+"' ";
         # update_text += " AND apl_no = '"+str(apl_no)+"' ";
-        update_text += " AND apl_no IN (SELECT apl_no FROM service20_mp_mtr WHERE apl_id = '"+str(apl_id)+"') ";
+        update_text += " AND apl_no IN (SELECT apl_no FROM service20_mp_mtr WHERE mntr_id='"+str(apl_id)+"' or apl_id = '"+str(apl_id)+"') ";
         update_text += " AND pln_no = '"+str(pln_no)+"' ";
 
         print(update_text)
