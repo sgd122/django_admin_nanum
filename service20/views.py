@@ -2226,6 +2226,68 @@ class MP0105M_detail(generics.ListAPIView):
 #####################################################################################
 
 
+#####################################################################################
+# MP0106M - START
+#####################################################################################
+
+# 보고서 현황 리스트 ###################################################
+class MP0106M_list_Serializer(serializers.ModelSerializer):
+
+    # testField = serializers.SerializerMethodField()
+
+    class Meta:
+        model = mp_exp
+        fields = ('mp_id','apl_no','exp_no','exp_mon','exp_div','exp_ttl','exp_dt','bank_dt','elap_tm','unit_price','appr_tm','sum_exp','bank_acct','bank_cd','bank_nm','bank_dpsr','mp_sname','mgr_id','mgr_dt','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm')
+
+class MP0106M_list(generics.ListAPIView):
+    queryset = mp_rep.objects.all()
+    serializer_class = MP0106M_list_Serializer
+
+
+    def list(self, request):
+        l_mp_id = request.GET.get('mp_id', "")
+        l_apl_id = request.GET.get('apl_id', "")
+
+
+        queryset = self.get_queryset()
+
+        query = " select t1.mp_id                              /*멘토링 프로그램id     */ ";
+        query += " , t1.apl_no                             /*멘토 지원 no        */ ";
+        query += " , t1.exp_no                             /*활동비 no        */ ";
+        query += " , substring(t1.exp_mon,5,2) as exp_mon  /*활동비 월        */ ";
+        query += " , t1.exp_div                            /*활동비 구분        */ ";
+        query += " , t1.exp_ttl                            /*활동비 제목        */ ";
+        query += " , t1.appr_tm                            /*인정시간 합계        */ ";
+        query += " , t1.sum_exp                            /*활동비=appr_tm * unit_price*/ ";
+        query += " , t1.bank_acct                          /*은행 계좌 번호        */ ";
+        query += " , t1.bank_cd                            /*은행 코드        */ ";
+        query += " , t1.bank_nm                            /*은행 명           */ ";
+        query += " , t1.bank_dpsr                          /*예금주           */ ";
+        query += " from service20_mp_exp t1                   /*프로그램 출석부(멘토)     */ ";
+        query += " left join service20_mp_mtr t3 on (t3.mp_id    = t1.mp_id ";
+        query += " and t3.apl_no   = t1.apl_no) ";
+        query += " where 1=1 ";
+        query += " and t1.mp_id    = '"+l_mp_id+"'     ";
+        query += " and t3.apl_id   = '"+l_apl_id+"' ";
+        query += " order by t1.exp_mon ";
+
+        queryset = mp_exp.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+
+#####################################################################################
+# MP0106M - END
+#####################################################################################
+
 @csrf_exempt
 def post_user_info(request):
     ida = request.POST.get('user_id', None)
