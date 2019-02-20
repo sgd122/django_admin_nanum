@@ -2270,7 +2270,7 @@ class MP0106M_list(generics.ListAPIView):
         query += " left join service20_mp_mtr t3 on (t3.mp_id    = t1.mp_id ";
         query += " and t3.apl_no   = t1.apl_no) ";
         query += " where 1=1 ";
-        query += " and t1.mp_id    = '"+l_mp_id+"'     ";
+        # query += " and t1.mp_id    = '"+l_mp_id+"'     ";
         query += " and t3.apl_id   = '"+l_apl_id+"' ";
         query += " order by t1.exp_mon ";
 
