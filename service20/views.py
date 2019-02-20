@@ -1533,6 +1533,50 @@ class MP0105M_detail(generics.ListAPIView):
         query += " AND t1.APL_NO    = '47' ";
         query += " AND t1.REP_NO    = '3' ";
 
+        query = " select T1.MP_ID                                         /* 멘토링 프로그램ID   */ ";
+        query += " , T1.REP_DIV                                       /* 보고서 구분(MP0062) */ ";
+        query += " , T1.REP_TTL                                       /* 보고서 제목 : 내용  */ ";
+        query += " , C2.STD_DETL_CODE_NM               AS REP_DIV_NM    ";
+        query += " , CONCAT(T2.APL_ID, '/', T2.APL_NM) AS APL_M       /* 지원자(멘토,학생) 명*/ ";
+        query += " , '교사'                            AS TEACHER       ";
+        query += " , '멘티'                            AS MTE_NM       ";
+        query += " , '교/학년'                         AS SCH_YR       ";
+        query += " , '지도과목'                        AS OBJ_SUB       ";
+        query += " , '출석현황'                        AS AAA          ";
+        query += " , SUBSTRING(T1.REP_DT,  1, 10)      AS REP_DT      /* 보고서작성일         */ ";
+        query += " , SUBSTRING(T1.REQ_DT,  1, 10)      AS REQ_DT      /* 승인요청일         */ ";
+        query += " , T1.APPR_NM                                       /* 승인자명            */ ";
+        query += " , SUBSTRING(T1.APPR_DT,  1, 10)     AS APPR_DT     /* 보호자 승인일시      */ ";
+        query += " , T1.MGR_ID                         AS MGR_NM      /* 관리자ID            */ ";
+        query += " , SUBSTRING(T1.MGR_DT,  1, 10)      AS MGR_DT      /* 관리자 승인일시      */ ";
+        query += " , T1.STATUS                                        /* 상태(MP0070)         */ ";
+        query += " , C1.STD_DETL_CODE_NM               AS STATUS_NM    ";
+        query += " , T1.MTR_OBJ                                       /* 학습목표            */ ";
+        query += " , T1.MTR_DESC                                      /* 학습내용            */ ";
+        query += " , T1.COATCHING                                     /* 학습외 지도(상담)   */ ";
+        query += " , T1.SPCL_NOTE                                     /* 특이사항            */ ";
+        query += " , T1.MTR_REVW                                      /* 소감문            */ ";
+        query += " , T2.UNV_NM                                        /* 지원자 대학교 명      */ ";
+        query += " , T2.CLLG_NM                                       /* 지원자 대학 명      */ ";
+        query += " , T2.DEPT_NM                                       /* 지원자 학부/학과 명 */       ";                                    
+        query += " , T1.APL_NO                                        /* 멘토 지원 NO         */ ";
+        query += " , T1.REP_NO                                        /* 보고서 NO         */ ";
+        query += " , T1.REP_DIV                                       /* 보고서 구분(MP0062) */ ";
+        query += " , T1.REP_TTL                                       /* 보고서 제목         */ ";
+        query += " , T1.APPR_ID                                       /* 승인자ID            */ ";
+        query += " FROM service20_mp_rep T1                              /* 프로그램 보고서      */ ";
+        query += " LEFT JOIN service20_mp_mtr T2  ON (T2.MP_ID   = T1.MP_ID ";
+        query += " AND T2.APL_NO = T1.APL_NO)        ";
+        query += " LEFT JOIN service20_com_cdd C1 ON (C1.STD_GRP_CODE  = 'MP0070'   ";
+        query += " AND C1.STD_DETL_CODE = T1.STATUS) ";
+        query += " LEFT JOIN service20_com_cdd C2 ON (C2.STD_GRP_CODE  = 'MP0062'   ";
+        query += " AND C2.STD_DETL_CODE = T1.REP_DIV) ";
+        query += " WHERE 1=1 ";
+        query += " AND T1.MP_ID     = 'P182015'     ";
+        query += " AND T2.APL_ID    =  '201521237' ";
+        query += " AND T1.APL_NO    = '47' ";
+        query += " AND T1.REP_NO    = '3' ";
+
         print(query)
         queryset = mp_rep.objects.raw(query)
 
