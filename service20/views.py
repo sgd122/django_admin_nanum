@@ -412,7 +412,7 @@ def MS0101M_detail(request):
         
         message = "Ok"
         rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
-        rows2 = mp_sub.objects.filter(mp_id=ms_ida)
+        rows2 = ms_sub.objects.filter(ms_id=ms_ida)
         rows3 = msch.objects.filter(ms_id=ms_ida)[0]
 
 
