@@ -1060,16 +1060,19 @@ class MP0101M_adm_list(generics.ListAPIView):
 # 멘토링 프로그램(관리자) - 질문2
 class MP0101M_adm_quest_Serializer2(serializers.ModelSerializer):
 
-    
+    std_detl_code = serializers.SerializerMethodField()
     std_detl_code_nm = serializers.SerializerMethodField()
     rmrk = serializers.SerializerMethodField()
 
     class Meta:
         model = mp_ans
-        fields = ('id','mp_id','test_div','apl_no','ques_no','apl_id','apl_nm','sort_seq','ans_t1','ans_t2','ans_t3','score','std_detl_code_nm','rmrk')
+        fields = ('id','mp_id','test_div','apl_no','ques_no','apl_id','apl_nm','sort_seq','ans_t1','ans_t2','ans_t3','score','std_detl_code','std_detl_code_nm','rmrk')
+
+    def get_std_detl_code(self,obj):
+        return obj.std_detl_code
 
     def get_std_detl_code_nm(self,obj):
-        return obj.std_detl_code_nm
+        return obj.std_detl_code_nm    
 
     def get_rmrk(self,obj):
         return obj.rmrk
@@ -1084,7 +1087,7 @@ class MP0101M_adm_quest(generics.ListAPIView):
         l_user_id = request.GET.get('user_id', None)           
         l_exist = mp_sub.objects.filter(mp_id=key1).exists()
         
-        query = "select B.std_detl_code_nm,B.rmrk,A.* from service20_mp_ans A, service20_com_cdd B where A.ques_no = B.std_detl_code and B.use_indc = 'Y' and B.std_grp_code in (select att_cdh from service20_mp_sub where att_id='MS0014' and mp_id = '"+str(key1)+"') and A.mp_id = '"+str(key1)+"' and apl_id = '"+str(l_user_id)+"'"
+        query = "select B.std_detl_code,B.std_detl_code_nm,B.rmrk,A.* from service20_mp_ans A, service20_com_cdd B where A.ques_no = B.std_detl_code and B.use_indc = 'Y' and B.std_grp_code in (select att_cdh from service20_mp_sub where att_id='MS0014' and mp_id = '"+str(key1)+"') and A.mp_id = '"+str(key1)+"' and apl_id = '"+str(l_user_id)+"'"
         queryset = mp_ans.objects.raw(query)
 
         print(query)
