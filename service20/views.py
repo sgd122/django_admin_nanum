@@ -68,6 +68,47 @@ class com_combo_yr(generics.ListAPIView):
 
         return Response(serializer.data)
 
+class com_list_my_mentee_Serializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = mp_mte
+        fields = ('mp_id','mnte_no','mnte_id','mnte_nm','mnte_nm_e','apl_no','brth_dt','mp_hm','mp_plc','mp_addr','sch_grd','sch_cd','sch_nm','gen','yr','term_div','sch_yr','mob_no','tel_no','grd_id','grd_nm','grd_tel','grd_rel','prnt_nat_cd','prnt_nat_nm','tchr_id','tchr_nm','tchr_tel','area_city','area_gu','h_addr','h_post_no','s_addr','s_post_no','email_addr','apl_dt','status','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm')
+
+class com_list_my_mentee(generics.ListAPIView):
+    queryset = mp_mte.objects.all()
+    serializer_class = com_list_my_mentee_Serializer
+
+    def list(self, request):
+        l_mp_id = request.GET.get('mp_id', "")
+        l_apl_id = request.GET.get('apl_id', "")
+        
+
+        queryset = self.get_queryset()
+        
+        query = " select ";
+        query += " S2.* ";
+        query += " FROM service20_mp_mtr S1 ";
+        query += " LEFT JOIN service20_mp_mte S2  ON (S2.MP_ID  = S1.MP_ID ";
+        query += " AND S2.APL_NO = S1.APL_NO) ";
+        query += " LEFT JOIN service20_mp_plnh S3 ON (S3.MP_ID    = S1.MP_ID ";
+        query += " AND S3.APL_NO   = S1.APL_NO) ";
+        query += " WHERE 1=1 ";
+        query += " AND S1.MP_ID      = '"+l_mp_id+"'     /* 멘토링 프로그램ID */ ";
+        query += " AND S1.APL_ID    =  '"+l_apl_id+"' ";
+
+
+        queryset = mp_mte.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)        
+
 #####################################################################################
 # 공통 - END
 #####################################################################################
