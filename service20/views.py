@@ -50,11 +50,11 @@ class com_combo_yr(generics.ListAPIView):
 
         queryset = self.get_queryset()
         
-        query = " select DATE_FORMAT(now(),'%Y')-1 as code,DATE_FORMAT(now(),'%Y')-1 as name ";
+        query = " select '1'id,DATE_FORMAT(now(),'%Y')-1 as code,DATE_FORMAT(now(),'%Y')-1 as name ";
         query += " union ";
-        query += " select DATE_FORMAT(now(),'%Y') as code,DATE_FORMAT(now(),'%Y') as name ";
+        query += " select '2'id,DATE_FORMAT(now(),'%Y') as code,DATE_FORMAT(now(),'%Y') as name ";
         query += " union ";
-        query += " select DATE_FORMAT(now(),'%Y')+1 as code,DATE_FORMAT(now(),'%Y')+1 as name ";
+        query += " select '3'id,DATE_FORMAT(now(),'%Y')+1 as code,DATE_FORMAT(now(),'%Y')+1 as name ";
 
         queryset = com_cdd.objects.raw(query)
 
