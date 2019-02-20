@@ -1750,7 +1750,7 @@ class MP0104M_list_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = mp_mtr
-        fields = ('mp_id','apl_no','mntr_id','indv_div','team_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','bank_acct','bank_cd','bank_nm','bank_dpsr','cnt_mp_a','cnt_mp_p','cnt_mp_c','cnt_mp_g','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','mp_name','pr_yr','pr_sch_yr','pr_term_div','mp_name')
+        fields = ('mp_id','apl_no','mntr_id','indv_div','team_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','bank_acct','bank_cd','bank_nm','bank_dpsr','cnt_mp_a','cnt_mp_p','cnt_mp_c','cnt_mp_g','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','mp_name','pr_yr','pr_sch_yr','pr_term_div','mp_name','sum_elap_tm','sum_appr_tm','sum_exp_amt','cum_appr_tm')
     
     def get_apl_no(self,obj):
         return obj.apl_no
@@ -1836,7 +1836,7 @@ class MP0104M_Detail_Serializer(serializers.ModelSerializer):
     
     class Meta:
         model = mp_att
-        fields = ('mp_id','apl_no','att_no','mp_div','spc_no','att_div','att_sts','att_sdt','att_saddr','att_sdist','att_edt','att_eaddr','att_edist','elap_tm','appr_tm','mtr_desc','mtr_pic','appr_id','appr_nm','appr_dt','mgr_id','mgr_dt','expl_yn','rep_no','exp_div','exp_no','exp_dt','exp_amt','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm')
+        fields = ('mp_id','apl_no','att_no','mp_div','spc_no','att_div','att_sts','att_sdt','att_saddr','att_sdist','att_edt','att_eaddr','att_edist','elap_tm','appr_tm','mtr_desc','mtr_pic','appr_id','appr_nm','appr_dt','mgr_id','mgr_dt','expl_yn','rep_no','exp_div','exp_no','exp_dt','exp_amt','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','mp_div_nm','mnte_id','mnte_nm','mgr_nm','expl_yn','apl_id')
     
     def get_mp_div_nm(self,obj):
         return obj.mp_div_nm
