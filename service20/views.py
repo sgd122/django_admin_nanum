@@ -1533,7 +1533,7 @@ class MP0105M_detail(generics.ListAPIView):
         query += " AND T1.APL_NO    = '47' ";
         query += " AND T1.REP_NO    = '3' ";
 
-
+        print(query)
         queryset = mp_rep.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
