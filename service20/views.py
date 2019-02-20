@@ -383,7 +383,7 @@ def MS0101M_save(request):
     context = {'message': 'Ok'}
 
     #return HttpResponse(json.dumss(context), content_type="application/json")
-    return JsonResponse(context,json_dumss_params={'ensure_ascii': True})
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 @csrf_exempt
 def MS0101M_detail(request):
@@ -596,7 +596,7 @@ def MS0101M_adm_acpt_save(request):
         
     context = {'message': 'Ok'}
 
-    return JsonResponse(context,json_dumss_params={'ensure_ascii': True})
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 # 멘토스쿨 수락취소
 @csrf_exempt
@@ -629,7 +629,7 @@ def MS0101M_adm_acpt_cancle(request):
         
     context = {'message': 'Ok'}
 
-    return JsonResponse(context,json_dumss_params={'ensure_ascii': True}) 
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True}) 
 
 # 멘토스쿨 update
 @csrf_exempt
@@ -662,7 +662,7 @@ def MS0101M_adm_update(request):
         
     context = {'message': 'Ok'}
 
-    return JsonResponse(context,json_dumss_params={'ensure_ascii': True}) 
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True}) 
 
 # 멘토스쿨 cancle
 @csrf_exempt
@@ -695,7 +695,7 @@ def MS0101M_adm_cancle(request):
         
     context = {'message': 'Ok'}
 
-    return JsonResponse(context,json_dumss_params={'ensure_ascii': True})   
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})   
 
 #####################################################################################
 # MS0101M - END
