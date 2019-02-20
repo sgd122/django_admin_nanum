@@ -2481,15 +2481,23 @@ class main_list_mento_count(generics.ListAPIView):
     def list(self, request):
         queryset = self.get_queryset()
 
-        query = "select count(*) as cnt from service20_mentor";
-        queryset = mentor.objects.raw(query)
+        v_count = mpgm.objects.count()
+        print(v_count)
 
-        serializer_class = self.get_serializer_class()
-        serializer = serializer_class(queryset, many=True)
+        context = {'count': v_count,
+                    }
+    
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
+        # query = "select count(*) as cnt from service20_mentor"
+        # queryset = mentor.objects.raw(query)
 
-        return Response(serializer.data)        
+        # serializer_class = self.get_serializer_class()
+        # serializer = serializer_class(queryset, many=True)
+
+        # page = self.paginate_queryset(queryset)
+        # if page is not None:
+        #     serializer = self.get_serializer(page, many=True)
+        #     return self.get_paginated_response(serializer.data)
+
+        # return Response(serializer.data)        
