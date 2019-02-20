@@ -296,7 +296,7 @@ class MS0101M_quest(generics.ListAPIView):
         return Response(serializer.data)
 
 # 멘토스쿨 신청
-@csrf_exemst
+@csrf_exempt
 def MS0101M_save(request):
     ida = request.POST.get('memberNo', None)
     programId = request.POST.get('programID', None)
@@ -384,7 +384,7 @@ def MS0101M_save(request):
     #return HttpResponse(json.dumss(context), content_type="application/json")
     return JsonResponse(context,json_dumss_params={'ensure_ascii': True})
 
-@csrf_exemst
+@csrf_exempt
 def MS0101M_detail(request):    
 
     ida = request.POST.get('user_id', None)
@@ -556,7 +556,7 @@ class MS0101M_adm_quest(generics.ListAPIView):
         return Response(serializer.data)
 
 # 멘토스쿨 수락
-@csrf_exemst
+@csrf_exempt
 def MS0101M_adm_acpt_save(request):
     ms_id = request.POST.get('ms_id', "")
     apl_id = request.POST.get('apl_id', "")
@@ -588,7 +588,7 @@ def MS0101M_adm_acpt_save(request):
     return JsonResponse(context,json_dumss_params={'ensure_ascii': True})
 
 # 멘토스쿨 수락취소
-@csrf_exemst
+@csrf_exempt
 def MS0101M_adm_acpt_cancle(request):
     ms_id = request.POST.get('ms_id', "")
     apl_id = request.POST.get('apl_id', "")
@@ -621,7 +621,7 @@ def MS0101M_adm_acpt_cancle(request):
     return JsonResponse(context,json_dumss_params={'ensure_ascii': True}) 
 
 # 멘토스쿨 update
-@csrf_exemst
+@csrf_exempt
 def MS0101M_adm_update(request):
     ms_id = request.POST.get('ms_id', "")
     apl_id = request.POST.get('apl_id', "")
@@ -654,7 +654,7 @@ def MS0101M_adm_update(request):
     return JsonResponse(context,json_dumss_params={'ensure_ascii': True}) 
 
 # 멘토스쿨 cancle
-@csrf_exemst
+@csrf_exempt
 def MS0101M_adm_cancle(request):
     ms_id = request.POST.get('ms_id', "")
     apl_id = request.POST.get('apl_id', "")
