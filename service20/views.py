@@ -1061,7 +1061,7 @@ class MP0103M_Detail(generics.ListAPIView):
         query += " , apl_no";
         query += " FROM service20_mp_mtr";
         query += " WHERE mp_id = '"+l_mp_id+"'";
-        query += " AND mntr_id = '"+l_user_id+"') c";
+        query += " AND (mntr_id = '"+l_user_id+"' or apl_id = '"+l_user_id+"') ) c";
         query += " WHERE a.mp_id = b.mp_id";
         query += "    AND a.mp_id = c.mp_id";
         query += "    AND a.apl_no = b.apl_no";
