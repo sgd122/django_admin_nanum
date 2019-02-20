@@ -2487,7 +2487,7 @@ class main_list_mento_count(generics.ListAPIView):
         context = {'count': v_count,
                     }
     
-    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+        return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
         # query = "select count(*) as cnt from service20_mentor"
         # queryset = mentor.objects.raw(query)
