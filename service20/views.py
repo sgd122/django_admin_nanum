@@ -78,7 +78,7 @@ class com_combo_cnclRsn_Serializer(serializers.ModelSerializer):
 
 class com_combo_cnclRsn(generics.ListAPIView):
     queryset = com_cdd.objects.all()
-    serializer_class = com_combo_yr_Serializer
+    serializer_class = com_combo_cnclRsn_Serializer
 
     def list(self, request):
         l_yr = request.GET.get('yr', "")
@@ -1311,7 +1311,7 @@ def MP0103M_Insert(request):
         insert_text += " , '"+str(upd_pgm)+"' ";
         insert_text += " from service20_mp_mtr t1 ";
         insert_text += " left join service20_mpgm t2 on (t2.mp_id = t1.mp_id) ";
-        insert_text += " where mp_id = '"+str(mp_id)+"' ";
+        insert_text += " where t1.mp_id = '"+str(mp_id)+"' ";
         insert_text += " and apl_id = '"+str(apl_id)+"' ";
         insert_text += " )";
 

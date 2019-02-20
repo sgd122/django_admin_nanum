@@ -23,6 +23,8 @@ urlpatterns = [
     ########################################################################################    
     # 년도 콤보박스
     path('com/combo/yr/', com_combo_yr.as_view(), name='com_combo_yr'),
+    # 취소사유 콤보박스
+    path('com/combo/cnclRsn/', com_combo_cnclRsn.as_view(), name='com_combo_cnclRsn'),
     # 멘토의 학번으로 해당되는 멘티찾기
     path('com/list/my_mentee/', com_list_my_mentee.as_view(), name='com_list_my_mentee'),
     ########################################################################################
