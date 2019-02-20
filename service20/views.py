@@ -1525,16 +1525,15 @@ class MP0105M_detail(generics.ListAPIView):
         query += " left join service20_mp_mtr t2  on (t2.mp_id   = t1.mp_id and t2.apl_no = t1.apl_no) "
         query += " left join service20_com_cdd c1 on (c1.std_grp_code  = 'MP0070'  and c1.std_detl_code = t1.status)  "
         query += " left join service20_com_cdd c2 on (c2.std_grp_code  = 'MP0062'  and c2.std_detl_code = t1.rep_div)  "
-        # query += " where 1=1 "
-        # query += " and t1.mp_id     = 'P182015'     "
-        # query += " and t2.apl_id    =  '201521237' "
-        # query += " and t1.apl_no    = '47' "
-        # query += " and t1.rep_no    = '3' "
+        query += " where 1=1 "
+        query += " and t1.mp_id     = 'P182015'     "
+        query += " and t2.apl_id    =  '201521237' "
+        query += " and t1.apl_no    = '47' "
+        query += " and t1.rep_no    = '3' "
 
-
-        print("===start====")
+        print("===start.====")
         print(query)
-        print("===end====")
+        print("===end.====")
         queryset = mp_rep.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
