@@ -1533,7 +1533,10 @@ class MP0105M_detail(generics.ListAPIView):
         query += " and t1.apl_no    = '47' ";
         query += " and t1.rep_no    = '3' ";
 
+
+        print("===start====")
         print(query)
+        print("===end====")
         queryset = mp_rep.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
