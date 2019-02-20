@@ -1259,11 +1259,12 @@ def MP0103M_Insert(request):
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)
 
-
+    print("==========gd========")
+    print(maxRow)
     row_max = int(maxRow)
     for i in range(0,row_max):
     
-        # mp_plnd_max = mp_plnd.objects.all().aggregate(vlMax=Max('apl_no'))
+        # pln_no_max = mp_plnd.objects.all().aggregate(vlMax=Max('pln_no'))
         
         # apl_no = 0;
         
