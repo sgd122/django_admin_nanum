@@ -49,39 +49,39 @@ urlpatterns = [
     #
     ########################################################################################
     #멘토스쿨 리스트
-    # # path('', MS0101M_list.as_view(), name='MS0101M_list'),
-    # path('MS0101M/list/', MS0101M_list.as_view(), name='MS0101M_list'),
-    # # 멘토스쿨 기본정보
-    # path('MS0101M/detail/', MS0101M_detail, name='MS0101M_detail'),
-    # # 멘토스쿨 질문유형
-    # path('MS0101M/quest/', MS0101M_quest.as_view(), name='MS0101M_quest'),
-    # # 멘토스쿨 신청
-    # path('MS0101M/save/', MS0101M_save, name='MS0101M_save'),
-    # # 멘토스쿨(관리자) - 기본정보
-    # path('MS0101M/admin/list/', MS0101M_adm_list.as_view(), name='MS0101M_adm_list'),
-    # # 멘토스쿨(관리자) - 질문
-    # path('MS0101M/admin/quest/', MS0101M_adm_quest.as_view(), name='MS0101M_adm_quest'),
-
-    # 멘토스쿨 리스트 조회
+    # path('', MS0101M_list.as_view(), name='MS0101M_list'),
     path('MS0101M/list/', MS0101M_list.as_view(), name='MS0101M_list'),
-    # 멘토스쿨 질문유형 가져오기
-    path('MS0101M/quest/', MS0101M_quest.as_view(), name='MS0101M_quest'), 
-    # 멘토스쿨 신청
-    path('MS0101M/save/', MS0101M_save, name='MS0101M_save'), 
-    # 성적,봉사,어학 가져오기
+    # 멘토스쿨 기본정보
     path('MS0101M/detail/', MS0101M_detail, name='MS0101M_detail'),
+    # 멘토스쿨 질문유형
+    path('MS0101M/quest/', MS0101M_quest.as_view(), name='MS0101M_quest'),
+    # 멘토스쿨 신청
+    path('MS0101M/save/', MS0101M_save, name='MS0101M_save'),
     # 멘토스쿨(관리자) - 기본정보
     path('MS0101M/admin/list/', MS0101M_adm_list.as_view(), name='MS0101M_adm_list'),
     # 멘토스쿨(관리자) - 질문
     path('MS0101M/admin/quest/', MS0101M_adm_quest.as_view(), name='MS0101M_adm_quest'),
-    # 멘토스쿨(관리자) 수락
-    path('MS0101M/admin/acpt_save/', MS0101M_adm_acpt_save, name='MS0101M_adm_acpt_save'), 
-    # 멘토스쿨(관리자) 수락취소
-    path('MS0101M/admin/acpt_cancle/', MS0101M_adm_acpt_cancle, name='MS0101M_adm_acpt_cancle'), 
-    # 멘토스쿨(관리자) update
-    path('MS0101M/admin/update/', MS0101M_adm_update, name='MS0101M_adm_update'), 
-    # 멘토스쿨(관리자) cancle
-    path('MS0101M/admin/cancle/', MS0101M_adm_cancle, name='MS0101M_adm_cancle'), 
+
+    # # 멘토스쿨 리스트 조회
+    # path('MS0101M/list/', MS0101M_list.as_view(), name='MS0101M_list'),
+    # # 멘토스쿨 질문유형 가져오기
+    # path('MS0101M/quest/', MS0101M_quest.as_view(), name='MS0101M_quest'), 
+    # # 멘토스쿨 신청
+    # path('MS0101M/save/', MS0101M_save, name='MS0101M_save'), 
+    # # 성적,봉사,어학 가져오기
+    # path('MS0101M/detail/', MS0101M_detail, name='MS0101M_detail'),
+    # # 멘토스쿨(관리자) - 기본정보
+    # path('MS0101M/admin/list/', MS0101M_adm_list.as_view(), name='MS0101M_adm_list'),
+    # # 멘토스쿨(관리자) - 질문
+    # path('MS0101M/admin/quest/', MS0101M_adm_quest.as_view(), name='MS0101M_adm_quest'),
+    # # 멘토스쿨(관리자) 수락
+    # path('MS0101M/admin/acpt_save/', MS0101M_adm_acpt_save, name='MS0101M_adm_acpt_save'), 
+    # # 멘토스쿨(관리자) 수락취소
+    # path('MS0101M/admin/acpt_cancle/', MS0101M_adm_acpt_cancle, name='MS0101M_adm_acpt_cancle'), 
+    # # 멘토스쿨(관리자) update
+    # path('MS0101M/admin/update/', MS0101M_adm_update, name='MS0101M_adm_update'), 
+    # # 멘토스쿨(관리자) cancle
+    # path('MS0101M/admin/cancle/', MS0101M_adm_cancle, name='MS0101M_adm_cancle'), 
     ########################################################################################
     # 멘토스쿨
     #
