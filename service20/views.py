@@ -1085,7 +1085,7 @@ class MP0103M_list_v1_Serializer(serializers.ModelSerializer):
     
     class Meta:
         model = mp_sub
-        fields = ('id','mp_id','att_id','att_seq','att_cdh','att_cdd','att_val','use_yn','sort_seq','std_detl_code','std_detl_code_nm','rmrk')
+        fields = ('id','mp_id','att_id','att_seq','att_cdh','att_cdd','att_val','use_yn','sort_seq')
     
 
 class MP0103M_list_v1(generics.ListAPIView):
