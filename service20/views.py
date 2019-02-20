@@ -1730,6 +1730,109 @@ def MP0103M_Update(request):
 #####################################################################################
 
 
+#####################################################################################
+# MP0103M - START
+#####################################################################################
+
+# 출석관리 리스트 ###################################################
+class MP0104M_list_Serializer(serializers.ModelSerializer):
+
+    mp_id = serializers.SerializerMethodField()
+    apl_no = serializers.SerializerMethodField()
+    sum_elap_tm = serializers.SerializerMethodField()
+    sum_appr_tm = serializers.SerializerMethodField()
+    sum_exp_amt = serializers.SerializerMethodField()
+    cum_appr_tm = serializers.SerializerMethodField()
+    
+    # mgr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+    # pln_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+    # appr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+    # pln_sedt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+
+    class Meta:
+        model = mp_mtr
+        fields = ('mp_id','apl_no','mntr_id','indv_div','team_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','bank_acct','bank_cd','bank_nm','bank_dpsr','cnt_mp_a','cnt_mp_p','cnt_mp_c','cnt_mp_g','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','mp_name','pr_yr','pr_sch_yr','pr_term_div','mp_name')
+    
+    def get_mp_id(self,obj):
+        return obj.mp_id
+    def get_apl_no(self,obj):
+        return obj.apl_no
+    def get_sum_elap_tm(self,obj):
+        return obj.sum_elap_tm
+    def get_sum_appr_tm(self,obj):
+        return obj.sum_appr_tm
+    def get_sum_exp_amt(self,obj):
+        return obj.sum_exp_amt
+    def get_cum_appr_tm(self,obj):
+        return obj.cum_appr_tm
+
+
+
+class MP0104M_list(generics.ListAPIView):
+    queryset = mpgm.objects.all()
+    serializer_class = MP0104M_list_Serializer
+
+    # mp_mtr - 프로그램 지원자(멘토) => mp_id(멘토링ID), apl_id
+    # mp_mte - 프로그램 지원자(멘티) => mp_id(멘토링ID)
+
+
+    def list(self, request):
+        l_mp_id = request.GET.get('mp_id', "")
+        l_apl_id = request.GET.get('apl_id', "")
+
+        queryset = self.get_queryset()
+
+        query = " select t1.mp_id     /* 멘토링 프로그램id*/ ";
+        query += " , t1.apl_no    /* 멘토 지원 no*/ ";
+        query += " , t3.mntr_id         /* 멘토id*/ ";
+        query += " , t3.apl_nm          /* 지원자(멘토,학생) 명*/ ";
+        query += " , t3.unv_nm          /* 지원자 대학교 명*/ ";
+        query += " , t3.cllg_nm         /* 지원자 대학 명*/ ";
+        query += " , t3.dept_nm         /* 지원자 학부/학과 명*/ ";
+        query += " , t3.sch_yr          /* 학년 */";
+        query += " , sec_to_time(sum(time_to_sec(t1.elap_tm))) sum_elap_tm  /* 경과시간*/ ";
+        query += " , sum(t1.appr_tm)   sum_appr_tm /* 인정시간*/ ";
+        query += " , sum(t1.exp_amt)   sum_exp_amt /* 지급 활동비 */";
+        query += " , sum(t1.appr_tm)   cum_appr_tm /* 누적시간*/ ";
+        query += " , t3.bank_nm         /* 은행 명*/ ";
+        query += " , t3.bank_acct       /* 은행 계좌 번호*/ ";
+        query += " from service20_mp_att t1     /* 프로그램 출석부(멘토)*/ ";
+        query += " left join service20_mp_mtr t3 on (t3.mp_id    = t1.mp_id ";
+        query += " and t3.apl_no   = t1.apl_no) ";
+        query += " where 1=1 ";
+        query += " and t1.mp_id    = '"+l_mp_id+"'    /* 멘토링 프로그램id */ ";
+        query += " and t3.apl_id   = '"+l_apl_id+"'   ";
+        query += " group by t1.mp_id     /* 멘토링 프로그램id */ ";
+        query += " , t1.apl_no    /* 멘토 지원 no */ ";
+        query += " , t3.mntr_id         /* 멘토id  */ ";
+        query += " , t3.apl_nm          /* 지원자(멘토,학생) 명 */ ";
+        query += " , t3.unv_nm          /* 지원자 대학교 명 */ ";
+        query += " , t3.cllg_nm         /* 지원자 대학 명 */ ";
+        query += " , t3.dept_nm         /* 지원자 학부/학과 명 */ ";
+        query += " , t3.sch_yr          /* 학년 */ ";
+        query += " , t3.bank_nm         /* 은행 명 */ ";
+        query += " , t3.bank_acct ";
+
+
+        print(query)
+
+        queryset = mp_mtr.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+#####################################################################################
+# MP0104M - END
+#####################################################################################
+
+
 
 #####################################################################################
 # MP0105M - START
