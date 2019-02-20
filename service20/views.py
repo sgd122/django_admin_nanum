@@ -30,7 +30,7 @@ class com_combo_yr_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = com_cdd
-        fields = ('code','name')
+        fields = ('std_grp_code','std_detl_code','std_detl_code_nm','rmrk','sort_seq_no')
 
     def get_code(self, obj):
         return obj.code
@@ -50,11 +50,11 @@ class com_combo_yr(generics.ListAPIView):
 
         queryset = self.get_queryset()
         
-        query = " select '1'id,DATE_FORMAT(now(),'%Y')-1 as code,DATE_FORMAT(now(),'%Y')-1 as name ";
+        query = " select '1'id,DATE_FORMAT(now(),'%Y')-1 as std_detl_code,DATE_FORMAT(now(),'%Y')-1 as std_detl_code_nm ";
         query += " union ";
-        query += " select '2'id,DATE_FORMAT(now(),'%Y') as code,DATE_FORMAT(now(),'%Y') as name ";
+        query += " select '2'id,DATE_FORMAT(now(),'%Y') as std_detl_code,DATE_FORMAT(now(),'%Y') as std_detl_code_nm ";
         query += " union ";
-        query += " select '3'id,DATE_FORMAT(now(),'%Y')+1 as code,DATE_FORMAT(now(),'%Y')+1 as name ";
+        query += " select '3'id,DATE_FORMAT(now(),'%Y')+1 as std_detl_code,DATE_FORMAT(now(),'%Y')+1 as std_detl_code_nm ";
 
         queryset = com_cdd.objects.raw(query)
 
@@ -208,6 +208,7 @@ class MS0101M_list(generics.ListAPIView):
         l_user_id = request.GET.get('user_id', None)
 
         query = "select ifnull((select 'Y' from service20_ms_apl where yr = '"+str(l_yr)+"' and term_div = '"+str(l_apl_term)+"' and apl_id = '"+str(l_user_id)+"' and ms_id = A.ms_id),'N') AS applyFlag,A.* from service20_msch A where A.yr='"+str(l_yr)+"' and A.apl_term='"+str(l_apl_term)+"'"
+        query += " order by apl_fr_dt desc,apl_to_dt desc " 
         queryset = msch.objects.raw(query)
 
         
@@ -617,6 +618,7 @@ class MP0101M_list(generics.ListAPIView):
         
         # 멘토만 조회가능.
         query = "select ifnull((select 'Y' from service20_mp_mtr where yr = '"+str(l_yr)+"' and apl_id = '"+str(ida)+"' and mp_id = A.mp_id),'N') AS applyFlag,A.* from service20_mpgm A where A.yr='"+str(l_yr)+"' and A.apl_term='"+str(l_apl_term)+"' and (select count(1) from service20_mentor where apl_id = '"+ida+"') > 0 "
+        query += " order by A.apl_fr_dt desc,A.apl_to_dt desc "
 
         queryset = mpgm.objects.raw(query)
 
