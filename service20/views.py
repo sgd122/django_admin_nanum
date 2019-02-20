@@ -1229,7 +1229,7 @@ def MP0103M_Insert(request):
         insert_text += " ) ";
         insert_text += "  ( select ";
         insert_text += " '"+str(mp_id)+"' ";
-        insert_text += " , '"+str(apl_no)+"' ";
+        insert_text += " , (SELECT COALESCE(MAX(apl_no)+1, 1) AS apl_no FROM service20_mp_plnd WHERE mp_id = '"+str(mp_id)+"') ";
         insert_text += " , '"+str(pln_no)+"' ";
         insert_text += " , adddate(t2.mnt_fr_dt, 7*('"+str(pln_no)+"'*1-1) + 0) pln_sdt ";
         insert_text += " , adddate(t2.mnt_fr_dt, 7*('"+str(pln_no)+"'*1-1) + 6) pln_edt ";
