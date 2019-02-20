@@ -172,12 +172,12 @@ class MS0101M_list_Serializer(serializers.ModelSerializer):
     
     apl_fr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     apl_to_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
-    mnt_fr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
-    mnt_to_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+    # mnt_fr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+    # mnt_to_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
 
     class Meta:
         model = msch
-        fields = ('ms_id','ms_name','status','statusCode','yr','yr_seq','sup_org','applyFlag','applyStatus','apl_fr_dt','apl_to_dt','mnt_fr_dt','mnt_to_dt','cnt_trn','status')
+        fields = ('ms_id','ms_name','status','statusCode','yr','yr_seq','sup_org','applyFlag','applyStatus','apl_fr_dt','apl_to_dt','cnt_trn','status')
 
     def get_applyFlag(self, obj):
         # return 'Y'     
