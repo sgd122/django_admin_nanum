@@ -1120,6 +1120,7 @@ def MP0103M_Insert(request):
             apl_no = apl_no + 1;
 
         mtr_desc = request.POST.get('mtr_desc'+str(i), "")
+        pln_no = request.POST.get('pln_no'+str(i+1), "")
 
         insert_text = " insert into service20_mp_plnd ( ";
         insert_text += " mp_id ";
@@ -1220,7 +1221,7 @@ def MP0103M_Update(request):
     for i in range(0,row_max):
 
         mtr_desc = request.POST.get('mtr_desc'+str(i), "")
-        pln_no = request.POST.get('pln_no'+str(i), "")
+        pln_no = request.POST.get('pln_no'+str(i+1), "")
 
         ####################################
         # 2번쿼리
