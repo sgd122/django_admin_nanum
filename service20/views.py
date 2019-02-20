@@ -1489,7 +1489,7 @@ class MP0105M_detail(generics.ListAPIView):
         queryset = self.get_queryset()
 
         # /*보고서 상세*/
-        query = " select T1.MP_ID                                         /* 멘토링 프로그램ID   */ ";
+        query = " select T1.id,T1.MP_ID                                         /* 멘토링 프로그램ID   */ ";
         query += " , T1.REP_DIV                                       /* 보고서 구분(MP0062) */ ";
         query += " , T1.REP_TTL                                       /* 보고서 제목 : 내용  */ ";
         query += " , C2.STD_DETL_CODE_NM               AS REP_DIV_NM    ";
