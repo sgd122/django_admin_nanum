@@ -1836,6 +1836,7 @@ class MP0104M_Detail_Serializer(serializers.ModelSerializer):
     mgr_nm = serializers.SerializerMethodField()
     expl_yn = serializers.SerializerMethodField()
     apl_id = serializers.SerializerMethodField()
+    att_etm = serializers.SerializerMethodField()
 
     
     # mgr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
@@ -1856,7 +1857,8 @@ class MP0104M_Detail_Serializer(serializers.ModelSerializer):
         return obj.expl_yn
     def get_apl_id(self,obj):
         return obj.apl_id
-    
+    def get_att_etm(self,obj):
+        return obj.att_etm
 
 
 
