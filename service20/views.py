@@ -932,6 +932,71 @@ class MP0101M_adm_quest(generics.ListAPIView):
 
         return Response(serializer.data)
 
+# 멘토링 프로그램 수락
+@csrf_exempt
+def MP0101M_adm_acpt_save(request):
+    mp_id = request.POST.get('mp_id', "")
+    apl_id = request.POST.get('apl_id', "")
+    apl_no = request.POST.get('apl_no', "")
+
+    ins_id = request.POST.get('ins_id', "")
+    ins_ip = request.POST.get('ins_ip', "")
+    ins_dt = request.POST.get('ins_dt', "")
+    ins_pgm = request.POST.get('ins_pgm', "")
+    upd_id = request.POST.get('upd_id', "")
+    upd_ip = request.POST.get('upd_ip', "")
+    upd_dt = request.POST.get('upd_dt', "")
+    upd_pgm = request.POST.get('upd_pgm', "")
+
+    update_text = " update service20_mp_mtr a ";
+    update_text += " SET a.acpt_dt = NOW() ";
+    update_text += " , a.acpt_div = 'Y' ";
+    update_text += " , a.acpt_cncl_rsn = null ";
+    update_text += " WHERE a.mp_id = b.mp_id ";
+    update_text += " AND a.mp_id = '"+mp_id+"' ";
+    update_text += " AND a.apl_no = '"+apl_no+"' ";
+    print(update_text)
+    cursor = connection.cursor()
+    query_result = cursor.execute(update_text)
+
+        
+    context = {'message': 'Ok'}
+
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+
+# 멘토링 프로그램 수락취소
+@csrf_exempt
+def MP0101M_adm_acpt_cancle(request):
+    mp_id = request.POST.get('mp_id', "")
+    apl_id = request.POST.get('apl_id', "")
+    apl_no = request.POST.get('apl_no', "")
+    acpt_cncl_rsn = request.POST.get('acpt_cncl_rsn', "")
+
+    ins_id = request.POST.get('ins_id', "")
+    ins_ip = request.POST.get('ins_ip', "")
+    ins_dt = request.POST.get('ins_dt', "")
+    ins_pgm = request.POST.get('ins_pgm', "")
+    upd_id = request.POST.get('upd_id', "")
+    upd_ip = request.POST.get('upd_ip', "")
+    upd_dt = request.POST.get('upd_dt', "")
+    upd_pgm = request.POST.get('upd_pgm', "")
+
+    update_text = " update service20_mp_mtr a ";
+    update_text += " SET a.acpt_dt = null ";
+    update_text += " , a.acpt_div = 'N' ";
+    update_text += " , a.acpt_cncl_rsn = '"+acpt_cncl_rsn+"' ";
+    update_text += " WHERE a.mp_id = b.mp_id ";
+    update_text += " AND a.mp_id = '"+mp_id+"' ";
+    update_text += " AND a.apl_no = '"+apl_no+"' ";
+    print(update_text)
+    cursor = connection.cursor()
+    query_result = cursor.execute(update_text)
+
+        
+    context = {'message': 'Ok'}
+
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})    
+
 #####################################################################################
 # MP0101M - END 
 #####################################################################################
@@ -1844,6 +1909,10 @@ class mpmgListView(generics.ListAPIView):
 
     def list(self, request):
         queryset = self.get_queryset()
+
+        query = "select * from service20_mpgm order by apl_fr_dt desc, apl_to_dt desc";
+        queryset = mpgm.objects.raw(query)
+
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
 
