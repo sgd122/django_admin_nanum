@@ -1138,12 +1138,12 @@ def MP0103M_Insert(request):
         insert_text += " , upd_dt ";
         insert_text += " , upd_pgm ";
         insert_text += " ) ";
-        insert_text += " VALUES ( ";
+        insert_text += "  ( select ";
         insert_text += " '"+str(mp_id)+"' ";
         insert_text += " , '"+str(apl_no)+"' ";
         insert_text += " , '"+str(pln_no)+"' ";
-        insert_text += " , ifnull(trim(NULLIF('"+str(pln_sdt)+"','')),DATE_FORMAT(now(),'%Y-%m-%d')) ";
-        insert_text += " , ifnull(trim(NULLIF('"+str(pln_edt)+"','')),DATE_FORMAT(now(),'%Y-%m-%d')) ";
+        insert_text += " adddate(t2.mnt_fr_dt, 7*('"+str(pln_no)+"'*1-1) + 0) pln_sdt ";
+        insert_text += " adddate(t2.mnt_fr_dt, 7*('"+str(pln_no)+"'*1-1) + 6) pln_edt ";
         insert_text += " , '"+str(mtr_desc)+"' ";
         insert_text += " , '"+str(ins_id)+"' ";
         insert_text += " , '"+str(ins_ip)+"' ";
@@ -1153,6 +1153,10 @@ def MP0103M_Insert(request):
         insert_text += " , '"+str(upd_ip)+"' ";
         insert_text += " , now() ";
         insert_text += " , '"+str(upd_pgm)+"' ";
+        insert_text += " from service20_mp_mtr t1 ";
+        insert_text += " left join service20_mpgm t2 on (t2.mp_id = t1.mp_id) ";
+        insert_text += " where mntr_id = '"+str(mp_id)+"' ";
+        insert_text += " and apl_id = '"+str(apl_id)+"' ";
         insert_text += " )";
 
         print(insert_text)
