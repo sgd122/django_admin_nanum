@@ -1002,7 +1002,7 @@ class MP0103M_list(generics.ListAPIView):
         query += " , apl_id ";
         query += " , apl_nm ";
         query += " FROM service20_mp_mtr ";
-        query += " WHERE mntr_id = '"+l_user_id+"') d ";
+        query += " WHERE mntr_id = '"+l_user_id+"' or apl_id = '"+l_user_id+"') d ";
         query += " WHERE a.mp_id = b.mp_id ";
         query += " AND a.mp_id = c.mp_id ";
         query += " AND a.mp_id = d.mp_id ";
