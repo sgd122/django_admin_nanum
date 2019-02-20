@@ -68,6 +68,41 @@ class com_combo_yr(generics.ListAPIView):
 
         return Response(serializer.data)
 
+# 취소사유 콤보박스
+class com_combo_cnclRsn_Serializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = com_cdd
+        fields = ('std_grp_code','std_detl_code','std_detl_code_nm','rmrk','sort_seq_no')
+
+
+class com_combo_cnclRsn(generics.ListAPIView):
+    queryset = com_cdd.objects.all()
+    serializer_class = com_combo_yr_Serializer
+
+    def list(self, request):
+        l_yr = request.GET.get('yr', "")
+        l_apl_term = request.GET.get('apl_term', "")
+        l_mp_id = request.GET.get('mp_id', "")
+        l_user_id = request.GET.get('user_id', "")
+        
+
+        queryset = self.get_queryset()
+        
+        query = " select id,std_grp_code,std_detl_code,std_detl_code_nm,rmrk,sort_seq_no from service20_com_cdd where std_grp_code = 'MS0004' where use_indc = 'Y'";
+
+        queryset = com_cdd.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)        
+
 class com_list_my_mentee_Serializer(serializers.ModelSerializer):
 
     mp_plc_nm = serializers.SerializerMethodField()
@@ -94,8 +129,8 @@ class com_list_my_mentee(generics.ListAPIView):
 
         queryset = self.get_queryset()
         
-        query = " select (select std_detl_code_nm from service20_com_cdd where std_grp_code = 'MP0052' and std_detl_code = S2.mp_plc) mp_plc_nm";
-        query += " ,(select std_detl_code_nm from service20_com_cdd where std_grp_code = 'MP0047' and std_detl_code = S2.grd_rel) grd_rel_nm ";
+        query = " select (select std_detl_code_nm from service20_com_cdd where std_grp_code = 'MP0052' and std_detl_code = S2.mp_plc and use_indc = 'Y') mp_plc_nm";
+        query += " ,(select std_detl_code_nm from service20_com_cdd where std_grp_code = 'MP0047' and std_detl_code = S2.grd_rel and use_indc = 'Y') grd_rel_nm ";
         query += " , S2.* ";
         query += " FROM service20_mp_mtr S1 ";
         query += " LEFT JOIN service20_mp_mte S2  ON (S2.MP_ID  = S1.MP_ID ";
@@ -309,7 +344,7 @@ class MS0101M_quest(generics.ListAPIView):
         key1 = request.GET.get('ms_id', None)           
         l_exist = ms_sub.objects.filter(ms_id=key1).exists()
         
-        query = "select B.std_detl_code,B.std_detl_code_nm,B.rmrk,A.* from service20_ms_sub A left outer join service20_com_cdd B on (A.att_id = B.std_grp_code and A.att_cdd = B.std_detl_code) where A.att_id = 'MS0014' and A.ms_id = '"+key1+"'"
+        query = "select B.std_detl_code,B.std_detl_code_nm,B.rmrk,A.* from service20_ms_sub A left outer join service20_com_cdd B on (A.att_id = B.std_grp_code and A.att_cdd = B.std_detl_code) where A.att_id = 'MS0014' and B.use_indc = 'Y' and A.ms_id = '"+key1+"'"
         queryset = ms_sub.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
@@ -481,7 +516,7 @@ class MS0101M_adm_quest(generics.ListAPIView):
         key1 = request.GET.get('ms_id', None) 
         l_user_id = request.GET.get('user_id', None)           
         
-        query = "select B.std_detl_code_nm,B.rmrk,A.* from service20_ms_ans A, service20_com_cdd B where A.ques_no = B.std_detl_code and B.std_grp_code in (select att_cdh from service20_ms_sub where att_id = 'MS0014' and ms_id = '"+key1+"') and A.ms_id = '"+key1+"' and apl_id = '"+l_user_id+"'"
+        query = "select B.std_detl_code_nm,B.rmrk,A.* from service20_ms_ans A, service20_com_cdd B where A.ques_no = B.std_detl_code and B.use_indc = 'Y' and B.std_grp_code in (select att_cdh from service20_ms_sub where att_id = 'MS0014' and ms_id = '"+key1+"') and A.ms_id = '"+key1+"' and apl_id = '"+l_user_id+"'"
         queryset = ms_ans.objects.raw(query)
 
 
@@ -624,7 +659,7 @@ class MP0101M_quest(generics.ListAPIView):
         #mp_sub 테이블에서 질문내역 조회
         key1 = request.GET.get('mp_id', None)           
         
-        query = "select B.std_detl_code,B.std_detl_code_nm,B.rmrk,A.* from service20_mp_sub A left outer join service20_com_cdd B on (A.att_id = B.std_grp_code and A.att_cdd = B.std_detl_code) where A.att_id='MS0014' and A.mp_id = '"+key1+"'"
+        query = "select B.std_detl_code,B.std_detl_code_nm,B.rmrk,A.* from service20_mp_sub A left outer join service20_com_cdd B on (A.att_id = B.std_grp_code and A.att_cdd = B.std_detl_code) where A.att_id='MS0014' and B.use_indc = 'Y' and A.mp_id = '"+key1+"'"
         queryset = mp_sub.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
@@ -879,7 +914,7 @@ class MP0101M_adm_quest(generics.ListAPIView):
         l_user_id = request.GET.get('user_id', None)           
         l_exist = mp_sub.objects.filter(mp_id=key1).exists()
         
-        query = "select B.std_detl_code_nm,B.rmrk,A.* from service20_mp_ans A, service20_com_cdd B where A.ques_no = B.std_detl_code and B.std_grp_code in (select att_cdh from service20_mp_sub where att_id='MS0014' and mp_id = '"+str(key1)+"') and A.mp_id = '"+str(key1)+"' and apl_id = '"+str(l_user_id)+"'"
+        query = "select B.std_detl_code_nm,B.rmrk,A.* from service20_mp_ans A, service20_com_cdd B where A.ques_no = B.std_detl_code and B.use_indc = 'Y' and B.std_grp_code in (select att_cdh from service20_mp_sub where att_id='MS0014' and mp_id = '"+str(key1)+"') and A.mp_id = '"+str(key1)+"' and apl_id = '"+str(l_user_id)+"'"
         queryset = mp_ans.objects.raw(query)
 
         print(query)
@@ -1223,22 +1258,22 @@ def MP0103M_Insert(request):
     print(update_text)
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)
-        
+
 
     row_max = int(maxRow)
     for i in range(0,row_max):
     
-        mp_plnd_max = mp_plnd.objects.all().aggregate(vlMax=Max('apl_no'))
+        # mp_plnd_max = mp_plnd.objects.all().aggregate(vlMax=Max('apl_no'))
         
-        apl_no = 0;
+        # apl_no = 0;
         
-        max_no = mp_plnd_max['vlMax']    
+        # max_no = mp_plnd_max['vlMax']    
 
-        if max_no == None:
-            apl_no = 0;
-        else:
-            apl_no = mp_plnd_max['vlMax']
-            apl_no = apl_no + 1;
+        # if max_no == None:
+        #     apl_no = 0;
+        # else:
+        #     apl_no = mp_plnd_max['vlMax']
+        #     apl_no = apl_no + 1;
 
         mtr_desc = request.POST.get('mtr_desc'+str(i), "")
         pln_no = request.POST.get('pln_no'+str(i+1), "")
@@ -1261,7 +1296,7 @@ def MP0103M_Insert(request):
         insert_text += " ) ";
         insert_text += "  ( select ";
         insert_text += " '"+str(mp_id)+"' ";
-        insert_text += " , (SELECT COALESCE(MAX(apl_no)+1, 1) AS apl_no FROM service20_mp_plnd WHERE mp_id = '"+str(mp_id)+"') ";
+        insert_text += " , '"+str(apl_no)+"' ";
         insert_text += " , '"+str(pln_no)+"' ";
         insert_text += " , adddate(t2.mnt_fr_dt, 7*('"+str(pln_no)+"'*1-1) + 0) pln_sdt ";
         insert_text += " , adddate(t2.mnt_fr_dt, 7*('"+str(pln_no)+"'*1-1) + 6) pln_edt ";
@@ -1276,7 +1311,7 @@ def MP0103M_Insert(request):
         insert_text += " , '"+str(upd_pgm)+"' ";
         insert_text += " from service20_mp_mtr t1 ";
         insert_text += " left join service20_mpgm t2 on (t2.mp_id = t1.mp_id) ";
-        insert_text += " where mntr_id = '"+str(mp_id)+"' ";
+        insert_text += " where mp_id = '"+str(mp_id)+"' ";
         insert_text += " and apl_id = '"+str(apl_id)+"' ";
         insert_text += " )";
 
