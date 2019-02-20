@@ -1825,6 +1825,104 @@ class MP0104M_list(generics.ListAPIView):
 
         return Response(serializer.data)
 
+# 출석관리 리스트 상세 ###################################################
+class MP0104M_Detail_Serializer(serializers.ModelSerializer):
+
+    mp_div_nm = serializers.SerializerMethodField()
+    mnte_id = serializers.SerializerMethodField()
+    mnte_nm = serializers.SerializerMethodField()
+    mgr_nm = serializers.SerializerMethodField()
+    expl_yn = serializers.SerializerMethodField()
+    apl_id = serializers.SerializerMethodField()
+
+    
+    # mgr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+    
+    class Meta:
+        model = mp_att
+        fields = ('mp_id','apl_no','att_no','mp_div','spc_no','att_div','att_sts','att_sdt','att_saddr','att_sdist','att_edt','att_eaddr','att_edist','elap_tm','appr_tm','mtr_desc','mtr_pic','appr_id','appr_nm','appr_dt','mgr_id','mgr_dt','expl_yn','rep_no','exp_div','exp_no','exp_dt','exp_amt','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm')
+    
+    def get_mp_div_nm(self,obj):
+        return obj.mp_div_nm
+    def get_mnte_id(self,obj):
+        return obj.mnte_id
+    def get_mnte_nm(self,obj):
+        return obj.mnte_nm
+    def get_mgr_nm(self,obj):
+        return obj.mgr_nm
+    def get_expl_yn(self,obj):
+        return obj.expl_yn
+    def get_apl_id(self,obj):
+        return obj.apl_id
+    
+
+
+
+class MP0104M_Detail(generics.ListAPIView):
+    queryset = mpgm.objects.all()
+    serializer_class = MP0104M_Detail_Serializer
+
+    # mp_mtr - 프로그램 지원자(멘토) => mp_id(멘토링ID), apl_id
+    # mp_mte - 프로그램 지원자(멘티) => mp_id(멘토링ID)
+
+
+    def list(self, request):
+        l_mp_id = request.GET.get('mp_id', "")
+        l_apl_id = request.GET.get('apl_id', "")
+
+        queryset = self.get_queryset()
+
+        query = " select t1.id,t1.mp_id     /* 멘토링 프로그램id */  ";
+        query += " , t1.apl_no    /* 멘토 지원 no */  ";
+        query += " , t1.att_no    /* 출석순서(seq) */  ";
+        query += " , t1.mp_div    /* 교육구분(mp0059) */  ";
+        query += " , c1.std_detl_code_nm   as mp_div_nm ";
+        query += " , t2.mnte_id     /* 멘티id */  ";
+        query += " , t2.mnte_nm     /* 멘티명 */  ";
+        query += " , substring(t1.att_sdt, 1, 10) as att_sdt   /* 출석일시(교육시작일시) */  ";
+        query += " , substring(t1.att_sdt, 12, 5) as att_stm   /* 출석일시(교육시작일시) */  ";
+        query += " , substring(t1.att_edt, 12, 5) as att_etm   /* 출석일시(교육시작일시) */  ";
+        query += " , substring(t1.elap_tm, 1, 5)  as elap_tm   /* 경과시간 */  ";
+        query += " , t1.appr_tm   /* 인정시간 */  ";
+        query += " , t1.mtr_desc  /* 멘토링 내용(보고서) */  ";
+        query += " , t1.appr_id   /* 승인자id */  ";
+        query += " , t1.appr_nm   /* 승인자명 */  ";
+        query += " , substring(t1.appr_dt, 1, 16)  as appr_dt  /* 보호자 승인일시 */  ";
+        query += " , t1.mgr_id    /* 관리자id */  ";
+        query += " , t4.mgr_nm    /* 관리자명 */  ";
+        query += " , substring(t1.mgr_dt, 1, 16)  as mgr_dt   /* 관리자 승인일시 */  ";
+        query += " , ' ' expl_yn   /* 소명상태 */  ";
+        query += " , t1.exp_amt   /* 지급 활동비 */  ";
+        query += " , t3.apl_id /* 학번 ";
+        query += " from service20_mp_att t1     /* 프로그램 출석부(멘토) */ ";
+        query += " left join service20_mp_mte t2  on (t2.mp_id  = t1.mp_id ";
+        query += " and t2.apl_no = t1.apl_no) ";
+        query += " left join service20_mp_mtr t3 on (t3.mp_id    = t1.mp_id ";
+        query += " and t3.apl_no   = t1.apl_no) ";
+        query += " left join service20_mpgm   t4 on (t4.mp_id    = t1.mp_id) ";
+        query += " left join service20_com_cdd c1 on (c1.std_grp_code  = 'mp0059'  ";
+        query += " and c1.std_detl_code = t1.mp_div) ";
+        query += " where 1=1 ";
+        query += " and t1.mp_id    = '"+l_mp_id+"'   /* 멘토링 프로그램id */ ";
+        query += " and t3.apl_id   = '"+l_apl_id+"' ";
+        query += " order by t1.att_no DESC    /* 출석순서(seq) */ ";
+
+
+        print(query)
+
+        queryset = mp_att.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+
 #####################################################################################
 # MP0104M - END
 #####################################################################################
