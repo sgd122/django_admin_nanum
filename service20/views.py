@@ -235,7 +235,6 @@ class MS0101M_list_Serializer(serializers.ModelSerializer):
         # return obj.applyStatus    
 
     def get_status(self,obj):
-        request = self.context['request']
         now = datetime.datetime.today()
         if obj.apl_fr_dt == None:
             return '개설중'
@@ -249,7 +248,6 @@ class MS0101M_list_Serializer(serializers.ModelSerializer):
             return '개설중'
 
     def get_statusCode(self,obj):
-        request = self.context['request']
         now = datetime.datetime.today()
         if obj.apl_fr_dt == None:
             # 개설중
@@ -539,12 +537,13 @@ class MS0101M_adm_list_Serializer(serializers.ModelSerializer):
     pr_yr = serializers.SerializerMethodField()
     pr_sch_yr = serializers.SerializerMethodField()
     pr_term_div = serializers.SerializerMethodField()
-
+    status = serializers.SerializerMethodField()
+    statusCode = serializers.SerializerMethodField()
     # acpt_dt = serializers.DateTimeField(format='%Y-%m-%d')
 
     class Meta:
         model = ms_apl
-        fields = ('ms_id','apl_no','mntr_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','fnl_rslt','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','ms_name','pr_yr','pr_sch_yr','pr_term_div')
+        fields = ('ms_id','apl_no','mntr_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','fnl_rslt','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','ms_name','pr_yr','pr_sch_yr','pr_term_div','status','statusCode')
 
     def get_ms_name(self,obj):
         return obj.ms_name
@@ -557,6 +556,43 @@ class MS0101M_adm_list_Serializer(serializers.ModelSerializer):
 
     def get_pr_term_div(self,obj):
         return obj.pr_term_div    
+
+    def get_status(self,obj):
+        now = datetime.datetime.today()
+        msch_query = msch.objects.all()
+        msch_query = msch_query.filter(ms_id=obj.ms_id)[0]
+
+        if msch_query.apl_fr_dt == None:
+            return '개설중'
+        elif now < msch_query.apl_fr_dt:
+            return '개설중'
+        elif msch_query.apl_fr_dt <= now < msch_query.apl_to_dt:
+            return '모집중'
+        elif now > msch_query.apl_to_dt:
+            return '모집완료'
+        else:
+            return '개설중'
+
+    def get_statusCode(self,obj):
+        now = datetime.datetime.today()
+        msch_query = msch.objects.all()
+        msch_query = msch_query.filter(ms_id=obj.ms_id)[0]
+        if msch_query.apl_fr_dt == None:
+            # 개설중
+            return '1'
+        elif now < msch_query.apl_fr_dt:
+            # 개설중
+            return '1'
+        elif msch_query.apl_fr_dt <= now < msch_query.apl_to_dt:
+            # 모집중
+            return '2'
+        elif now > msch_query.apl_to_dt:
+            # 모집완료
+            return '3'  
+        else:
+            # 개설중
+            return '1'
+    get_status.short_description = '상태'     
 
 class MS0101M_adm_list(generics.ListAPIView):
     queryset = ms_apl.objects.all()
