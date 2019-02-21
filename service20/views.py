@@ -2457,8 +2457,8 @@ def MP0105M_Insert(request):
     insert_text += " )  ";
     insert_text += " values(  ";
     insert_text += " '"+mp_id    +"'  /*멘토링 프로그램id*/  ";
-    insert_text += " , '"+apl_no  +"'    /*멘토 지원 no*/  ";
-    insert_text += " , '"+rep_no  +"'    /*보고서 no*/  ";
+    insert_text += " , "+apl_no  +"    /*멘토 지원 no*/  ";
+    insert_text += " , "+rep_no  +"    /*보고서 no*/  ";
     insert_text += " , '"+rep_div  +"'    /*보고서 구분(mp0062)*/  ";
     insert_text += " , '"+mnte_id  +"'    /*담당멘티id*/  ";
     insert_text += " , '"+mnte_nm  +"'    /*담당멘티명*/  ";
