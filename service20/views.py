@@ -172,7 +172,7 @@ class com_combo_program(generics.ListAPIView):
 
     def list(self, request):
         
-        apl_id = request.GET.get('apl_id', "")
+        apl_id = request.GET.get('apl_id', "%")
         
 
         queryset = self.get_queryset()
