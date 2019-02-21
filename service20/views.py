@@ -210,6 +210,7 @@ class com_combo_program(generics.ListAPIView):
 
 class MS0101M_list_Serializer(serializers.ModelSerializer):
 
+    status_nm = serializers.SerializerMethodField()
     applyFlag = serializers.SerializerMethodField()
     applyStatus = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
@@ -222,7 +223,7 @@ class MS0101M_list_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = msch
-        fields = ('ms_id','ms_name','status','statusCode','yr','yr_seq','sup_org','applyFlag','applyStatus','apl_fr_dt','apl_to_dt','cnt_trn','status')
+        fields = ('ms_id','ms_name','status','statusCode','yr','yr_seq','sup_org','applyFlag','applyStatus','apl_fr_dt','apl_to_dt','cnt_trn','status','status_nm')
 
     def get_applyFlag(self, obj):
         # return 'Y'     
@@ -235,18 +236,18 @@ class MS0101M_list_Serializer(serializers.ModelSerializer):
         # return obj.applyStatus    
 
     def get_status(self,obj):
-        now = datetime.datetime.today()
-        if obj.apl_fr_dt == None:
-            return '개설중'
-        elif now < obj.apl_fr_dt:
-            return '개설중'
-        elif obj.apl_fr_dt <= now < obj.apl_to_dt:
-            return '모집중'
-        elif now > obj.apl_to_dt:
-            return '모집완료'
-        else:
-            return '개설중'
-
+        # now = datetime.datetime.today()
+        # if obj.apl_fr_dt == None:
+        #     return '개설중'
+        # elif now < obj.apl_fr_dt:
+        #     return '개설중'
+        # elif obj.apl_fr_dt <= now < obj.apl_to_dt:
+        #     return '모집중'
+        # elif now > obj.집:
+        #     return '모집완료'
+        # else:
+        #     return '개설중'
+        return obj.status_nm
     def get_statusCode(self,obj):
         now = datetime.datetime.today()
         if obj.apl_fr_dt == None:
@@ -264,9 +265,10 @@ class MS0101M_list_Serializer(serializers.ModelSerializer):
         else:
             # 개설중
             return '1'
-    get_status.short_description = '상태'     
+    # get_status.short_description = '상태'     
 
-
+    def get_status_nm(self,obj):
+        return obj.status_nm
 
 class MS0101M_list(generics.ListAPIView):
     queryset = msch.objects.all()
@@ -277,9 +279,22 @@ class MS0101M_list(generics.ListAPIView):
         l_apl_term = request.GET.get('trn_term', None)
         l_user_id = request.GET.get('user_id', None)
 
-        query = "select ifnull((select 'Y' from service20_ms_apl where yr = '"+str(l_yr)+"' and apl_id = '"+str(l_user_id)+"' and ms_id = A.ms_id),'N') AS applyFlag,A.* from service20_msch A where A.yr='"+str(l_yr)+"' and A.apl_term='"+str(l_apl_term)+"'"
+        query = " select APL_TO_DT,  ";
+        query += " IF(A.STATUS = '10'  ";
+        query += " AND NOW() > A.APL_TO_DT, 'XX', A.STATUS) AS statusCode,  ";
+        query += " IF(A.STATUS = '10'  ";
+        query += " AND NOW() > A.APL_TO_DT, '모집완료', (SELECT STD_DETL_CODE_NM  ";
+        query += " FROM   SERVICE20_COM_CDD  ";
+        query += " WHERE  ";
+        query += " STD_GRP_CODE = 'MS0001'  ";
+        query += " AND USE_INDC = 'Y'  ";
+        query += " AND STD_DETL_CODE = STATUS)) as status_nm,  ";
+
+        query += " ifnull((select 'Y' from service20_ms_apl where yr = '"+str(l_yr)+"' and apl_id = '"+str(l_user_id)+"' and ms_id = A.ms_id),'N') AS applyFlag,A.* from service20_msch A where A.yr='"+str(l_yr)+"' and A.apl_term='"+str(l_apl_term)+"'"
         query += " order by apl_fr_dt desc,apl_to_dt desc " 
         queryset = msch.objects.raw(query)
+
+        print(query)
         
         # # 멘토만 조회가능.
         # query = "select ifnull((select 'Y' from service20_ms_apl where yr = '"+str(l_yr)+"' and apl_id = '"+str(ida)+"' and ms_id = A.ms_id),'N') AS applyFlag,A.* from service20_msch A where A.yr='"+str(l_yr)+"' and A.apl_term='"+str(l_apl_term)+"' and (select count(1) from service20_mentor where apl_id = '"+ida+"') > 0 "
@@ -650,8 +665,6 @@ class MS0101M_adm_quest(generics.ListAPIView):
         
         query = "select B.std_detl_code,B.std_detl_code_nm,B.rmrk,A.* from service20_ms_ans A, service20_com_cdd B where A.ques_no = B.std_detl_code and B.use_indc = 'Y' and B.std_grp_code in (select att_cdh from service20_ms_sub where att_id='MS0014' and ms_id = '"+str(key1)+"') and A.ms_id = '"+str(key1)+"' and apl_id = '"+str(l_user_id)+"'"
         queryset = ms_ans.objects.raw(query)
-
-        print(query)
         
 
         serializer_class = self.get_serializer_class()
@@ -1204,7 +1217,7 @@ class MP0101M_adm_list(generics.ListAPIView):
         # mpgm
         query = "select C.mp_name,B.pr_yr,B.pr_sch_yr,B.pr_term_div,A.* from service20_mp_mtr A,service10_vm_nanum_stdt B,service20_mpgm C where A.apl_id=B.apl_id and A.mp_id = C.mp_id and A.yr='"+l_yr+"' and A.mp_id = '"+ms_ida+"' and A.apl_id='"+ida+"'"
         queryset = mp_mtr.objects.raw(query)
-        print(query)
+        
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
 
@@ -1248,7 +1261,6 @@ class MP0101M_adm_quest(generics.ListAPIView):
         query = "select B.std_detl_code,B.std_detl_code_nm,B.rmrk,A.* from service20_mp_ans A, service20_com_cdd B where A.ques_no = B.std_detl_code and B.use_indc = 'Y' and B.std_grp_code in (select att_cdh from service20_mp_sub where att_id='MS0014' and mp_id = '"+str(key1)+"') and A.mp_id = '"+str(key1)+"' and apl_id = '"+str(l_user_id)+"'"
         queryset = mp_ans.objects.raw(query)
 
-        print(query)
         
 
         serializer_class = self.get_serializer_class()
@@ -1608,7 +1620,7 @@ class MP0103M_list(generics.ListAPIView):
         query += " AND a.apl_no = d.apl_no ";
         query += " AND d.apl_no = c.apl_no ";
 
-        print(query)
+        
 
         queryset = mpgm.objects.raw(query)
 
@@ -1711,7 +1723,6 @@ class MP0103M_list_v1(generics.ListAPIView):
         query += " WHERE t1.mp_id = '"+l_mp_id+"' ";
         query += " AND t1.apl_id='"+l_apl_id+"' ";
 
-        print(query)
 
         queryset = mp_sub.objects.raw(query)
 
@@ -2006,7 +2017,6 @@ class MP0104M_list(generics.ListAPIView):
         query += " , t3.bank_acct ";
 
 
-        print(query)
 
         queryset = mp_mtr.objects.raw(query)
 
@@ -2099,7 +2109,6 @@ class MP0104M_Detail(generics.ListAPIView):
         query += " order by t1.att_no DESC    /* 출석순서(seq) */ ";
 
 
-        print(query)
 
         queryset = mp_att.objects.raw(query)
 
