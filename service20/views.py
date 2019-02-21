@@ -828,7 +828,8 @@ class MP0101M_list_Serializer(serializers.ModelSerializer):
 
     def get_status_nm(self,obj):
         return obj.status_nm   
-
+    def get_status(self,obj):
+        return obj.status
 
 
 class MP0101M_list(generics.ListAPIView):
