@@ -50,11 +50,11 @@ class com_combo_yr(generics.ListAPIView):
 
         queryset = self.get_queryset()
         
-        query = " select 1 id,DATE_FORMAT(now(),'%Y')-1 as std_detl_code,DATE_FORMAT(now(),'%Y')-1 as std_detl_code_nm ";
-        query += " union ";
-        query += " select 2 id,DATE_FORMAT(now(),'%Y') as std_detl_code,DATE_FORMAT(now(),'%Y') as std_detl_code_nm ";
-        query += " union ";
-        query += " select 3 id,DATE_FORMAT(now(),'%Y')+1 as std_detl_code,DATE_FORMAT(now(),'%Y')+1 as std_detl_code_nm ";
+        query = " select 1 id,DATE_FORMAT(now(),'%Y')-1 as std_detl_code,DATE_FORMAT(now(),'%Y')-1 as std_detl_code_nm "
+        query += " union "
+        query += " select 2 id,DATE_FORMAT(now(),'%Y') as std_detl_code,DATE_FORMAT(now(),'%Y') as std_detl_code_nm "
+        query += " union "
+        query += " select 3 id,DATE_FORMAT(now(),'%Y')+1 as std_detl_code,DATE_FORMAT(now(),'%Y')+1 as std_detl_code_nm "
 
         queryset = com_cdd.objects.raw(query)
 
@@ -89,7 +89,7 @@ class com_combo_cnclRsn(generics.ListAPIView):
 
         queryset = self.get_queryset()
         
-        query = " select id,std_grp_code,std_detl_code,std_detl_code_nm,rmrk,sort_seq_no from service20_com_cdd where std_grp_code = 'MS0004' and use_indc = 'Y'";
+        query = " select id,std_grp_code,std_detl_code,std_detl_code_nm,rmrk,sort_seq_no from service20_com_cdd where std_grp_code = 'MS0004' and use_indc = 'Y'"
 
         queryset = com_cdd.objects.raw(query)
 
@@ -129,17 +129,17 @@ class com_list_my_mentee(generics.ListAPIView):
 
         queryset = self.get_queryset()
         
-        query = " select (select std_detl_code_nm from service20_com_cdd where std_grp_code = 'MP0052' and std_detl_code = S2.mp_plc and use_indc = 'Y') mp_plc_nm";
-        query += " ,(select std_detl_code_nm from service20_com_cdd where std_grp_code = 'MP0047' and std_detl_code = S2.grd_rel and use_indc = 'Y') grd_rel_nm ";
-        query += " , S2.* ";
-        query += " FROM service20_mp_mtr S1 ";
-        query += " LEFT JOIN service20_mp_mte S2  ON (S2.MP_ID  = S1.MP_ID ";
-        query += " AND S2.APL_NO = S1.APL_NO) ";
-        query += " LEFT JOIN service20_mp_plnh S3 ON (S3.MP_ID    = S1.MP_ID ";
-        query += " AND S3.APL_NO   = S1.APL_NO) ";
-        query += " WHERE 1=1 ";
-        query += " AND S1.MP_ID      = '"+l_mp_id+"'     /* 멘토링 프로그램ID */ ";
-        query += " AND S1.APL_ID    =  '"+l_apl_id+"' ";
+        query = " select (select std_detl_code_nm from service20_com_cdd where std_grp_code = 'MP0052' and std_detl_code = S2.mp_plc and use_indc = 'Y') mp_plc_nm"
+        query += " ,(select std_detl_code_nm from service20_com_cdd where std_grp_code = 'MP0047' and std_detl_code = S2.grd_rel and use_indc = 'Y') grd_rel_nm "
+        query += " , S2.* "
+        query += " FROM service20_mp_mtr S1 "
+        query += " LEFT JOIN service20_mp_mte S2  ON (S2.MP_ID  = S1.MP_ID "
+        query += " AND S2.APL_NO = S1.APL_NO) "
+        query += " LEFT JOIN service20_mp_plnh S3 ON (S3.MP_ID    = S1.MP_ID "
+        query += " AND S3.APL_NO   = S1.APL_NO) "
+        query += " WHERE 1=1 "
+        query += " AND S1.MP_ID      = '"+l_mp_id+"'     /* 멘토링 프로그램ID */ "
+        query += " AND S1.APL_ID    =  '"+l_apl_id+"' "
 
 
         queryset = mp_mte.objects.raw(query)
@@ -179,14 +179,14 @@ class com_combo_program(generics.ListAPIView):
 
         queryset = self.get_queryset()
         
-        query = " select A.mp_id ";
-        query += " , A.apl_no ";
-        query += " , B.mp_name ";
-        query += " FROM service20_mp_mtr A ";
-        query += " , service20_mpgm B ";
-        query += " WHERE apl_id = '"+str(apl_id)+"' ";
-        query += " AND mntr_id IS NOT null ";
-        query += " AND A.mp_id = B.mp_id ";
+        query = " select A.mp_id "
+        query += " , A.apl_no "
+        query += " , B.mp_name "
+        query += " FROM service20_mp_mtr A "
+        query += " , service20_mpgm B "
+        query += " WHERE apl_id = '"+str(apl_id)+"' "
+        query += " AND mntr_id IS NOT null "
+        query += " AND A.mp_id = B.mp_id "
 
         queryset = mpgm.objects.raw(query)
 
@@ -249,16 +249,16 @@ class MS0101M_list(generics.ListAPIView):
         l_apl_term = request.GET.get('trn_term', None)
         l_user_id = request.GET.get('user_id', None)
 
-        query = " select apl_to_dt,  ";
-        query += " if(A.status = '10'  ";
-        query += " and now() > A.apl_to_dt, 'xx', A.status) as statusCode,  ";
-        query += " if(A.status = '10'  ";
-        query += " and now() > A.apl_to_dt, '모집완료', (select std_detl_code_nm  ";
-        query += " from   service20_com_cdd  ";
-        query += " where  ";
-        query += " std_grp_code = 'MS0001'  ";
-        query += " and use_indc = 'y'  ";
-        query += " and std_detl_code = status)) as status_nm,  ";
+        query = " select apl_to_dt,  "
+        query += " if(A.status = '10'  "
+        query += " and now() > A.apl_to_dt, 'xx', A.status) as statusCode,  "
+        query += " if(A.status = '10'  "
+        query += " and now() > A.apl_to_dt, '모집완료', (select std_detl_code_nm  "
+        query += " from   service20_com_cdd  "
+        query += " where  "
+        query += " std_grp_code = 'MS0001'  "
+        query += " and use_indc = 'y'  "
+        query += " and std_detl_code = status)) as status_nm,  "
 
         query += " ifnull((select 'Y' from service20_ms_apl where yr = '"+str(l_yr)+"' and apl_id = '"+str(l_user_id)+"' and ms_id = A.ms_id),'N') AS applyFlag,A.* from service20_msch A where A.yr='"+str(l_yr)+"' and A.apl_term='"+str(l_apl_term)+"'"
         query += " order by apl_fr_dt desc,apl_to_dt desc " 
@@ -355,10 +355,10 @@ def MS0101M_save(request):
     max_no = ms_apl_max['vlMax']    
 
     if max_no == None:
-        apl_no = 0;
+        apl_no = 0
     else:
         apl_no = ms_apl_max['vlMax']
-        apl_no = apl_no + 1;
+        apl_no = apl_no + 1
     
     
 
@@ -413,10 +413,10 @@ def MS0101M_save(request):
     # mp_mntr/ms_apl  -> mp_id만 조건 걸어서 count(*)
     # 해당 cnt값을 mpgm/msch -> cnt_apl
 
-    update_text = " update service20_msch a ";
-    update_text += " SET a.cnt_apl = (select count(*) from service20_ms_apl where ms_id = '"+mp_id+"') ";
-    update_text += " WHERE 1=1 ";
-    update_text += " AND a.ms_id = '"+mp_id+"' ";
+    update_text = " update service20_msch a "
+    update_text += " SET a.cnt_apl = (select count(*) from service20_ms_apl where ms_id = '"+mp_id+"') "
+    update_text += " WHERE 1=1 "
+    update_text += " AND a.ms_id = '"+mp_id+"' "
     print(update_text)
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)    
@@ -663,13 +663,13 @@ def MS0101M_adm_acpt_save(request):
     upd_dt = request.POST.get('upd_dt', "")
     upd_pgm = request.POST.get('upd_pgm', "")
 
-    update_text = " update service20_ms_apl a ";
-    update_text += " SET a.acpt_dt = NOW() ";
-    update_text += " , a.acpt_div = 'Y' ";
-    update_text += " , a.acpt_cncl_rsn = null ";
-    update_text += " WHERE 1=1 ";
-    update_text += " AND a.ms_id = '"+ms_id+"' ";
-    update_text += " AND a.apl_no = '"+apl_no+"' ";
+    update_text = " update service20_ms_apl a "
+    update_text += " SET a.acpt_dt = NOW() "
+    update_text += " , a.acpt_div = 'Y' "
+    update_text += " , a.acpt_cncl_rsn = null "
+    update_text += " WHERE 1=1 "
+    update_text += " AND a.ms_id = '"+ms_id+"' "
+    update_text += " AND a.apl_no = '"+apl_no+"' "
     print(update_text)
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)
@@ -696,13 +696,13 @@ def MS0101M_adm_acpt_cancle(request):
     upd_dt = request.POST.get('upd_dt', "")
     upd_pgm = request.POST.get('upd_pgm', "")
 
-    update_text = " update service20_ms_apl a ";
-    update_text += " SET a.acpt_dt = null ";
-    update_text += " , a.acpt_div = 'N' ";
-    update_text += " , a.acpt_cncl_rsn = '"+acpt_cncl_rsn+"' ";
-    update_text += " WHERE 1=1 ";
-    update_text += " AND a.ms_id = '"+ms_id+"' ";
-    update_text += " AND a.apl_no = '"+apl_no+"' ";
+    update_text = " update service20_ms_apl a "
+    update_text += " SET a.acpt_dt = null "
+    update_text += " , a.acpt_div = 'N' "
+    update_text += " , a.acpt_cncl_rsn = '"+acpt_cncl_rsn+"' "
+    update_text += " WHERE 1=1 "
+    update_text += " AND a.ms_id = '"+ms_id+"' "
+    update_text += " AND a.apl_no = '"+apl_no+"' "
     print(update_text)
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)
@@ -739,12 +739,12 @@ def MS0101M_adm_update(request):
         ques_no = request.POST.get('ques_no'+str(i+1), None)
         ans_t2 = request.POST.get('ans_t2_'+str(i+1), None)
 
-        update_text = " update service20_ms_ans a ";
-        update_text += " SET a.ans_t2 = '"+str(ans_t2)+"' ";
-        update_text += " WHERE 1=1 ";
-        update_text += " AND a.mp_id = '"+str(ms_id)+"' ";
-        update_text += " AND a.apl_no = '"+str(apl_no)+"' ";
-        update_text += " AND a.ques_no = '"+str(ques_no)+"' ";
+        update_text = " update service20_ms_ans a "
+        update_text += " SET a.ans_t2 = '"+str(ans_t2)+"' "
+        update_text += " WHERE 1=1 "
+        update_text += " AND a.mp_id = '"+str(ms_id)+"' "
+        update_text += " AND a.apl_no = '"+str(apl_no)+"' "
+        update_text += " AND a.ques_no = '"+str(ques_no)+"' "
         print(update_text)
         cursor = connection.cursor()
         query_result = cursor.execute(update_text)
@@ -771,12 +771,12 @@ def MS0101M_adm_cancle(request):
     upd_dt = request.POST.get('upd_dt', "")
     upd_pgm = request.POST.get('upd_pgm', "")
 
-    update_text = " update service20_msch a ";
-    update_text += " SET status = '19' ";
-    update_text += " , doc_cncl_dt = now() ";
-    update_text += " WHERE 1=1 ";
-    update_text += " AND a.ms_id = '"+ms_id+"' ";
-    update_text += " AND a.apl_no = '"+apl_no+"' ";
+    update_text = " update service20_msch a "
+    update_text += " SET status = '19' "
+    update_text += " , doc_cncl_dt = now() "
+    update_text += " WHERE 1=1 "
+    update_text += " AND a.ms_id = '"+ms_id+"' "
+    update_text += " AND a.apl_no = '"+apl_no+"' "
     print(update_text)
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)
@@ -846,16 +846,16 @@ class MP0101M_list(generics.ListAPIView):
         
         # 멘토만 조회가능.
 
-        query = " select apl_to_dt,  ";
-        query += " if(A.status = '10'  ";
-        query += " and now() > A.apl_to_dt, 'xx', A.status) as statusCode,  ";
-        query += " if(A.status = '10'  ";
-        query += " and now() > A.apl_to_dt, '모집완료', (select std_detl_code_nm  ";
-        query += " from   service20_com_cdd  ";
-        query += " where  ";
-        query += " std_grp_code = 'MS0001'  ";
-        query += " and use_indc = 'y'  ";
-        query += " and std_detl_code = status)) as status_nm,  ";
+        query = " select apl_to_dt,  "
+        query += " if(A.status = '10'  "
+        query += " and now() > A.apl_to_dt, 'xx', A.status) as statusCode,  "
+        query += " if(A.status = '10'  "
+        query += " and now() > A.apl_to_dt, '모집완료', (select std_detl_code_nm  "
+        query += " from   service20_com_cdd  "
+        query += " where  "
+        query += " std_grp_code = 'MS0001'  "
+        query += " and use_indc = 'y'  "
+        query += " and std_detl_code = status)) as status_nm,  "
 
         query += " ifnull((select 'Y' from service20_mp_mtr where yr = '"+str(l_yr)+"' and apl_id = '"+str(ida)+"' and mp_id = A.mp_id),'N') AS applyFlag,A.* from service20_mpgm A where A.yr='"+str(l_yr)+"' and A.apl_term='"+str(l_apl_term)+"' and (select count(1) from service20_mentor where apl_id = '"+ida+"') > 0 "
         query += " order by A.apl_fr_dt desc,A.apl_to_dt desc "
@@ -945,10 +945,10 @@ def MP0101M_save(request):
     max_no = mp_mtr_max['vlMax']    
 
     if max_no == None:
-        apl_no = 0;
+        apl_no = 0
     else:
         apl_no = mp_mtr_max['vlMax']
-        apl_no = apl_no + 1;
+        apl_no = apl_no + 1
     
     
     
@@ -1003,10 +1003,10 @@ def MP0101M_save(request):
     # mp_mntr/ms_apl  -> mp_id만 조건 걸어서 count(*)
     # 해당 cnt값을 mpgm/msch -> cnt_apl
 
-    update_text = " update service20_mpgm a ";
-    update_text += " SET a.cnt_apl = (select count(*) from service20_mp_mntr where mp_id = '"+mp_id+"') ";
-    update_text += " WHERE 1=1 ";
-    update_text += " AND a.mp_id = '"+mp_id+"' ";
+    update_text = " update service20_mpgm a "
+    update_text += " SET a.cnt_apl = (select count(*) from service20_mp_mntr where mp_id = '"+mp_id+"') "
+    update_text += " WHERE 1=1 "
+    update_text += " AND a.mp_id = '"+mp_id+"' "
     print(update_text)
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)    
@@ -1244,13 +1244,13 @@ def MP0101M_adm_acpt_save(request):
     upd_dt = request.POST.get('upd_dt', "")
     upd_pgm = request.POST.get('upd_pgm', "")
 
-    update_text = " update service20_mp_mtr a ";
-    update_text += " SET a.acpt_dt = NOW() ";
-    update_text += " , a.acpt_div = 'Y' ";
-    update_text += " , a.acpt_cncl_rsn = null ";
-    update_text += " WHERE 1=1 ";
-    update_text += " AND a.mp_id = '"+mp_id+"' ";
-    update_text += " AND a.apl_no = '"+apl_no+"' ";
+    update_text = " update service20_mp_mtr a "
+    update_text += " SET a.acpt_dt = NOW() "
+    update_text += " , a.acpt_div = 'Y' "
+    update_text += " , a.acpt_cncl_rsn = null "
+    update_text += " WHERE 1=1 "
+    update_text += " AND a.mp_id = '"+mp_id+"' "
+    update_text += " AND a.apl_no = '"+apl_no+"' "
     print(update_text)
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)
@@ -1277,13 +1277,13 @@ def MP0101M_adm_acpt_cancle(request):
     upd_dt = request.POST.get('upd_dt', "")
     upd_pgm = request.POST.get('upd_pgm', "")
 
-    update_text = " update service20_mp_mtr a ";
-    update_text += " SET a.acpt_dt = null ";
-    update_text += " , a.acpt_div = 'N' ";
-    update_text += " , a.acpt_cncl_rsn = '"+acpt_cncl_rsn+"' ";
-    update_text += " WHERE 1=1 ";
-    update_text += " AND a.mp_id = '"+mp_id+"' ";
-    update_text += " AND a.apl_no = '"+apl_no+"' ";
+    update_text = " update service20_mp_mtr a "
+    update_text += " SET a.acpt_dt = null "
+    update_text += " , a.acpt_div = 'N' "
+    update_text += " , a.acpt_cncl_rsn = '"+acpt_cncl_rsn+"' "
+    update_text += " WHERE 1=1 "
+    update_text += " AND a.mp_id = '"+mp_id+"' "
+    update_text += " AND a.apl_no = '"+apl_no+"' "
     print(update_text)
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)
@@ -1320,12 +1320,12 @@ def MP0101M_adm_update(request):
         ques_no = request.POST.get('ques_no'+str(i+1), None)
         ans_t2 = request.POST.get('ans_t2_'+str(i+1), None)
 
-        update_text = " update service20_mp_ans a ";
-        update_text += " SET a.ans_t2 = '"+str(ans_t2)+"' ";
-        update_text += " WHERE 1=1 ";
-        update_text += " AND a.mp_id = '"+str(mp_id)+"' ";
-        update_text += " AND a.apl_no = '"+str(apl_no)+"' ";
-        update_text += " AND a.ques_no = '"+str(ques_no)+"' ";
+        update_text = " update service20_mp_ans a "
+        update_text += " SET a.ans_t2 = '"+str(ans_t2)+"' "
+        update_text += " WHERE 1=1 "
+        update_text += " AND a.mp_id = '"+str(mp_id)+"' "
+        update_text += " AND a.apl_no = '"+str(apl_no)+"' "
+        update_text += " AND a.ques_no = '"+str(ques_no)+"' "
         print(update_text)
         cursor = connection.cursor()
         query_result = cursor.execute(update_text)
@@ -1352,12 +1352,12 @@ def MP0101M_adm_cancle(request):
     upd_dt = request.POST.get('upd_dt', "")
     upd_pgm = request.POST.get('upd_pgm', "")
 
-    update_text = " update service20_mp_mtr a ";
-    update_text += " SET status = '19' ";
-    update_text += " , doc_cncl_dt = now() ";
-    update_text += " WHERE 1=1 ";
-    update_text += " AND a.mp_id = '"+mp_id+"' ";
-    update_text += " AND a.apl_no = '"+apl_no+"' ";
+    update_text = " update service20_mp_mtr a "
+    update_text += " SET status = '19' "
+    update_text += " , doc_cncl_dt = now() "
+    update_text += " WHERE 1=1 "
+    update_text += " AND a.mp_id = '"+mp_id+"' "
+    update_text += " AND a.apl_no = '"+apl_no+"' "
     print(update_text)
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)
@@ -1404,7 +1404,7 @@ class MP0102M_list(generics.ListAPIView):
         
         queryset = self.get_queryset()
         
-        query = "select * from service20_mp_spc where yr='"+l_yr+"' and apl_term='"+l_apl_term+"'";
+        query = "select * from service20_mp_spc where yr='"+l_yr+"' and apl_term='"+l_apl_term+"'"
         queryset = mp_spc.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
@@ -1443,7 +1443,7 @@ class MP0102M_detail(generics.ListAPIView):
         
         queryset = self.get_queryset()
         
-        query = "select * from service20_mp_spc where yr='"+l_yr+"' and apl_term='"+l_apl_term+"'";
+        query = "select * from service20_mp_spc where yr='"+l_yr+"' and apl_term='"+l_apl_term+"'"
         queryset = mp_spc.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
@@ -1542,38 +1542,38 @@ class MP0103M_list(generics.ListAPIView):
 
         queryset = self.get_queryset()
 
-        query = " select b.mp_id      AS mp_id ";
-        query += " , b.mp_name    AS mp_name ";
-        query += " , b.apl_term   AS apl_term ";
-        query += " , b.yr_seq     AS yr_seq ";
-        query += " , c.mnte_nm    AS mnte_nm ";
-        query += " , c.sch_nm     AS sch_nm ";
-        query += " , c.sch_yr     AS sch_yr ";
-        query += " , a.pln_dt     AS pln_dt ";
-        query += " , a.appr_nm    AS appr_nm ";
-        query += " , a.appr_dt    AS appr_dt ";
-        query += " , a.mgr_id     AS mgr_id ";
-        query += " , a.mgr_dt     AS mgr_dt ";
-        query += " , d.apl_id     AS apl_id ";
-        query += " , d.apl_nm     AS apl_nm ";
-        query += " , c.tchr_nm    AS tchr_nm ";
-        query += " , a.mtr_sub     AS mtr_sub ";
-        query += " , d.apl_no     AS apl_no ";
-        query += " , (SELECT concat(pln_sdt, CONCAT('~', pln_edt)) FROM service20_mp_plnd WHERE mp_id = a.mp_id AND apl_no = a.apl_no LIMIT 1) AS pln_sedt ";
-        query += " from service20_mp_plnh a ";
-        query += " , service20_mpgm b ";
-        query += " , service20_mp_mte c ";
-        query += " , (SELECT mp_id ";
-        query += " , apl_no ";
-        query += " , apl_id ";
-        query += " , apl_nm ";
-        query += " FROM service20_mp_mtr ";
-        query += " WHERE mntr_id = '"+l_user_id+"' or apl_id = '"+l_user_id+"') d ";
-        query += " WHERE a.mp_id = b.mp_id ";
-        query += " AND a.mp_id = c.mp_id ";
-        query += " AND a.mp_id = d.mp_id ";
-        query += " AND a.apl_no = d.apl_no ";
-        query += " AND d.apl_no = c.apl_no ";
+        query = " select b.mp_id      AS mp_id "
+        query += " , b.mp_name    AS mp_name "
+        query += " , b.apl_term   AS apl_term "
+        query += " , b.yr_seq     AS yr_seq "
+        query += " , c.mnte_nm    AS mnte_nm "
+        query += " , c.sch_nm     AS sch_nm "
+        query += " , c.sch_yr     AS sch_yr "
+        query += " , a.pln_dt     AS pln_dt "
+        query += " , a.appr_nm    AS appr_nm "
+        query += " , a.appr_dt    AS appr_dt "
+        query += " , a.mgr_id     AS mgr_id "
+        query += " , a.mgr_dt     AS mgr_dt "
+        query += " , d.apl_id     AS apl_id "
+        query += " , d.apl_nm     AS apl_nm "
+        query += " , c.tchr_nm    AS tchr_nm "
+        query += " , a.mtr_sub     AS mtr_sub "
+        query += " , d.apl_no     AS apl_no "
+        query += " , (SELECT concat(pln_sdt, CONCAT('~', pln_edt)) FROM service20_mp_plnd WHERE mp_id = a.mp_id AND apl_no = a.apl_no LIMIT 1) AS pln_sedt "
+        query += " from service20_mp_plnh a "
+        query += " , service20_mpgm b "
+        query += " , service20_mp_mte c "
+        query += " , (SELECT mp_id "
+        query += " , apl_no "
+        query += " , apl_id "
+        query += " , apl_nm "
+        query += " FROM service20_mp_mtr "
+        query += " WHERE mntr_id = '"+l_user_id+"' or apl_id = '"+l_user_id+"') d "
+        query += " WHERE a.mp_id = b.mp_id "
+        query += " AND a.mp_id = c.mp_id "
+        query += " AND a.mp_id = d.mp_id "
+        query += " AND a.apl_no = d.apl_no "
+        query += " AND d.apl_no = c.apl_no "
 
         
 
@@ -1620,18 +1620,18 @@ class MP0103M_Detail(generics.ListAPIView):
         queryset = self.get_queryset()
         
 
-        query = " select b.*";
-        query += " from service20_mp_plnh a";
-        query += " , service20_mp_plnd b";
-        query += " , (SELECT mp_id";
-        query += " , apl_no";
-        query += " FROM service20_mp_mtr";
-        query += " WHERE mp_id = '"+l_mp_id+"'";
-        query += " AND ( apl_id = '"+l_user_id+"') ) c";
-        query += " WHERE a.mp_id = b.mp_id";
-        query += "    AND a.mp_id = c.mp_id";
-        query += "    AND a.apl_no = b.apl_no";
-        query += "    AND a.apl_no = c.apl_no";
+        query = " select b.*"
+        query += " from service20_mp_plnh a"
+        query += " , service20_mp_plnd b"
+        query += " , (SELECT mp_id"
+        query += " , apl_no"
+        query += " FROM service20_mp_mtr"
+        query += " WHERE mp_id = '"+l_mp_id+"'"
+        query += " AND ( apl_id = '"+l_user_id+"') ) c"
+        query += " WHERE a.mp_id = b.mp_id"
+        query += "    AND a.mp_id = c.mp_id"
+        query += "    AND a.apl_no = b.apl_no"
+        query += "    AND a.apl_no = c.apl_no"
 
         queryset = mp_plnd.objects.raw(query)
 
@@ -1669,14 +1669,14 @@ class MP0103M_list_v1(generics.ListAPIView):
 
         queryset = self.get_queryset()
 
-        query = " select t2.id,t2.att_val AS att_val ";
-        query += " FROM service20_mp_mtr t1 ";
-        query += " LEFT JOIN service20_mp_sub t2 ON (t2.mp_id = t1.mp_id ";
-        query += " AND t2.att_id= 'MP0013' ";
-        query += " AND t2.att_cdh = 'MP0013' ";
-        query += " AND t2.att_cdd = '20') ";
-        query += " WHERE t1.mp_id = '"+l_mp_id+"' ";
-        query += " AND t1.apl_id='"+l_apl_id+"' ";
+        query = " select t2.id,t2.att_val AS att_val "
+        query += " FROM service20_mp_mtr t1 "
+        query += " LEFT JOIN service20_mp_sub t2 ON (t2.mp_id = t1.mp_id "
+        query += " AND t2.att_id= 'MP0013' "
+        query += " AND t2.att_cdh = 'MP0013' "
+        query += " AND t2.att_cdd = '20') "
+        query += " WHERE t1.mp_id = '"+l_mp_id+"' "
+        query += " AND t1.apl_id='"+l_apl_id+"' "
 
 
         queryset = mp_sub.objects.raw(query)
@@ -1714,22 +1714,22 @@ def MP0103M_Insert(request):
 
     maxRow = request.POST.get('maxRow', 0)
 
-    update_text = " update service20_mp_plnh a ";
-    update_text += " , service20_mpgm b ";
-    update_text += " , service20_mp_mte c ";
-    update_text += " , (SELECT mp_id ";
-    update_text += " , apl_no ";
-    update_text += " , apl_id ";
-    update_text += " , apl_nm ";
-    update_text += " FROM service20_mp_mtr ";
-    update_text += " WHERE apl_id = '"+apl_id+"' ";
-    update_text += " AND apl_no = '"+apl_no+"') d ";
-    update_text += " SET a.pln_dt = NOW() ";
-    update_text += " WHERE a.mp_id = b.mp_id ";
-    update_text += " AND a.mp_id = c.mp_id ";
-    update_text += " AND a.mp_id = d.mp_id ";
-    update_text += " AND a.apl_no = d.apl_no ";
-    update_text += " AND d.apl_no = c.apl_no ";
+    update_text = " update service20_mp_plnh a "
+    update_text += " , service20_mpgm b "
+    update_text += " , service20_mp_mte c "
+    update_text += " , (SELECT mp_id "
+    update_text += " , apl_no "
+    update_text += " , apl_id "
+    update_text += " , apl_nm "
+    update_text += " FROM service20_mp_mtr "
+    update_text += " WHERE apl_id = '"+apl_id+"' "
+    update_text += " AND apl_no = '"+apl_no+"') d "
+    update_text += " SET a.pln_dt = NOW() "
+    update_text += " WHERE a.mp_id = b.mp_id "
+    update_text += " AND a.mp_id = c.mp_id "
+    update_text += " AND a.mp_id = d.mp_id "
+    update_text += " AND a.apl_no = d.apl_no "
+    update_text += " AND d.apl_no = c.apl_no "
     print(update_text)
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)
@@ -1741,55 +1741,55 @@ def MP0103M_Insert(request):
     
         # pln_no_max = mp_plnd.objects.all().aggregate(vlMax=Max('pln_no'))
         
-        # apl_no = 0;
+        # apl_no = 0
         
         # max_no = mp_plnd_max['vlMax']    
 
         # if max_no == None:
-        #     apl_no = 0;
+        #     apl_no = 0
         # else:
         #     apl_no = mp_plnd_max['vlMax']
-        #     apl_no = apl_no + 1;
+        #     apl_no = apl_no + 1
 
         mtr_desc = request.POST.get('mtr_desc'+str(i), "")
         pln_no = request.POST.get('pln_no'+str(i+1), "")
 
-        insert_text = " insert into service20_mp_plnd ( ";
-        insert_text += " mp_id ";
-        insert_text += " , apl_no ";
-        insert_text += " , pln_no ";
-        insert_text += " , pln_sdt ";
-        insert_text += " , pln_edt ";
-        insert_text += " , mtr_desc ";
-        insert_text += " , ins_id ";
-        insert_text += " , ins_ip ";
-        insert_text += " , ins_dt ";
-        insert_text += " , ins_pgm ";
-        insert_text += " , upd_id ";
-        insert_text += " , upd_ip ";
-        insert_text += " , upd_dt ";
-        insert_text += " , upd_pgm ";
-        insert_text += " ) ";
-        insert_text += "  ( select ";
-        insert_text += " '"+str(mp_id)+"' ";
-        insert_text += " , '"+str(apl_no)+"' ";
-        insert_text += " , '"+str(pln_no)+"' ";
-        insert_text += " , adddate(t2.mnt_fr_dt, 7*('"+str(pln_no)+"'*1-1) + 0) pln_sdt ";
-        insert_text += " , adddate(t2.mnt_fr_dt, 7*('"+str(pln_no)+"'*1-1) + 6) pln_edt ";
-        insert_text += " , '"+str(mtr_desc)+"' ";
-        insert_text += " , '"+str(ins_id)+"' ";
-        insert_text += " , '"+str(ins_ip)+"' ";
-        insert_text += " , now() ";
-        insert_text += " , '"+str(ins_pgm)+"' ";
-        insert_text += " , '"+str(upd_id)+"' ";
-        insert_text += " , '"+str(upd_ip)+"' ";
-        insert_text += " , now() ";
-        insert_text += " , '"+str(upd_pgm)+"' ";
-        insert_text += " from service20_mp_mtr t1 ";
-        insert_text += " left join service20_mpgm t2 on (t2.mp_id = t1.mp_id) ";
-        insert_text += " where t1.mp_id = '"+str(mp_id)+"' ";
-        insert_text += " and apl_id = '"+str(apl_id)+"' ";
-        insert_text += " )";
+        insert_text = " insert into service20_mp_plnd ( "
+        insert_text += " mp_id "
+        insert_text += " , apl_no "
+        insert_text += " , pln_no "
+        insert_text += " , pln_sdt "
+        insert_text += " , pln_edt "
+        insert_text += " , mtr_desc "
+        insert_text += " , ins_id "
+        insert_text += " , ins_ip "
+        insert_text += " , ins_dt "
+        insert_text += " , ins_pgm "
+        insert_text += " , upd_id "
+        insert_text += " , upd_ip "
+        insert_text += " , upd_dt "
+        insert_text += " , upd_pgm "
+        insert_text += " ) "
+        insert_text += "  ( select "
+        insert_text += " '"+str(mp_id)+"' "
+        insert_text += " , '"+str(apl_no)+"' "
+        insert_text += " , '"+str(pln_no)+"' "
+        insert_text += " , adddate(t2.mnt_fr_dt, 7*('"+str(pln_no)+"'*1-1) + 0) pln_sdt "
+        insert_text += " , adddate(t2.mnt_fr_dt, 7*('"+str(pln_no)+"'*1-1) + 6) pln_edt "
+        insert_text += " , '"+str(mtr_desc)+"' "
+        insert_text += " , '"+str(ins_id)+"' "
+        insert_text += " , '"+str(ins_ip)+"' "
+        insert_text += " , now() "
+        insert_text += " , '"+str(ins_pgm)+"' "
+        insert_text += " , '"+str(upd_id)+"' "
+        insert_text += " , '"+str(upd_ip)+"' "
+        insert_text += " , now() "
+        insert_text += " , '"+str(upd_pgm)+"' "
+        insert_text += " from service20_mp_mtr t1 "
+        insert_text += " left join service20_mpgm t2 on (t2.mp_id = t1.mp_id) "
+        insert_text += " where t1.mp_id = '"+str(mp_id)+"' "
+        insert_text += " and apl_id = '"+str(apl_id)+"' "
+        insert_text += " )"
 
         print(insert_text)
         cursor = connection.cursor()
@@ -1833,17 +1833,17 @@ def MP0103M_Update(request):
     ####################################
     # 1번쿼리
     ####################################
-    update_text = " update service20_mp_plnh ";
-    update_text += " SET mtr_sub = '"+str(mtr_sub)+"' ";
-    # update_text += " , pln_sdt = ifnull(trim(NULLIF('"+str(mtr_pln_sdt)+"','')),DATE_FORMAT(now(),'%Y-%m-%d')) ";
-    # update_text += " , pln_edt = ifnull(trim(NULLIF('"+str(mtr_pln_edt)+"','')),DATE_FORMAT(now(),'%Y-%m-%d')) ";
-    update_text += " , upd_id = '"+str(upd_id)+"' ";
-    update_text += " , upd_ip = '"+str(upd_ip)+"' ";
-    update_text += " , upd_dt = now() ";
-    update_text += " , upd_pgm = '"+str(upd_pgm)+"' ";
-    update_text += " WHERE mp_id = '"+str(mp_id)+"' ";
-    # update_text += " AND apl_no = '"+str(apl_no)+"' ";
-    update_text += " AND apl_no IN (SELECT apl_no FROM service20_mp_mtr WHERE apl_id = '"+str(apl_id)+"') ";
+    update_text = " update service20_mp_plnh "
+    update_text += " SET mtr_sub = '"+str(mtr_sub)+"' "
+    # update_text += " , pln_sdt = ifnull(trim(NULLIF('"+str(mtr_pln_sdt)+"','')),DATE_FORMAT(now(),'%Y-%m-%d')) "
+    # update_text += " , pln_edt = ifnull(trim(NULLIF('"+str(mtr_pln_edt)+"','')),DATE_FORMAT(now(),'%Y-%m-%d')) "
+    update_text += " , upd_id = '"+str(upd_id)+"' "
+    update_text += " , upd_ip = '"+str(upd_ip)+"' "
+    update_text += " , upd_dt = now() "
+    update_text += " , upd_pgm = '"+str(upd_pgm)+"' "
+    update_text += " WHERE mp_id = '"+str(mp_id)+"' "
+    # update_text += " AND apl_no = '"+str(apl_no)+"' "
+    update_text += " AND apl_no IN (SELECT apl_no FROM service20_mp_mtr WHERE apl_id = '"+str(apl_id)+"') "
 
     print(update_text)
     cursor = connection.cursor()
@@ -1862,18 +1862,18 @@ def MP0103M_Update(request):
         ####################################
         # 2번쿼리
         ####################################
-        update_text = " update service20_mp_plnd ";
-        update_text += " SET mtr_desc = '"+str(mtr_desc)+"' ";
-        # update_text += " , pln_sdt = ifnull(trim(NULLIF('"+str(mtr_pln_sdt)+"','')),DATE_FORMAT(now(),'%Y-%m-%d')) ";
-        # update_text += " , pln_edt = ifnull(trim(NULLIF('"+str(mtr_pln_edt)+"','')),DATE_FORMAT(now(),'%Y-%m-%d')) ";
-        update_text += " , upd_id = '"+str(upd_id)+"' ";
-        update_text += " , upd_ip = '"+str(upd_ip)+"' ";
-        update_text += " , upd_dt = now() ";
-        update_text += " , upd_pgm = '"+str(upd_pgm)+"' ";
-        update_text += " WHERE mp_id = '"+str(mp_id)+"' ";
-        # update_text += " AND apl_no = '"+str(apl_no)+"' ";
-        update_text += " AND apl_no IN (SELECT apl_no FROM service20_mp_mtr WHERE apl_id = '"+str(apl_id)+"') ";
-        update_text += " AND pln_no = '"+str(pln_no)+"' ";
+        update_text = " update service20_mp_plnd "
+        update_text += " SET mtr_desc = '"+str(mtr_desc)+"' "
+        # update_text += " , pln_sdt = ifnull(trim(NULLIF('"+str(mtr_pln_sdt)+"','')),DATE_FORMAT(now(),'%Y-%m-%d')) "
+        # update_text += " , pln_edt = ifnull(trim(NULLIF('"+str(mtr_pln_edt)+"','')),DATE_FORMAT(now(),'%Y-%m-%d')) "
+        update_text += " , upd_id = '"+str(upd_id)+"' "
+        update_text += " , upd_ip = '"+str(upd_ip)+"' "
+        update_text += " , upd_dt = now() "
+        update_text += " , upd_pgm = '"+str(upd_pgm)+"' "
+        update_text += " WHERE mp_id = '"+str(mp_id)+"' "
+        # update_text += " AND apl_no = '"+str(apl_no)+"' "
+        update_text += " AND apl_no IN (SELECT apl_no FROM service20_mp_mtr WHERE apl_id = '"+str(apl_id)+"') "
+        update_text += " AND pln_no = '"+str(pln_no)+"' "
 
         print(update_text)
         cursor = connection.cursor()
@@ -1939,37 +1939,37 @@ class MP0104M_list(generics.ListAPIView):
 
         queryset = self.get_queryset()
 
-        query = " select t3.id,t3.mp_id     /* 멘토링 프로그램id*/ ";
-        query += " , t1.apl_no    /* 멘토 지원 no*/ ";
-        query += " , t3.mntr_id         /* 멘토id*/ ";
-        query += " , t3.apl_nm          /* 지원자(멘토,학생) 명*/ ";
-        query += " , t3.unv_nm          /* 지원자 대학교 명*/ ";
-        query += " , t3.cllg_nm         /* 지원자 대학 명*/ ";
-        query += " , t3.dept_nm         /* 지원자 학부/학과 명*/ ";
-        query += " , t3.sch_yr          /* 학년 */";
-        query += " , sec_to_time(sum(time_to_sec(t1.elap_tm))) sum_elap_tm  /* 경과시간*/ ";
-        query += " , sum(t1.appr_tm)   sum_appr_tm /* 인정시간*/ ";
-        query += " , sum(t1.exp_amt)   sum_exp_amt /* 지급 활동비 */";
-        query += " , sum(t1.appr_tm)   cum_appr_tm /* 누적시간*/ ";
-        query += " , t3.bank_nm         /* 은행 명*/ ";
-        query += " , t3.bank_acct       /* 은행 계좌 번호*/ ";
-        query += " , t3.apl_id ";
-        query += " from service20_mp_att t1     /* 프로그램 출석부(멘토)*/ ";
-        query += " left join service20_mp_mtr t3 on (t3.mp_id    = t1.mp_id ";
-        query += " and t3.apl_no   = t1.apl_no) ";
-        query += " where 1=1 ";
-        # query += " and t1.mp_id    = '"+l_mp_id+"'    /* 멘토링 프로그램id */ ";
-        query += " and t3.apl_id   = '"+l_apl_id+"'   ";
-        query += " group by t1.mp_id     /* 멘토링 프로그램id */ ";
-        query += " , t1.apl_no    /* 멘토 지원 no */ ";
-        query += " , t3.mntr_id         /* 멘토id  */ ";
-        query += " , t3.apl_nm          /* 지원자(멘토,학생) 명 */ ";
-        query += " , t3.unv_nm          /* 지원자 대학교 명 */ ";
-        query += " , t3.cllg_nm         /* 지원자 대학 명 */ ";
-        query += " , t3.dept_nm         /* 지원자 학부/학과 명 */ ";
-        query += " , t3.sch_yr          /* 학년 */ ";
-        query += " , t3.bank_nm         /* 은행 명 */ ";
-        query += " , t3.bank_acct ";
+        query = " select t3.id,t3.mp_id     /* 멘토링 프로그램id*/ "
+        query += " , t1.apl_no    /* 멘토 지원 no*/ "
+        query += " , t3.mntr_id         /* 멘토id*/ "
+        query += " , t3.apl_nm          /* 지원자(멘토,학생) 명*/ "
+        query += " , t3.unv_nm          /* 지원자 대학교 명*/ "
+        query += " , t3.cllg_nm         /* 지원자 대학 명*/ "
+        query += " , t3.dept_nm         /* 지원자 학부/학과 명*/ "
+        query += " , t3.sch_yr          /* 학년 */"
+        query += " , sec_to_time(sum(time_to_sec(t1.elap_tm))) sum_elap_tm  /* 경과시간*/ "
+        query += " , sum(t1.appr_tm)   sum_appr_tm /* 인정시간*/ "
+        query += " , sum(t1.exp_amt)   sum_exp_amt /* 지급 활동비 */"
+        query += " , sum(t1.appr_tm)   cum_appr_tm /* 누적시간*/ "
+        query += " , t3.bank_nm         /* 은행 명*/ "
+        query += " , t3.bank_acct       /* 은행 계좌 번호*/ "
+        query += " , t3.apl_id "
+        query += " from service20_mp_att t1     /* 프로그램 출석부(멘토)*/ "
+        query += " left join service20_mp_mtr t3 on (t3.mp_id    = t1.mp_id "
+        query += " and t3.apl_no   = t1.apl_no) "
+        query += " where 1=1 "
+        # query += " and t1.mp_id    = '"+l_mp_id+"'    /* 멘토링 프로그램id */ "
+        query += " and t3.apl_id   = '"+l_apl_id+"'   "
+        query += " group by t1.mp_id     /* 멘토링 프로그램id */ "
+        query += " , t1.apl_no    /* 멘토 지원 no */ "
+        query += " , t3.mntr_id         /* 멘토id  */ "
+        query += " , t3.apl_nm          /* 지원자(멘토,학생) 명 */ "
+        query += " , t3.unv_nm          /* 지원자 대학교 명 */ "
+        query += " , t3.cllg_nm         /* 지원자 대학 명 */ "
+        query += " , t3.dept_nm         /* 지원자 학부/학과 명 */ "
+        query += " , t3.sch_yr          /* 학년 */ "
+        query += " , t3.bank_nm         /* 은행 명 */ "
+        query += " , t3.bank_acct "
 
 
 
@@ -2031,37 +2031,37 @@ class MP0104M_Detail(generics.ListAPIView):
 
         queryset = self.get_queryset()
 
-        query = " select t1.id,t1.mp_id     /* 멘토링 프로그램id */  ";
-        query += " , t1.apl_no    /* 멘토 지원 no */  ";
-        query += " , t1.att_no    /* 출석순서(seq) */  ";
-        query += " , t1.mp_div    /* 교육구분(mp0059) */  ";
-        query += " , c1.std_detl_code_nm   as mp_div_nm ";
-        query += " , t2.mnte_id     /* 멘티id */  ";
-        query += " , t2.mnte_nm     /* 멘티명 */  ";
-        query += " , substring(t1.att_sdt, 1, 10) as att_sdt   /* 출석일시(교육시작일시) */  ";
-        query += " , substring(t1.att_sdt, 12, 5) as att_stm   /* 출석일시(교육시작일시) */  ";
-        query += " , substring(t1.att_edt, 12, 5) as att_etm   /* 출석일시(교육시작일시) */  ";
-        query += " , substring(t1.elap_tm, 1, 5)  as elap_tm   /* 경과시간 */  ";
-        query += " , t1.appr_tm   /* 인정시간 */  ";
-        query += " , t1.mtr_desc  /* 멘토링 내용(보고서) */  ";
-        query += " , t1.appr_id   /* 승인자id */  ";
-        query += " , t1.appr_nm   /* 승인자명 */  ";
-        query += " , substring(t1.appr_dt, 1, 16)  as appr_dt  /* 보호자 승인일시 */  ";
-        query += " , t1.mgr_id    /* 관리자id */  ";
-        query += " , t4.mgr_nm    /* 관리자명 */  ";
-        query += " , substring(t1.mgr_dt, 1, 16)  as mgr_dt   /* 관리자 승인일시 */  ";
-        query += " , ' ' expl_yn   /* 소명상태 */  ";
-        query += " , t1.exp_amt   /* 지급 활동비 */  ";
-        query += " , t3.apl_id /* 학번 */ ";
-        query += " from service20_mp_att t1     /* 프로그램 출석부(멘토) */ ";
-        query += " left join service20_mp_mte t2  on (t2.mp_id  = t1.mp_id and t2.apl_no = t1.apl_no)  ";
-        query += " left join service20_mp_mtr t3 on (t3.mp_id    = t1.mp_id and t3.apl_no   = t1.apl_no) ";
-        query += " left join service20_mpgm   t4 on (t4.mp_id    = t1.mp_id) ";
-        query += " left join service20_com_cdd c1 on (c1.std_grp_code  = 'mp0059' and c1.std_detl_code = t1.mp_div) ";
-        query += " where 1=1 ";
-        query += " and t1.mp_id    = '"+l_mp_id+"'   /* 멘토링 프로그램id */ ";
-        query += " and t3.apl_id   = '"+l_apl_id+"' ";
-        query += " order by t1.att_no DESC    /* 출석순서(seq) */ ";
+        query = " select t1.id,t1.mp_id     /* 멘토링 프로그램id */  "
+        query += " , t1.apl_no    /* 멘토 지원 no */  "
+        query += " , t1.att_no    /* 출석순서(seq) */  "
+        query += " , t1.mp_div    /* 교육구분(mp0059) */  "
+        query += " , c1.std_detl_code_nm   as mp_div_nm "
+        query += " , t2.mnte_id     /* 멘티id */  "
+        query += " , t2.mnte_nm     /* 멘티명 */  "
+        query += " , substring(t1.att_sdt, 1, 10) as att_sdt   /* 출석일시(교육시작일시) */  "
+        query += " , substring(t1.att_sdt, 12, 5) as att_stm   /* 출석일시(교육시작일시) */  "
+        query += " , substring(t1.att_edt, 12, 5) as att_etm   /* 출석일시(교육시작일시) */  "
+        query += " , substring(t1.elap_tm, 1, 5)  as elap_tm   /* 경과시간 */  "
+        query += " , t1.appr_tm   /* 인정시간 */  "
+        query += " , t1.mtr_desc  /* 멘토링 내용(보고서) */  "
+        query += " , t1.appr_id   /* 승인자id */  "
+        query += " , t1.appr_nm   /* 승인자명 */  "
+        query += " , substring(t1.appr_dt, 1, 16)  as appr_dt  /* 보호자 승인일시 */  "
+        query += " , t1.mgr_id    /* 관리자id */  "
+        query += " , t4.mgr_nm    /* 관리자명 */  "
+        query += " , substring(t1.mgr_dt, 1, 16)  as mgr_dt   /* 관리자 승인일시 */  "
+        query += " , ' ' expl_yn   /* 소명상태 */  "
+        query += " , t1.exp_amt   /* 지급 활동비 */  "
+        query += " , t3.apl_id /* 학번 */ "
+        query += " from service20_mp_att t1     /* 프로그램 출석부(멘토) */ "
+        query += " left join service20_mp_mte t2  on (t2.mp_id  = t1.mp_id and t2.apl_no = t1.apl_no)  "
+        query += " left join service20_mp_mtr t3 on (t3.mp_id    = t1.mp_id and t3.apl_no   = t1.apl_no) "
+        query += " left join service20_mpgm   t4 on (t4.mp_id    = t1.mp_id) "
+        query += " left join service20_com_cdd c1 on (c1.std_grp_code  = 'mp0059' and c1.std_detl_code = t1.mp_div) "
+        query += " where 1=1 "
+        query += " and t1.mp_id    = '"+l_mp_id+"'   /* 멘토링 프로그램id */ "
+        query += " and t3.apl_id   = '"+l_apl_id+"' "
+        query += " order by t1.att_no DESC    /* 출석순서(seq) */ "
 
 
 
@@ -2115,15 +2115,15 @@ class MP0105M_combo_1(generics.ListAPIView):
 
         queryset = self.get_queryset()
 
-        query = " select A.id ";
-        query += " , A.mp_id ";
-        query += " , A.apl_no ";
-        query += " , B.mp_name ";
-        query += " FROM service20_mp_mtr A ";
-        query += " , service20_mpgm B ";
-        query += " WHERE apl_id = '"+l_apl_id+"' ";
-        query += " AND mntr_id IS NOT null ";
-        query += " AND A.mp_id = B.mp_id ";
+        query = " select A.id "
+        query += " , A.mp_id "
+        query += " , A.apl_no "
+        query += " , B.mp_name "
+        query += " FROM service20_mp_mtr A "
+        query += " , service20_mpgm B "
+        query += " WHERE apl_id = '"+l_apl_id+"' "
+        query += " AND mntr_id IS NOT null "
+        query += " AND A.mp_id = B.mp_id "
 
         queryset = mp_mtr.objects.raw(query)
 
@@ -2198,49 +2198,49 @@ class MP0105M_list(generics.ListAPIView):
 
         queryset = self.get_queryset()
 
-        query = " select t1.id ";
-        query += " , t1.mp_id     /* 멘토링 프로그램id */ ";
-        query += " , t2.unv_nm          /* 지원자 대학교 명 */ ";
-        query += " , t2.cllg_nm         /* 지원자 대학 명 */ ";
-        query += " , t2.dept_nm         /* 지원자 학부/학과 명 */ ";
-        query += " , t2.apl_id          /* 지원자(멘토,학생) 학번 */ ";
-        query += " , t2.apl_nm          /* 지원자(멘토,학생) 명 */ ";
-        query += " , t1.rep_div         /* 보고서 구분(mp0062) */ ";
-        query += " , c2.std_detl_code_nm   as rep_div_nm ";
-        query += " , t1.status          /* 상태(mp0070) */ ";
-        query += " , c1.std_detl_code_nm   as status_nm ";
-        query += " , substring(t1.req_dt,  1, 10) req_dt_sub    /* 승인요청일 */ ";
-        query += " , substring(t1.appr_dt, 1, 10) appr_dt_sub   /* 보호자 승인일시 */ ";
-        query += " , substring(t1.mgr_dt,  1, 10) mgr_dt_sub   /* 관리자 승인일시 */ ";
-        query += " , t1.rep_ttl   /* 보고서 제목 : 내용 */ ";
-        query += " , t1.apl_no    /* 멘토 지원 no */ ";
-        query += " , t1.rep_no    /* 보고서 no */ ";
-        query += " , t1.rep_div   /* 보고서 구분(mp0062) */ ";
-        query += " , t1.rep_ttl   /* 보고서 제목 */ ";
-        query += " , t1.mtr_obj   /* 학습목표 */ ";
-        query += " , t1.rep_dt    /* 보고서작성일 */ ";
-        query += " , t1.req_dt    /* 승인요청일 */ ";
-        query += " , t1.mtr_desc  /* 학습내용 */ ";
-        query += " , t1.coatching /* 학습외 지도(상담) */ ";
-        query += " , t1.spcl_note /* 특이사항 */ ";
-        query += " , t1.mtr_revw  /* 소감문 */ ";
-        query += " , t1.appr_id   /* 승인자id */ ";
-        query += " , t1.appr_nm   /* 승인자명 */ ";
-        query += " , t1.appr_dt   /* 보호자 승인일시 */ ";
-        query += " , t1.mgr_id    /* 관리자id */ ";
-        query += " , t1.mgr_dt    /* 관리자 승인일시 */ ";
-        query += " from service20_mp_rep t1     /* 프로그램 보고서 */ ";
-        query += " left join service20_mp_mtr t2 on (t2.mp_id   = t1.mp_id ";
-        query += " and t2.apl_no = t1.apl_no)       /* 지원 멘토 */ ";
-        query += " left join service20_com_cdd c1 on (c1.std_grp_code  = 'MP0070'  /* 상태(mp0070) */ ";
-        query += " and c1.std_detl_code = t1.status) ";
-        query += " left join service20_com_cdd c2 on (c2.std_grp_code  = 'MP0062'  /* 보고서 구분(mp0062) */ ";
-        query += " and c2.std_detl_code = t1.rep_div) ";
-        query += " where 1=1 ";
-        query += " and t1.mp_id     = '"+l_mp_id+"'     /* 멘토링 프로그램id */ ";
-        # query += " and t1.rep_div   = 'M' ";
-        # query += " and t1.status    =  '20' /* 제출, 40 완료 */ ";
-        query += " and t2.apl_id    =  '"+l_apl_id+"' ";
+        query = " select t1.id "
+        query += " , t1.mp_id     /* 멘토링 프로그램id */ "
+        query += " , t2.unv_nm          /* 지원자 대학교 명 */ "
+        query += " , t2.cllg_nm         /* 지원자 대학 명 */ "
+        query += " , t2.dept_nm         /* 지원자 학부/학과 명 */ "
+        query += " , t2.apl_id          /* 지원자(멘토,학생) 학번 */ "
+        query += " , t2.apl_nm          /* 지원자(멘토,학생) 명 */ "
+        query += " , t1.rep_div         /* 보고서 구분(mp0062) */ "
+        query += " , c2.std_detl_code_nm   as rep_div_nm "
+        query += " , t1.status          /* 상태(mp0070) */ "
+        query += " , c1.std_detl_code_nm   as status_nm "
+        query += " , substring(t1.req_dt,  1, 10) req_dt_sub    /* 승인요청일 */ "
+        query += " , substring(t1.appr_dt, 1, 10) appr_dt_sub   /* 보호자 승인일시 */ "
+        query += " , substring(t1.mgr_dt,  1, 10) mgr_dt_sub   /* 관리자 승인일시 */ "
+        query += " , t1.rep_ttl   /* 보고서 제목 : 내용 */ "
+        query += " , t1.apl_no    /* 멘토 지원 no */ "
+        query += " , t1.rep_no    /* 보고서 no */ "
+        query += " , t1.rep_div   /* 보고서 구분(mp0062) */ "
+        query += " , t1.rep_ttl   /* 보고서 제목 */ "
+        query += " , t1.mtr_obj   /* 학습목표 */ "
+        query += " , t1.rep_dt    /* 보고서작성일 */ "
+        query += " , t1.req_dt    /* 승인요청일 */ "
+        query += " , t1.mtr_desc  /* 학습내용 */ "
+        query += " , t1.coatching /* 학습외 지도(상담) */ "
+        query += " , t1.spcl_note /* 특이사항 */ "
+        query += " , t1.mtr_revw  /* 소감문 */ "
+        query += " , t1.appr_id   /* 승인자id */ "
+        query += " , t1.appr_nm   /* 승인자명 */ "
+        query += " , t1.appr_dt   /* 보호자 승인일시 */ "
+        query += " , t1.mgr_id    /* 관리자id */ "
+        query += " , t1.mgr_dt    /* 관리자 승인일시 */ "
+        query += " from service20_mp_rep t1     /* 프로그램 보고서 */ "
+        query += " left join service20_mp_mtr t2 on (t2.mp_id   = t1.mp_id "
+        query += " and t2.apl_no = t1.apl_no)       /* 지원 멘토 */ "
+        query += " left join service20_com_cdd c1 on (c1.std_grp_code  = 'MP0070'  /* 상태(mp0070) */ "
+        query += " and c1.std_detl_code = t1.status) "
+        query += " left join service20_com_cdd c2 on (c2.std_grp_code  = 'MP0062'  /* 보고서 구분(mp0062) */ "
+        query += " and c2.std_detl_code = t1.rep_div) "
+        query += " where 1=1 "
+        query += " and t1.mp_id     = '"+l_mp_id+"'     /* 멘토링 프로그램id */ "
+        # query += " and t1.rep_div   = 'M' "
+        # query += " and t1.status    =  '20' /* 제출, 40 완료 */ "
+        query += " and t2.apl_id    =  '"+l_apl_id+"' "
 
 
         queryset = mp_rep.objects.raw(query)
@@ -2419,80 +2419,80 @@ def MP0105M_Insert(request):
     upd_pgm   = request.POST.get('upd_pgm  ', "")
 
 
-    insert_text = " insert into service20_mp_rep  ";
-    insert_text += " (  ";
-    insert_text += " mp_id      /*멘토링 프로그램id*/  ";
-    insert_text += " , apl_no      /*멘토 지원 no*/  ";
-    insert_text += " , rep_no      /*보고서 no*/  ";
-    insert_text += " , rep_div     /*보고서 구분(mp0062)*/  ";
-    insert_text += " , mnte_id    /*담당멘티id*/  ";
-    insert_text += " , mnte_nm    /*담당멘티명*/  ";
-    insert_text += " , tchr_id    /*담당교사id*/  ";
-    insert_text += " , tchr_nm    /*담당교사명*/  ";
-    insert_text += " , sch_nm      /*학교명*/  ";
-    insert_text += " , mtr_sub    /*지도과목*/  ";
-    insert_text += " , att_desc    /*출석현황*/  ";
-    insert_text += " , rep_ttl    /*보고서 제목*/  ";
-    insert_text += " , mtr_obj    /*학습목표*/  ";
-    insert_text += " , rep_dt      /*보고서작성일*/  ";
-    insert_text += " , req_dt      /*승인요청일*/  ";
-    insert_text += " , mtr_desc    /*학습내용*/  ";
-    insert_text += " , coatching    /*학습외 지도(상담)*/  ";
-    insert_text += " , spcl_note    /*특이사항*/  ";
-    insert_text += " , mtr_revw    /*소감문*/  ";
-    insert_text += " , appr_id    /*승인자id*/  ";
-    insert_text += " , appr_nm    /*승인자명*/  ";
-    insert_text += " , appr_dt    /*보호자 승인일시*/ "; 
-    insert_text += " , mgr_id      /*관리자id*/  ";
-    insert_text += " , mgr_dt      /*관리자 승인일시*/  ";
-    insert_text += " , status      /*상태(mp0070)*/  ";
-    insert_text += " , ins_id      /*입력자id*/  ";
-    insert_text += " , ins_ip      /*입력자ip*/  ";
-    insert_text += " , ins_dt      /*입력일시*/  ";
-    insert_text += " , ins_pgm    /*입력프로그램id*/  ";
-    insert_text += " , upd_id      /*수정자id*/  ";
-    insert_text += " , upd_ip      /*수정자ip*/  ";
-    insert_text += " , upd_dt      /*수정일시*/  ";
-    insert_text += " , upd_pgm    /*수정프로그램id*/  ";
-    insert_text += " )  ";
-    insert_text += " values(  ";
-    insert_text += " '"+str(mp_id )   +"'  /*멘토링 프로그램id*/  ";
-    insert_text += " , '"+str(apl_no ) +"'    /*멘토 지원 no*/  ";
-    insert_text += " , '"+str(rep_no ) +"'    /*보고서 no*/  ";
-    insert_text += " , '"+str(rep_div)  +"'    /*보고서 구분(mp0062)*/  ";
-    insert_text += " , '"+str(mnte_id)  +"'    /*담당멘티id*/  ";
-    insert_text += " , '"+str(mnte_nm)  +"'    /*담당멘티명*/  ";
-    insert_text += " , '"+str(tchr_id)  +"'    /*담당교사id*/  ";
-    insert_text += " , '"+str(tchr_nm)  +"'    /*담당교사명*/ "; 
-    insert_text += " , '"+str(sch_nm ) +"'    /*학교명*/  ";
-    insert_text += " , '"+str(mtr_sub)  +"'    /*지도과목*/  ";
-    insert_text += " , '"+str(att_desc)  +"'  /*출석현황*/  ";
-    insert_text += " , '"+str(rep_ttl)  +"'    /*보고서 제목*/  ";
-    insert_text += " , '"+str(mtr_obj)  +"'    /*학습목표*/  ";
-    insert_text += " , '"+str(rep_dt)  +"'    /*보고서작성일*/  ";
-    insert_text += " , '"+str(req_dt)  +"'    /*승인요청일*/  ";
-    insert_text += " , '"+str(mtr_desc)  +"'  /*학습내용*/  ";
-    insert_text += " , '"+str(coatching)  +"'  /*학습외 지도(상담)*/  ";
-    insert_text += " , '"+str(spcl_note)  +"' /*특이사항*/  ";
-    insert_text += " , '"+str(mtr_revw)  +"'  /*소감문*/  ";
-    insert_text += " , '"+str(appr_id)  +"'   /*승인자id*/  ";
-    insert_text += " , '"+str(appr_nm)  +"'    /*승인자명*/  ";
-    insert_text += " , '"+str(appr_dt)  +"'    /*보호자 승인일시*/  ";
-    insert_text += " , '"+str(mgr_id)  +"'    /*관리자id*/  ";
-    insert_text += " , '"+str(mgr_dt)  +"'    /*관리자 승인일시*/  ";
-    insert_text += " , '"+str(status)  +"'    /*상태(mp0070)*/  ";
-    insert_text += " , '"+str(ins_id)  +"'    /*입력자id*/  ";
-    insert_text += " , '"+str(ins_ip)  +"'    /*입력자ip*/  ";
-    insert_text += " , '"+str(ins_dt)  +"'    /*입력일시*/  ";
-    insert_text += " , '"+str(ins_pgm)  +"'   /*입력프로그램id*/  ";
-    insert_text += " , '"+str(upd_id)  +"'    /*수정자id*/  ";
-    insert_text += " , '"+str(upd_ip)  +"'    /*수정자ip*/  ";
-    insert_text += " , '"+str(upd_dt)  +"'    /*수정일시*/  ";
-    insert_text += " , '"+str(upd_pgm)  +"'    /*수정프로그램id*/  ";
-    insert_text += " ) on duplicate key update  ";
-    insert_text += " mtr_obj     = '"+str(mtr_obj)+"'       ";       
-    insert_text += " ,mtr_desc    = '"+str(mtr_desc)+"'  ";          
-    insert_text += " ,coatching   = '"+str(coatching)+"' ";
+    insert_text = " insert into service20_mp_rep  "
+    insert_text += " (  "
+    insert_text += " mp_id      /*멘토링 프로그램id*/  "
+    insert_text += " , apl_no      /*멘토 지원 no*/  "
+    insert_text += " , rep_no      /*보고서 no*/  "
+    insert_text += " , rep_div     /*보고서 구분(mp0062)*/  "
+    insert_text += " , mnte_id    /*담당멘티id*/  "
+    insert_text += " , mnte_nm    /*담당멘티명*/  "
+    insert_text += " , tchr_id    /*담당교사id*/  "
+    insert_text += " , tchr_nm    /*담당교사명*/  "
+    insert_text += " , sch_nm      /*학교명*/  "
+    insert_text += " , mtr_sub    /*지도과목*/  "
+    insert_text += " , att_desc    /*출석현황*/  "
+    insert_text += " , rep_ttl    /*보고서 제목*/  "
+    insert_text += " , mtr_obj    /*학습목표*/  "
+    insert_text += " , rep_dt      /*보고서작성일*/  "
+    insert_text += " , req_dt      /*승인요청일*/  "
+    insert_text += " , mtr_desc    /*학습내용*/  "
+    insert_text += " , coatching    /*학습외 지도(상담)*/  "
+    insert_text += " , spcl_note    /*특이사항*/  "
+    insert_text += " , mtr_revw    /*소감문*/  "
+    insert_text += " , appr_id    /*승인자id*/  "
+    insert_text += " , appr_nm    /*승인자명*/  "
+    insert_text += " , appr_dt    /*보호자 승인일시*/ " 
+    insert_text += " , mgr_id      /*관리자id*/  "
+    insert_text += " , mgr_dt      /*관리자 승인일시*/  "
+    insert_text += " , status      /*상태(mp0070)*/  "
+    insert_text += " , ins_id      /*입력자id*/  "
+    insert_text += " , ins_ip      /*입력자ip*/  "
+    insert_text += " , ins_dt      /*입력일시*/  "
+    insert_text += " , ins_pgm    /*입력프로그램id*/  "
+    insert_text += " , upd_id      /*수정자id*/  "
+    insert_text += " , upd_ip      /*수정자ip*/  "
+    insert_text += " , upd_dt      /*수정일시*/  "
+    insert_text += " , upd_pgm    /*수정프로그램id*/  "
+    insert_text += " )  "
+    insert_text += " values(  "
+    insert_text += " '"+str(mp_id )   +"'  /*멘토링 프로그램id*/  "
+    insert_text += " , '"+str(apl_no ) +"'    /*멘토 지원 no*/  "
+    insert_text += " , '"+str(rep_no ) +"'    /*보고서 no*/  "
+    insert_text += " , '"+str(rep_div)  +"'    /*보고서 구분(mp0062)*/  "
+    insert_text += " , '"+str(mnte_id)  +"'    /*담당멘티id*/  "
+    insert_text += " , '"+str(mnte_nm)  +"'    /*담당멘티명*/  "
+    insert_text += " , '"+str(tchr_id)  +"'    /*담당교사id*/  "
+    insert_text += " , '"+str(tchr_nm)  +"'    /*담당교사명*/ " 
+    insert_text += " , '"+str(sch_nm ) +"'    /*학교명*/  "
+    insert_text += " , '"+str(mtr_sub)  +"'    /*지도과목*/  "
+    insert_text += " , '"+str(att_desc)  +"'  /*출석현황*/  "
+    insert_text += " , '"+str(rep_ttl)  +"'    /*보고서 제목*/  "
+    insert_text += " , '"+str(mtr_obj)  +"'    /*학습목표*/  "
+    insert_text += " , '"+str(rep_dt)  +"'    /*보고서작성일*/  "
+    insert_text += " , '"+str(req_dt)  +"'    /*승인요청일*/  "
+    insert_text += " , '"+str(mtr_desc)  +"'  /*학습내용*/  "
+    insert_text += " , '"+str(coatching)  +"'  /*학습외 지도(상담)*/  "
+    insert_text += " , '"+str(spcl_note)  +"' /*특이사항*/  "
+    insert_text += " , '"+str(mtr_revw)  +"'  /*소감문*/  "
+    insert_text += " , '"+str(appr_id)  +"'   /*승인자id*/  "
+    insert_text += " , '"+str(appr_nm)  +"'    /*승인자명*/  "
+    insert_text += " , '"+str(appr_dt)  +"'    /*보호자 승인일시*/  "
+    insert_text += " , '"+str(mgr_id)  +"'    /*관리자id*/  "
+    insert_text += " , '"+str(mgr_dt)  +"'    /*관리자 승인일시*/  "
+    insert_text += " , '"+str(status)  +"'    /*상태(mp0070)*/  "
+    insert_text += " , '"+str(ins_id)  +"'    /*입력자id*/  "
+    insert_text += " , '"+str(ins_ip)  +"'    /*입력자ip*/  "
+    insert_text += " , '"+str(ins_dt)  +"'    /*입력일시*/  "
+    insert_text += " , '"+str(ins_pgm)  +"'   /*입력프로그램id*/  "
+    insert_text += " , '"+str(upd_id)  +"'    /*수정자id*/  "
+    insert_text += " , '"+str(upd_ip)  +"'    /*수정자ip*/  "
+    insert_text += " , '"+str(upd_dt)  +"'    /*수정일시*/  "
+    insert_text += " , '"+str(upd_pgm)  +"'    /*수정프로그램id*/  "
+    insert_text += " ) on duplicate key update  "
+    insert_text += " mtr_obj     = '"+str(mtr_obj)+"'       "       
+    insert_text += " ,mtr_desc    = '"+str(mtr_desc)+"'  "          
+    insert_text += " ,coatching   = '"+str(coatching)+"' "
     print(insert_text)
     cursor = connection.cursor()
     query_result = cursor.execute(insert_text)
@@ -2533,25 +2533,25 @@ class MP0106M_list(generics.ListAPIView):
 
         queryset = self.get_queryset()
 
-        query = " select t1.id,t1.mp_id                              /*멘토링 프로그램id     */ ";
-        query += " , t1.apl_no                             /*멘토 지원 no        */ ";
-        query += " , t1.exp_no                             /*활동비 no        */ ";
-        query += " , substring(t1.exp_mon,5,2) as exp_mon  /*활동비 월        */ ";
-        query += " , t1.exp_div                            /*활동비 구분        */ ";
-        query += " , t1.exp_ttl                            /*활동비 제목        */ ";
-        query += " , t1.appr_tm                            /*인정시간 합계        */ ";
-        query += " , t1.sum_exp                            /*활동비=appr_tm * unit_price*/ ";
-        query += " , t1.bank_acct                          /*은행 계좌 번호        */ ";
-        query += " , t1.bank_cd                            /*은행 코드        */ ";
-        query += " , t1.bank_nm                            /*은행 명           */ ";
-        query += " , t1.bank_dpsr                          /*예금주           */ ";
-        query += " from service20_mp_exp t1                   /*프로그램 출석부(멘토)     */ ";
-        query += " left join service20_mp_mtr t3 on (t3.mp_id    = t1.mp_id ";
-        query += " and t3.apl_no   = t1.apl_no) ";
-        query += " where 1=1 ";
-        # query += " and t1.mp_id    = '"+l_mp_id+"'     ";
-        query += " and t3.apl_id   = '"+l_apl_id+"' ";
-        query += " order by t1.exp_mon ";
+        query = " select t1.id,t1.mp_id                              /*멘토링 프로그램id     */ "
+        query += " , t1.apl_no                             /*멘토 지원 no        */ "
+        query += " , t1.exp_no                             /*활동비 no        */ "
+        query += " , substring(t1.exp_mon,5,2) as exp_mon  /*활동비 월        */ "
+        query += " , t1.exp_div                            /*활동비 구분        */ "
+        query += " , t1.exp_ttl                            /*활동비 제목        */ "
+        query += " , t1.appr_tm                            /*인정시간 합계        */ "
+        query += " , t1.sum_exp                            /*활동비=appr_tm * unit_price*/ "
+        query += " , t1.bank_acct                          /*은행 계좌 번호        */ "
+        query += " , t1.bank_cd                            /*은행 코드        */ "
+        query += " , t1.bank_nm                            /*은행 명           */ "
+        query += " , t1.bank_dpsr                          /*예금주           */ "
+        query += " from service20_mp_exp t1                   /*프로그램 출석부(멘토)     */ "
+        query += " left join service20_mp_mtr t3 on (t3.mp_id    = t1.mp_id "
+        query += " and t3.apl_no   = t1.apl_no) "
+        query += " where 1=1 "
+        # query += " and t1.mp_id    = '"+l_mp_id+"'     "
+        query += " and t3.apl_id   = '"+l_apl_id+"' "
+        query += " order by t1.exp_mon "
 
         queryset = mp_exp.objects.raw(query)
 
@@ -2702,7 +2702,7 @@ class mpmgListView(generics.ListAPIView):
     def list(self, request):
         queryset = self.get_queryset()
 
-        query = "select * from service20_mpgm order by apl_fr_dt desc, apl_to_dt desc";
+        query = "select * from service20_mpgm order by apl_fr_dt desc, apl_to_dt desc"
         queryset = mpgm.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
