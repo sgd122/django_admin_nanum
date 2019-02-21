@@ -27,6 +27,8 @@ urlpatterns = [
     path('com/combo/cnclRsn/', com_combo_cnclRsn.as_view(), name='com_combo_cnclRsn'),
     # 멘토의 학번으로 해당되는 멘티찾기
     path('com/list/my_mentee/', com_list_my_mentee.as_view(), name='com_list_my_mentee'),
+    # 프로그램 찾기
+    path('com/combo/program/', com_combo_program.as_view(), name='com_combo_program'),
     ########################################################################################
     # 공통(com)
     #
