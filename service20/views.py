@@ -279,16 +279,16 @@ class MS0101M_list(generics.ListAPIView):
         l_apl_term = request.GET.get('trn_term', None)
         l_user_id = request.GET.get('user_id', None)
 
-        query = " select APL_TO_DT,  ";
-        query += " IF(A.STATUS = '10'  ";
-        query += " AND NOW() > A.APL_TO_DT, 'XX', A.STATUS) AS statusCode,  ";
-        query += " IF(A.STATUS = '10'  ";
-        query += " AND NOW() > A.APL_TO_DT, '모집완료', (SELECT STD_DETL_CODE_NM  ";
-        query += " FROM   SERVICE20_COM_CDD  ";
-        query += " WHERE  ";
-        query += " STD_GRP_CODE = 'MS0001'  ";
-        query += " AND USE_INDC = 'Y'  ";
-        query += " AND STD_DETL_CODE = STATUS)) as status_nm,  ";
+        query = " select apl_to_dt,  ";
+        query += " if(a.status = '10'  ";
+        query += " and now() > a.apl_to_dt, 'xx', a.status) as statusCode,  ";
+        query += " if(a.status = '10'  ";
+        query += " and now() > a.apl_to_dt, '모집완료', (select std_detl_code_nm  ";
+        query += " from   service20_com_cdd  ";
+        query += " where  ";
+        query += " std_grp_code = 'MS0001'  ";
+        query += " and use_indc = 'y'  ";
+        query += " and std_detl_code = status)) as status_nm,  ";
 
         query += " ifnull((select 'Y' from service20_ms_apl where yr = '"+str(l_yr)+"' and apl_id = '"+str(l_user_id)+"' and ms_id = A.ms_id),'N') AS applyFlag,A.* from service20_msch A where A.yr='"+str(l_yr)+"' and A.apl_term='"+str(l_apl_term)+"'"
         query += " order by apl_fr_dt desc,apl_to_dt desc " 
