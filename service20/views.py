@@ -803,7 +803,8 @@ class MP0101M_list_Serializer(serializers.ModelSerializer):
     applyStatus = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
     statusCode = serializers.SerializerMethodField()
-    
+    status_nm  = serializers.SerializerMethodField()
+
     apl_fr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     apl_to_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     mnt_fr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
@@ -811,10 +812,9 @@ class MP0101M_list_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = mpgm
-        fields = ('mp_id','mp_name','status','statusCode','yr','yr_seq','sup_org','applyFlag','applyStatus','apl_fr_dt','apl_to_dt','mnt_fr_dt','mnt_to_dt','cnt_trn','status')
+        fields = ('mp_id','mp_name','status','statusCode','yr','yr_seq','sup_org','applyFlag','applyStatus','apl_fr_dt','apl_to_dt','mnt_fr_dt','mnt_to_dt','cnt_trn','status','status_nm')
 
     def get_applyFlag(self, obj):
-        # return 'Y'     
         return obj.applyFlag    
     def get_applyStatus(self, obj):
         if obj.applyFlag == 'Y':
@@ -823,39 +823,11 @@ class MP0101M_list_Serializer(serializers.ModelSerializer):
             return '미지원'    
         # return obj.applyStatus    
 
-    def get_status(self,obj):
-        request = self.context['request']
-        now = datetime.datetime.today()
-        if obj.apl_fr_dt == None:
-            return '개설중'
-        elif now < obj.apl_fr_dt:
-            return '개설중'
-        elif obj.apl_fr_dt <= now < obj.apl_to_dt:
-            return '모집중'
-        elif now > obj.apl_to_dt:
-            return '모집완료'
-        else:
-            return '개설중'
-
     def get_statusCode(self,obj):
-        request = self.context['request']
-        now = datetime.datetime.today()
-        if obj.apl_fr_dt == None:
-            # 개설중
-            return '1'
-        elif now < obj.apl_fr_dt:
-            # 개설중
-            return '1'
-        elif obj.apl_fr_dt <= now < obj.apl_to_dt:
-            # 모집중
-            return '2'
-        elif now > obj.apl_to_dt:
-            # 모집완료
-            return '3'  
-        else:
-            # 개설중
-            return '1'
-    get_status.short_description = '상태'     
+        return obj.statusCode 
+
+    def get_status_nm(self,obj):
+        return obj.status_nm   
 
 
 
