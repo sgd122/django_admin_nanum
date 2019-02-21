@@ -2475,13 +2475,13 @@ class main_list_mento_count_Serializer(serializers.ModelSerializer):
 
 
 class main_list_mento_count(generics.ListAPIView):
-    queryset = mpgm.objects.all()
+    queryset = mentor.objects.all()
     serializer_class = main_list_mento_count_Serializer
 
     def list(self, request):
         queryset = self.get_queryset()
 
-        v_count = mpgm.objects.count()
+        v_count = mentor.objects.count()
         print(v_count)
 
         context = {'count': v_count,
