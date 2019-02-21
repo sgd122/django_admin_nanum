@@ -172,7 +172,7 @@ class com_combo_program(generics.ListAPIView):
 
     def list(self, request):
         
-        apl_id = request.GET.get('apl_id', "%")
+        apl_id = request.GET.get('apl_id', "")
         
 
         queryset = self.get_queryset()
@@ -182,7 +182,7 @@ class com_combo_program(generics.ListAPIView):
         query += " , B.mp_name ";
         query += " FROM service20_mp_mtr A ";
         query += " , service20_mpgm B ";
-        query += " WHERE apl_id like '"+str(apl_id)+"' ";
+        query += " WHERE apl_id = '"+str(apl_id)+"' ";
         query += " AND mntr_id IS NOT null ";
         query += " AND A.mp_id = B.mp_id ";
 
