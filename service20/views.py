@@ -154,6 +154,49 @@ class com_list_my_mentee(generics.ListAPIView):
 
         return Response(serializer.data)        
 
+# 취소사유 콤보박스
+class com_combo_program_Serializer(serializers.ModelSerializer):
+
+    mp_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = mpgm
+        fields = ('mp_id','apl_no','mntr_id','indv_div','team_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','bank_acct','bank_cd','bank_nm','bank_dpsr','cnt_mp_a','cnt_mp_p','cnt_mp_c','cnt_mp_g','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','fnl_rslt','acpt_dt','acpt_div','acpt_cncl_rsn','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','mp_name')
+
+    def get_mp_name(self, obj):
+        return obj.mp_name
+
+class com_combo_program(generics.ListAPIView):
+    queryset = mpgm.objects.all()
+    serializer_class = com_combo_program_Serializer
+
+    def list(self, request):
+        
+        apl_id = request.GET.get('apl_id', "")
+        
+
+        queryset = self.get_queryset()
+        
+        query = " select A.mp_id ";
+        query += " , A.apl_no ";
+        query += " , B.mp_name ";
+        query += " FROM service20_mp_mtr A ";
+        query += " , service20_mpgm B ";
+        query += " WHERE apl_id like '"+apl_id+"' ";
+        query += " AND mntr_id IS NOT null ";
+        query += " AND A.mp_id = B.mp_id ";
+
+        queryset = mpgm.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)        
 #####################################################################################
 # 공통 - END
 #####################################################################################
@@ -1322,6 +1365,45 @@ class MP0102M_list(generics.ListAPIView):
             return self.get_paginated_response(serializer.data)
 
         return Response(serializer.data)
+
+# 학습외신청(멘토) Detail ###################################################
+class MP0102M_detail_Serializer(serializers.ModelSerializer):
+
+    testField = serializers.SerializerMethodField()
+    class Meta:
+        model = mp_spc
+        fields = ('id','mp_id','spc_no','spc_div','status','spc_name','spc_intro','yr','yr_seq','apl_ntc_fr_dt','apl_ntc_to_dt','apl_term','apl_fr_dt','apl_to_dt','mnt_term','mnt_fr_dt','mnt_to_dt','cnf_dt','appr_tm','tot_apl','cnt_apl','cnt_pln','cnt_att','use_div','pic_div','rep_div','ord_div','grd_appr_div','tch_appr_div')
+
+    def get_testField(self, obj):
+        return 'test'     
+
+
+class MP0102M_detail(generics.ListAPIView):
+    queryset = mp_spc.objects.all()
+    serializer_class = MP0102M_detail_Serializer
+
+    # mp_spc
+
+    def list(self, request):
+        l_yr = request.GET.get('yr', "")
+        l_apl_term = request.GET.get('apl_term', "")
+        l_status = request.GET.get('status', "")
+        ida = request.GET.get('user_id', "")
+        
+        queryset = self.get_queryset()
+        
+        query = "select * from service20_mp_spc where yr='"+l_yr+"' and apl_term='"+l_apl_term+"'";
+        queryset = mp_spc.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)        
 
 ######################################################################
 
