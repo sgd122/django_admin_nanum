@@ -2385,8 +2385,8 @@ class MP0105M_detail(generics.ListAPIView):
 @csrf_exempt
 def MP0105M_Insert(request):
     mp_id     = request.POST.get('mp_id    ', "")
-    apl_no    = request.POST.get('apl_no   ', "")
-    rep_no    = request.POST.get('rep_no   ', "")
+    apl_no    = request.POST.get('apl_no   ', 0)
+    rep_no    = request.POST.get('rep_no   ', 0)
     rep_div   = request.POST.get('rep_div  ', "")
     mnte_id   = request.POST.get('mnte_id  ', "")
     mnte_nm   = request.POST.get('mnte_nm  ', "")
