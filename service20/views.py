@@ -280,10 +280,10 @@ class MS0101M_list(generics.ListAPIView):
         l_user_id = request.GET.get('user_id', None)
 
         query = " select apl_to_dt,  ";
-        query += " if(a.status = '10'  ";
-        query += " and now() > a.apl_to_dt, 'xx', a.status) as statusCode,  ";
-        query += " if(a.status = '10'  ";
-        query += " and now() > a.apl_to_dt, '모집완료', (select std_detl_code_nm  ";
+        query += " if(A.status = '10'  ";
+        query += " and now() > A.apl_to_dt, 'xx', A.status) as statusCode,  ";
+        query += " if(A.status = '10'  ";
+        query += " and now() > A.apl_to_dt, '모집완료', (select std_detl_code_nm  ";
         query += " from   service20_com_cdd  ";
         query += " where  ";
         query += " std_grp_code = 'MS0001'  ";
