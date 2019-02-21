@@ -589,7 +589,7 @@ class MS0101M_adm_list(generics.ListAPIView):
         
         # msch
         query = "select C.ms_name,B.pr_yr,B.pr_sch_yr,B.pr_term_div,A.* from service20_ms_apl A,service10_vm_nanum_stdt B,service20_msch C where A.apl_id=B.apl_id and A.ms_id = C.ms_id and A.yr='"+l_yr+"' and A.ms_id = '"+ms_ida+"' and A.apl_id='"+ida+"'"
-        
+        print(query)
         queryset = ms_apl.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
