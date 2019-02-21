@@ -1126,12 +1126,14 @@ class MP0101M_adm_list_Serializer(serializers.ModelSerializer):
     pr_yr = serializers.SerializerMethodField()
     pr_sch_yr = serializers.SerializerMethodField()
     pr_term_div = serializers.SerializerMethodField()
+    statusNm = serializers.SerializerMethodField()
+    statusCode = serializers.SerializerMethodField()
 
     acpt_dt = serializers.DateTimeField(format='%Y-%m-%d')
 
     class Meta:
         model = mp_mtr
-        fields = ('mp_id','apl_no','mntr_id','indv_div','team_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','bank_acct','bank_cd','bank_nm','bank_dpsr','cnt_mp_a','cnt_mp_p','cnt_mp_c','cnt_mp_g','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','fnl_rslt','acpt_dt','acpt_div','acpt_cncl_rsn','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','mp_name','pr_yr','pr_sch_yr','pr_term_div')
+        fields = ('mp_id','apl_no','mntr_id','indv_div','team_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','bank_acct','bank_cd','bank_nm','bank_dpsr','cnt_mp_a','cnt_mp_p','cnt_mp_c','cnt_mp_g','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','fnl_rslt','acpt_dt','acpt_div','acpt_cncl_rsn','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','mp_name','pr_yr','pr_sch_yr','pr_term_div','statusNm','statusCode')
 
     def get_mp_name(self,obj):
         return obj.mp_name
@@ -1143,7 +1145,43 @@ class MP0101M_adm_list_Serializer(serializers.ModelSerializer):
         return obj.pr_sch_yr
 
     def get_pr_term_div(self,obj):
-        return obj.pr_term_div    
+        return obj.pr_term_div  
+
+    def get_statusNm(self,obj):
+        now = datetime.datetime.today()
+        mpgm_query = mpgm.objects.all()
+        mpgm_query = mpgm_query.filter(mp_id=obj.mp_id)[0]
+
+        if mpgm_query.apl_fr_dt == None:
+            return '개설중'
+        elif now < mpgm_query.apl_fr_dt:
+            return '개설중'
+        elif mpgm_query.apl_fr_dt <= now < mpgm_query.apl_to_dt:
+            return '모집중'
+        elif now > mpgm_query.apl_to_dt:
+            return '모집완료'
+        else:
+            return '개설중'
+
+    def get_statusCode(self,obj):
+        now = datetime.datetime.today()
+        mpgm_query = mpgm.objects.all()
+        mpgm_query = mpgm_query.filter(mp_id=obj.mp_id)[0]
+        if mpgm_query.apl_fr_dt == None:
+            # 개설중
+            return '1'
+        elif now < mpgm_query.apl_fr_dt:
+            # 개설중
+            return '1'
+        elif mpgm_query.apl_fr_dt <= now < mpgm_query.apl_to_dt:
+            # 모집중
+            return '2'
+        elif now > mpgm_query.apl_to_dt:
+            # 모집완료
+            return '3'  
+        else:
+            # 개설중
+            return '1'      
 
 class MP0101M_adm_list(generics.ListAPIView):
     queryset = mp_mtr.objects.all()
