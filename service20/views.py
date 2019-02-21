@@ -592,7 +592,6 @@ class MS0101M_adm_list_Serializer(serializers.ModelSerializer):
         else:
             # 개설중
             return '1'
-    get_status.short_description = '상태'     
 
 class MS0101M_adm_list(generics.ListAPIView):
     queryset = ms_apl.objects.all()
