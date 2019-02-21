@@ -2381,6 +2381,128 @@ class MP0105M_detail(generics.ListAPIView):
 
         return Response(serializer.data)                
 
+# 보고서 현황 save
+@csrf_exempt
+def MP0105M_Insert(request):
+    mp_id     = request.POST.get('mp_id    ', "")
+    apl_no    = request.POST.get('apl_no   ', "")
+    rep_no    = request.POST.get('rep_no   ', "")
+    rep_div   = request.POST.get('rep_div  ', "")
+    mnte_id   = request.POST.get('mnte_id  ', "")
+    mnte_nm   = request.POST.get('mnte_nm  ', "")
+    tchr_id   = request.POST.get('tchr_id  ', "")
+    tchr_nm   = request.POST.get('tchr_nm  ', "")
+    sch_nm    = request.POST.get('sch_nm   ', "")
+    mtr_sub   = request.POST.get('mtr_sub  ', "")
+    att_desc  = request.POST.get('att_desc ', "")
+    rep_ttl   = request.POST.get('rep_ttl  ', "")
+    mtr_obj   = request.POST.get('mtr_obj  ', "")
+    rep_dt    = request.POST.get('rep_dt   ', "")
+    req_dt    = request.POST.get('req_dt   ', "")
+    mtr_desc  = request.POST.get('mtr_desc ', "")
+    coatching = request.POST.get('coatching', "")
+    spcl_note = request.POST.get('spcl_note', "")
+    mtr_revw  = request.POST.get('mtr_revw ', "")
+    appr_id   = request.POST.get('appr_id  ', "")
+    appr_nm   = request.POST.get('appr_nm  ', "")
+    appr_dt   = request.POST.get('appr_dt  ', "")
+    mgr_id    = request.POST.get('mgr_id   ', "")
+    mgr_dt    = request.POST.get('mgr_dt   ', "")
+    status    = request.POST.get('status   ', "")
+    ins_id    = request.POST.get('ins_id   ', "")
+    ins_ip    = request.POST.get('ins_ip   ', "")
+    ins_dt    = request.POST.get('ins_dt   ', "")
+    ins_pgm   = request.POST.get('ins_pgm  ', "")
+    upd_id    = request.POST.get('upd_id   ', "")
+    upd_ip    = request.POST.get('upd_ip   ', "")
+    upd_dt    = request.POST.get('upd_dt   ', "")
+    upd_pgm   = request.POST.get('upd_pgm  ', "")
+
+
+    insert_text = " insert into service20_mp_rep  ";
+    insert_text += " (  ";
+    insert_text += " mp_id      /*멘토링 프로그램id*/  ";
+    insert_text += " , apl_no      /*멘토 지원 no*/  ";
+    insert_text += " , rep_no      /*보고서 no*/  ";
+    insert_text += " , rep_div     /*보고서 구분(mp0062)*/  ";
+    insert_text += " , mnte_id    /*담당멘티id*/  ";
+    insert_text += " , mnte_nm    /*담당멘티명*/  ";
+    insert_text += " , tchr_id    /*담당교사id*/  ";
+    insert_text += " , tchr_nm    /*담당교사명*/  ";
+    insert_text += " , sch_nm      /*학교명*/  ";
+    insert_text += " , mtr_sub    /*지도과목*/  ";
+    insert_text += " , att_desc    /*출석현황*/  ";
+    insert_text += " , rep_ttl    /*보고서 제목*/  ";
+    insert_text += " , mtr_obj    /*학습목표*/  ";
+    insert_text += " , rep_dt      /*보고서작성일*/  ";
+    insert_text += " , req_dt      /*승인요청일*/  ";
+    insert_text += " , mtr_desc    /*학습내용*/  ";
+    insert_text += " , coatching    /*학습외 지도(상담)*/  ";
+    insert_text += " , spcl_note    /*특이사항*/  ";
+    insert_text += " , mtr_revw    /*소감문*/  ";
+    insert_text += " , appr_id    /*승인자id*/  ";
+    insert_text += " , appr_nm    /*승인자명*/  ";
+    insert_text += " , appr_dt    /*보호자 승인일시*/ "; 
+    insert_text += " , mgr_id      /*관리자id*/  ";
+    insert_text += " , mgr_dt      /*관리자 승인일시*/  ";
+    insert_text += " , status      /*상태(mp0070)*/  ";
+    insert_text += " , ins_id      /*입력자id*/  ";
+    insert_text += " , ins_ip      /*입력자ip*/  ";
+    insert_text += " , ins_dt      /*입력일시*/  ";
+    insert_text += " , ins_pgm    /*입력프로그램id*/  ";
+    insert_text += " , upd_id      /*수정자id*/  ";
+    insert_text += " , upd_ip      /*수정자ip*/  ";
+    insert_text += " , upd_dt      /*수정일시*/  ";
+    insert_text += " , upd_pgm    /*수정프로그램id*/  ";
+    insert_text += " )  ";
+    insert_text += " values(  ";
+    insert_text += " '"+mp_id    +"'  /*멘토링 프로그램id*/  ";
+    insert_text += " , '"+apl_no  +"'    /*멘토 지원 no*/  ";
+    insert_text += " , '"+rep_no  +"'    /*보고서 no*/  ";
+    insert_text += " , '"+rep_div  +"'    /*보고서 구분(mp0062)*/  ";
+    insert_text += " , '"+mnte_id  +"'    /*담당멘티id*/  ";
+    insert_text += " , '"+mnte_nm  +"'    /*담당멘티명*/  ";
+    insert_text += " , '"+tchr_id  +"'    /*담당교사id*/  ";
+    insert_text += " , '"+tchr_nm  +"'    /*담당교사명*/ "; 
+    insert_text += " , '"+sch_nm  +"'    /*학교명*/  ";
+    insert_text += " , '"+mtr_sub  +"'    /*지도과목*/  ";
+    insert_text += " , '"+att_desc  +"'  /*출석현황*/  ";
+    insert_text += " , '"+rep_ttl  +"'    /*보고서 제목*/  ";
+    insert_text += " , '"+mtr_obj  +"'    /*학습목표*/  ";
+    insert_text += " , '"+rep_dt  +"'    /*보고서작성일*/  ";
+    insert_text += " , '"+req_dt  +"'    /*승인요청일*/  ";
+    insert_text += " , '"+mtr_desc  +"'  /*학습내용*/  ";
+    insert_text += " , '"+coatching  +"'  /*학습외 지도(상담)*/  ";
+    insert_text += " , '"+spcl_note  +"' /*특이사항*/  ";
+    insert_text += " , '"+mtr_revw  +"'  /*소감문*/  ";
+    insert_text += " , '"+appr_id  +"'   /*승인자id*/  ";
+    insert_text += " , '"+appr_nm  +"'    /*승인자명*/  ";
+    insert_text += " , '"+appr_dt  +"'    /*보호자 승인일시*/  ";
+    insert_text += " , '"+mgr_id  +"'    /*관리자id*/  ";
+    insert_text += " , '"+mgr_dt  +"'    /*관리자 승인일시*/  ";
+    insert_text += " , '"+status  +"'    /*상태(mp0070)*/  ";
+    insert_text += " , '"+ins_id  +"'    /*입력자id*/  ";
+    insert_text += " , '"+ins_ip  +"'    /*입력자ip*/  ";
+    insert_text += " , '"+ins_dt  +"'    /*입력일시*/  ";
+    insert_text += " , '"+ins_pgm  +"'   /*입력프로그램id*/  ";
+    insert_text += " , '"+upd_id  +"'    /*수정자id*/  ";
+    insert_text += " , '"+upd_ip  +"'    /*수정자ip*/  ";
+    insert_text += " , '"+upd_dt  +"'    /*수정일시*/  ";
+    insert_text += " , '"+upd_pgm  +"'    /*수정프로그램id*/  ";
+    insert_text += " ) on duplicate key update  ";
+    insert_text += " mtr_obj     = '"+mtr_obj+"'       ";       
+    insert_text += " ,mtr_desc    = '"+mtr_desc+"'  ";          
+    insert_text += " ,coatching   = '"+coatching+"' ";
+    print(insert_text)
+    cursor = connection.cursor()
+    query_result = cursor.execute(insert_text)
+
+    
+        
+    context = {'message': 'Ok'}
+
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+
 #####################################################################################
 # MP0105M - END
 #####################################################################################
