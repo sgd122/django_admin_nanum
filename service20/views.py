@@ -604,6 +604,7 @@ class MS0101M_adm_list(generics.ListAPIView):
         
         # msch
         query = "select C.ms_name,B.pr_yr,B.pr_sch_yr,B.pr_term_div,A.* from service20_ms_apl A,service10_vm_nanum_stdt B,service20_msch C where A.apl_id=B.apl_id and A.ms_id = C.ms_id and A.yr='"+l_yr+"' and A.ms_id = '"+ms_ida+"' and A.apl_id='"+ida+"'"
+        
         queryset = ms_apl.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
@@ -745,16 +746,25 @@ def MS0101M_adm_update(request):
     upd_dt = request.POST.get('upd_dt', "")
     upd_pgm = request.POST.get('upd_pgm', "")
 
-    update_text = " update service20_ms_apl a ";
-    update_text += " SET a.acpt_dt = null ";
-    update_text += " , a.acpt_div = 'N' ";
-    update_text += " , a.acpt_cncl_rsn = '"+acpt_cncl_rsn+"' ";
-    update_text += " WHERE 1=1 ";
-    update_text += " AND a.ms_id = '"+ms_id+"' ";
-    update_text += " AND a.apl_no = '"+apl_no+"' ";
-    print(update_text)
-    cursor = connection.cursor()
-    query_result = cursor.execute(update_text)
+    maxRow = request.POST.get('maxRow', 0)
+
+
+    apl_max = int(maxRow)
+
+    for i in range(0,apl_max):
+        anst2 = request.POST.get('que'+str(i+1), None)
+        ques_no = request.POST.get('ques_no'+str(i+1), None)
+        ans_t2 = request.POST.get('ans_t2_'+str(i+1), None)
+
+        update_text = " update service20_ms_ans a ";
+        update_text += " SET a.ans_t2 = '"+str(ans_t2)+"' ";
+        update_text += " WHERE 1=1 ";
+        update_text += " AND a.mp_id = '"+str(ms_id)+"' ";
+        update_text += " AND a.apl_no = '"+str(apl_no)+"' ";
+        update_text += " AND a.ques_no = '"+str(ques_no)+"' ";
+        print(update_text)
+        cursor = connection.cursor()
+        query_result = cursor.execute(update_text)
 
         
     context = {'message': 'Ok'}
@@ -778,10 +788,9 @@ def MS0101M_adm_cancle(request):
     upd_dt = request.POST.get('upd_dt', "")
     upd_pgm = request.POST.get('upd_pgm', "")
 
-    update_text = " update service20_ms_apl a ";
-    update_text += " SET a.acpt_dt = null ";
-    update_text += " , a.acpt_div = 'N' ";
-    update_text += " , a.acpt_cncl_rsn = '"+acpt_cncl_rsn+"' ";
+    update_text = " update service20_msch a ";
+    update_text += " SET status = '19' ";
+    update_text += " , doc_cncl_dt = now() ";
     update_text += " WHERE 1=1 ";
     update_text += " AND a.ms_id = '"+ms_id+"' ";
     update_text += " AND a.apl_no = '"+apl_no+"' ";
@@ -789,7 +798,7 @@ def MS0101M_adm_cancle(request):
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)
 
-        
+
     context = {'message': 'Ok'}
 
     return JsonResponse(context,json_dumps_params={'ensure_ascii': True})   
