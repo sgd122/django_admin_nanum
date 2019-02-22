@@ -777,6 +777,13 @@ def MS0101M_adm_update(request):
 
     maxRow = request.POST.get('maxRow', 0)
 
+    update_text = " update service20_ms_apl a "
+    update_text += " SET a.status = '10' "
+    update_text += " WHERE 1=1 "
+    update_text += " AND a.ms_id = '"+str(ms_id)+"' "
+    update_text += " AND a.apl_id = '"+str(apl_id)+"' "
+    cursor = connection.cursor()
+    query_result = cursor.execute(update_text)
 
     apl_max = int(maxRow)
 
@@ -1331,6 +1338,115 @@ class MP0101M_adm_list(generics.ListAPIView):
 
         return Response(serializer.data)
 
+class MP0101M_adm_list_Serializer(serializers.ModelSerializer):
+    
+    mp_name = serializers.SerializerMethodField()
+    pr_yr = serializers.SerializerMethodField()
+    pr_sch_yr = serializers.SerializerMethodField()
+    pr_term_div = serializers.SerializerMethodField()
+    statusCode = serializers.SerializerMethodField()
+    status_nm = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
+    acpt_dt = serializers.DateTimeField(format='%Y-%m-%d')
+
+    class Meta:
+        model = mp_mtr
+        fields = ('mp_id','apl_no','mntr_id','indv_div','team_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','bank_acct','bank_cd','bank_nm','bank_dpsr','cnt_mp_a','cnt_mp_p','cnt_mp_c','cnt_mp_g','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','fnl_rslt','acpt_dt','acpt_div','acpt_cncl_rsn','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','mp_name','pr_yr','pr_sch_yr','pr_term_div','statusCode','status_nm')
+
+    def get_mp_name(self,obj):
+        return obj.mp_name
+
+    def get_pr_yr(self,obj):
+        return obj.pr_yr
+
+    def get_pr_sch_yr(self,obj):
+        return obj.pr_sch_yr
+
+    def get_pr_term_div(self,obj):
+        return obj.pr_term_div  
+
+    def get_statusCode(self,obj):
+        return obj.statusCode 
+
+    def get_status_nm(self,obj):
+        return obj.status_nm
+    def get_status(self,obj):
+        return obj.status
+
+class MP0101M_adm_list(generics.ListAPIView):
+    queryset = mp_mtr.objects.all()
+    serializer_class = MP0101M_adm_list_Serializer
+    
+    def list(self, request):
+        ida = request.GET.get('user_id', None)
+        mp_ida = request.GET.get('mp_id', None)
+        l_yr = request.GET.get('yr', None)
+        
+        # mpgm
+
+        query = " select   "
+        query += " if(C.status = '10'  "
+        query += " and now() > C.apl_to_dt, 'xx', C.status) as statusCode,  "
+        query += " if(A.status = '10'  "
+        query += " and now() > C.apl_to_dt, '모집완료', (select std_detl_code_nm  "
+        query += " from   service20_com_cdd  "
+        query += " where  "
+        query += " std_grp_code = 'MS0001'  "
+        query += " and use_indc = 'y'  "
+        query += " and std_detl_code = C.status)) as status_nm,  "
+
+        query += " C.mp_name,B.pr_yr,B.pr_sch_yr,B.pr_term_div,A.* from service20_mp_mtr A,service20_vw_nanum_stdt B,service20_mpgm C where A.apl_id=B.apl_id and A.mp_id = C.mp_id and A.yr='"+l_yr+"' and A.mp_id = '"+mp_ida+"' and A.apl_id='"+ida+"'"
+        queryset = mp_mtr.objects.raw(query)
+        print(query)
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+# 멘토링 프로그램(관리자) - 어학
+class MP0101M_adm_list_fe_Serializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = mp_mtr
+        fields = ('mp_id','apl_no','mntr_id','indv_div','team_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','bank_acct','bank_cd','bank_nm','bank_dpsr','cnt_mp_a','cnt_mp_p','cnt_mp_c','cnt_mp_g','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','fnl_rslt','acpt_dt','acpt_div','acpt_cncl_rsn','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm')
+
+
+class MP0101M_adm_list_fe(generics.ListAPIView):
+    queryset = mp_mtr.objects.all()
+    serializer_class = MP0101M_adm_list_fe_Serializer
+    
+    def list(self, request):
+        ida = request.GET.get('user_id', None)
+        mp_ida = request.GET.get('mp_id', None)
+        l_yr = request.GET.get('yr', None)
+        
+        query += " select id,  ";
+        query += "        frexm_cd,  ";
+        query += "        frexm_nm,  ";
+        query += "        score,  ";
+        query += "        grade  ";
+        query += " FROM   service20_mp_mtr_fe  ";
+        query += " WHERE  mp_id = '"+mp_ida+"'  ";
+        query += "        AND apl_id = '"+ida+"' ";
+
+        queryset = mp_mtr.objects.raw(query)
+        print(query)
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+
 # 멘토링 프로그램(관리자) - 질문2
 class MP0101M_adm_quest_Serializer2(serializers.ModelSerializer):
 
@@ -1471,8 +1587,6 @@ def MP0101M_adm_update(request):
     update_text += " AND a.apl_id = '"+str(apl_id)+"' "
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)
-
-    print(update_text)
 
     for i in range(0,apl_max):
         anst2 = request.POST.get('que'+str(i+1), None)
