@@ -624,9 +624,9 @@ class MS0101M_adm_list(generics.ListAPIView):
         # msch
         query = " select   "
         query += " if(C.status = '10'  "
-        query += " and now() > A.apl_to_dt, 'xx', C.status) as statusCode,  "
+        query += " and now() > C.apl_to_dt, 'xx', C.status) as statusCode,  "
         query += " if(C.status = '10'  "
-        query += " and now() > A.apl_to_dt, '모집완료', (select std_detl_code_nm  "
+        query += " and now() > C.apl_to_dt, '모집완료', (select std_detl_code_nm  "
         query += " from   service20_com_cdd  "
         query += " where  "
         query += " std_grp_code = 'MS0001'  "
