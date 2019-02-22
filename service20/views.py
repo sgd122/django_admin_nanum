@@ -30,7 +30,7 @@ class com_combo_yr_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = com_cdd
-        fields = ('std_grp_code','std_detl_code','std_detl_code_nm','rmrk','sort_seq_no')
+        fields = ('std_detl_code','std_detl_code_nm')
 
     # def get_code(self, obj):
     #     return obj.code
