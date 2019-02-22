@@ -1330,7 +1330,7 @@ class MP0101M_adm_list(generics.ListAPIView):
         
         # mpgm
 
-        query = " select apl_to_dt,  "
+        query = " select   "
         query += " if(A.status = '10'  "
         query += " and now() > A.apl_to_dt, 'xx', A.status) as statusCode,  "
         query += " if(A.status = '10'  "
