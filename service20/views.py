@@ -1446,6 +1446,39 @@ class MP0101M_adm_list_fe(generics.ListAPIView):
 
         return Response(serializer.data)
 
+# 멘토링 프로그램(관리자) - 봉사
+class MP0101M_adm_list_sa_Serializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = mp_mtr_sa
+        fields = ('mp_id','apl_no','sa_no','apl_id','apl_nm','nation_inout_cd','nation_inout_nm','sch_inout_cd','sch_inout_nm','activity_nm','manage_org_nm','start_date','start_time','end_date','end_time','tot_time')
+
+
+class MP0101M_adm_list_sa(generics.ListAPIView):
+    queryset = mp_mtr.objects.all()
+    serializer_class = MP0101M_adm_list_sa_Serializer
+    
+    def list(self, request):
+        ida = request.GET.get('user_id', None)
+        mp_ida = request.GET.get('mp_id', None)
+        l_yr = request.GET.get('yr', None)
+        
+        query = " select *  "
+        query += " FROM   service20_mp_mtr_sa  "
+        query += " WHERE  mp_id = '"+str(mp_ida)+"'  "
+        query += "        AND apl_id = '"+str(ida)+"' "
+
+        queryset = mp_mtr_sa.objects.raw(query)
+        print(query)
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
 
 # 멘토링 프로그램(관리자) - 질문2
 class MP0101M_adm_quest_Serializer2(serializers.ModelSerializer):

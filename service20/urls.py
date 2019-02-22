@@ -99,6 +99,8 @@ urlpatterns = [
     path('MP0101M/admin/list/', MP0101M_adm_list.as_view(), name='MP0101M_adm_list'),
     # 멘토링 프로그램(관리자) - 어학점수
     path('MP0101M/admin/list/fe/', MP0101M_adm_list_fe.as_view(), name='MP0101M_adm_list_fe'),
+    # 멘토링 프로그램(관리자) - 봉사점수
+    path('MP0101M/admin/list/sa/', MP0101M_adm_list_sa.as_view(), name='MP0101M_adm_list_sa'),
     # 멘토링 프로그램(관리자) - 질문
     path('MP0101M/admin/quest/', MP0101M_adm_quest.as_view(), name='MP0101M_adm_quest'),
     # 멘토링 프로그램(관리자) 수락
