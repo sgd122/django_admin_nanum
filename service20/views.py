@@ -225,8 +225,6 @@ class com_combo_status(generics.ListAPIView):
         query += " union  "
         query += " select '','xx','모집완료'  "
 
-        print(query)
-
         queryset = com_cdd.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
@@ -303,7 +301,7 @@ class MS0101M_list(generics.ListAPIView):
         query += " ifnull((select 'Y' from service20_ms_apl where yr = '"+str(l_yr)+"' and apl_id = '"+str(l_user_id)+"' and ms_id = A.ms_id),'N') AS applyFlag,A.* from service20_msch A where A.yr='"+str(l_yr)+"' and A.apl_term='"+str(l_apl_term)+"'"
         
         query += " and if(A.status = '10' and now() > A.apl_to_dt, 'xx', A.status) "
-        query += "  like '"+str(l_status)+"' || '%%' "
+        query += "  like ifnull(NULLIF('"+str(l_status)+"',''),'%%') || '%%' "
 
         query += " order by apl_fr_dt desc,apl_to_dt desc " 
         queryset = msch.objects.raw(query)
@@ -989,7 +987,7 @@ class MP0101M_list(generics.ListAPIView):
         query += " ifnull((select 'Y' from service20_mp_mtr where yr = '"+str(l_yr)+"' and apl_id = '"+str(ida)+"' and mp_id = A.mp_id),'N') AS applyFlag,A.* from service20_mpgm A where A.yr='"+str(l_yr)+"' and A.apl_term='"+str(l_apl_term)+"' and (select count(1) from service20_mentor where apl_id = '"+ida+"') > 0 "
 
         query += " and if(A.status = '10' and now() > A.apl_to_dt, 'xx', A.status) "
-        query += "  like '"+str(l_status)+"' || '%%' "
+        query += "  like ifnull(NULLIF('"+str(l_status)+"',''),'%%') || '%%' "
 
         query += " order by A.apl_fr_dt desc,A.apl_to_dt desc "
 
