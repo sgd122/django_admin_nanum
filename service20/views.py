@@ -25,17 +25,17 @@ import json
 # 년도 콤보박스 ###################################################
 class com_combo_yr_Serializer(serializers.ModelSerializer):
 
-    code = serializers.SerializerMethodField()
-    name = serializers.SerializerMethodField()
+    # code = serializers.SerializerMethodField()
+    # name = serializers.SerializerMethodField()
 
     class Meta:
         model = com_cdd
         fields = ('std_grp_code','std_detl_code','std_detl_code_nm','rmrk','sort_seq_no')
 
-    def get_code(self, obj):
-        return obj.code
-    def get_name(self, obj):
-        return obj.name
+    # def get_code(self, obj):
+    #     return obj.code
+    # def get_name(self, obj):
+    #     return obj.name
 
 class com_combo_yr(generics.ListAPIView):
     queryset = com_cdd.objects.all()
