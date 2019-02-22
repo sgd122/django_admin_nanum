@@ -25,28 +25,16 @@ import json
 # 년도 콤보박스 ###################################################
 class com_combo_yr_Serializer(serializers.ModelSerializer):
 
-    # code = serializers.SerializerMethodField()
-    # name = serializers.SerializerMethodField()
-
     class Meta:
         model = com_cdd
         fields = ('std_detl_code','std_detl_code_nm')
 
-    # def get_code(self, obj):
-    #     return obj.code
-    # def get_name(self, obj):
-    #     return obj.name
 
 class com_combo_yr(generics.ListAPIView):
     queryset = com_cdd.objects.all()
     serializer_class = com_combo_yr_Serializer
 
     def list(self, request):
-        l_yr = request.GET.get('yr', "")
-        l_apl_term = request.GET.get('apl_term', "")
-        l_mp_id = request.GET.get('mp_id', "")
-        l_user_id = request.GET.get('user_id', "")
-        
 
         queryset = self.get_queryset()
         
@@ -56,7 +44,38 @@ class com_combo_yr(generics.ListAPIView):
         query += " union "
         query += " select '3' id,DATE_FORMAT(now(),'%%Y')+1 as std_detl_code,DATE_FORMAT(now(),'%%Y')+1 as std_detl_code_nm "
 
-        print(query)
+        queryset = com_cdd.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+# 학기 콤보박스 ###################################################
+class com_combo_termdiv_Serializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = com_cdd
+        fields = ('std_detl_code','std_detl_code_nm')
+
+
+class com_combo_termdiv(generics.ListAPIView):
+    queryset = com_cdd.objects.all()
+    serializer_class = com_combo_termdiv_Serializer
+
+    def list(self, request):
+
+        queryset = self.get_queryset()
+        
+        query = " select '1' id,'10' as std_detl_code,'1' as std_detl_code_nm "
+        query += " union "
+        query += " select '2' id,'20' as std_detl_code,'2' as std_detl_code_nm "
+
         queryset = com_cdd.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
