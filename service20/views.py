@@ -2551,135 +2551,82 @@ class MP0105M_detail(generics.ListAPIView):
 @csrf_exempt
 def MP0105M_update(request,pk):
 
-    print(pk)
-    # mp_id     = request.POST.get('mp_id    ', "")
-    # apl_no    = request.POST.get('apl_no   ', 0)
-    # rep_no    = request.POST.get('rep_no   ', 0)
-    # rep_div   = request.POST.get('rep_div  ', "")
-    # mnte_id   = request.POST.get('mnte_id  ', "")
-    # mnte_nm   = request.POST.get('mnte_nm  ', "")
-    # tchr_id   = request.POST.get('tchr_id  ', "")
-    # tchr_nm   = request.POST.get('tchr_nm  ', "")
-    # sch_nm    = request.POST.get('sch_nm   ', "")
-    # mtr_sub   = request.POST.get('mtr_sub  ', "")
-    # att_desc  = request.POST.get('att_desc ', "")
-    # rep_ttl   = request.POST.get('rep_ttl  ', "")
-    # mtr_obj   = request.POST.get('mtr_obj  ', "")
-    # rep_dt    = request.POST.get('rep_dt   ', "")
-    # req_dt    = request.POST.get('req_dt   ', "")
-    # mtr_desc  = request.POST.get('mtr_desc ', "")
-    # coatching = request.POST.get('coatching', "")
-    # spcl_note = request.POST.get('spcl_note', "")
-    # mtr_revw  = request.POST.get('mtr_revw ', "")
-    # appr_id   = request.POST.get('appr_id  ', "")
-    # appr_nm   = request.POST.get('appr_nm  ', "")
-    # appr_dt   = request.POST.get('appr_dt  ', "")
-    # mgr_id    = request.POST.get('mgr_id   ', "")
-    # mgr_dt    = request.POST.get('mgr_dt   ', "")
-    # status    = request.POST.get('status   ', "")
-    # ins_id    = request.POST.get('ins_id   ', "")
-    # ins_ip    = request.POST.get('ins_ip   ', "")
-    # ins_dt    = request.POST.get('ins_dt   ', "")
-    # ins_pgm   = request.POST.get('ins_pgm  ', "")
-    # upd_id    = request.POST.get('upd_id   ', "")
-    # upd_ip    = request.POST.get('upd_ip   ', "")
-    # upd_dt    = request.POST.get('upd_dt   ', "")
-    # upd_pgm   = request.POST.get('upd_pgm  ', "")
 
+    mp_id     = request.POST.get('mp_id    ', "")
+    apl_no    = request.POST.get('apl_no   ', 0)
+    rep_no    = request.POST.get('rep_no   ', 0)
+    rep_div   = request.POST.get('rep_div  ', "")
+    mnte_id   = request.POST.get('mnte_id  ', "")
+    mnte_nm   = request.POST.get('mnte_nm  ', "")
+    tchr_id   = request.POST.get('tchr_id  ', "")
+    tchr_nm   = request.POST.get('tchr_nm  ', "")
+    sch_nm    = request.POST.get('sch_nm   ', "")
+    mtr_sub   = request.POST.get('mtr_sub  ', "")
+    att_desc  = request.POST.get('att_desc ', "")
+    rep_ttl   = request.POST.get('rep_ttl  ', "")
+    mtr_obj   = request.POST.get('mtr_obj  ', "")
+    rep_dt    = request.POST.get('rep_dt   ', "")
+    req_dt    = request.POST.get('req_dt   ', "")
+    mtr_desc  = request.POST.get('mtr_desc ', "")
+    coatching = request.POST.get('coatching', "")
+    spcl_note = request.POST.get('spcl_note', "")
+    mtr_revw  = request.POST.get('mtr_revw ', "")
+    appr_id   = request.POST.get('appr_id  ', "")
+    appr_nm   = request.POST.get('appr_nm  ', "")
+    appr_dt   = request.POST.get('appr_dt  ', "")
+    mgr_id    = request.POST.get('mgr_id   ', "")
+    mgr_dt    = request.POST.get('mgr_dt   ', "")
+    status    = request.POST.get('status   ', "")
+    ins_id    = request.POST.get('ins_id   ', "")
+    ins_ip    = request.POST.get('ins_ip   ', "")
+    ins_dt    = request.POST.get('ins_dt   ', "")
+    ins_pgm   = request.POST.get('ins_pgm  ', "")
+    upd_id    = request.POST.get('upd_id   ', "")
+    upd_ip    = request.POST.get('upd_ip   ', "")
+    upd_dt    = request.POST.get('upd_dt   ', "")
+    upd_pgm   = request.POST.get('upd_pgm  ', "")
 
-    # insert_text = " insert into service20_mp_rep  "
-    # insert_text += " (  "
-    # insert_text += " mp_id      /*멘토링 프로그램id*/  "
-    # insert_text += " , apl_no      /*멘토 지원 no*/  "
-    # insert_text += " , rep_no      /*보고서 no*/  "
-    # insert_text += " , rep_div     /*보고서 구분(mp0062)*/  "
-    # insert_text += " , mnte_id    /*담당멘티id*/  "
-    # insert_text += " , mnte_nm    /*담당멘티명*/  "
-    # insert_text += " , tchr_id    /*담당교사id*/  "
-    # insert_text += " , tchr_nm    /*담당교사명*/  "
-    # insert_text += " , sch_nm      /*학교명*/  "
-    # insert_text += " , mtr_sub    /*지도과목*/  "
-    # insert_text += " , att_desc    /*출석현황*/  "
-    # insert_text += " , rep_ttl    /*보고서 제목*/  "
-    # insert_text += " , mtr_obj    /*학습목표*/  "
-    # insert_text += " , rep_dt      /*보고서작성일*/  "
-    # insert_text += " , req_dt      /*승인요청일*/  "
-    # insert_text += " , mtr_desc    /*학습내용*/  "
-    # insert_text += " , coatching    /*학습외 지도(상담)*/  "
-    # insert_text += " , spcl_note    /*특이사항*/  "
-    # insert_text += " , mtr_revw    /*소감문*/  "
-    # insert_text += " , appr_id    /*승인자id*/  "
-    # insert_text += " , appr_nm    /*승인자명*/  "
-    # insert_text += " , appr_dt    /*보호자 승인일시*/ " 
-    # insert_text += " , mgr_id      /*관리자id*/  "
-    # insert_text += " , mgr_dt      /*관리자 승인일시*/  "
-    # insert_text += " , status      /*상태(mp0070)*/  "
-    # insert_text += " , ins_id      /*입력자id*/  "
-    # insert_text += " , ins_ip      /*입력자ip*/  "
-    # insert_text += " , ins_dt      /*입력일시*/  "
-    # insert_text += " , ins_pgm    /*입력프로그램id*/  "
-    # insert_text += " , upd_id      /*수정자id*/  "
-    # insert_text += " , upd_ip      /*수정자ip*/  "
-    # insert_text += " , upd_dt      /*수정일시*/  "
-    # insert_text += " , upd_pgm    /*수정프로그램id*/  "
-    # insert_text += " )  "
-    # insert_text += " values(  "
-    # insert_text += " '"+str(mp_id )   +"'  /*멘토링 프로그램id*/  "
-    # insert_text += " , '"+str(apl_no ) +"'    /*멘토 지원 no*/  "
-    # insert_text += " , '"+str(rep_no ) +"'    /*보고서 no*/  "
-    # insert_text += " , '"+str(rep_div)  +"'    /*보고서 구분(mp0062)*/  "
-    # insert_text += " , '"+str(mnte_id)  +"'    /*담당멘티id*/  "
-    # insert_text += " , '"+str(mnte_nm)  +"'    /*담당멘티명*/  "
-    # insert_text += " , '"+str(tchr_id)  +"'    /*담당교사id*/  "
-    # insert_text += " , '"+str(tchr_nm)  +"'    /*담당교사명*/ " 
-    # insert_text += " , '"+str(sch_nm ) +"'    /*학교명*/  "
-    # insert_text += " , '"+str(mtr_sub)  +"'    /*지도과목*/  "
-    # insert_text += " , '"+str(att_desc)  +"'  /*출석현황*/  "
-    # insert_text += " , '"+str(rep_ttl)  +"'    /*보고서 제목*/  "
-    # insert_text += " , '"+str(mtr_obj)  +"'    /*학습목표*/  "
-    # insert_text += " , '"+str(rep_dt)  +"'    /*보고서작성일*/  "
-    # insert_text += " , '"+str(req_dt)  +"'    /*승인요청일*/  "
-    # insert_text += " , '"+str(mtr_desc)  +"'  /*학습내용*/  "
-    # insert_text += " , '"+str(coatching)  +"'  /*학습외 지도(상담)*/  "
-    # insert_text += " , '"+str(spcl_note)  +"' /*특이사항*/  "
-    # insert_text += " , '"+str(mtr_revw)  +"'  /*소감문*/  "
-    # insert_text += " , '"+str(appr_id)  +"'   /*승인자id*/  "
-    # insert_text += " , '"+str(appr_nm)  +"'    /*승인자명*/  "
-    # insert_text += " , '"+str(appr_dt)  +"'    /*보호자 승인일시*/  "
-    # insert_text += " , '"+str(mgr_id)  +"'    /*관리자id*/  "
-    # insert_text += " , '"+str(mgr_dt)  +"'    /*관리자 승인일시*/  "
-    # insert_text += " , '"+str(status)  +"'    /*상태(mp0070)*/  "
-    # insert_text += " , '"+str(ins_id)  +"'    /*입력자id*/  "
-    # insert_text += " , '"+str(ins_ip)  +"'    /*입력자ip*/  "
-    # insert_text += " , '"+str(ins_dt)  +"'    /*입력일시*/  "
-    # insert_text += " , '"+str(ins_pgm)  +"'   /*입력프로그램id*/  "
-    # insert_text += " , '"+str(upd_id)  +"'    /*수정자id*/  "
-    # insert_text += " , '"+str(upd_ip)  +"'    /*수정자ip*/  "
-    # insert_text += " , '"+str(upd_dt)  +"'    /*수정일시*/  "
-    # insert_text += " , '"+str(upd_pgm)  +"'    /*수정프로그램id*/  "
-    # insert_text += " ) on duplicate key update  "
-    # insert_text += " mtr_obj     = '"+str(mtr_obj)+"'       "       
-    # insert_text += " ,mtr_desc    = '"+str(mtr_desc)+"'  "          
-    # insert_text += " ,coatching   = '"+str(coatching)+"' "
-    # print(insert_text)
-    # cursor = connection.cursor()
-    # query_result = cursor.execute(insert_text)
-
-    # /*보고서현황작성_저장*/
-    # UPDATE service20_mp_rep
-    #    SET MTR_OBJ     = #{MTR_OBJ}       /*학습목표*/       
-    #      , MTR_DESC    = #{MTR_DESC}      /*학습내용*/      
-    #      , COATCHING   = #{COATCHING}     /*학습외 지도(상담)*/ 
-    #      , SPCL_NOTE   = #{SPCL_NOTE}    /*특이사항*/ 
-    #      , MTR_REVW    = #{MTR_REVW}     /*소감문*/      
-    #      , REP_DT      = NOW()            /*보고서작성일*/
-    #      , UPD_ID      = #{UPD_ID}        /*수정자ID*/ 
-    #      , UPD_IP      = #{UPD_IP}        /*수정자IP*/ 
-    #      , UPD_DT      =  NOW()           /*수정일시*/ 
-    #      , UPD_PGM     = #{UPD_PGM}       /*수정프로그램ID*/    
-    #  WHERE MP_ID     = #{MP_ID}    
-    #    AND APL_NO    = #{APL_NO}
-    #    AND REP_NO    = #{REP_NO}      
+    update_text = "";
+    if pk == 1:
+        # /*보고서현황작성_승인요청*/
+        update_text = " update service20_mp_rep "
+        update_text = " SET MTR_OBJ    = '"+mtr_obj  +"'    /*학습목표*/         "    
+        update_text += " , MTR_DESC    = '"+mtr_desc +"'    /*학습내용*/         "    
+        update_text += " , COATCHING   = '"+coatching+"'    /*학습외 지도(상담)*/"    
+        update_text += " , SPCL_NOTE   = '"+spcl_note+"'    /*특이사항*/         "    
+        update_text += " , MTR_REVW    = '"+mtr_revw +"'    /*소감문*/           "    
+        update_text += " , REP_DT      = "+NOW()    +"    /*보고서작성일*/     "    
+        update_text += " , UPD_ID      = '"+upd_id   +"'    /*수정자ID*/         "    
+        update_text += " , UPD_IP      = '"+upd_ip   +"'    /*수정자IP*/         "    
+        update_text += " , UPD_DT      = "+NOW()    +"    /*수정일시*/         "    
+        update_text += " , UPD_PGM     = '"+upd_pgm  +"'    /*수정프로그램ID*/   "    
+        update_text += " WHERE 1=1 "
+        update_text += " AND MP_ID  = '" +mp_id+"' "
+        update_text += " AND APL_NO = '"+apl_no+"' "
+        update_text += " AND REP_NO = '"+rep_no+"' "
+    elif pk == 2:
+        # /*보고서현황작성_승인요청*/
+        update_text = " update service20_mp_rep "
+        update_text = " SET MTR_OBJ    = '"+mtr_obj  +"'    /*학습목표*/         "    
+        update_text += " , MTR_DESC    = '"+mtr_desc +"'    /*학습내용*/         "    
+        update_text += " , COATCHING   = '"+coatching+"'    /*학습외 지도(상담)*/"    
+        update_text += " , SPCL_NOTE   = '"+spcl_note+"'    /*특이사항*/         "    
+        update_text += " , MTR_REVW    = '"+mtr_revw +"'    /*소감문*/           "    
+        update_text += " , REP_DT      = CASE REP_DT IS NULL THEN REP_DT ELSE NOW() END    /*보고서작성일*/     "    
+        update_text += " , REQ_DT      = "+NOW()    +"    /*승인요청일*/       "
+        update_text += " , UPD_ID      = '"+upd_id   +"'    /*수정자ID*/         "    
+        update_text += " , UPD_IP      = '"+upd_ip   +"'    /*수정자IP*/         "    
+        update_text += " , UPD_DT      = "+NOW()    +"    /*수정일시*/         "    
+        update_text += " , UPD_PGM     = '"+upd_pgm  +"'    /*수정프로그램ID*/   "    
+        update_text += " WHERE 1=1 "
+        update_text += " AND MP_ID  = '" +mp_id+"' "
+        update_text += " AND APL_NO = '"+apl_no+"' "
+        update_text += " AND REP_NO = '"+rep_no+"' "
+    
+    print(update_text)
+    cursor = connection.cursor()
+    query_result = cursor.execute(update_text)
+ 
         
     context = {'message': 'Ok'}
 
