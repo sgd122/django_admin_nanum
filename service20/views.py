@@ -818,7 +818,7 @@ def MS0101M_adm_cancle(request):
     upd_pgm = request.POST.get('upd_pgm', "")
 
     update_text = " update service20_msch a "
-    update_text += " SET status = '99' "
+    update_text += " SET status = '19' "
     update_text += " , doc_cncl_dt = now() "
     update_text += " WHERE 1=1 "
     update_text += " AND a.ms_id = '"+ms_id+"' "
@@ -931,6 +931,7 @@ class MS0101M_report_list(generics.ListAPIView):
 class MP0101M_list_Serializer(serializers.ModelSerializer):
 
     applyFlag = serializers.SerializerMethodField()
+    applyFlagNm = serializers.SerializerMethodField()
     applyStatus = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
     statusCode = serializers.SerializerMethodField()
@@ -943,10 +944,12 @@ class MP0101M_list_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = mpgm
-        fields = ('mp_id','mp_name','status','statusCode','yr','yr_seq','sup_org','applyFlag','applyStatus','apl_fr_dt','apl_to_dt','mnt_fr_dt','mnt_to_dt','cnt_trn','status','status_nm')
+        fields = ('mp_id','mp_name','status','statusCode','yr','yr_seq','sup_org','applyFlag','applyStatus','apl_fr_dt','apl_to_dt','mnt_fr_dt','mnt_to_dt','cnt_trn','status','status_nm','applyFlagNm')
 
     def get_applyFlag(self, obj):
         return obj.applyFlag    
+    def get_applyFlagNm(self, obj):
+        return obj.applyFlagNm    
     def get_applyStatus(self, obj):
         
         if obj.applyFlag == 'N':
@@ -998,6 +1001,40 @@ class MP0101M_list(generics.ListAPIView):
         query += "  like ifnull(NULLIF('"+str(l_status)+"',''),'%%') || '%%' "
 
         query += " order by A.apl_fr_dt desc,A.apl_to_dt desc "
+
+
+query = " select apl_to_dt,  ";
+query += "        IF(A.status = '10'  ";
+query += "           AND Now() > A.apl_to_dt, 'xx', A.status) AS statusCode,  ";
+query += "        IF(A.status = '10'  ";
+query += "           AND Now() > A.apl_to_dt, '모집완료',  ";
+query += "        (SELECT std_detl_code_nm  ";
+query += "         FROM   service20_com_cdd  ";
+query += "         WHERE  std_grp_code = 'MS0001'  ";
+query += "                AND use_indc = 'y'  ";
+query += "                AND std_detl_code = A.status))      AS status_nm,  ";
+query += "        Ifnull(B.status, 'N')                       AS applyFlag,  ";
+query += "        (SELECT std_detl_code_nm  ";
+query += "         FROM   service20_com_cdd  ";
+query += "         WHERE  std_grp_code = 'MP0053'  ";
+query += "                AND std_detl_code = B.status)       AS applyFlagNm,  ";
+query += "        A.*  ";
+query += " FROM   service20_mpgm A  ";
+query += "        LEFT JOIN service20_mp_mtr B  ";
+query += "               ON ( A.mp_id = B.mp_id  ";
+query += "                    AND A.yr = B.yr  ";
+query += "                    AND B.apl_id = '"+str(ida)+"' )  ";
+query += " WHERE  A.yr = '"+str(l_yr)+"'  ";
+query += "        AND A.apl_term = '"+str(l_apl_term)+"'  ";
+query += "        AND (SELECT Count(1)  ";
+query += "             FROM   service20_mentor  ";
+query += "             WHERE  apl_id = '"+str(ida)+"') > 0  ";
+query += "        AND IF(A.status = '10'  ";
+query += "               AND Now() > A.apl_to_dt, 'xx', A.status) LIKE  ";
+query += "            Ifnull(Nullif('"+str(l_status)+"', ''), '%%')  ";
+query += "            || '%%'  ";
+query += " ORDER  BY A.apl_fr_dt DESC,  ";
+query += "           A.apl_to_dt DESC  ";
 
         print(query)
         queryset = mpgm.objects.raw(query)
@@ -1478,7 +1515,7 @@ def MP0101M_adm_cancle(request):
     upd_pgm = request.POST.get('upd_pgm', "")
 
     update_text = " update service20_mp_mtr a "
-    update_text += " SET status = '99' "
+    update_text += " SET status = '19' "
     update_text += " , doc_cncl_dt = now() "
     update_text += " WHERE 1=1 "
     update_text += " AND a.mp_id = '"+mp_id+"' "
