@@ -115,6 +115,8 @@ urlpatterns = [
     path('MP0101M/admin/update/', MP0101M_adm_update, name='MP0101M_adm_update'), 
     # 멘토링 프로그램(관리자) cancle
     path('MP0101M/admin/cancle/', MP0101M_adm_cancle, name='MP0101M_adm_cancle'), 
+    # 멘토링 프로그램(레포트) - 기본정보
+    path('MP0101M/report/list/', MP0101M_report_list.as_view(), name='MP0101M_report_list'),
     ########################################################################################
     # 멘토링 프로그램(MP0101M - END )
     #

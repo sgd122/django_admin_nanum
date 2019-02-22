@@ -417,7 +417,7 @@ def MS0101M_save(request):
     update_text += " SET a.cnt_apl = (select count(*) from service20_ms_apl where ms_id = '"+mp_id+"') "
     update_text += " WHERE 1=1 "
     update_text += " AND a.ms_id = '"+mp_id+"' "
-    print(update_text)
+    
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)    
         
@@ -670,7 +670,7 @@ def MS0101M_adm_acpt_save(request):
     update_text += " WHERE 1=1 "
     update_text += " AND a.ms_id = '"+ms_id+"' "
     update_text += " AND a.apl_no = '"+apl_no+"' "
-    print(update_text)
+    
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)
 
@@ -703,7 +703,7 @@ def MS0101M_adm_acpt_cancle(request):
     update_text += " WHERE 1=1 "
     update_text += " AND a.ms_id = '"+ms_id+"' "
     update_text += " AND a.apl_no = '"+apl_no+"' "
-    print(update_text)
+    
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)
 
@@ -745,7 +745,7 @@ def MS0101M_adm_update(request):
         update_text += " AND a.mp_id = '"+str(ms_id)+"' "
         update_text += " AND a.apl_no = '"+str(apl_no)+"' "
         update_text += " AND a.ques_no = '"+str(ques_no)+"' "
-        print(update_text)
+        
         cursor = connection.cursor()
         query_result = cursor.execute(update_text)
 
@@ -777,7 +777,7 @@ def MS0101M_adm_cancle(request):
     update_text += " WHERE 1=1 "
     update_text += " AND a.ms_id = '"+ms_id+"' "
     update_text += " AND a.apl_no = '"+apl_no+"' "
-    print(update_text)
+    
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)
 
@@ -861,7 +861,7 @@ class MP0101M_list(generics.ListAPIView):
         query += " order by A.apl_fr_dt desc,A.apl_to_dt desc "
 
         queryset = mpgm.objects.raw(query)
-        print(query)
+        
 
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, context={'request': request}, many=True)
@@ -1007,7 +1007,7 @@ def MP0101M_save(request):
     update_text += " SET a.cnt_apl = (select count(*) from service20_mp_mntr where mp_id = '"+mp_id+"') "
     update_text += " WHERE 1=1 "
     update_text += " AND a.mp_id = '"+mp_id+"' "
-    print(update_text)
+    
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)    
 
@@ -1251,7 +1251,7 @@ def MP0101M_adm_acpt_save(request):
     update_text += " WHERE 1=1 "
     update_text += " AND a.mp_id = '"+mp_id+"' "
     update_text += " AND a.apl_no = '"+apl_no+"' "
-    print(update_text)
+    
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)
 
@@ -1284,7 +1284,7 @@ def MP0101M_adm_acpt_cancle(request):
     update_text += " WHERE 1=1 "
     update_text += " AND a.mp_id = '"+mp_id+"' "
     update_text += " AND a.apl_no = '"+apl_no+"' "
-    print(update_text)
+    
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)
 
@@ -1326,7 +1326,7 @@ def MP0101M_adm_update(request):
         update_text += " AND a.mp_id = '"+str(mp_id)+"' "
         update_text += " AND a.apl_no = '"+str(apl_no)+"' "
         update_text += " AND a.ques_no = '"+str(ques_no)+"' "
-        print(update_text)
+        
         cursor = connection.cursor()
         query_result = cursor.execute(update_text)
 
@@ -1358,7 +1358,7 @@ def MP0101M_adm_cancle(request):
     update_text += " WHERE 1=1 "
     update_text += " AND a.mp_id = '"+mp_id+"' "
     update_text += " AND a.apl_no = '"+apl_no+"' "
-    print(update_text)
+    
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)
 
@@ -1367,6 +1367,93 @@ def MP0101M_adm_cancle(request):
 
     return JsonResponse(context,json_dumps_params={'ensure_ascii': True})            
 
+class MP0101M_report_list_Serializer(serializers.ModelSerializer):
+    
+    mp_name = serializers.SerializerMethodField()
+    pr_yr = serializers.SerializerMethodField()
+    pr_sch_yr = serializers.SerializerMethodField()
+    pr_term_div = serializers.SerializerMethodField()
+    statusNm = serializers.SerializerMethodField()
+    statusCode = serializers.SerializerMethodField()
+
+    acpt_dt = serializers.DateTimeField(format='%Y-%m-%d')
+
+    class Meta:
+        model = mp_mtr
+        fields = ('mp_id','apl_no','mntr_id','indv_div','team_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','bank_acct','bank_cd','bank_nm','bank_dpsr','cnt_mp_a','cnt_mp_p','cnt_mp_c','cnt_mp_g','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','fnl_rslt','acpt_dt','acpt_div','acpt_cncl_rsn','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','mp_name','pr_yr','pr_sch_yr','pr_term_div','statusNm','statusCode')
+
+    def get_mp_name(self,obj):
+        return obj.mp_name
+
+    def get_pr_yr(self,obj):
+        return obj.pr_yr
+
+    def get_pr_sch_yr(self,obj):
+        return obj.pr_sch_yr
+
+    def get_pr_term_div(self,obj):
+        return obj.pr_term_div  
+
+    def get_statusNm(self,obj):
+        now = datetime.datetime.today()
+        mpgm_query = mpgm.objects.all()
+        mpgm_query = mpgm_query.filter(mp_id=obj.mp_id)[0]
+
+        if mpgm_query.apl_fr_dt == None:
+            return '개설중'
+        elif now < mpgm_query.apl_fr_dt:
+            return '개설중'
+        elif mpgm_query.apl_fr_dt <= now < mpgm_query.apl_to_dt:
+            return '모집중'
+        elif now > mpgm_query.apl_to_dt:
+            return '모집완료'
+        else:
+            return '개설중'
+
+    def get_statusCode(self,obj):
+        now = datetime.datetime.today()
+        mpgm_query = mpgm.objects.all()
+        mpgm_query = mpgm_query.filter(mp_id=obj.mp_id)[0]
+        if mpgm_query.apl_fr_dt == None:
+            # 개설중
+            return '1'
+        elif now < mpgm_query.apl_fr_dt:
+            # 개설중
+            return '1'
+        elif mpgm_query.apl_fr_dt <= now < mpgm_query.apl_to_dt:
+            # 모집중
+            return '2'
+        elif now > mpgm_query.apl_to_dt:
+            # 모집완료
+            return '3'  
+        else:
+            # 개설중
+            return '1'      
+
+class MP0101M_report_list(generics.ListAPIView):
+    queryset = mp_mtr.objects.all()
+    serializer_class = MP0101M_report_list_Serializer
+    
+    def list(self, request):
+        ida = request.GET.get('user_id', None)
+        ms_ida = request.GET.get('ms_id', None)
+        l_yr = request.GET.get('yr', None)
+        
+        # mpgm
+        query = "select C.mp_name,B.pr_yr,B.pr_sch_yr,B.pr_term_div,A.* from service20_mp_mtr A,service10_vm_nanum_stdt B,service20_mpgm C where A.apl_id=B.apl_id and A.mp_id = C.mp_id and A.yr='"+l_yr+"' and A.mp_id = '"+ms_ida+"' and A.apl_id='"+ida+"'"
+        queryset = mp_mtr.objects.raw(query)
+        
+        print(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
 #####################################################################################
 # MP0101M - END 
 #####################################################################################
@@ -1730,12 +1817,11 @@ def MP0103M_Insert(request):
     update_text += " AND a.mp_id = d.mp_id "
     update_text += " AND a.apl_no = d.apl_no "
     update_text += " AND d.apl_no = c.apl_no "
-    print(update_text)
+    
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)
 
-    print("==========gd========")
-    print(maxRow)
+    
     row_max = int(maxRow)
     for i in range(0,row_max):
     
@@ -1791,10 +1877,8 @@ def MP0103M_Insert(request):
         insert_text += " and apl_id = '"+str(apl_id)+"' "
         insert_text += " )"
 
-        print(insert_text)
         cursor = connection.cursor()
         query_result = cursor.execute(insert_text)    
-        print(query_result)
         
     context = {'message': 'Ok'}
 
@@ -1824,8 +1908,7 @@ def MP0103M_Update(request):
     
 
     maxRow = request.POST.get('maxRow', 0)
-    print("::maxRow::")
-    print(maxRow)
+    
 
     row_max = int(maxRow)
 
@@ -1845,10 +1928,10 @@ def MP0103M_Update(request):
     # update_text += " AND apl_no = '"+str(apl_no)+"' "
     update_text += " AND apl_no IN (SELECT apl_no FROM service20_mp_mtr WHERE apl_id = '"+str(apl_id)+"') "
 
-    print(update_text)
+    
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)    
-    print(query_result)
+    
     ####################################
     # 1번쿼리
     ####################################
@@ -1875,10 +1958,8 @@ def MP0103M_Update(request):
         update_text += " AND apl_no IN (SELECT apl_no FROM service20_mp_mtr WHERE apl_id = '"+str(apl_id)+"') "
         update_text += " AND pln_no = '"+str(pln_no)+"' "
 
-        print(update_text)
         cursor = connection.cursor()
         query_result = cursor.execute(update_text)    
-        print(query_result)
         ####################################
         # 2번쿼리
         ####################################
@@ -2734,7 +2815,7 @@ class main_list_mento_count(generics.ListAPIView):
         queryset = self.get_queryset()
 
         v_count = mentor.objects.count()
-        print(v_count)
+        
 
         context = {'count': v_count,
                     }
