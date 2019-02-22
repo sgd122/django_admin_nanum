@@ -984,25 +984,6 @@ class MP0101M_list(generics.ListAPIView):
         
         # 멘토만 조회가능.
 
-        # query = " select apl_to_dt,  "
-        # query += " if(A.status = '10'  "
-        # query += " and now() > A.apl_to_dt, 'xx', A.status) as statusCode,  "
-        # query += " if(A.status = '10'  "
-        # query += " and now() > A.apl_to_dt, '모집완료', (select std_detl_code_nm  "
-        # query += " from   service20_com_cdd  "
-        # query += " where  "
-        # query += " std_grp_code = 'MS0001'  "
-        # query += " and use_indc = 'y'  "
-        # query += " and std_detl_code = status)) as status_nm,  "
-
-        # query += " ifnull((select 'Y' from service20_mp_mtr where yr = '"+str(l_yr)+"' and apl_id = '"+str(ida)+"' and mp_id = A.mp_id),'N') AS applyFlag,A.* from service20_mpgm A where A.yr='"+str(l_yr)+"' and A.apl_term='"+str(l_apl_term)+"' and (select count(1) from service20_mentor where apl_id = '"+ida+"') > 0 "
-
-        # query += " and if(A.status = '10' and now() > A.apl_to_dt, 'xx', A.status) "
-        # query += "  like ifnull(NULLIF('"+str(l_status)+"',''),'%%') || '%%' "
-
-        # query += " order by A.apl_fr_dt desc,A.apl_to_dt desc "
-
-
         query = " select apl_to_dt,  "
         query += "        IF(A.status = '10'  "
         query += "           AND Now() > A.apl_to_dt, 'xx', A.status) AS statusCode,  "
@@ -1013,11 +994,22 @@ class MP0101M_list(generics.ListAPIView):
         query += "         WHERE  std_grp_code = 'MS0001'  "
         query += "                AND use_indc = 'y'  "
         query += "                AND std_detl_code = A.status))      AS status_nm,  "
-        query += "        Ifnull(B.status, 'N')                       AS applyFlag,  "
-        query += "        (SELECT std_detl_code_nm  "
-        query += "         FROM   service20_com_cdd  "
-        query += "         WHERE  std_grp_code = 'MP0053'  "
-        query += "                AND std_detl_code = B.status)       AS applyFlagNm,  "
+        
+
+        # query += "        Ifnull(Ifnull(B.status, 'N')                       AS applyFlag,  "
+        # query += "        (SELECT std_detl_code_nm  "
+        # query += "         FROM   service20_com_cdd  "
+        # query += "         WHERE  std_grp_code = 'MP0053'  "
+        # query += "                AND std_detl_code = B.status),'미지원')      AS applyFlagNm,  "
+        
+        query += "CASE  ";
+        query += "WHEN Ifnull(B.status, 'N') = 'N' THEN '미지원' ";
+        query += "ELSE (SELECT std_detl_code_nm  ";
+        query += "      FROM   service20_com_cdd  ";
+        query += "      WHERE  std_grp_code = 'MP0053'  ";
+        query += "             AND std_detl_code = B.status)  ";
+        query += " end                                         AS applyFlagNm,  ";
+
         query += "        A.*  "
         query += " FROM   service20_mpgm A  "
         query += "        LEFT JOIN service20_mp_mtr B  "
