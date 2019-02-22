@@ -283,7 +283,7 @@ class MS0101M_list(generics.ListAPIView):
         l_yr = request.GET.get('yr', None)
         l_apl_term = request.GET.get('trn_term', None)
         l_user_id = request.GET.get('user_id', None)
-        l_status = request.GET.get('l_status', None)
+        l_status = request.GET.get('status', '')
 
         query = " select apl_to_dt,  "
         query += " if(A.status = '10'  "
@@ -299,7 +299,7 @@ class MS0101M_list(generics.ListAPIView):
         query += " ifnull((select 'Y' from service20_ms_apl where yr = '"+str(l_yr)+"' and apl_id = '"+str(l_user_id)+"' and ms_id = A.ms_id),'N') AS applyFlag,A.* from service20_msch A where A.yr='"+str(l_yr)+"' and A.apl_term='"+str(l_apl_term)+"'"
         
         query += " and if(A.status = '10' and now() > A.apl_to_dt, 'xx', A.status) "
-        query += "  = '"+str(l_status)+"'  "
+        query += "  like '"+str(l_status)+"' || '%' "
 
         query += " order by apl_fr_dt desc,apl_to_dt desc " 
         queryset = msch.objects.raw(query)
@@ -985,7 +985,7 @@ class MP0101M_list(generics.ListAPIView):
         query += " ifnull((select 'Y' from service20_mp_mtr where yr = '"+str(l_yr)+"' and apl_id = '"+str(ida)+"' and mp_id = A.mp_id),'N') AS applyFlag,A.* from service20_mpgm A where A.yr='"+str(l_yr)+"' and A.apl_term='"+str(l_apl_term)+"' and (select count(1) from service20_mentor where apl_id = '"+ida+"') > 0 "
 
         query += " and if(A.status = '10' and now() > A.apl_to_dt, 'xx', A.status) "
-        query += "  = '"+str(l_status)+"'  "
+        query += "  like '"+str(l_status)+"' || '%' "
 
         query += " order by A.apl_fr_dt desc,A.apl_to_dt desc "
 
