@@ -219,7 +219,7 @@ class com_combo_status(generics.ListAPIView):
 
         queryset = self.get_queryset()
         
-        query = " select '0'id,''std_detl_code,'전체'std_detl_code_nm "
+        query = " select '0'id,' 'std_detl_code,'전체'std_detl_code_nm "
         query += " union  "
         query += " select id,std_detl_code,std_detl_code_nm from service20_com_cdd where std_grp_code = 'MS0001' "
         query += " union  "
