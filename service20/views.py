@@ -953,8 +953,8 @@ class MP0101M_list_Serializer(serializers.ModelSerializer):
             return '지원'
         else:
             print(obj.applyFlag)
-            queryset = com_cdd.objects.filter(std_grp_code='MP0053',std_detl_code=obj.applyFlag)[0]
-            return queryset.std_detl_code_nm
+            rows = com_cdd.objects.filter(std_grp_code='MP0053',std_detl_code=obj.applyFlag)[0]
+            return rows.std_detl_code_nm
         # return obj.applyStatus    
 
     def get_statusCode(self,obj):
