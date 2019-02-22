@@ -86,6 +86,8 @@ urlpatterns = [
     path('MS0101M/admin/update/', MS0101M_adm_update, name='MS0101M_adm_update'), 
     # 멘토스쿨(관리자) cancle
     path('MS0101M/admin/cancle/', MS0101M_adm_cancle, name='MS0101M_adm_cancle'), 
+    # 멘토링 프로그램(레포트) - 기본정보
+    path('MS0101M/report/list/', MS0101M_report_list.as_view(), name='MS0101M_report_list'),
     ########################################################################################
     # 멘토스쿨
     #
