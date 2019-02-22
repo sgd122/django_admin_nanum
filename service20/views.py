@@ -1425,14 +1425,14 @@ class MP0101M_adm_list_fe(generics.ListAPIView):
         mp_ida = request.GET.get('mp_id', None)
         l_yr = request.GET.get('yr', None)
         
-        query += " select id,  ";
-        query += "        frexm_cd,  ";
-        query += "        frexm_nm,  ";
-        query += "        score,  ";
-        query += "        grade  ";
-        query += " FROM   service20_mp_mtr_fe  ";
-        query += " WHERE  mp_id = '"+mp_ida+"'  ";
-        query += "        AND apl_id = '"+ida+"' ";
+        query = " select id,  "
+        query += "        frexm_cd,  "
+        query += "        frexm_nm,  "
+        query += "        score,  "
+        query += "        grade  "
+        query += " FROM   service20_mp_mtr_fe  "
+        query += " WHERE  mp_id = '"+mp_ida+"'  "
+        query += "        AND apl_id = '"+ida+"' "
 
         queryset = mp_mtr.objects.raw(query)
         print(query)
@@ -2841,7 +2841,7 @@ def MP0105M_update(request,pk):
     upd_dt    = request.POST.get('upd_dt   ', "")
     upd_pgm   = request.POST.get('upd_pgm  ', "")
 
-    update_text = "";
+    update_text = ""
     if pk == 1:
         # /*보고서현황작성_승인요청*/
         update_text = " update service20_mp_rep "
