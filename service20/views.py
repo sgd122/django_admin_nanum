@@ -795,7 +795,7 @@ class MS0101M_report_list_Serializer(serializers.ModelSerializer):
     statusNm = serializers.SerializerMethodField()
     statusCode = serializers.SerializerMethodField()
 
-    acpt_dt = serializers.DateTimeField(format='%Y-%m-%d')
+    # acpt_dt = serializers.DateTimeField(format='%Y-%m-%d')
 
     class Meta:
         model = ms_apl
