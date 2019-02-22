@@ -991,6 +991,7 @@ class MP0101M_list(generics.ListAPIView):
 
         query += " order by A.apl_fr_dt desc,A.apl_to_dt desc "
 
+        print(query)
         queryset = mpgm.objects.raw(query)
         
 
