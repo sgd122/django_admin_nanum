@@ -1864,6 +1864,59 @@ class MP0103M_Detail(generics.ListAPIView):
 
         return Response(serializer.data)
 
+# 프로그램 수행계획서 작성 폼 데이터 ###################################################
+class MP0103M_Detail_v2_Serializer(serializers.ModelSerializer):
+
+    testField = serializers.SerializerMethodField()
+    class Meta:
+        model = mp_plnd
+        fields = ('mp_id','apl_no','pln_no','pln_sdt','pln_edt','mtr_desc','testField')
+
+    def get_testField(self, obj):
+        return 'test'     
+
+
+class MP0103M_Detail_v2(generics.ListAPIView):
+    queryset = mpgm.objects.all()
+    serializer_class = MP0103M_Detail_v2_Serializer
+
+    def list(self, request):
+        l_mp_id = request.GET.get('mp_id', "")
+        apl_id = request.GET.get('apl_id', "")
+        apl_no = request.GET.get('apl_no', "")
+        
+
+        queryset = self.get_queryset()
+        
+
+        # /* 프로그램 수행계획서 작성 폼 데이터 */
+        select_text = "select case when a.pln_dt is not NULL then 'true' ELSE 'false' END AS prn_fg"
+        select_text += ", d.apl_id AS apl_id, d.apl_nm AS apl_nm, c.tchr_nm AS tchr_nm, c.sch_nm AS sch_nm, a.mtr_sub AS mtr_sub, '60' AS pln_time"
+        select_text += " from service20_mp_plnh a, service20_mpgm b, service20_mp_mte c"
+        select_text += ", (SELECT mp_id, apl_no, apl_id, apl_nm"
+        select_text += " FROM service20_mp_mtr"
+        select_text += " WHERE apl_id = '"+apl_id+"' AND apl_no = '"+apl_no+"') d"
+        select_text += " WHERE a.mp_id = b.mp_id"
+        select_text += " AND a.mp_id = c.mp_id"
+        select_text += " AND a.mp_id = d.mp_id"
+        select_text += " AND a.apl_no = d.apl_no"
+        select_text += " AND d.apl_no = c.apl_no"
+        select_text += " AND a.mp_id = '"+l_mp_id+"';"
+
+        print(select_text)
+
+        queryset = mp_plnd.objects.raw(select_text)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
 # 계획서 최초 작성 시 주차 수를 셋팅
 class MP0103M_list_v1_Serializer(serializers.ModelSerializer):
 
@@ -2058,7 +2111,7 @@ def MP0103M_Update(request):
     update_text += " , upd_pgm = '"+str(upd_pgm)+"' "
     update_text += " WHERE mp_id = '"+str(mp_id)+"' "
     # update_text += " AND apl_no = '"+str(apl_no)+"' "
-    update_text += " AND apl_no IN (SELECT apl_no FROM service20_mp_mtr WHERE apl_id = '"+str(apl_id)+"') "
+    update_text += " AND apl_no = '"+str(apl_id)+"' "
 
     
     cursor = connection.cursor()
@@ -2087,8 +2140,9 @@ def MP0103M_Update(request):
         update_text += " , upd_pgm = '"+str(upd_pgm)+"' "
         update_text += " WHERE mp_id = '"+str(mp_id)+"' "
         # update_text += " AND apl_no = '"+str(apl_no)+"' "
-        update_text += " AND apl_no IN (SELECT apl_no FROM service20_mp_mtr WHERE apl_id = '"+str(apl_id)+"') "
+        update_text += " AND apl_no = '"+str(apl_id)+"' "
         update_text += " AND pln_no = '"+str(pln_no)+"' "
+
 
         cursor = connection.cursor()
         query_result = cursor.execute(update_text)    

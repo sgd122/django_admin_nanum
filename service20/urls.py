@@ -132,6 +132,8 @@ urlpatterns = [
     path('MP0103M/list/', MP0103M_list.as_view(), name='MP0103M_list'),
     # 프로그램 수행계획서 상세
     path('MP0103M/detail/', MP0103M_Detail.as_view(), name='MP0103M_Detail'),
+    # 프로그램 수행계획서 작성 폼 데이터
+    path('MP0103M/detail/v2/', MP0103M_Detail_v2.as_view(), name='MP0103M_Detail_v2'),
     # 프로그램 수행계획서 -> 최초 작성 시 주차 수를 셋팅
     path('MP0103M/list/v1/', MP0103M_list_v1.as_view(), name='MP0103M_list_v1'),
     # 프로그램 수행계획서 Insert
