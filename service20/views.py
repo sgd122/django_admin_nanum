@@ -1345,7 +1345,7 @@ class MP0101M_adm_list(generics.ListAPIView):
 
         query += " C.mp_name,B.pr_yr,B.pr_sch_yr,B.pr_term_div,A.* from service20_mp_mtr A,service20_vw_nanum_stdt B,service20_mpgm C where A.apl_id=B.apl_id and A.mp_id = C.mp_id and A.yr='"+l_yr+"' and A.mp_id = '"+ms_ida+"' and A.apl_id='"+ida+"'"
         queryset = mp_mtr.objects.raw(query)
-        
+        print(query)
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
 
