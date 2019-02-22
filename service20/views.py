@@ -283,7 +283,7 @@ class MS0101M_list(generics.ListAPIView):
         l_yr = request.GET.get('yr', None)
         l_apl_term = request.GET.get('trn_term', None)
         l_user_id = request.GET.get('user_id', None)
-        l_status = request.GET.get('l_status', None)
+        l_status = request.GET.get('status', None)
 
         query = " select apl_to_dt,  "
         query += " if(A.status = '10'  "
