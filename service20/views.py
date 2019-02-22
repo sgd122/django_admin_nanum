@@ -1436,11 +1436,11 @@ class MP0101M_report_list(generics.ListAPIView):
     
     def list(self, request):
         ida = request.GET.get('user_id', None)
-        ms_ida = request.GET.get('ms_id', None)
+        mp_ida = request.GET.get('mp_id', None)
         l_yr = request.GET.get('yr', None)
         
         # mpgm
-        query = "select C.mp_name,B.pr_yr,B.pr_sch_yr,B.pr_term_div,A.* from service20_mp_mtr A,service10_vm_nanum_stdt B,service20_mpgm C where A.apl_id=B.apl_id and A.mp_id = C.mp_id and A.yr='"+l_yr+"' and A.mp_id = '"+ms_ida+"' and A.apl_id='"+ida+"'"
+        query = "select C.mp_name,B.pr_yr,B.pr_sch_yr,B.pr_term_div,A.* from service20_mp_mtr A,service10_vm_nanum_stdt B,service20_mpgm C where A.apl_id=B.apl_id and A.mp_id = C.mp_id and A.yr='"+str(l_yr)+"' and A.mp_id = '"+str(mp_ida)+"' and A.apl_id='"+str(ida)+"'"
         queryset = mp_mtr.objects.raw(query)
         
         print(query)
