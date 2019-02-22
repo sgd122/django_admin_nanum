@@ -995,14 +995,7 @@ class MP0101M_list(generics.ListAPIView):
         query += "                AND use_indc = 'y'  "
         query += "                AND std_detl_code = A.status))      AS status_nm,  "
         query += "        Ifnull(B.status, 'N')                       AS applyFlag,  "
-        
-
-        # query += "        (SELECT std_detl_code_nm  "
-        # query += "         FROM   service20_com_cdd  "
-        # query += "         WHERE  std_grp_code = 'MP0053'  "
-        # query += "                AND std_detl_code = B.status),'미지원'      AS applyFlagNm,  "
-
-
+    
         query += " CASE  "
         query += "      WHEN Ifnull(B.status, 'N') = 'N' THEN '미지원' "
         query += "      ELSE (SELECT std_detl_code_nm  "
@@ -1010,9 +1003,6 @@ class MP0101M_list(generics.ListAPIView):
         query += "              WHERE  std_grp_code = 'MP0053'  "
         query += "                 AND std_detl_code = B.status)  "
         query += " end                                         AS applyFlagNm,  "
-
-        
-
 
         query += "        A.*  "
         query += " FROM   service20_mpgm A  "
@@ -1472,6 +1462,15 @@ def MP0101M_adm_update(request):
 
 
     apl_max = int(maxRow)
+    
+
+    update_text = " update service20_mp_mtr a "
+    update_text += " SET a.status = '10' "
+    update_text += " WHERE 1=1 "
+    update_text += " AND a.mp_id = '"+str(mp_id)+"' "
+    update_text += " AND a.apl_id = '"+str(apl_id)+"' "
+    cursor = connection.cursor()
+    query_result = cursor.execute(update_text)
 
     for i in range(0,apl_max):
         anst2 = request.POST.get('que'+str(i+1), None)
