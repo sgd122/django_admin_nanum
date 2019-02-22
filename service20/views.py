@@ -2756,7 +2756,7 @@ def MP0105M_update(request,pk):
         update_text += " AND APL_NO = '"+apl_no+"' "
         update_text += " AND REP_NO = '"+rep_no+"' "
     
-    
+    print(update_text)
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)
  
