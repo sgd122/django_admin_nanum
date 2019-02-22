@@ -449,6 +449,7 @@ def MS0101M_save(request):
         score3=rows.score03,
         score4=rows.score04,
         score5=rows.score05,
+        status='10', # 지원
         )
     model_instance.save()
     
@@ -947,10 +948,12 @@ class MP0101M_list_Serializer(serializers.ModelSerializer):
     def get_applyFlag(self, obj):
         return obj.applyFlag    
     def get_applyStatus(self, obj):
-        if obj.applyFlag == 'Y':
+        queryset = com_cdd.objects.all()
+        queryset = com_cdd.filter(std_grp_code='MP0053',std_detl_code=obj.applyFlag)[0]
+        if obj.applyFlag == 'N':
             return '지원'
-        elif obj.applyFlag == 'N':
-            return '미지원'    
+        else:
+            return queryset.std_detl_code_nm
         # return obj.applyStatus    
 
     def get_statusCode(self,obj):
@@ -987,7 +990,7 @@ class MP0101M_list(generics.ListAPIView):
         query += " and use_indc = 'y'  "
         query += " and std_detl_code = status)) as status_nm,  "
 
-        query += " ifnull((select 'Y' from service20_mp_mtr where yr = '"+str(l_yr)+"' and apl_id = '"+str(ida)+"' and mp_id = A.mp_id),'N') AS applyFlag,A.* from service20_mpgm A where A.yr='"+str(l_yr)+"' and A.apl_term='"+str(l_apl_term)+"' and (select count(1) from service20_mentor where apl_id = '"+ida+"') > 0 "
+        query += " ifnull((select status from service20_mp_mtr where yr = '"+str(l_yr)+"' and apl_id = '"+str(ida)+"' and mp_id = A.mp_id),'N') AS applyFlag,A.* from service20_mpgm A where A.yr='"+str(l_yr)+"' and A.apl_term='"+str(l_apl_term)+"' and (select count(1) from service20_mentor where apl_id = '"+ida+"') > 0 "
 
         query += " and if(A.status = '10' and now() > A.apl_to_dt, 'xx', A.status) "
         query += "  like ifnull(NULLIF('"+str(l_status)+"',''),'%%') || '%%' "
@@ -1113,6 +1116,7 @@ def MP0101M_save(request):
         score3=rows.score03,
         score4=rows.score04,
         score5=rows.score05,
+        status='10', # 지원
         )
     model_instance.save()
     
