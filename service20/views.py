@@ -817,7 +817,7 @@ def MS0101M_adm_cancle(request):
     upd_pgm = request.POST.get('upd_pgm', "")
 
     update_text = " update service20_msch a "
-    update_text += " SET status = '19' "
+    update_text += " SET status = '99' "
     update_text += " , doc_cncl_dt = now() "
     update_text += " WHERE 1=1 "
     update_text += " AND a.ms_id = '"+ms_id+"' "
@@ -1472,7 +1472,7 @@ def MP0101M_adm_cancle(request):
     upd_pgm = request.POST.get('upd_pgm', "")
 
     update_text = " update service20_mp_mtr a "
-    update_text += " SET status = '19' "
+    update_text += " SET status = '99' "
     update_text += " , doc_cncl_dt = now() "
     update_text += " WHERE 1=1 "
     update_text += " AND a.mp_id = '"+mp_id+"' "
