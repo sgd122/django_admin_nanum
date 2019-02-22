@@ -585,11 +585,12 @@ class MS0101M_adm_list_Serializer(serializers.ModelSerializer):
     pr_term_div = serializers.SerializerMethodField()
     statusNm = serializers.SerializerMethodField()
     statusCode = serializers.SerializerMethodField()
+    status_nm = serializers.SerializerMethodField()
     # acpt_dt = serializers.DateTimeField(format='%Y-%m-%d')
 
     class Meta:
         model = ms_apl
-        fields = ('ms_id','apl_no','mntr_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','fnl_rslt','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','ms_name','pr_yr','pr_sch_yr','pr_term_div','statusNm','statusCode')
+        fields = ('ms_id','apl_no','mntr_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','fnl_rslt','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','ms_name','pr_yr','pr_sch_yr','pr_term_div','statusNm','statusCode','status_nm')
 
     def get_ms_name(self,obj):
         return obj.ms_name
@@ -603,41 +604,13 @@ class MS0101M_adm_list_Serializer(serializers.ModelSerializer):
     def get_pr_term_div(self,obj):
         return obj.pr_term_div    
 
-    def get_statusNm(self,obj):
-        now = datetime.datetime.today()
-        msch_query = msch.objects.all()
-        msch_query = msch_query.filter(ms_id=obj.ms_id)[0]
-
-        if msch_query.apl_fr_dt == None:
-            return '개설중'
-        elif now < msch_query.apl_fr_dt:
-            return '개설중'
-        elif msch_query.apl_fr_dt <= now < msch_query.apl_to_dt:
-            return '모집중'
-        elif now > msch_query.apl_to_dt:
-            return '모집완료'
-        else:
-            return '개설중'
-
     def get_statusCode(self,obj):
-        now = datetime.datetime.today()
-        msch_query = msch.objects.all()
-        msch_query = msch_query.filter(ms_id=obj.ms_id)[0]
-        if msch_query.apl_fr_dt == None:
-            # 개설중
-            return '1'
-        elif now < msch_query.apl_fr_dt:
-            # 개설중
-            return '1'
-        elif msch_query.apl_fr_dt <= now < msch_query.apl_to_dt:
-            # 모집중
-            return '2'
-        elif now > msch_query.apl_to_dt:
-            # 모집완료
-            return '3'  
-        else:
-            # 개설중
-            return '1'
+        return obj.statusCode 
+
+    def get_status_nm(self,obj):
+        return obj.status_nm
+    def get_status(self,obj):
+        return obj.status
 
 class MS0101M_adm_list(generics.ListAPIView):
     queryset = ms_apl.objects.all()
@@ -649,7 +622,18 @@ class MS0101M_adm_list(generics.ListAPIView):
         l_yr = request.GET.get('yr', None)
         
         # msch
-        query = "select C.ms_name,B.pr_yr,B.pr_sch_yr,B.pr_term_div,A.* from service20_ms_apl A,service20_vw_nanum_stdt B,service20_msch C where A.apl_id=B.apl_id and A.ms_id = C.ms_id and A.yr='"+l_yr+"' and A.ms_id = '"+ms_ida+"' and A.apl_id='"+ida+"'"
+        query = " select apl_to_dt,  "
+        query += " if(C.status = '10'  "
+        query += " and now() > A.apl_to_dt, 'xx', C.status) as statusCode,  "
+        query += " if(C.status = '10'  "
+        query += " and now() > A.apl_to_dt, '모집완료', (select std_detl_code_nm  "
+        query += " from   service20_com_cdd  "
+        query += " where  "
+        query += " std_grp_code = 'MS0001'  "
+        query += " and use_indc = 'y'  "
+        query += " and std_detl_code = C.status)) as status_nm,  "
+
+        query += " C.ms_name,B.pr_yr,B.pr_sch_yr,B.pr_term_div,A.* from service20_ms_apl A,service20_vw_nanum_stdt B,service20_msch C where A.apl_id=B.apl_id and A.ms_id = C.ms_id and A.yr='"+l_yr+"' and A.ms_id = '"+ms_ida+"' and A.apl_id='"+ida+"'"
         
         queryset = ms_apl.objects.raw(query)
 
@@ -1254,7 +1238,6 @@ class MP0101M_adm_list_Serializer(serializers.ModelSerializer):
     pr_yr = serializers.SerializerMethodField()
     pr_sch_yr = serializers.SerializerMethodField()
     pr_term_div = serializers.SerializerMethodField()
-    # statusNm = serializers.SerializerMethodField()
     statusCode = serializers.SerializerMethodField()
     status_nm = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
@@ -1275,43 +1258,6 @@ class MP0101M_adm_list_Serializer(serializers.ModelSerializer):
 
     def get_pr_term_div(self,obj):
         return obj.pr_term_div  
-
-    # def get_statusNm(self,obj):
-    #     now = datetime.datetime.today()
-    #     mpgm_query = mpgm.objects.all()
-    #     mpgm_query = mpgm_query.filter(mp_id=obj.mp_id)[0]
-
-    #     if mpgm_query.apl_fr_dt == None:
-    #         return '개설중'
-    #     elif now < mpgm_query.apl_fr_dt:
-    #         return '개설중'
-    #     elif mpgm_query.apl_fr_dt <= now < mpgm_query.apl_to_dt:
-    #         return '모집중'
-    #     elif now > mpgm_query.apl_to_dt:
-    #         return '모집완료'
-    #     else:
-    #         return '개설중'
-
-    # def get_statusCode(self,obj):
-    #     now = datetime.datetime.today()
-    #     mpgm_query = mpgm.objects.all()
-    #     mpgm_query = mpgm_query.filter(mp_id=obj.mp_id)[0]
-    #     if mpgm_query.apl_fr_dt == None:
-    #         # 개설중
-    #         return '1'
-    #     elif now < mpgm_query.apl_fr_dt:
-    #         # 개설중
-    #         return '1'
-    #     elif mpgm_query.apl_fr_dt <= now < mpgm_query.apl_to_dt:
-    #         # 모집중
-    #         return '2'
-    #     elif now > mpgm_query.apl_to_dt:
-    #         # 모집완료
-    #         return '3'  
-    #     else:
-    #         # 개설중
-    #         return '1'   
-
 
     def get_statusCode(self,obj):
         return obj.statusCode 
