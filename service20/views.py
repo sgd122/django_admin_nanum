@@ -1317,7 +1317,7 @@ class MP0101M_adm_list_Serializer(serializers.ModelSerializer):
 
     def get_status_nm(self,obj):
         return obj.status_nm
-                  
+
 
 class MP0101M_adm_list(generics.ListAPIView):
     queryset = mp_mtr.objects.all()
@@ -1341,7 +1341,7 @@ class MP0101M_adm_list(generics.ListAPIView):
         query += " and use_indc = 'y'  "
         query += " and std_detl_code = status)) as status_nm,  "
 
-        query = " C.mp_name,B.pr_yr,B.pr_sch_yr,B.pr_term_div,A.* from service20_mp_mtr A,service20_vw_nanum_stdt B,service20_mpgm C where A.apl_id=B.apl_id and A.mp_id = C.mp_id and A.yr='"+l_yr+"' and A.mp_id = '"+ms_ida+"' and A.apl_id='"+ida+"'"
+        query += " C.mp_name,B.pr_yr,B.pr_sch_yr,B.pr_term_div,A.* from service20_mp_mtr A,service20_vw_nanum_stdt B,service20_mpgm C where A.apl_id=B.apl_id and A.mp_id = C.mp_id and A.yr='"+l_yr+"' and A.mp_id = '"+ms_ida+"' and A.apl_id='"+ida+"'"
         queryset = mp_mtr.objects.raw(query)
         
         serializer_class = self.get_serializer_class()
