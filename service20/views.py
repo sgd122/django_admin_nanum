@@ -219,9 +219,11 @@ class com_combo_status(generics.ListAPIView):
 
         queryset = self.get_queryset()
         
+        query = " select ''id,''std_detl_code,'전체' ";
+        query += " union  ";
         query = " select id,std_detl_code,std_detl_code_nm from service20_com_cdd where std_grp_code = 'MS0001' ";
         query += " union  ";
-        query += " select '','xx','모집완료' from service20_com_cdd where std_grp_code = 'MS0001' ";
+        query += " select '','xx','모집완료'  ";
 
         queryset = com_cdd.objects.raw(query)
 
@@ -299,7 +301,7 @@ class MS0101M_list(generics.ListAPIView):
         query += " ifnull((select 'Y' from service20_ms_apl where yr = '"+str(l_yr)+"' and apl_id = '"+str(l_user_id)+"' and ms_id = A.ms_id),'N') AS applyFlag,A.* from service20_msch A where A.yr='"+str(l_yr)+"' and A.apl_term='"+str(l_apl_term)+"'"
         
         query += " and if(A.status = '10' and now() > A.apl_to_dt, 'xx', A.status) "
-        query += "  like '"+str(l_status)+"' || '%' "
+        query += "  like '"+str(l_status)+"' || '%%' "
 
         query += " order by apl_fr_dt desc,apl_to_dt desc " 
         queryset = msch.objects.raw(query)
