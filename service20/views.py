@@ -2447,7 +2447,7 @@ class MP0105M_list(generics.ListAPIView):
         query += " left join service20_com_cdd c2 on (c2.std_grp_code  = 'MP0062'  /* 보고서 구분(mp0062) */ "
         query += " and c2.std_detl_code = t1.rep_div) "
         query += " where 1=1 "
-        query += " and date_format(now(),'%%y%%m') > t1.rep_ym "
+        query += " and Date_format(Now(), REPLACE(('% Y % m'),' ','')) > t1.rep_ym "
         query += " and t1.mp_id     = '"+l_mp_id+"'     /* 멘토링 프로그램id */ "
         # query += " and t1.rep_div   = 'M' "
         # query += " and t1.status    =  '20' /* 제출, 40 완료 */ "
