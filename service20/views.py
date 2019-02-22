@@ -2453,7 +2453,7 @@ class MP0105M_list(generics.ListAPIView):
         # query += " and t1.status    =  '20' /* 제출, 40 완료 */ "
         query += " and t2.apl_id    =  '"+l_apl_id+"' "
 
-
+        print(query)
         queryset = mp_rep.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
