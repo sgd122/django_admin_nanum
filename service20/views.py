@@ -198,7 +198,41 @@ class com_combo_program(generics.ListAPIView):
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
 
-        return Response(serializer.data)        
+        return Response(serializer.data) 
+
+# 모집상태 콤보박스
+class com_combo_status_Serializer(serializers.ModelSerializer):
+
+    
+    class Meta:
+        model = com_cdd
+        fields = ('std_detl_code','std_detl_code_nm')
+
+
+class com_combo_status(generics.ListAPIView):
+    queryset = com_cdd.objects.all()
+    serializer_class = com_combo_status_Serializer
+
+    def list(self, request):
+        
+
+        queryset = self.get_queryset()
+        
+        query = " select std_detl_code,std_detl_code_nm from service20_com_cdd where std_grp_code = 'MS0001' ";
+        query += " union  ";
+        query += " select 'XX','모집완료' from service20_com_cdd where std_grp_code = 'MS0001' ";
+
+        queryset = com_cdd.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)                
 #####################################################################################
 # 공통 - END
 #####################################################################################
@@ -2698,6 +2732,118 @@ class MP0106M_list(generics.ListAPIView):
 #####################################################################################
 # MP0106M - END
 #####################################################################################
+
+
+
+#####################################################################################
+# TE0201 - START
+#####################################################################################
+
+# 멘티의 프로그램 신청현황 리스트 ###################################################
+class TE0201_list_Serializer(serializers.ModelSerializer):
+
+    # testField = serializers.SerializerMethodField()
+    mp_name = serializers.SerializerMethodField()
+    
+
+    class Meta:
+        model = mp_mtr
+        fields = ('mp_id','apl_no','mntr_id','indv_div','team_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','bank_acct','bank_cd','bank_nm','bank_dpsr','cnt_mp_a','cnt_mp_p','cnt_mp_c','cnt_mp_g','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','mp_name','pr_yr','pr_sch_yr','pr_term_div','mp_name')
+
+    def get_mp_name(self,obj):
+        return obj.mp_name
+
+class TE0201_list(generics.ListAPIView):
+    queryset = mp_rep.objects.all()
+    serializer_class = TE0201_list_Serializer
+
+
+    def list(self, request):
+        l_yr = request.GET.get('yr', "")
+        l_mp_id = request.GET.get('mp_id', "")
+        l_mnt_term = request.GET.get('mnt_term', "")
+        l_mnte_id = request.GET.get('mnte_id', "")
+
+
+        queryset = self.get_queryset()
+
+
+        # /* 멘티의 프로그램 신청현황 조회 TE0201/list */
+        select_text = " select a.yr, a.mnt_term, a.mp_name, b.mp_hm, b.mp_plc, b.status"
+        select_text += " FROM service20_mpgm a LEFT JOIN service20_mp_mte b ON (a.mp_id = b.mp_id)"
+        select_text += " WHERE a.yr like '"+l_yr+"'"
+        select_text += " AND a.mnt_term like '"+l_mnt_term+"'"
+        select_text += " AND a.mp_id like '"+l_mp_id+"'"
+        select_text += " AND b.mnte_id like '"+l_mnte_id+"'"
+
+        queryset = mp_mtr.objects.raw(select_text)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+
+# 멘티의 프로그램 신청현황 리스트 ###################################################
+class TE0201_detail_Serializer(serializers.ModelSerializer):
+
+    # testField = serializers.SerializerMethodField()
+    mp_name = serializers.SerializerMethodField()
+    
+
+    class Meta:
+        model = mp_mtr
+        fields = ('mp_id','apl_no','mntr_id','indv_div','team_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','bank_acct','bank_cd','bank_nm','bank_dpsr','cnt_mp_a','cnt_mp_p','cnt_mp_c','cnt_mp_g','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','mp_name','pr_yr','pr_sch_yr','pr_term_div','mp_name')
+
+    def get_mp_name(self,obj):
+        return obj.mp_name
+
+class TE0201_detail(generics.ListAPIView):
+    queryset = mp_rep.objects.all()
+    serializer_class = TE0201_detail_Serializer
+
+
+    def list(self, request):
+
+        l_mnte_id = request.GET.get('mnte_id', "")
+
+
+        queryset = self.get_queryset()
+
+
+        # /* 멘티의 프로그램 신청현황 멘티 상세 조회 TE0201/detail */
+        select_text = "select mnte_nm, sch_nm, h_addr, brth_dt, sch_yr, mob_no, grd_nm"
+        select_text += ", case when grd_rel = '11' then '부'"
+        select_text += " when grd_rel = '12' then '모'"
+        select_text += " when grd_rel = '21' then '조부'"
+        select_text += " when grd_rel = '22' then '조모'"
+        select_text += " when grd_rel = '31' then '삼촌'"
+        select_text += " when grd_rel = '32' then '고모'"
+        select_text += " ELSE '' END AS grd_rel"
+        select_text += ", grd_tel, prnt_nat_nm, tchr_nm, tchr_tel"
+        select_text += " FROM service20_mp_mte"
+        select_text += " WHERE mnte_id = '"+l_mnte_id+"'"
+
+        queryset = mp_mtr.objects.raw(select_text)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+#####################################################################################
+# TE0201 - END
+#####################################################################################
+
 
 @csrf_exempt
 def post_user_info(request):
