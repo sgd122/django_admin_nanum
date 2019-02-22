@@ -996,15 +996,15 @@ class MP0101M_list(generics.ListAPIView):
         query += "                AND std_detl_code = A.status))      AS status_nm,  "
         
 
-        # query += "        Ifnull(Ifnull(B.status, 'N')                       AS applyFlag,  "
+        query += "        Ifnull(Ifnull(B.status, 'N')                       AS applyFlag,  "
         # query += "        (SELECT std_detl_code_nm  "
         # query += "         FROM   service20_com_cdd  "
         # query += "         WHERE  std_grp_code = 'MP0053'  "
         # query += "                AND std_detl_code = B.status),'미지원')      AS applyFlagNm,  "
         
-        query += "CASE  ";
-        query += "WHEN Ifnull(B.status, 'N') = 'N' THEN '미지원' ";
-        query += "ELSE (SELECT std_detl_code_nm  ";
+        query += " CASE  ";
+        query += " WHEN Ifnull(B.status, 'N') = 'N' THEN '미지원' ";
+        query += " ELSE (SELECT std_detl_code_nm  ";
         query += "      FROM   service20_com_cdd  ";
         query += "      WHERE  std_grp_code = 'MP0053'  ";
         query += "             AND std_detl_code = B.status)  ";
