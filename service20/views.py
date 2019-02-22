@@ -218,9 +218,9 @@ class com_combo_status(generics.ListAPIView):
 
         queryset = self.get_queryset()
         
-        query = " select std_detl_code,std_detl_code_nm from service20_com_cdd where std_grp_code = 'MS0001' ";
+        query = " select id,std_detl_code,std_detl_code_nm from service20_com_cdd where std_grp_code = 'MS0001' ";
         query += " union  ";
-        query += " select 'XX','모집완료' from service20_com_cdd where std_grp_code = 'MS0001' ";
+        query += " select id,'XX','모집완료' from service20_com_cdd where std_grp_code = 'MS0001' ";
 
         queryset = com_cdd.objects.raw(query)
 
