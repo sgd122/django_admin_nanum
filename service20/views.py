@@ -952,10 +952,11 @@ class MP0101M_list_Serializer(serializers.ModelSerializer):
         if obj.applyFlag == 'N':
             return '지원'
         else:
-            print(obj.applyFlag)
-            rows = com_cdd.objects.filter(std_grp_code='MP0053',std_detl_code=obj.applyFlag)
-            return str(rows[0].std_detl_code_nm)
-        # return obj.applyStatus    
+            # print(obj.applyFlag)
+            # rows = com_cdd.objects.filter(std_grp_code='MP0053',std_detl_code=obj.applyFlag)
+            # return str(rows[0].std_detl_code_nm)
+            return '111'
+        return obj.applyStatus    
 
     def get_statusCode(self,obj):
         return obj.statusCode 
@@ -998,7 +999,7 @@ class MP0101M_list(generics.ListAPIView):
 
         query += " order by A.apl_fr_dt desc,A.apl_to_dt desc "
 
-        
+        print(query)
         queryset = mpgm.objects.raw(query)
         
 
