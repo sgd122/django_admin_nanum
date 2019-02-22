@@ -1257,6 +1257,7 @@ class MP0101M_adm_list_Serializer(serializers.ModelSerializer):
     statusNm = serializers.SerializerMethodField()
     statusCode = serializers.SerializerMethodField()
     status_nm = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
     acpt_dt = serializers.DateTimeField(format='%Y-%m-%d')
 
     class Meta:
@@ -1317,7 +1318,8 @@ class MP0101M_adm_list_Serializer(serializers.ModelSerializer):
 
     def get_status_nm(self,obj):
         return obj.status_nm
-
+    def get_status(self,obj):
+        return obj.status
 
 class MP0101M_adm_list(generics.ListAPIView):
     queryset = mp_mtr.objects.all()
