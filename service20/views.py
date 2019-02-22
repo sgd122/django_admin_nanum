@@ -219,7 +219,7 @@ class com_combo_status(generics.ListAPIView):
 
         queryset = self.get_queryset()
         
-        query = " select '0'id,' 'std_detl_code,'전체'std_detl_code_nm "
+        query = " select '0'id,''std_detl_code,'전체'std_detl_code_nm "
         query += " union  "
         query += " select id,std_detl_code,std_detl_code_nm from service20_com_cdd where std_grp_code = 'MS0001' "
         query += " union  "
@@ -987,7 +987,7 @@ class MP0101M_list(generics.ListAPIView):
         query += " ifnull((select 'Y' from service20_mp_mtr where yr = '"+str(l_yr)+"' and apl_id = '"+str(ida)+"' and mp_id = A.mp_id),'N') AS applyFlag,A.* from service20_mpgm A where A.yr='"+str(l_yr)+"' and A.apl_term='"+str(l_apl_term)+"' and (select count(1) from service20_mentor where apl_id = '"+ida+"') > 0 "
 
         query += " and if(A.status = '10' and now() > A.apl_to_dt, 'xx', A.status) "
-        query += "  like ifnull(NULLIF('"+str(l_status)+"',''),'%%') || '%%' "
+        query += "  like ifnull(NULLIF('"+str(l_status)+"',''),'90') || '%%' "
 
         query += " order by A.apl_fr_dt desc,A.apl_to_dt desc "
 
