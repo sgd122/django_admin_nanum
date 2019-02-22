@@ -221,7 +221,7 @@ class com_combo_status(generics.ListAPIView):
         
         query = " select id,std_detl_code,std_detl_code_nm from service20_com_cdd where std_grp_code = 'MS0001' ";
         query += " union  ";
-        query += " select '','XX','모집완료' from service20_com_cdd where std_grp_code = 'MS0001' ";
+        query += " select '','xx','모집완료' from service20_com_cdd where std_grp_code = 'MS0001' ";
 
         queryset = com_cdd.objects.raw(query)
 
@@ -283,6 +283,7 @@ class MS0101M_list(generics.ListAPIView):
         l_yr = request.GET.get('yr', None)
         l_apl_term = request.GET.get('trn_term', None)
         l_user_id = request.GET.get('user_id', None)
+        l_status = request.GET.get('l_status', None)
 
         query = " select apl_to_dt,  "
         query += " if(A.status = '10'  "
@@ -296,6 +297,10 @@ class MS0101M_list(generics.ListAPIView):
         query += " and std_detl_code = status)) as status_nm,  "
 
         query += " ifnull((select 'Y' from service20_ms_apl where yr = '"+str(l_yr)+"' and apl_id = '"+str(l_user_id)+"' and ms_id = A.ms_id),'N') AS applyFlag,A.* from service20_msch A where A.yr='"+str(l_yr)+"' and A.apl_term='"+str(l_apl_term)+"'"
+        
+        query += " and if(A.status = '10' and now() > A.apl_to_dt, 'xx', A.status) "
+        query += "  = '"+l_status+"'  "
+
         query += " order by apl_fr_dt desc,apl_to_dt desc " 
         queryset = msch.objects.raw(query)
 
@@ -961,7 +966,7 @@ class MP0101M_list(generics.ListAPIView):
         l_apl_term = request.GET.get('apl_term', "")
         l_status = request.GET.get('status', "")
         ida = request.GET.get('user_id', "")
-
+        
         query = "select ifnull((select 'Y' from service20_mp_mtr where yr = '"+str(l_yr)+"' and apl_id = '"+str(ida)+"' and mp_id = A.mp_id),'N') AS applyFlag,A.* from service20_mpgm A where A.yr='"+str(l_yr)+"' and A.apl_term='"+str(l_apl_term)+"'"
         
         # 멘토만 조회가능.
@@ -978,6 +983,10 @@ class MP0101M_list(generics.ListAPIView):
         query += " and std_detl_code = status)) as status_nm,  "
 
         query += " ifnull((select 'Y' from service20_mp_mtr where yr = '"+str(l_yr)+"' and apl_id = '"+str(ida)+"' and mp_id = A.mp_id),'N') AS applyFlag,A.* from service20_mpgm A where A.yr='"+str(l_yr)+"' and A.apl_term='"+str(l_apl_term)+"' and (select count(1) from service20_mentor where apl_id = '"+ida+"') > 0 "
+
+        query += " and if(A.status = '10' and now() > A.apl_to_dt, 'xx', A.status) "
+        query += "  = '"+l_status+"'  "
+        
         query += " order by A.apl_fr_dt desc,A.apl_to_dt desc "
 
         queryset = mpgm.objects.raw(query)
