@@ -23,16 +23,16 @@ urlpatterns = [
     ########################################################################################    
     # 년도 콤보박스
     path('com/combo/yr/', com_combo_yr.as_view(), name='com_combo_yr'),
-    # 년도 콤보박스
+    # 학기 콤보박스
     path('com/combo/termdiv/', com_combo_termdiv.as_view(), name='com_combo_termdiv'),
+    # 모집상태 콤보박스
+    path('com/combo/status/', com_combo_status.as_view(), name='com_combo_status'),
     # 취소사유 콤보박스
     path('com/combo/cnclRsn/', com_combo_cnclRsn.as_view(), name='com_combo_cnclRsn'),
     # 멘토의 학번으로 해당되는 멘티찾기
     path('com/list/my_mentee/', com_list_my_mentee.as_view(), name='com_list_my_mentee'),
     # 프로그램 찾기
     path('com/combo/program/', com_combo_program.as_view(), name='com_combo_program'),
-    # 모집상태 콤보박스
-    path('com/combo/status/', com_combo_status.as_view(), name='com_combo_status'),
     ########################################################################################
     # 공통(com)
     #

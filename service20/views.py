@@ -1594,7 +1594,7 @@ class MP0101M_report_list(generics.ListAPIView):
         query = "select C.mp_name,B.pr_yr,B.pr_sch_yr,B.pr_term_div,A.* from service20_mp_mtr A,service20_vw_nanum_stdt B,service20_mpgm C where A.apl_id=B.apl_id and A.mp_id = C.mp_id and A.yr='"+str(l_yr)+"' and A.mp_id = '"+str(mp_ida)+"' and A.apl_id='"+str(ida)+"'"
         queryset = mp_mtr.objects.raw(query)
         
-        print(query)
+        
 
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
@@ -1933,7 +1933,7 @@ class MP0103M_Detail_v2(generics.ListAPIView):
         select_text += " AND d.apl_no = c.apl_no"
         select_text += " AND a.mp_id = '"+l_mp_id+"'"
 
-        print(select_text)
+        
 
         queryset = mp_mtr.objects.raw(select_text)
 
@@ -2143,7 +2143,7 @@ def MP0103M_Update(request):
     # update_text += " AND apl_no = '"+str(apl_no)+"' "
     update_text += " AND apl_no = '"+str(apl_id)+"' "
 
-    
+    print(update_text)
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)    
     
@@ -2173,7 +2173,7 @@ def MP0103M_Update(request):
         update_text += " AND apl_no = '"+str(apl_id)+"' "
         update_text += " AND pln_no = '"+str(pln_no)+"' "
 
-
+        print(update_text)
         cursor = connection.cursor()
         query_result = cursor.execute(update_text)    
         ####################################
@@ -2540,7 +2540,7 @@ class MP0105M_list(generics.ListAPIView):
         # query += " and t1.status    =  '20' /* 제출, 40 완료 */ "
         query += " and t2.apl_id    =  '"+l_apl_id+"' "
 
-        print(query)
+        
         queryset = mp_rep.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
@@ -2755,7 +2755,7 @@ def MP0105M_update(request,pk):
         update_text += " AND APL_NO = '"+apl_no+"' "
         update_text += " AND REP_NO = '"+rep_no+"' "
     
-    print(update_text)
+    
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)
  
