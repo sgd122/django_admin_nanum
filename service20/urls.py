@@ -66,6 +66,10 @@ urlpatterns = [
     path('MS0101M/detail/', MS0101M_detail, name='MS0101M_detail'),
     # 멘토스쿨(관리자) - 기본정보
     path('MS0101M/admin/list/', MS0101M_adm_list.as_view(), name='MS0101M_adm_list'),
+    # 멘토링 프로그램(관리자) - 어학점수
+    path('MS0101M/admin/list/fe/', MS0101M_adm_list_fe.as_view(), name='MS0101M_adm_list_fe'),
+    # 멘토링 프로그램(관리자) - 봉사점수
+    path('MS0101M/admin/list/sa/', MS0101M_adm_list_sa.as_view(), name='MS0101M_adm_list_sa'),
     # 멘토스쿨(관리자) - 질문
     path('MS0101M/admin/quest/', MS0101M_adm_quest.as_view(), name='MS0101M_adm_quest'),
     # 멘토스쿨(관리자) 수락
