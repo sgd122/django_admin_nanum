@@ -1867,14 +1867,25 @@ class MP0103M_Detail(generics.ListAPIView):
 # 프로그램 수행계획서 작성 폼 데이터 ###################################################
 class MP0103M_Detail_v2_Serializer(serializers.ModelSerializer):
 
-    testField = serializers.SerializerMethodField()
+    prn_fg = serializers.SerializerMethodField()
+    tchr_nm = serializers.SerializerMethodField()
+    sch_nm = serializers.SerializerMethodField()
+    mtr_sub = serializers.SerializerMethodField()
+    pln_time  = serializers.SerializerMethodField()
     class Meta:
-        model = mp_plnd
-        fields = ('mp_id','apl_no','pln_no','pln_sdt','pln_edt','mtr_desc','testField')
-
-    def get_testField(self, obj):
-        return 'test'     
-
+        model = mp_mtr
+        fields = ('apl_nm','apl_id','prn_fg','tchr_nm','sch_nm','mtr_sub','pln_time')
+      
+    def get_prn_fg(self, obj):
+        return obj.prn_fg
+    def get_tchr_nm(self, obj):
+        return obj.tchr_nm
+    def get_sch_nm(self, obj):
+        return obj.sch_nm
+    def get_mtr_sub(self, obj):
+        return obj.mtr_sub
+    def get_pln_time(self, obj):
+        return obj.pln_time
 
 class MP0103M_Detail_v2(generics.ListAPIView):
     queryset = mpgm.objects.all()
@@ -1890,10 +1901,10 @@ class MP0103M_Detail_v2(generics.ListAPIView):
         
 
         # /* 프로그램 수행계획서 작성 폼 데이터 */
-        select_text = "select case when a.pln_dt is not NULL then 'true' ELSE 'false' END AS prn_fg"
+        select_text = "select d.id,case when a.pln_dt is not NULL then 'true' ELSE 'false' END AS prn_fg"
         select_text += ", d.apl_id AS apl_id, d.apl_nm AS apl_nm, c.tchr_nm AS tchr_nm, c.sch_nm AS sch_nm, a.mtr_sub AS mtr_sub, '60' AS pln_time"
         select_text += " from service20_mp_plnh a, service20_mpgm b, service20_mp_mte c"
-        select_text += ", (SELECT mp_id, apl_no, apl_id, apl_nm"
+        select_text += ", (SELECT id,mp_id, apl_no, apl_id, apl_nm"
         select_text += " FROM service20_mp_mtr"
         select_text += " WHERE apl_id = '"+apl_id+"' AND apl_no = '"+apl_no+"') d"
         select_text += " WHERE a.mp_id = b.mp_id"
@@ -1905,7 +1916,7 @@ class MP0103M_Detail_v2(generics.ListAPIView):
 
         print(select_text)
 
-        queryset = mp_plnd.objects.raw(select_text)
+        queryset = mp_mtr.objects.raw(select_text)
 
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
