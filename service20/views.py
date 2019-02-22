@@ -1472,6 +1472,8 @@ def MP0101M_adm_update(request):
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)
 
+    print(update_text)
+
     for i in range(0,apl_max):
         anst2 = request.POST.get('que'+str(i+1), None)
         ques_no = request.POST.get('ques_no'+str(i+1), None)
