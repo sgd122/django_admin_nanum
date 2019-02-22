@@ -948,8 +948,7 @@ class MP0101M_list_Serializer(serializers.ModelSerializer):
     def get_applyFlag(self, obj):
         return obj.applyFlag    
     def get_applyStatus(self, obj):
-        queryset = com_cdd.objects.all()
-        queryset = com_cdd.filter(std_grp_code='MP0053',std_detl_code=obj.applyFlag)[0]
+        queryset = com_cdd.objects.filter(std_grp_code='MP0053',std_detl_code=obj.applyFlag)[0]
         if obj.applyFlag == 'N':
             return '지원'
         else:
