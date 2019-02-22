@@ -1256,7 +1256,7 @@ class MP0101M_adm_list_Serializer(serializers.ModelSerializer):
     pr_term_div = serializers.SerializerMethodField()
     statusNm = serializers.SerializerMethodField()
     statusCode = serializers.SerializerMethodField()
-
+    status_nm = serializers.SerializerMethodField()
     acpt_dt = serializers.DateTimeField(format='%Y-%m-%d')
 
     class Meta:
@@ -1275,41 +1275,49 @@ class MP0101M_adm_list_Serializer(serializers.ModelSerializer):
     def get_pr_term_div(self,obj):
         return obj.pr_term_div  
 
-    def get_statusNm(self,obj):
-        now = datetime.datetime.today()
-        mpgm_query = mpgm.objects.all()
-        mpgm_query = mpgm_query.filter(mp_id=obj.mp_id)[0]
+    # def get_statusNm(self,obj):
+    #     now = datetime.datetime.today()
+    #     mpgm_query = mpgm.objects.all()
+    #     mpgm_query = mpgm_query.filter(mp_id=obj.mp_id)[0]
 
-        if mpgm_query.apl_fr_dt == None:
-            return '개설중'
-        elif now < mpgm_query.apl_fr_dt:
-            return '개설중'
-        elif mpgm_query.apl_fr_dt <= now < mpgm_query.apl_to_dt:
-            return '모집중'
-        elif now > mpgm_query.apl_to_dt:
-            return '모집완료'
-        else:
-            return '개설중'
+    #     if mpgm_query.apl_fr_dt == None:
+    #         return '개설중'
+    #     elif now < mpgm_query.apl_fr_dt:
+    #         return '개설중'
+    #     elif mpgm_query.apl_fr_dt <= now < mpgm_query.apl_to_dt:
+    #         return '모집중'
+    #     elif now > mpgm_query.apl_to_dt:
+    #         return '모집완료'
+    #     else:
+    #         return '개설중'
+
+    # def get_statusCode(self,obj):
+    #     now = datetime.datetime.today()
+    #     mpgm_query = mpgm.objects.all()
+    #     mpgm_query = mpgm_query.filter(mp_id=obj.mp_id)[0]
+    #     if mpgm_query.apl_fr_dt == None:
+    #         # 개설중
+    #         return '1'
+    #     elif now < mpgm_query.apl_fr_dt:
+    #         # 개설중
+    #         return '1'
+    #     elif mpgm_query.apl_fr_dt <= now < mpgm_query.apl_to_dt:
+    #         # 모집중
+    #         return '2'
+    #     elif now > mpgm_query.apl_to_dt:
+    #         # 모집완료
+    #         return '3'  
+    #     else:
+    #         # 개설중
+    #         return '1'   
+
 
     def get_statusCode(self,obj):
-        now = datetime.datetime.today()
-        mpgm_query = mpgm.objects.all()
-        mpgm_query = mpgm_query.filter(mp_id=obj.mp_id)[0]
-        if mpgm_query.apl_fr_dt == None:
-            # 개설중
-            return '1'
-        elif now < mpgm_query.apl_fr_dt:
-            # 개설중
-            return '1'
-        elif mpgm_query.apl_fr_dt <= now < mpgm_query.apl_to_dt:
-            # 모집중
-            return '2'
-        elif now > mpgm_query.apl_to_dt:
-            # 모집완료
-            return '3'  
-        else:
-            # 개설중
-            return '1'      
+        return obj.statusCode 
+
+    def get_status_nm(self,obj):
+        return obj.status_nm
+                  
 
 class MP0101M_adm_list(generics.ListAPIView):
     queryset = mp_mtr.objects.all()
@@ -1321,7 +1329,19 @@ class MP0101M_adm_list(generics.ListAPIView):
         l_yr = request.GET.get('yr', None)
         
         # mpgm
-        query = "select C.mp_name,B.pr_yr,B.pr_sch_yr,B.pr_term_div,A.* from service20_mp_mtr A,service20_vw_nanum_stdt B,service20_mpgm C where A.apl_id=B.apl_id and A.mp_id = C.mp_id and A.yr='"+l_yr+"' and A.mp_id = '"+ms_ida+"' and A.apl_id='"+ida+"'"
+
+        query = " select apl_to_dt,  "
+        query += " if(A.status = '10'  "
+        query += " and now() > A.apl_to_dt, 'xx', A.status) as statusCode,  "
+        query += " if(A.status = '10'  "
+        query += " and now() > A.apl_to_dt, '모집완료', (select std_detl_code_nm  "
+        query += " from   service20_com_cdd  "
+        query += " where  "
+        query += " std_grp_code = 'MS0001'  "
+        query += " and use_indc = 'y'  "
+        query += " and std_detl_code = status)) as status_nm,  "
+
+        query = " C.mp_name,B.pr_yr,B.pr_sch_yr,B.pr_term_div,A.* from service20_mp_mtr A,service20_vw_nanum_stdt B,service20_mpgm C where A.apl_id=B.apl_id and A.mp_id = C.mp_id and A.yr='"+l_yr+"' and A.mp_id = '"+ms_ida+"' and A.apl_id='"+ida+"'"
         queryset = mp_mtr.objects.raw(query)
         
         serializer_class = self.get_serializer_class()
@@ -2736,7 +2756,7 @@ def MP0105M_update(request,pk):
         update_text += " WHERE 1=1 "
         update_text += " AND MP_ID  = '" +mp_id+"' "
         update_text += " AND APL_NO = '"+str(apl_no)+"' "
-        update_text += " AND REP_NO = '"+rep_no+"' "
+        update_text += " AND REP_NO = '"+str(rep_no)+"' "
     elif pk == 2:
         # /*보고서현황작성_승인요청*/
         update_text = " update service20_mp_rep "
@@ -2754,7 +2774,7 @@ def MP0105M_update(request,pk):
         update_text += " WHERE 1=1 "
         update_text += " AND MP_ID  = '" +mp_id+"' "
         update_text += " AND APL_NO = '"+str(apl_no)+"' "
-        update_text += " AND REP_NO = '"+rep_no+"' "
+        update_text += " AND REP_NO = '"+str(rep_no)+"' "
     
     print(update_text)
     cursor = connection.cursor()
