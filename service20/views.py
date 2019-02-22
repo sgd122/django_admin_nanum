@@ -56,6 +56,7 @@ class com_combo_yr(generics.ListAPIView):
         query += " union "
         query += " select '3' id,DATE_FORMAT(now(),'%Y')+1 as std_detl_code,DATE_FORMAT(now(),'%Y')+1 as std_detl_code_nm "
 
+        print(query)
         queryset = com_cdd.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
