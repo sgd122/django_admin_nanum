@@ -622,7 +622,7 @@ class MS0101M_adm_list(generics.ListAPIView):
         l_yr = request.GET.get('yr', None)
         
         # msch
-        query = " select apl_to_dt,  "
+        query = " select   "
         query += " if(C.status = '10'  "
         query += " and now() > A.apl_to_dt, 'xx', C.status) as statusCode,  "
         query += " if(C.status = '10'  "
