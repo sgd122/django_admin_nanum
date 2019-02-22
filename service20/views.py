@@ -1912,7 +1912,7 @@ class MP0103M_Detail_v2(generics.ListAPIView):
         select_text += " AND a.mp_id = d.mp_id"
         select_text += " AND a.apl_no = d.apl_no"
         select_text += " AND d.apl_no = c.apl_no"
-        select_text += " AND a.mp_id = '"+l_mp_id+"';"
+        select_text += " AND a.mp_id = '"+l_mp_id+"'"
 
         print(select_text)
 
