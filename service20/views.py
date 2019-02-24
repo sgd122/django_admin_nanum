@@ -22,6 +22,26 @@ import json
 # 공통 - START
 #####################################################################################
 
+@csrf_exempt
+def login_returnsso(request):
+    a =  request.POST.get('gbn')
+    request.session['member_id'] = 'aaaaaasss'
+    print(request.session['member_id'])
+    
+    message = "Ok"
+    context = {'message': message,    }
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+        
+@csrf_exempt
+def login_session(request):
+    v_member_id = request.session.get('member_id', None)
+    if v_member_id == None:
+        message = 'NoSession'       
+    else:
+        message = request.session['member_id']
+    context = {'message': message,}
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+
 # 년도 콤보박스 ###################################################
 class com_combo_yr_Serializer(serializers.ModelSerializer):
 
