@@ -22,6 +22,8 @@ urlpatterns = [
     #
     ########################################################################################    
     #리턴URLTest
+    path('login/login/', login_login, name='login_login'), 
+    #리턴URLTest
     path('login/returnsso/', login_returnsso, name='login_returnsso'), 
     #리턴URLTest
     path('login/session/', login_session, name='login_session'), 

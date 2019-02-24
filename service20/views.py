@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework import generics, serializers
 from django.http import HttpResponse,Http404, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_protect,csrf_exempt
-from django.shortcuts import get_object_or_404,render
+from django.shortcuts import get_object_or_404,render,redirect
 from rest_framework.response import Response
 from django.http import JsonResponse, HttpResponse,Http404, HttpResponseRedirect
 from django.views import generic
@@ -15,6 +15,10 @@ from django.db.models import Max
 from django.db import connection
 from collections  import OrderedDict
 import json
+import requests
+import pymssql
+from bs4 import BeautifulSoup as bs
+
 # api/moim 으로 get하면 이 listview로 연결
 
 
@@ -23,24 +27,250 @@ import json
 #####################################################################################
 
 @csrf_exempt
-def login_returnsso(request):
-    a =  request.POST.get('gbn')
-    request.session['member_id'] = 'aaaaaasss'
-    print(request.session['member_id'])
-    
-    message = "Ok"
-    context = {'message': message,    }
-    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+def login_login(request):
+
+        id =  request.POST.get('user_id')
+        pswd =  request.POST.get('user_pw')
+        # 로그인할 유저정보를 넣어주자 (모두 문자열)
+        login_info = {'id':id,'pswd': pswd,'dest':'http://nanum.pusan.ac.kr:8000/service20/login/returnsso/'}
+        login_info = {'id':'514965','pswd': 'gks3089#','dest':'http://nanum.pusan.ac.kr:8000/service20/login/returnsso/'}
+        # HTTP GET Request: requests대신 s 객체를 사용한다.
+        with requests.Session() as s:
+            first_page = s.post('https://onestop.pusan.ac.kr/new_pass/exorgan/exidentify.asp', data=login_info)
+            html = first_page.text
+            if first_page.status_code != 200:
+                message = "login_fail"                  
+            else:
+                soup = bs(html, 'html.parser')
+                gbn = soup.find('input', {'name': 'gbn'}) # input태그 중에서 name이 _csrf인 것을 찾습니다.
+                userid = soup.find('input', {'name': 'userid'})
+                v_userid = userid['value']              
+                # MSSQL 접속
+                # 로그인처리 - 시작                
+                query = "select t3.apl_id      /* 학번 */ ";
+                query += "     , t3.apl_nm      /* 성명 */ ";
+                query += "     , t3.apl_nm_e    /* 성명_영문 */ ";
+                query += "     , t3.unv_cd      /* 대학교코드 */ ";
+                query += "     , t3.unv_nm      /* 대학교명 */ ";
+                query += "     , t3.grad_div_cd /* 대학원구분코드 */ ";
+                query += "     , t3.grad_div_nm /* 대학원구분명 */ ";
+                query += "     , t3.cllg_cd     /* 대학코드 */ ";
+                query += "     , t3.cllg_nm     /* 대학명 */ ";
+                query += "     , t3.dept_cd     /* 학과코드 */ ";
+                query += "     , t3.dept_nm     /* 학과명 */ ";
+                query += "     , t3.mjr_cd      /* 전공코드 */ ";
+                query += "     , t3.mjr_nm      /* 전공명 */ ";
+                query += "     , t3.brth_dt     /* 생년월일 */ ";
+                query += "     , t3.gen_cd      /* 성별코드 */ ";
+                query += "     , t3.gen_nm      /* 성별명 */ ";
+                query += "     , t3.yr          /* 학년도 */ ";
+                query += "     , t3.sch_yr      /* 학년 */ ";
+                query += "     , t3.term_div    /* 학기코드 */ ";
+                query += "     , t3.term_nm     /* 학기명 */ ";
+                query += "     , t3.stds_div    /* 학적상태코드 */ ";
+                query += "     , t3.stds_nm     /* 학적상태명 */ ";
+                query += "     , t3.mob_no      /* 휴대전화번호 */ ";
+                query += "     , t3.tel_no      /* 집전화 */ ";
+                query += "     , t3.tel_no_g    /* 보호자연락처 */ ";
+                query += "     , t3.h_addr      /* 집주소 */ ";
+                query += "     , t3.post_no     /* 우편번호 */ ";
+                query += "     , t3.email_addr  /* 이메일주소 */ ";
+                query += "     , t3.bank_acct   /* 은행계좌번호 */ ";
+                query += "     , t3.bank_cd     /* 은행코드 */ ";
+                query += "     , t3.bank_nm     /* 은행명 */ ";
+                query += "     , t3.bank_dpsr   /* 예금주 */ ";
+                query += "     , t3.pr_yr       /* 직전 학년도 */ ";
+                query += "     , t3.pr_sch_yr   /* 직전 학년 */ ";
+                query += "     , t3.pr_term_div /* 직전학기코드 */ ";
+                query += "     , t3.score01     /* 직전학기 석차 */ ";
+                query += "     , t3.score02     /* 직전학기 총원 */ ";
+                query += "     , t3.score03     /* 직전학기 학점 */ ";
+                query += "     , t3.score04     /* 봉사점수합계 */ ";
+                query += "     , t3.score05     /* 자격증 개수 */ ";
+                query += " from vw_nanum_stdt t3     /* 부산대학교 학생 정보 */ ";              
+#               query += " where t3.apl_id='"+v_userid+"'" 
+                query += " where t3.apl_id='201866148'"                 
+                conn = pymssql.connect(server='192.168.2.124', user='nanum', password='n@num*!@', database='hakjuk', port='1221')
+                cursor = conn.cursor()   
+                cursor.execute(query)  
+                row = cursor.fetchone()  
+                print(row)
+                if row == None:
+                    context = {'loginStudent': 'fail',}
+                else:    
+                    message = "login_notFound"
+                    while row:
+                        message = "Ok"
+                        # 삭제
+                        delete_query = " delete from service20_vw_nanum_stdt where apl_id = '"+str(row[0])+"' "
+                        cursor_delete = connection.cursor()
+                        delete_query_result = cursor_delete.execute(delete_query)                       
+                        # 삭제
+                        
+                        # insert
+                        insert_query = " insert into service20_vw_nanum_stdt (apl_id      /* 학번 */ "
+                        insert_query += " , apl_nm      /* 성명 */ "
+                        insert_query += " , apl_nm_e    /* 성명_영문 */ "
+                        insert_query += " , unv_cd      /* 대학교코드 */ "
+                        insert_query += " , unv_nm      /* 대학교명 */ "
+                        insert_query += " , grad_div_cd /* 대학원구분코드 */ "
+                        insert_query += " , grad_div_nm /* 대학원구분명 */ "
+                        insert_query += " , cllg_cd     /* 대학코드 */ "
+                        insert_query += " , cllg_nm     /* 대학명 */ "
+                        insert_query += " , dept_cd     /* 학과코드 */ "
+                        insert_query += " , dept_nm     /* 학과명 */ "
+                        insert_query += " , mjr_cd      /* 전공코드 */ "
+                        insert_query += " , mjr_nm      /* 전공명 */ "
+                        insert_query += " , brth_dt     /* 생년월일 */ "
+                        insert_query += " , gen_cd      /* 성별코드 */ "
+                        insert_query += " , gen_nm      /* 성별명 */ "
+                        insert_query += " , yr          /* 학년도 */ "
+                        insert_query += " , sch_yr      /* 학년 */ "
+                        insert_query += " , term_div    /* 학기코드 */ "
+                        insert_query += " , term_nm     /* 학기명 */ "
+                        insert_query += " , stds_div    /* 학적상태코드 */ "
+                        insert_query += " , stds_nm     /* 학적상태명 */ "
+                        insert_query += " , mob_no      /* 휴대전화번호 */ "
+                        insert_query += " , tel_no      /* 집전화 */ "
+                        insert_query += " , tel_no_g    /* 보호자연락처 */ "
+                        insert_query += " , h_addr      /* 집주소 */ "
+                        insert_query += " , post_no     /* 우편번호 */ "
+                        insert_query += " , email_addr  /* 이메일주소 */ "
+                        insert_query += " , bank_acct   /* 은행계좌번호 */ "
+                        insert_query += " , bank_cd     /* 은행코드 */ "
+                        insert_query += " , bank_nm     /* 은행명 */ "
+                        insert_query += " , bank_dpsr   /* 예금주 */ "
+                        insert_query += " , pr_yr       /* 직전 학년도 */ "
+                        insert_query += " , pr_sch_yr   /* 직전 학년 */ "
+                        insert_query += " , pr_term_div /* 직전학기코드 */ "
+                        insert_query += " , score01     /* 직전학기 석차 */ "
+                        insert_query += " , score02     /* 직전학기 총원 */ "
+                        insert_query += " , score03     /* 직전학기 학점 */ "
+                        insert_query += " , score04     /* 봉사점수합계 */ "
+                        insert_query += " , score05     /* 자격증 개수 */ "
+                        insert_query += " ) values ("
+    #                   insert_query += " (select ifnull(max(id)+1,1) from service20_vw_nanum_stdt)  "
+                        insert_query += " CASE WHEN '"+str(row[0])+"' =  'None' THEN NULL ELSE '"+str(row[0])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[1])+"' =  'None' THEN NULL ELSE '"+str(row[1])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[2])+"' =  'None' THEN NULL ELSE '"+str(row[2])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[3])+"' =  'None' THEN NULL ELSE '"+str(row[3])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[4])+"' =  'None' THEN NULL ELSE '"+str(row[4])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[5])+"' =  'None' THEN NULL ELSE '"+str(row[5])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[6])+"' =  'None' THEN NULL ELSE '"+str(row[6])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[7])+"' =  'None' THEN NULL ELSE '"+str(row[7])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[8])+"' =  'None' THEN NULL ELSE '"+str(row[8])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[9])+"' =  'None' THEN NULL ELSE '"+str(row[9])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[10])+"' =  'None' THEN NULL ELSE '"+str(row[10])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[11])+"' =  'None' THEN NULL ELSE '"+str(row[11])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[12])+"' =  'None' THEN NULL ELSE '"+str(row[12])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[13])+"' =  'None' THEN NULL ELSE '"+str(row[13])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[14])+"' =  'None' THEN NULL ELSE '"+str(row[14])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[15])+"' =  'None' THEN NULL ELSE '"+str(row[15])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[16])+"' =  'None' THEN NULL ELSE '"+str(row[16])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[17])+"' =  'None' THEN NULL ELSE '"+str(row[17])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[18])+"' =  'None' THEN NULL ELSE '"+str(row[18])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[19])+"' =  'None' THEN NULL ELSE '"+str(row[19])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[20])+"' =  'None' THEN NULL ELSE '"+str(row[20])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[21])+"' =  'None' THEN NULL ELSE '"+str(row[21])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[22])+"' =  'None' THEN NULL ELSE '"+str(row[22])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[23])+"' =  'None' THEN NULL ELSE '"+str(row[23])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[24])+"' =  'None' THEN NULL ELSE '"+str(row[24])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[25])+"' =  'None' THEN NULL ELSE '"+str(row[25])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[26])+"' =  'None' THEN NULL ELSE '"+str(row[26])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[27])+"' =  'None' THEN NULL ELSE '"+str(row[27])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[28])+"' =  'None' THEN NULL ELSE '"+str(row[28])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[29])+"' =  'None' THEN NULL ELSE '"+str(row[29])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[30])+"' =  'None' THEN NULL ELSE '"+str(row[30])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[31])+"' =  'None' THEN NULL ELSE '"+str(row[31])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[32])+"' =  'None' THEN NULL ELSE '"+str(row[32])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[33])+"' =  'None' THEN NULL ELSE '"+str(row[33])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[34])+"' =  'None' THEN NULL ELSE '"+str(row[34])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[35])+"' =  'None' THEN NULL ELSE '"+str(row[35])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[36])+"' =  'None' THEN NULL ELSE '"+str(row[36])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[37])+"' =  'None' THEN NULL ELSE '"+str(row[37])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[38])+"' =  'None' THEN NULL ELSE '"+str(row[38])+"' END"
+                        insert_query += " , CASE WHEN '"+str(row[39])+"' =  'None' THEN NULL ELSE '"+str(row[39])+"' END"
+                        insert_query += " )"                    
+                        cursor2 = connection.cursor()
+                        query_result = cursor2.execute(insert_query)    
+                        # insert
+                                            
+                        context = {'message': message,
+                        'apl_id' : str(row[0]),
+                        'apl_nm' : str(row[1]),
+                        'univ_cd' : str(row[3]),
+                        'univ_nm' : str(row[4]),
+                        'grad_div_cd' : str(row[5]),
+                        'grad_div_nm' : str(row[6]),
+                        'cllg_cd' : str(row[7]),
+                        'cllg_nm' : str(row[8]),
+                        'dept_cd' : str(row[9]),
+                        'dept_nm' : str(row[10]),
+                        'mjr_cd' : str(row[11]),
+                        'mjr_nm' : str(row[12]),
+                        'brth_dt' : str(row[13]),
+                        'gen_cd' : str(row[14]),
+                        'gen_nm' : str(row[15]),
+                        'yr' : str(row[16]),
+                        'sch_yr' : str(row[17]),
+                        'term_div' : str(row[18]),
+                        'term_nm' : str(row[19]),
+                        'stdt_div' : str(row[20]),
+                        'stdt_nm' : str(row[21]),
+                        'mob_nm' : str(row[22]),
+                        'tel_no' : str(row[23]),
+                        'tel_no_g' : str(row[24]),
+                        'h_addr' : str(row[25]),
+                        'post_no' : str(row[26]),
+                        'email_addr' : str(row[27]),
+                        'bank_acct' : str(row[28]),
+                        'bank_cd' : str(row[29]),
+                        'bank_nm' : str(row[30]),
+                        'bank_dpsr' : str(row[31]),
+                        'pr_yr' : str(row[32]),
+                        'pr_sch_yr' : str(row[33]),
+                        'pr_term_div' : str(row[34]),
+                        'score01' : str(row[35]),
+                        'score02' : str(row[36]),
+                        'score03' : str(row[37]),
+                        'score04' : str(row[38]),
+                        'score05' : str(row[39])
+                        }
+                        row = cursor.fetchone()                                                                     
+                    # 로그인처리 - 종료
+                    
+                
+
         
+#         context = {'message': message,'member_id':v_userid}
+
+        return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+                
+
+
+@csrf_exempt
+def login_returnsso(request):
+        print("====login_returnsso====")
+        a =  request.POST.get('gbn')
+        request.session['member_id'] = 'test'
+        print("====login_returnsso====")
+        print(request.session['member_id'])
+        
+        message = "Ok"
+        context = {'message': message,    }
+
+        return redirect('http://nanum.pusan.ac.kr/login/success.html', { 'context': context })
+                
 @csrf_exempt
 def login_session(request):
-    v_member_id = request.session.get('member_id', None)
-    if v_member_id == None:
-        message = 'NoSession'       
-    else:
-        message = request.session['member_id']
-    context = {'message': message,}
-    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+        v_member_id = request.session.get('member_id', None)
+        if v_member_id == None:
+            message = 'NoSession'       
+        else:
+            message = request.session['member_id']
+        context = {'message': message,}
+        return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+
 
 # 년도 콤보박스 ###################################################
 class com_combo_yr_Serializer(serializers.ModelSerializer):
@@ -517,7 +747,7 @@ def MS0101M_detail(request):
     
     #created,created_flag = vm_nanum_stdt.apl_id.get_or_create(user=request.user)
     created_flag = vm_nanum_stdt.objects.filter(apl_id=ida).exists()
-
+    msch_flag = msch.objects.filter(ms_id=ms_ida,status='20').exists()
     # ms_apl_flag = ms_apl.objects.filter(apl_id=ida,ms_id=ms_ida).exists()
     ms_apl_flag = ms_apl.objects.filter(apl_id=ida,yr=l_yr,ms_id=ms_ida).exists()
 
@@ -532,67 +762,71 @@ def MS0101M_detail(request):
         message = "Fail"
         context = {'message': message}
     else:
-        
-        message = "Ok"
-        rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
-        rows2 = ms_sub.objects.filter(ms_id=ms_ida)
-        rows3 = msch.objects.filter(ms_id=ms_ida)[0]
+        if not msch_flag:
+            message = "Fail"
+            context = {'message': message}
+        else:
+
+            message = "Ok"
+            rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
+            rows2 = ms_sub.objects.filter(ms_id=ms_ida)
+            rows3 = msch.objects.filter(ms_id=ms_ida)[0]
 
 
-        for val in rows2:
-            key1 = val.att_id
-            #key2 = val.att_cdd
+            for val in rows2:
+                key1 = val.att_id
+                #key2 = val.att_cdd
 
-        #question01 = com_cdd.objects.filter(std_grp_code=key1)[0].rmrk
-        #question02 = com_cdd.objects.filter(std_grp_code=key1)[1].rmrk
-        #question03 = com_cdd.objects.filter(std_grp_code=key1)[2].rmrk
-        #question04 = com_cdd.objects.filter(std_grp_code=key1)[3].rmrk
-        #question05 = com_cdd.objects.filter(std_grp_code=key1)[4].rmrk
+            #question01 = com_cdd.objects.filter(std_grp_code=key1)[0].rmrk
+            #question02 = com_cdd.objects.filter(std_grp_code=key1)[1].rmrk
+            #question03 = com_cdd.objects.filter(std_grp_code=key1)[2].rmrk
+            #question04 = com_cdd.objects.filter(std_grp_code=key1)[3].rmrk
+            #question05 = com_cdd.objects.filter(std_grp_code=key1)[4].rmrk
 
-        context = {'message': message,
-                    'applyYn' : applyYn,
-                    'apl_nm' : rows.apl_nm,
-                    'univ_cd' : rows.univ_cd,
-                    'univ_nm' : rows.univ_nm,
-                    'grad_div_cd' : rows.grad_div_cd,
-                    'grad_div_nm' : rows.grad_div_nm,
-                    'cllg_cd' : rows.cllg_cd,
-                    'cllg_nm' : rows.cllg_nm,
-                    'dept_cd' : rows.dept_cd,
-                    'dept_nm' : rows.dept_nm,
-                    'mjr_cd' : rows.mjr_cd,
-                    'mjr_nm' : rows.mjr_nm,
-                    'brth_dt' : rows.brth_dt,
-                    'gen_cd' : rows.gen_cd,
-                    'gen_nm' : rows.gen_nm,
-                    'yr' : rows.yr,
-                    'sch_yr' : rows.sch_yr,
-                    'term_div' : rows.term_div,
-                    'term_nm' : rows.term_nm,
-                    'stdt_div' : rows.stdt_div,
-                    'stdt_nm' : rows.stdt_nm,
-                    'mob_nm' : rows.mob_nm,
-                    'tel_no' : rows.tel_no,
-                    'tel_no_g' : rows.tel_no_g,
-                    'h_addr' : rows.h_addr,
-                    'post_no' : rows.post_no,
-                    'email_addr' : rows.email_addr,
-                    'bank_acct' : rows.bank_acct,
-                    'bank_cd' : rows.bank_cd,
-                    'bank_nm' : rows.bank_nm,
-                    'bank_dpsr' : rows.bank_dpsr,
-                    'pr_yr' : rows.pr_yr,
-                    'pr_sch_yr' : rows.pr_sch_yr,
-                    'pr_term_div' : rows.pr_term_div,
-                    'score01' : rows.score01,
-                    'score02' : rows.score02,
-                    'score03' : rows.score03,
-                    'score04' : rows.score04,
-                    'score04_tp' : rows.score04_tp,
-                    'score05' : rows.score05,
-                    'ms_id' : rows3.ms_id,
-                    'ms_name' : rows3.ms_name,
-                    }
+            context = {'message': message,
+                        'applyYn' : applyYn,
+                        'apl_nm' : rows.apl_nm,
+                        'univ_cd' : rows.univ_cd,
+                        'univ_nm' : rows.univ_nm,
+                        'grad_div_cd' : rows.grad_div_cd,
+                        'grad_div_nm' : rows.grad_div_nm,
+                        'cllg_cd' : rows.cllg_cd,
+                        'cllg_nm' : rows.cllg_nm,
+                        'dept_cd' : rows.dept_cd,
+                        'dept_nm' : rows.dept_nm,
+                        'mjr_cd' : rows.mjr_cd,
+                        'mjr_nm' : rows.mjr_nm,
+                        'brth_dt' : rows.brth_dt,
+                        'gen_cd' : rows.gen_cd,
+                        'gen_nm' : rows.gen_nm,
+                        'yr' : rows.yr,
+                        'sch_yr' : rows.sch_yr,
+                        'term_div' : rows.term_div,
+                        'term_nm' : rows.term_nm,
+                        'stdt_div' : rows.stdt_div,
+                        'stdt_nm' : rows.stdt_nm,
+                        'mob_nm' : rows.mob_nm,
+                        'tel_no' : rows.tel_no,
+                        'tel_no_g' : rows.tel_no_g,
+                        'h_addr' : rows.h_addr,
+                        'post_no' : rows.post_no,
+                        'email_addr' : rows.email_addr,
+                        'bank_acct' : rows.bank_acct,
+                        'bank_cd' : rows.bank_cd,
+                        'bank_nm' : rows.bank_nm,
+                        'bank_dpsr' : rows.bank_dpsr,
+                        'pr_yr' : rows.pr_yr,
+                        'pr_sch_yr' : rows.pr_sch_yr,
+                        'pr_term_div' : rows.pr_term_div,
+                        'score01' : rows.score01,
+                        'score02' : rows.score02,
+                        'score03' : rows.score03,
+                        'score04' : rows.score04,
+                        'score04_tp' : rows.score04_tp,
+                        'score05' : rows.score05,
+                        'ms_id' : rows3.ms_id,
+                        'ms_name' : rows3.ms_name,
+                        }
     
 
     #return HttpResponse(json.dumps(context), content_type="application/json")
@@ -1289,8 +1523,9 @@ def MP0101M_detail(request):
     l_yr = request.POST.get('yr', None)
 
     created_flag = vm_nanum_stdt.objects.filter(apl_id=ida).exists()
+    mpgm_flag = mpgm.objects.filter(mp_id=ms_ida,status='20').exists()
     ms_apl_flag = mp_mtr.objects.filter(apl_id=ida,mp_id=ms_ida).exists()
-    
+    print(mpgm_flag)
     if not ms_apl_flag:
         applyYn = 'N'
     else:
@@ -1301,63 +1536,66 @@ def MP0101M_detail(request):
         message = "Fail"
         context = {'message': message}
     else:
+        if not mpgm_flag:
+            message = "Fail"
+            context = {'message': message}
+        else:
+            message = "Ok"
+            rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
+            rows2 = mp_sub.objects.filter(mp_id=ms_ida)
+            rows3 = mpgm.objects.filter(mp_id=ms_ida)[0]
+
+
+            for val in rows2:
+                key1 = val.att_id
+                #key2 = val.att_cdd
+
+
+            context = {'message': message,
+                        'applyYn' : applyYn,
+                        'apl_nm' : rows.apl_nm,
+                        'univ_cd' : rows.univ_cd,
+                        'univ_nm' : rows.univ_nm,
+                        'grad_div_cd' : rows.grad_div_cd,
+                        'grad_div_nm' : rows.grad_div_nm,
+                        'cllg_cd' : rows.cllg_cd,
+                        'cllg_nm' : rows.cllg_nm,
+                        'dept_cd' : rows.dept_cd,
+                        'dept_nm' : rows.dept_nm,
+                        'mjr_cd' : rows.mjr_cd,
+                        'mjr_nm' : rows.mjr_nm,
+                        'brth_dt' : rows.brth_dt,
+                        'gen_cd' : rows.gen_cd,
+                        'gen_nm' : rows.gen_nm,
+                        'yr' : rows.yr,
+                        'sch_yr' : rows.sch_yr,
+                        'term_div' : rows.term_div,
+                        'term_nm' : rows.term_nm,
+                        'stdt_div' : rows.stdt_div,
+                        'stdt_nm' : rows.stdt_nm,
+                        'mob_nm' : rows.mob_nm,
+                        'tel_no' : rows.tel_no,
+                        'tel_no_g' : rows.tel_no_g,
+                        'h_addr' : rows.h_addr,
+                        'post_no' : rows.post_no,
+                        'email_addr' : rows.email_addr,
+                        'bank_acct' : rows.bank_acct,
+                        'bank_cd' : rows.bank_cd,
+                        'bank_nm' : rows.bank_nm,
+                        'bank_dpsr' : rows.bank_dpsr,
+                        'pr_yr' : rows.pr_yr,
+                        'pr_sch_yr' : rows.pr_sch_yr,
+                        'pr_term_div' : rows.pr_term_div,
+                        'score01' : rows.score01,
+                        'score02' : rows.score02,
+                        'score03' : rows.score03,
+                        'score04' : rows.score04,
+                        'score04_tp' : rows.score04_tp,
+                        'score05' : rows.score05,
+                        'ms_id' : rows3.mp_id,
+                        'ms_name' : rows3.mp_name,
+                        }
         
-        message = "Ok"
-        rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
-        rows2 = mp_sub.objects.filter(mp_id=ms_ida)
-        rows3 = mpgm.objects.filter(mp_id=ms_ida)[0]
-
-
-        for val in rows2:
-            key1 = val.att_id
-            #key2 = val.att_cdd
-
-
-        context = {'message': message,
-                    'applyYn' : applyYn,
-                    'apl_nm' : rows.apl_nm,
-                    'univ_cd' : rows.univ_cd,
-                    'univ_nm' : rows.univ_nm,
-                    'grad_div_cd' : rows.grad_div_cd,
-                    'grad_div_nm' : rows.grad_div_nm,
-                    'cllg_cd' : rows.cllg_cd,
-                    'cllg_nm' : rows.cllg_nm,
-                    'dept_cd' : rows.dept_cd,
-                    'dept_nm' : rows.dept_nm,
-                    'mjr_cd' : rows.mjr_cd,
-                    'mjr_nm' : rows.mjr_nm,
-                    'brth_dt' : rows.brth_dt,
-                    'gen_cd' : rows.gen_cd,
-                    'gen_nm' : rows.gen_nm,
-                    'yr' : rows.yr,
-                    'sch_yr' : rows.sch_yr,
-                    'term_div' : rows.term_div,
-                    'term_nm' : rows.term_nm,
-                    'stdt_div' : rows.stdt_div,
-                    'stdt_nm' : rows.stdt_nm,
-                    'mob_nm' : rows.mob_nm,
-                    'tel_no' : rows.tel_no,
-                    'tel_no_g' : rows.tel_no_g,
-                    'h_addr' : rows.h_addr,
-                    'post_no' : rows.post_no,
-                    'email_addr' : rows.email_addr,
-                    'bank_acct' : rows.bank_acct,
-                    'bank_cd' : rows.bank_cd,
-                    'bank_nm' : rows.bank_nm,
-                    'bank_dpsr' : rows.bank_dpsr,
-                    'pr_yr' : rows.pr_yr,
-                    'pr_sch_yr' : rows.pr_sch_yr,
-                    'pr_term_div' : rows.pr_term_div,
-                    'score01' : rows.score01,
-                    'score02' : rows.score02,
-                    'score03' : rows.score03,
-                    'score04' : rows.score04,
-                    'score04_tp' : rows.score04_tp,
-                    'score05' : rows.score05,
-                    'ms_id' : rows3.mp_id,
-                    'ms_name' : rows3.mp_name,
-                    }
-    
 
     return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
