@@ -288,11 +288,11 @@ class com_combo_yr(generics.ListAPIView):
 
         queryset = self.get_queryset()
         
-        query = " select '1' id,DATE_FORMAT(now(),'%%Y')-1 as std_detl_code,DATE_FORMAT(now(),'%%Y')-1 as std_detl_code_nm "
+        query = " select '1' id,DATE_FORMAT(now(),'%%Y') as std_detl_code,DATE_FORMAT(now(),'%%Y') as std_detl_code_nm "
         query += " union "
-        query += " select '2' id,DATE_FORMAT(now(),'%%Y') as std_detl_code,DATE_FORMAT(now(),'%%Y') as std_detl_code_nm "
+        query += " select '2' id,DATE_FORMAT(now(),'%%Y')+1 as std_detl_code,DATE_FORMAT(now(),'%%Y')+1 as std_detl_code_nm "
         query += " union "
-        query += " select '3' id,DATE_FORMAT(now(),'%%Y')+1 as std_detl_code,DATE_FORMAT(now(),'%%Y')+1 as std_detl_code_nm "
+        query += " select '3' id,DATE_FORMAT(now(),'%%Y')+2 as std_detl_code,DATE_FORMAT(now(),'%%Y')+2 as std_detl_code_nm "
 
         queryset = com_cdd.objects.raw(query)
 
@@ -1346,9 +1346,9 @@ class MP0101M_list(generics.ListAPIView):
         query += "                    AND B.apl_id = '"+str(ida)+"' )  "
         query += " WHERE  A.yr = '"+str(l_yr)+"'  "
         query += "        AND A.apl_term = '"+str(l_apl_term)+"'  "
-        query += "        AND (SELECT Count(1)  "
-        query += "             FROM   service20_mentor  "
-        query += "             WHERE  apl_id = '"+str(ida)+"') > 0  "
+        # query += "        AND (SELECT Count(1)  "
+        # query += "             FROM   service20_mentor  "
+        # query += "             WHERE  apl_id = '"+str(ida)+"') > 0  "
         query += "        AND IF(A.status = '10'  "
         query += "               AND Now() > A.apl_to_dt, 'xx', A.status) LIKE  "
         query += "            Ifnull(Nullif('"+str(l_status)+"', ''), '%%')  "
@@ -1531,15 +1531,18 @@ def MP0101M_detail(request):
     else:
         applyYn = 'Y'
 
-    
+    print('========')
     if not created_flag:
+        print('0')
         message = "Fail"
         context = {'message': message}
     else:
-        if not mpgm_flag:
+        if mpgm_flag == False:
+            print('1')
             message = "Fail"
             context = {'message': message}
         else:
+            print('2')
             message = "Ok"
             rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
             rows2 = mp_sub.objects.filter(mp_id=ms_ida)
@@ -3563,6 +3566,8 @@ class mpmgListView(generics.ListAPIView):
         queryset = self.get_queryset()
 
         query = "select * from service20_mpgm order by apl_fr_dt desc, apl_to_dt desc"
+
+
         queryset = mpgm.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
