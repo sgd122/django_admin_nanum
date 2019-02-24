@@ -4,6 +4,7 @@ import datetime
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from member.models import Member
+from ckeditor.fields import RichTextField
 
 
 class com_cdh(models.Model):
@@ -1467,7 +1468,7 @@ class dept_ast(models.Model):
 
 
 class ms_apl_fe(models.Model):
-  mp_id = models.CharField(max_length=10, null=False, verbose_name='멘토링 프로그램ID' )
+  ms_id = models.CharField(max_length=10, null=False, verbose_name='멘토스쿨ID' )
   apl_no = models.CharField(max_length=10, null=False, verbose_name='지원 NO' )
   fe_no = models.PositiveIntegerField(null=False, verbose_name='어학점수 NO' )
   apl_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='학번' )
@@ -1491,10 +1492,13 @@ class ms_apl_fe(models.Model):
   upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
   upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
 
+
+
+
   class Meta:
     verbose_name = '멘토스쿨 지원자 어학점수'
     verbose_name_plural =  verbose_name
-    unique_together=("mp_id", "apl_no", "fe_no")
+    unique_together=("ms_id", "apl_no", "fe_no")
 
 class mp_mtr_sa(models.Model):
   mp_id = models.CharField(max_length=10, null=False, verbose_name='멘토링 프로그램ID' )
@@ -1682,3 +1686,14 @@ class vw_nanum_stdt(models.Model):
   class Meta:
     verbose_name = '부산대학교 학생 정보'
     verbose_name_plural =  verbose_name
+
+
+
+#개인정보동의약관
+class agree_cont1(models.Model):
+	title = models.CharField(max_length=255, null=True, blank=True, verbose_name='타이틀' )
+	code = models.CharField(max_length=10, null=True, blank=True, verbose_name='코드' )
+	html = RichTextField()
+	content1 = models.CharField(max_length=255, null=True, blank=True, verbose_name='기타1' )
+	content2 = models.CharField(max_length=255, null=True, blank=True, verbose_name='기타2' )
+	content3 = models.CharField(max_length=255, null=True, blank=True, verbose_name='기타3' )

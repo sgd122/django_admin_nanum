@@ -224,7 +224,7 @@ urlpatterns = [
 
     
     
-    ########################################################################################
+   ########################################################################################
     # view2 부분 (시작)
     #
     ########################################################################################
@@ -238,6 +238,22 @@ urlpatterns = [
     path('msFn2/', msFn2, name='msFn2'),
     #엑셀
     path('msFn3/', msFn3, name='msFn3'),    
+    #면접
+    path('msFn4/', msFn4, name='msFn4'),
+    #합격자업로드
+    path('msFn6/', msFn6, name='msFn6'),
+    #합격자업로드_전송
+    path('msFn6_Submit/', msFn6_Submit, name='msFn6_Submit'),
+    #합격자업로드_전송
+    path('msFn6_Submit2/', msFn6_Submit2, name='msFn6_Submit2'),
+
+    #합격자업로드
+    path('msFn7/', msFn7, name='msFn7'),
+    #최종합격자업로드_전송
+    path('msFn7_Submit/', msFn7_Submit, name='msFn7_Submit'),
+    #최종합격자업로드_전송
+    path('msFn7_Submit2/', msFn7_Submit2, name='msFn7_Submit2'),
+
     #멘토스쿨 팝업1
     path('msPop1/', msPop1, name='msPop1'),    
     #멘토스쿨 핍압1_조회1
@@ -247,8 +263,12 @@ urlpatterns = [
 
     #멘토스쿨 핍압1_조회3_채점자 교수 조회
     path('msPop1_Det3/', msPop1_Det3.as_view(), name='msPop1_Det3'), 
-
-
+    #멘토스쿨 핍압1_조회4_채점문항 
+    path('msPop1_Det4/', msPop1_Det4.as_view(), name='msPop1_Det4'), 
+    #멘토스쿨 핍압1_조회5_답변
+    path('msPop1_Det5/', msPop1_Det5.as_view(), name='msPop1_Det5'), 
+    #멘토스쿨 핍압1_조회5_답변_저장
+    path('msPop1_Det5_Save/', msPop1_Det5_Save, name='msPop1_Det5_Save'), 
 
     #멘토스쿨 환산표
     #path('msFn1/', msFn1, name='msFn1'),
@@ -263,6 +283,21 @@ urlpatterns = [
     path('mpFn2/', mpFn2, name='mpFn2'),
     #엑셀
     path('mpFn3/', mpFn3, name='mpFn3'),    
+    #면접
+    path('mpFn4/', mpFn4, name='mpFn4'),
+    #합격자업로드
+    path('mpFn6/', mpFn6, name='mpFn6'), 
+    #합격자업로드_전송
+    path('mpFn6_Submit/', mpFn6_Submit, name='mpFn6_Submit'),
+    #합격자업로드_전송
+    path('mpFn6_Submit2/', mpFn6_Submit2, name='mpFn6_Submit2'),
+
+    #합격자업로드
+    path('mpFn7/', mpFn7, name='mpFn7'),
+    #최종합격자업로드_전송
+    #path('msFn7_Submit/', msFn7_Submit, name='msFn7_Submit'),
+    #최종합격자업로드_전송
+    #path('msFn7_Submit2/', msFn7_Submit2, name='msFn7_Submit2'),
 
     #멘토링 팝업1
     path('mpPop1/', mpPop1, name='mpPop1'),    
@@ -270,6 +305,28 @@ urlpatterns = [
     path('mpPop1_Det1/', mpPop1_Det1.as_view(), name='mpPop1_Det1'), 
     #멘토랑핍압1_조회2   
     path('mpPop1_Det2/', mpPop1_Det2, name='mpPop1_Det2'), 
+    #멘토랑 핍압1_조회3_채점자 교수 조회
+    path('mpPop1_Det3/', mpPop1_Det3.as_view(), name='mpPop1_Det3'), 
+    #멘토랑 핍압1_조회4_채점문항 
+    path('mpPop1_Det4/', mpPop1_Det4.as_view(), name='mpPop1_Det4'), 
+    #멘토랑 핍압1_조회5_답변
+    path('mpPop1_Det5/', mpPop1_Det5.as_view(), name='mpPop1_Det5'), 
+    #멘토랑 핍압1_조회5_답변_저장 
+    path('mpPop1_Det5_Save/', mpPop1_Det5_Save, name='mpPop1_Det5_Save'), 
+ 
+
+    #SMS 팝업
+    path('sms/', sms, name='sms'), 
+    path('sms_result/', sms_result, name='sms_result'), 
+
+
+    #리턴URLTest
+    path('returnsso/', returnsso, name='returnsso'), 
+
+
+
+    #개인정보리턴
+    path('agree_cont1/', agree_cont1.as_view(), name='agree_cont1'), 
     ########################################################################################
     # view2 부분 (종료)
     #
