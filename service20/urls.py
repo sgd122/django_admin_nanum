@@ -21,6 +21,10 @@ urlpatterns = [
     # 공통(com)
     #
     ########################################################################################    
+    #리턴URLTest
+    path('login/returnsso/', login_returnsso, name='login_returnsso'), 
+    #리턴URLTest
+    path('login/session/', login_session, name='login_session'), 
     # 년도 콤보박스
     path('com/combo/yr/', com_combo_yr.as_view(), name='com_combo_yr'),
     # 학기 콤보박스
