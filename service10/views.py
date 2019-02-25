@@ -60,6 +60,10 @@ def post_login(request):
 		query_result = mentor_cursor.execute(mentor_query)  
 		print("::query_result::")
 		print(query_result)
+		if query_result == 0:
+			v_mntr_id = ''
+		else
+			v_mntr_id = str(query_result[0].mntr_id)
 		context = {'message': message,
 					'apl_nm' : rows.apl_nm,
 					'univ_cd' : rows.univ_cd,
@@ -99,7 +103,8 @@ def post_login(request):
 					'score03' : rows.score03,
 					'score04' : rows.score04,
 					'score04_tp' : rows.score04_tp,
-					'score05' : rows.score05
+					'score05' : rows.score05,
+					'mntr_id' : v_mntr_id
 					}
 	
 		print(context)
