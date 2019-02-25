@@ -182,6 +182,8 @@ urlpatterns = [
     path('MP0105M/list/', MP0105M_list.as_view(), name='MP0105M_list'),   
     # 보고서 현황 상세
     path('MP0105M/detail/', MP0105M_detail.as_view(), name='MP0105M_detail'),   
+    # 보고서 현황 상세
+    path('MP0105M/detail/2/', MP0105M_detail_2.as_view(), name='MP0105M_detail_2'),   
     # 보고서 현황 콤보1
     path('MP0105M/combo/1/', MP0105M_combo_1.as_view(), name='MP0105M_combo_1'),   
     # 보고서 현황 save
