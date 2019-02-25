@@ -376,6 +376,12 @@ def login_login(request):
                         cursor2 = connection.cursor()
                         query_result = cursor2.execute(insert_query)    
                         # insert
+
+                        #mentor_query
+                        mentor_query = " select mntr_id from service20_mentor where apl_id = '"+str(row[0])+"'"
+                        mentor_cursor = connection.cursor()
+                        query_result = mentor_cursor.execute(mentor_query)    
+
                                             
                         context = {'message': message,
                         'apl_id' : str(row[0]),
@@ -416,7 +422,8 @@ def login_login(request):
                         'score02' : str(row[36]),
                         'score03' : str(row[37]),
                         'score04' : str(row[38]),
-                        'score05' : str(row[39])
+                        'score05' : str(row[39]),
+                        'mntr_id' : query_result[0].mntr_id
                         }
                         row = cursor.fetchone()                                                                     
                     # 로그인처리 - 종료
