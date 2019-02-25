@@ -3784,6 +3784,15 @@ def MP0105M_update(request,pk):
         update_text += " , SPCL_NOTE   = '"+str(spcl_note)+"'    /*특이사항*/         "    
         update_text += " , MTR_REVW    = '"+str(mtr_revw) +"'    /*소감문*/           "    
         update_text += " , REP_DT      = CASE REP_DT IS NULL THEN REP_DT ELSE NOW() END    /*보고서작성일*/     "    
+
+        update_text += "     , mnte_id     = '" +mnte_id+"'      /*담당멘티id*/ ";
+        update_text += "     , mnte_nm     = '" +mnte_nm+"'      /*담당멘티명*/ ";
+        update_text += "     , tchr_id     = '" +tchr_id+"'      /*담당교사id*/ ";
+        update_text += "     , tchr_nm     = '" +teacher+"'      /*담당교사명*/ ";
+        update_text += "     , sch_nm      = '" +sch_yr+"'       /*학교명*/ ";
+        update_text += "     , mtr_sub     = '" +obj_sub+"'      /*지도과목*/ ";
+        update_text += "     , att_desc    = '" +aaa+"'          /*출석현황*/   ";
+        
         update_text += " , REQ_DT      = NOW()    /*승인요청일*/       "
         update_text += " , UPD_ID      = '"+str(upd_id)   +"'    /*수정자ID*/         "    
         update_text += " , UPD_IP      = '"+str(upd_ip)   +"'    /*수정자IP*/         "    
