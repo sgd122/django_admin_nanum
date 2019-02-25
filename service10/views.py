@@ -58,8 +58,7 @@ def post_login(request):
 		mentor_query = " select mntr_id from service20_mentor where apl_id = '"+str(ida)+"'"
 		mentor_cursor = connection.cursor()
 		query_result = mentor_cursor.execute(mentor_query)  
-		print("::query_result::")
-		print(query_result)
+
 		if query_result == 0:
 			v_mntr_id = ''
 		else:
