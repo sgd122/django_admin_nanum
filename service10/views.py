@@ -53,16 +53,18 @@ def post_login(request):
 		
 		message = "Ok"
 		rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
+		rows_mentor = mentor.objects.filter(apl_id=ida)[0]
 
 		#mentor_query
 		mentor_query = " select mntr_id from service20_mentor where apl_id = '"+str(ida)+"'"
 		mentor_cursor = connection.cursor()
 		query_result = mentor_cursor.execute(mentor_query)  
 
+
 		if query_result == 0:
 			v_mntr_id = ''
 		else:
-			v_mntr_id = str(query_result[0].mntr_id)
+			v_mntr_id = str(rows_mentor.mntr_id)
 
 		context = {'message': message,
 					'apl_nm' : rows.apl_nm,
