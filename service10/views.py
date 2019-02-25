@@ -54,10 +54,10 @@ def post_login(request):
 		message = "Ok"
 		rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
 
-	    #mentor_query
-	    mentor_query = " select mntr_id from service20_mentor where apl_id = '"+str(ida)+"'"
-	    mentor_cursor = connection.cursor()
-	    query_result = mentor_cursor.execute(mentor_query)  
+		#mentor_query
+		mentor_query = " select mntr_id from service20_mentor where apl_id = '"+str(ida)+"'"
+		mentor_cursor = connection.cursor()
+		query_result = mentor_cursor.execute(mentor_query)  
 
 		context = {'message': message,
 					'apl_nm' : rows.apl_nm,
@@ -99,7 +99,7 @@ def post_login(request):
 					'score04' : rows.score04,
 					'score04_tp' : rows.score04_tp,
 					'score05' : rows.score05,
-                    'mntr_id' : query_result[0].mntr_id
+					'mntr_id' : query_result[0].mntr_id
 					}
 	
 		print(context)
