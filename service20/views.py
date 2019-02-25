@@ -3508,6 +3508,7 @@ class MP0105M_detail_2_Serializer(serializers.ModelSerializer):
     appr_nm = serializers.SerializerMethodField()
     appr_dt = serializers.SerializerMethodField()
     mgr_id = serializers.SerializerMethodField()
+    mgr_nm = serializers.SerializerMethodField()
     mgr_dt = serializers.SerializerMethodField()
     status_nm = serializers.SerializerMethodField()
     mtr_desc = serializers.SerializerMethodField()
@@ -3526,7 +3527,7 @@ class MP0105M_detail_2_Serializer(serializers.ModelSerializer):
     mgr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     class Meta:
         model = mp_rep
-        fields = ('mp_id','apl_no','rep_no','rep_div','rep_ttl','mtr_obj','rep_dt','req_dt','mtr_desc','coatching','spcl_note','mtr_revw','appr_id','appr_nm','appr_dt','mgr_id','mgr_dt','status','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','rep_ym','sch_yr','rep_div_nm','apl_m','tchr_id','tchr_nm','mnte_id','mnte_nm','mtr_sub','att_desc','status_nm','apl_id','teacher','mte_nm','obj_sub','aaa')
+        fields = ('mp_id','apl_no','rep_no','rep_div','rep_ttl','mtr_obj','rep_dt','req_dt','mtr_desc','coatching','spcl_note','mtr_revw','appr_id','appr_nm','appr_dt','mgr_id','mgr_dt','status','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','rep_ym','sch_yr','rep_div_nm','apl_m','tchr_id','tchr_nm','mnte_id','mnte_nm','mtr_sub','att_desc','status_nm','apl_id','teacher','mte_nm','obj_sub','aaa','mgr_nm')
     
     def get_mp_id(self,obj):
         return obj.mp_id
@@ -3560,6 +3561,8 @@ class MP0105M_detail_2_Serializer(serializers.ModelSerializer):
         return obj.appr_dt
     def get_mgr_id(self,obj):
         return obj.mgr_id
+    def get_mgr_nm(self,obj):
+        return obj.mgr_nm
     def get_mgr_dt(self,obj):
         return obj.mgr_dt
     def get_status_nm(self,obj):
@@ -3628,6 +3631,7 @@ class MP0105M_detail_2(generics.ListAPIView):
         query += "     , t3.tchr_nm as appr_nm "
         query += "     , null       as appr_dt "
         query += "     , t4.mgr_id  as mgr_id "
+        query += "     , t4.mgr_nm  as mgr_nm "
         query += "     , null       as mgr_dt"
         query += "     , t2.status "
         query += "     , c1.std_detl_code_nm as status_nm     "
