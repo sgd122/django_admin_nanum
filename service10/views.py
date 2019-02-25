@@ -58,7 +58,8 @@ def post_login(request):
 		mentor_query = " select mntr_id from service20_mentor where apl_id = '"+str(ida)+"'"
 		mentor_cursor = connection.cursor()
 		query_result = mentor_cursor.execute(mentor_query)  
-
+		print("::query_result::")
+		print(query_result)
 		context = {'message': message,
 					'apl_nm' : rows.apl_nm,
 					'univ_cd' : rows.univ_cd,
@@ -98,8 +99,7 @@ def post_login(request):
 					'score03' : rows.score03,
 					'score04' : rows.score04,
 					'score04_tp' : rows.score04_tp,
-					'score05' : rows.score05,
-					'mntr_id' : str(query_result[0].mntr_id)
+					'score05' : rows.score05
 					}
 	
 		print(context)
