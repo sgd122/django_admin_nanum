@@ -3778,7 +3778,7 @@ def MP0105M_update(request,pk):
     elif pk == 2:
         # /*보고서현황작성_승인요청*/
         update_text = " update service20_mp_rep "
-        update_text = " set mtr_obj    = '"+str(mtr_obj)  +"'    /*학습목표*/         "    
+        update_text += " set mtr_obj    = '"+str(mtr_obj)  +"'    /*학습목표*/         "    
         update_text += " , mtr_desc    = '"+str(mtr_desc) +"'    /*학습내용*/         "    
         update_text += " , coatching   = '"+str(coatching)+"'    /*학습외 지도(상담)*/"    
         update_text += " , spcl_note   = '"+str(spcl_note)+"'    /*특이사항*/         "    
