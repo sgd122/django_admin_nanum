@@ -3544,10 +3544,10 @@ class MP0105M_detail_2(generics.ListAPIView):
         query += "           c1.std_grp_code = 'mp0070'  ";
         query += "       and c1.std_detl_code = t2.status";
         query += "       ) ";
-        query += " where t1.mp_id = '"+mp_id+"' ";
-        query += "   and t1.apl_id = '"+apl_id+"' ";
+        query += " where t1.mp_id = '"+str(mp_id)+"' ";
+        query += "   and t1.apl_id = '"+str(apl_id)+"' ";
         query += "   and t2.status = '00' ";
-        query += "   and t2.rep_ym = '"+rep_ym+"'";
+        query += "   and t2.rep_ym = '"+str(rep_ym)+"'";
 
 
         queryset = mp_rep.objects.raw(query)
