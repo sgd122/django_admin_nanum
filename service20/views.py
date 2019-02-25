@@ -46,6 +46,89 @@ def login_login(request):
                 userid = soup.find('input', {'name': 'userid'})
                 v_userid = userid['value']              
                 # MSSQL 접속
+
+
+                ########################################################################
+                # 어학 - 시작
+                ########################################################################
+                query += "select t3.apl_id         /* 학번 */";
+                query += "     , t3.apl_nm         /* 성명 */";
+                query += "     , t3.lang_kind_cd   /* 어학종류코드 */";
+                query += "     , t3.lang_kind_nm   /* 어학종류명 */";
+                query += "     , t3.lang_cd        /* 어학상위코드 */";
+                query += "     , t3.lang_nm        /* 어학상위코드명 */";
+                query += "     , t3.lang_detail_cd /* 어학하위코드 */";
+                query += "     , t3.lang_detail_nm /* 어학하위코드명 */";
+                query += "     , t3.frexm_nm       /* 외국어시험명 */";
+                query += "     , t3.score          /* 시험점수 */";
+                query += "     , t3.grade          /* 시험등급 */";
+                query += "  from service20_vw_nanum_foreign_exam t3     /* 유효한 외국어 성적 리스트 view(임시) */";
+                query += " where 1=1";
+                conn = pymssql.connect(server='192.168.2.124', user='nanum', password='n@num*!@', database='hakjuk', port='1221')
+                cursor = conn.cursor()   
+                cursor.execute(query)  
+                row = cursor.fetchone()  
+                while row:
+                    l_apl_id = str(row[0])
+                    l_apl_nm = str(row[1])
+                    l_lang_kind_cd = str(row[2])
+                    l_lang_kind_nm = str(row[3])
+                    l_lang_cd = str(row[4])
+                    l_lang_nm = str(row[5])
+                    l_lang_detail_cd = str(row[6])
+                    l_lang_detail_nm = str(row[7])
+                    l_frexm_nm = str(row[8])
+                    l_score = str(row[9])
+                    l_grade = str(row[10])
+
+                    # 삭제 (어학)
+                    delete_query = " delete from service20_vw_nanum_foreign_exam where apl_id = CASE WHEN '"+l_apl_id+"' "
+                    cursor_delete = connection.cursor()
+                    delete_query_result = cursor_delete.execute(delete_query)                       
+                    # 삭제 (어학)
+
+                    # insert(어학)
+                    query += "insert into service20_vw_nanum_foreign_exam     -- 유효한 외국어 성적 리스트 view(임시)";
+                    query += "   ( apl_id         /* 학번 */";
+                    query += "     , apl_nm         /* 성명 */";
+                    query += "     , lang_kind_cd   /* 어학종류코드 */";
+                    query += "     , lang_kind_nm   /* 어학종류명 */";
+                    query += "     , lang_cd        /* 어학상위코드 */";
+                    query += "     , lang_nm        /* 어학상위코드명 */";
+                    query += "     , lang_detail_cd /* 어학하위코드 */";
+                    query += "     , lang_detail_nm /* 어학하위코드명 */";
+                    query += "     , frexm_nm       /* 외국어시험명 */";
+                    query += "     , score          /* 시험점수 */";
+                    query += "     , grade          /* 시험등급 */";
+                    query += ")";
+                    query += "values";
+                    query += "     ( CASE WHEN '"+str(l_apl_id)+"' =  'None' THEN NULL ELSE '"+str(l_apl_id)+"' END         /* 학번 */";
+                    query += "     ,CASE WHEN '"+str(l_apl_nm)+"' =  'None' THEN NULL ELSE '"+str(l_apl_nm)+"' END         /* 성명 */";
+                    query += "     ,CASE WHEN '"+str(l_lang_kind_cd)+"' =  'None' THEN NULL ELSE '"+str(l_lang_kind_cd)+"' END   /* 어학종류코드 */";
+                    query += "     ,CASE WHEN '"+str(l_lang_kind_nm)+"' =  'None' THEN NULL ELSE '"+str(l_lang_kind_nm)+"' END   /* 어학종류명 */";
+                    query += "     ,CASE WHEN '"+str(l_lang_cd)+"' =  'None' THEN NULL ELSE '"+str(l_lang_cd)+"' END        /* 어학상위코드 */";
+                    query += "     ,CASE WHEN '"+str(l_lang_nm)+"' =  'None' THEN NULL ELSE '"+str(l_lang_nm)+"' END        /* 어학상위코드명 */";
+                    query += "     ,CASE WHEN '"+str(l_lang_detail_cd)+"' =  'None' THEN NULL ELSE '"+str(l_lang_detail_cd)+"' END /* 어학하위코드 */";
+                    query += "     ,CASE WHEN '"+str(l_lang_detail_nm)+"' =  'None' THEN NULL ELSE '"+str(l_lang_detail_nm)+"' END /* 어학하위코드명 */";
+                    query += "     ,CASE WHEN '"+str(l_frexm_nm)+"' =  'None' THEN NULL ELSE '"+str(l_frexm_nm)+"' END       /* 외국어시험명 */";
+                    query += "     ,CASE WHEN '"+str(l_score)+"' =  'None' THEN NULL ELSE '"+str(l_score)+"' END          /* 시험점수 */";
+                    query += "     ,CASE WHEN '"+str(l_grade)+"' =  'None' THEN NULL ELSE '"+str(l_grade)+"' END          /* 시험등급 */";
+                    # query += "     ,CASE WHEN '"+str(l_ins_id)+"' =  'None' THEN NULL ELSE '"+str(l_ins_id)+"' END         /* 입력자id */";
+                    # query += "     ,CASE WHEN '"+str(l_ins_ip)+"' =  'None' THEN NULL ELSE '"+str(l_ins_ip)+"' END         /* 입력자ip */";
+                    # query += "     ,CASE WHEN '"+str(l_ins_dt)+"' =  'None' THEN NULL ELSE '"+str(l_ins_dt)+"' END         /* 입력일시 */";
+                    # query += "     ,CASE WHEN '"+str(l_ins_pgm)+"' =  'None' THEN NULL ELSE '"+str(l_ins_pgm)+"' END        /* 입력프로그램id */";
+                    # query += "     ,CASE WHEN '"+str(l_upd_id)+"' =  'None' THEN NULL ELSE '"+str(l_upd_id)+"' END         /* 수정자id */";
+                    # query += "     ,CASE WHEN '"+str(l_upd_ip)+"' =  'None' THEN NULL ELSE '"+str(l_upd_ip)+"' END         /* 수정자ip */";
+                    # query += "     ,CASE WHEN '"+str(l_upd_dt)+"' =  'None' THEN NULL ELSE '"+str(l_upd_dt)+"' END         /* 수정일시 */";
+                    # query += "     ,CASE WHEN '"+str(l_upd_pgm)+"' =  'None' THEN NULL ELSE '"+str(l_upd_pgm)+"' END        /* 수정프로그램id */";
+                    query += ")";
+                    cursor3 = connection.cursor()
+                    query_result = cursor3.execute(query)    
+                    # insert(어학)
+                ########################################################################
+                # 어학 - 종료
+                ########################################################################
+
                 # 로그인처리 - 시작                
                 query = "select t3.apl_id      /* 학번 */ ";
                 query += "     , t3.apl_nm      /* 성명 */ ";
@@ -524,12 +607,12 @@ class MS0101M_list_Serializer(serializers.ModelSerializer):
     
     apl_fr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     apl_to_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
-    # mnt_fr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
-    # mnt_to_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+    trn_fr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+    trn_to_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
 
     class Meta:
         model = msch
-        fields = ('ms_id','ms_name','status','statusCode','yr','yr_seq','sup_org','applyFlag','applyStatus','apl_fr_dt','apl_to_dt','cnt_trn','status','status_nm')
+        fields = ('ms_id','ms_name','status','statusCode','yr','yr_seq','sup_org','applyFlag','applyStatus','apl_fr_dt','apl_to_dt','cnt_trn','status','status_nm','trn_fr_dt','trn_to_dt')
 
     def get_applyFlag(self, obj):
         return obj.applyFlag    
@@ -2944,7 +3027,7 @@ class MP0105M_list_Serializer(serializers.ModelSerializer):
     mgr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     class Meta:
         model = mp_rep
-        fields = ('mp_id','apl_no','rep_no','rep_div','rep_ttl','mtr_obj','rep_dt','req_dt','mtr_desc','coatching','spcl_note','mtr_revw','appr_id','appr_nm','appr_dt','mgr_id','mgr_dt','status','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','unv_nm','cllg_nm','dept_nm','apl_id','apl_nm','rep_div_nm','status_nm','req_dt_sub','appr_dt_sub','mgr_dt_sub')
+        fields = ('mp_id','apl_no','rep_no','rep_div','rep_ttl','mtr_obj','rep_dt','req_dt','mtr_desc','coatching','spcl_note','mtr_revw','appr_id','appr_nm','appr_dt','mgr_id','mgr_dt','status','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','unv_nm','cllg_nm','dept_nm','apl_id','apl_nm','rep_div_nm','status_nm','req_dt_sub','appr_dt_sub','mgr_dt_sub','rep_ym ')
     
     def get_unv_nm(self,obj):
         return obj.unv_nm  
@@ -3016,6 +3099,7 @@ class MP0105M_list(generics.ListAPIView):
         query += " , t1.appr_dt   /* 보호자 승인일시 */ "
         query += " , t1.mgr_id    /* 관리자id */ "
         query += " , t1.mgr_dt    /* 관리자 승인일시 */ "
+        query += " , t1.rep_ym     "
         query += " from service20_mp_rep t1     /* 프로그램 보고서 */ "
         query += " left join service20_mp_mtr t2 on (t2.mp_id   = t1.mp_id "
         query += " and t2.apl_no = t1.apl_no)       /* 지원 멘토 */ "
