@@ -3750,11 +3750,11 @@ def MP0105M_update(request,pk):
     if pk == 1:
         # /*보고서현황작성_승인요청*/
         update_text = " update service20_mp_rep "
-        update_text = " SET MTR_OBJ    = '"+str(mtr_obj)  +"'    /*학습목표*/         "    
-        update_text += " , MTR_DESC    = '"+str(mtr_desc) +"'    /*학습내용*/         "    
-        update_text += " , COATCHING   = '"+str(coatching)+"'    /*학습외 지도(상담)*/"    
-        update_text += " , SPCL_NOTE   = '"+str(spcl_note)+"'    /*특이사항*/         "    
-        update_text += " , MTR_REVW    = '"+str(mtr_revw) +"'    /*소감문*/           "    
+        update_text = " set mtr_obj    = '"+str(mtr_obj)  +"'    /*학습목표*/         "    
+        update_text += " , mtr_desc    = '"+str(mtr_desc) +"'    /*학습내용*/         "    
+        update_text += " , coatching   = '"+str(coatching)+"'    /*학습외 지도(상담)*/"    
+        update_text += " , spcl_note   = '"+str(spcl_note)+"'    /*특이사항*/         "    
+        update_text += " , mtr_revw    = '"+str(mtr_revw) +"'    /*소감문*/           "    
 
         update_text += "     , mnte_id     = '" +mnte_id+"'      /*담당멘티id*/ ";
         update_text += "     , mnte_nm     = '" +mnte_nm+"'      /*담당멘티명*/ ";
@@ -3764,26 +3764,26 @@ def MP0105M_update(request,pk):
         update_text += "     , mtr_sub     = '" +obj_sub+"'      /*지도과목*/ ";
         update_text += "     , att_desc    = '" +aaa+"'          /*출석현황*/   ";
 
-        update_text += " , REP_DT      = NOW()    /*보고서작성일*/     "    
-        update_text += " , UPD_ID      = '"+str(upd_id)   +"'    /*수정자ID*/         "    
-        update_text += " , UPD_IP      = '"+str(upd_ip)   +"'    /*수정자IP*/         "    
-        update_text += " , UPD_DT      = NOW()    /*수정일시*/         "    
-        update_text += " , UPD_PGM     = '"+str(upd_pgm)  +"'    /*수정프로그램ID*/   "    
-        update_text += " WHERE 1=1 "
-        update_text += " AND MP_ID  = '" +mp_id+"' "
-        update_text += " AND APL_NO = '"+str(apl_no)+"' "
-        update_text += " AND REP_NO = '"+str(rep_no)+"' "
+        update_text += " , rep_dt      = now()    /*보고서작성일*/     "    
+        update_text += " , upd_id      = '"+str(upd_id)   +"'    /*수정자id*/         "    
+        update_text += " , upd_ip      = '"+str(upd_ip)   +"'    /*수정자ip*/         "    
+        update_text += " , upd_dt      = now()    /*수정일시*/         "    
+        update_text += " , upd_pgm     = '"+str(upd_pgm)  +"'    /*수정프로그램id*/   "    
+        update_text += " where 1=1 "
+        update_text += " and mp_id  = '" +mp_id+"' "
+        update_text += " and apl_no = '"+str(apl_no)+"' "
+        update_text += " and rep_no = '"+str(rep_no)+"' "
 
         
     elif pk == 2:
         # /*보고서현황작성_승인요청*/
         update_text = " update service20_mp_rep "
-        update_text = " SET MTR_OBJ    = '"+str(mtr_obj)  +"'    /*학습목표*/         "    
-        update_text += " , MTR_DESC    = '"+str(mtr_desc) +"'    /*학습내용*/         "    
-        update_text += " , COATCHING   = '"+str(coatching)+"'    /*학습외 지도(상담)*/"    
-        update_text += " , SPCL_NOTE   = '"+str(spcl_note)+"'    /*특이사항*/         "    
-        update_text += " , MTR_REVW    = '"+str(mtr_revw) +"'    /*소감문*/           "    
-        update_text += " , REP_DT      = CASE REP_DT IS NULL THEN REP_DT ELSE NOW() END    /*보고서작성일*/     "    
+        update_text = " set mtr_obj    = '"+str(mtr_obj)  +"'    /*학습목표*/         "    
+        update_text += " , mtr_desc    = '"+str(mtr_desc) +"'    /*학습내용*/         "    
+        update_text += " , coatching   = '"+str(coatching)+"'    /*학습외 지도(상담)*/"    
+        update_text += " , spcl_note   = '"+str(spcl_note)+"'    /*특이사항*/         "    
+        update_text += " , mtr_revw    = '"+str(mtr_revw) +"'    /*소감문*/           "    
+        update_text += " , rep_dt      = case rep_dt is null then rep_dt else now() end    /*보고서작성일*/     "    
 
         update_text += "     , mnte_id     = '" +mnte_id+"'      /*담당멘티id*/ ";
         update_text += "     , mnte_nm     = '" +mnte_nm+"'      /*담당멘티명*/ ";
@@ -3793,15 +3793,15 @@ def MP0105M_update(request,pk):
         update_text += "     , mtr_sub     = '" +obj_sub+"'      /*지도과목*/ ";
         update_text += "     , att_desc    = '" +aaa+"'          /*출석현황*/   ";
         
-        update_text += " , REQ_DT      = NOW()    /*승인요청일*/       "
-        update_text += " , UPD_ID      = '"+str(upd_id)   +"'    /*수정자ID*/         "    
-        update_text += " , UPD_IP      = '"+str(upd_ip)   +"'    /*수정자IP*/         "    
-        update_text += " , UPD_DT      = NOW()    /*수정일시*/         "    
-        update_text += " , UPD_PGM     = '"+str(upd_pgm)  +"'    /*수정프로그램ID*/   "    
-        update_text += " WHERE 1=1 "
-        update_text += " AND MP_ID  = '" +mp_id+"' "
-        update_text += " AND APL_NO = '"+str(apl_no)+"' "
-        update_text += " AND REP_NO = '"+str(rep_no)+"' "
+        update_text += " , req_dt      = now()    /*승인요청일*/       "
+        update_text += " , upd_id      = '"+str(upd_id)   +"'    /*수정자id*/         "    
+        update_text += " , upd_ip      = '"+str(upd_ip)   +"'    /*수정자ip*/         "    
+        update_text += " , upd_dt      = now()    /*수정일시*/         "    
+        update_text += " , upd_pgm     = '"+str(upd_pgm)  +"'    /*수정프로그램id*/   "    
+        update_text += " where 1=1 "
+        update_text += " and mp_id  = '" +mp_id+"' "
+        update_text += " and apl_no = '"+str(apl_no)+"' "
+        update_text += " and rep_no = '"+str(rep_no)+"' "
     
     print(update_text)
     cursor = connection.cursor()
