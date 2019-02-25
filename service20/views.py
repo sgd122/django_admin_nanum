@@ -2737,7 +2737,11 @@ def MP0103M_Insert(request):
     upd_dt = request.POST.get('upd_dt', "")
     upd_pgm = request.POST.get('upd_pgm', "")
 
-    maxRow = request.POST.get('maxRow', 0)
+    maxRow = request.POST.get('maxRow', 0)              # 1번 insert
+    
+    mnt_dt_cnt = request.POST.get('mnt_dt_cnt', 0)      # 2번 insert
+    rep_ym = request.POST.get('rep_ym', "")
+    
 
     update_text = " update service20_mp_plnh a "
     update_text += " , service20_mpgm b "
@@ -2817,7 +2821,90 @@ def MP0103M_Insert(request):
 
         cursor = connection.cursor()
         query_result = cursor.execute(insert_text)    
+    
+    row_mnt_dt_cnt = int(mnt_dt_cnt)
+    for i in range(1,row_mnt_dt_cnt):
         
+        # /* 계획서 최초 작성 시 보고서 insert */
+        # /* 화면으로부터 넘겨받은 mnt_dt_cnt로 for(i = 1; i < mnt_dt_cnt; i++) */
+        # /* MP0103M/insert 시 같이 수행되게 해주세요 */
+        query += "insert into service20_mp_rep (";
+        query += "  mp_id";
+        query += ", apl_no";
+        query += ", rep_no";
+        query += ", rep_div";
+        query += ", rep_ym";
+        query += ", mnte_id";
+        query += ", mnte_nm";
+        query += ", tchr_id";
+        query += ", tchr_nm";
+        query += ", sch_nm";
+        query += ", mtr_sub";
+        query += ", att_desc";
+        query += ", rep_ttl";
+        query += ", mtr_obj";
+        query += ", rep_dt";
+        query += ", req_dt";
+        query += ", mtr_desc";
+        query += ", coatching";
+        query += ", spcl_note";
+        query += ", mtr_revw";
+        query += ", appr_id";
+        query += ", appr_nm";
+        query += ", appr_dt";
+        query += ", mgr_id";
+        query += ", mgr_dt";
+        query += ", status";
+        query += ", ins_id";
+        query += ", ins_ip";
+        query += ", ins_dt";
+        query += ", ins_pgm";
+        query += ", upd_id";
+        query += ", upd_ip";
+        query += ", upd_dt";
+        query += ", upd_pgm";
+        query += ")";
+        query += "select t1.mp_id  as mp_id";
+        query += "     , t1.apl_no as apl_no";
+        query += "     , '" + i + "''        as rep_no /* {!i} */";
+        query += "     , 'M'       as rep_div /*m - 교육 */";
+        query += "     , '" + str(rep_ym) + "'  as rep_ym /* {!rep_ym} */";
+        query += "     , null      as mnte_id";
+        query += "     , null      as mnte_nm";
+        query += "     , null      as tchr_id";
+        query += "     , null      as tchr_nm";
+        query += "     , null      as sch_nm";
+        query += "     , null      as mtr_sub";
+        query += "     , null      as att_desc";
+        query += "     , concat(date_format(date(t1.mnt_fr_dt + interval "+i+"-1 month), '%%y'), '년 ', date_format(date(t1.mnt_fr_dt + interval "+i+"-1 month), '%%m'), '월 보고서') as rep_ttl";
+        query += "     , null      as mtr_obj";
+        query += "     , null      as rep_dt";
+        query += "     , null      as req_dt";
+        query += "     , null      as mtr_desc";
+        query += "     , null      as coatching";
+        query += "     , null      as spcl_note";
+        query += "     , null      as mtr_revw";
+        query += "     , null      as appr_id";
+        query += "     , null      as appr_nm";
+        query += "     , null      as appr_dt";
+        query += "     , null      as mgr_id";
+        query += "     , null      as mgr_dt";
+        query += "     , '00'      as status";
+        query += "     , '" + str(ins_id) + "' as ins_id   /* {!login_id} */";
+        query += "     , '" + str(ins_ip) + "' as ins_ip   /* {!ins_ip} */";
+        query += "     , now()     as ins_dt";
+        query += "     , '" + str(ins_pgm) + "'   as ins_pgm  /* {!ins_pgm} */";
+        query += "     , '" + str(upd_id) + "' as upd_id";
+        query += "     , '" + str(upd_ip) + "' as upd_ip";
+        query += "     , now() as upd_dt";
+        query += "     , '" + str(upd_pgm) + "' as upd_pgm";
+        query += "  from service20_mp_mtr t1";
+        query += " where t1.mp_id  = '" + str(mp_id) + "'"
+        query += "   and t1.apl_id = '" + str(apl_id) + "' /* {!apl_id} */"
+
+        cursor = connection.cursor()
+        query_result = cursor.execute(insert_text) 
+
     context = {'message': 'Ok'}
 
     return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
