@@ -8,7 +8,7 @@ from django.http import JsonResponse, HttpResponse,Http404, HttpResponseRedirect
 from django.views import generic
 from django.urls import reverse
 from service10.models import *
-
+from django.db import connection
 # Create your views here.
 
 class Service10AuthListSerializer(serializers.ModelSerializer):
