@@ -64,6 +64,7 @@ def login_login(request):
                 query += "     , t3.grade          /* 시험등급 */";
                 query += "  from service20_vw_nanum_foreign_exam t3     /* 유효한 외국어 성적 리스트 view(임시) */";
                 query += " where 1=1";
+                query += " and t3.apl_id='"+v_userid+"'" 
                 conn = pymssql.connect(server='192.168.2.124', user='nanum', password='n@num*!@', database='hakjuk', port='1221')
                 cursor = conn.cursor()   
                 cursor.execute(query)  
@@ -147,6 +148,7 @@ def login_login(request):
                 query += "     , t3.tot_time        /* 총시간 */";
                 query += "  from service20_vw_nanum_service_activ t3     /* 학생 봉사 시간 view(임시) */";
                 query += " where 1=1";
+                query += " and t3.apl_id='"+v_userid+"'" 
                 conn = pymssql.connect(server='192.168.2.124', user='nanum', password='n@num*!@', database='hakjuk', port='1221')
                 cursor = conn.cursor()   
                 cursor.execute(query)  
@@ -268,8 +270,8 @@ def login_login(request):
                 query += "     , t3.score04     /* 봉사점수합계 */ ";
                 query += "     , t3.score05     /* 자격증 개수 */ ";
                 query += " from vw_nanum_stdt t3     /* 부산대학교 학생 정보 */ ";              
-#               query += " where t3.apl_id='"+v_userid+"'" 
-                query += " where t3.apl_id='201866148'"                 
+                query += " where t3.apl_id='"+v_userid+"'" 
+                # query += " where t3.apl_id='201866148'"                 
                 conn = pymssql.connect(server='192.168.2.124', user='nanum', password='n@num*!@', database='hakjuk', port='1221')
                 cursor = conn.cursor()   
                 cursor.execute(query)  
