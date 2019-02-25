@@ -3388,13 +3388,17 @@ class MP0105M_detail_2_Serializer(serializers.ModelSerializer):
     mtr_revw = serializers.SerializerMethodField()
     apl_no = serializers.SerializerMethodField()
     apl_id = serializers.SerializerMethodField()
+    teacher = serializers.SerializerMethodField()
+    mte_nm = serializers.SerializerMethodField()
+    obj_sub = serializers.SerializerMethodField()
+    aaa = serializers.SerializerMethodField()
 
     req_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     appr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     mgr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     class Meta:
         model = mp_rep
-        fields = ('mp_id','apl_no','rep_no','rep_div','rep_ttl','mtr_obj','rep_dt','req_dt','mtr_desc','coatching','spcl_note','mtr_revw','appr_id','appr_nm','appr_dt','mgr_id','mgr_dt','status','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','rep_ym','sch_yr','rep_div_nm','apl_m','tchr_id','tchr_nm','mnte_id','mnte_nm','mtr_sub','att_desc','status_nm','apl_id')
+        fields = ('mp_id','apl_no','rep_no','rep_div','rep_ttl','mtr_obj','rep_dt','req_dt','mtr_desc','coatching','spcl_note','mtr_revw','appr_id','appr_nm','appr_dt','mgr_id','mgr_dt','status','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','rep_ym','sch_yr','rep_div_nm','apl_m','tchr_id','tchr_nm','mnte_id','mnte_nm','mtr_sub','att_desc','status_nm','apl_id','teacher','mte_nm','obj_sub','aaa')
     
     def get_mp_id(self,obj):
         return obj.mp_id
@@ -3444,6 +3448,14 @@ class MP0105M_detail_2_Serializer(serializers.ModelSerializer):
         return obj.apl_no
     def get_apl_id(self,obj):
         return obj.apl_id   
+    def get_teacher(self,obj):
+        return obj.teacher
+    def get_mte_nm(self,obj):
+        return obj.mte_nm
+    def get_obj_sub(self,obj):
+        return obj.obj_sub
+    def get_aaa(self,obj):    
+        return obj.aaa    
 
 class MP0105M_detail_2(generics.ListAPIView):
     queryset = mp_rep.objects.all()
@@ -3466,12 +3478,12 @@ class MP0105M_detail_2(generics.ListAPIView):
         query += "         where std_grp_code  = 'mp0062' ";
         query += "           and std_detl_code = t2.rep_div)   as rep_div_nm     ";
         query += "     , concat(t1.apl_id, '/', t1.apl_nm)     as apl_m       /* 지원자(멘토,학생) 명*/ ";
-        query += "     , t3.tchr_id     /* 지도교사 id */";
+        query += "     , t3.tchr_id  as teacher   /* 지도교사 id */";
         query += "     , t3.tchr_nm     /* 지도교사 명 */     ";
         query += "     , t3.mnte_id     /* 멘티id */ ";
-        query += "     , t3.mnte_nm ";
+        query += "     , t3.mnte_nm  as mte_nm";
         query += "     , t3.sch_yr      /* 학교명/학년 */ ";
-        query += "     , t3.mtr_sub     /* 지도과목 */ ";
+        query += "     , t3.mtr_sub  as obj_sub   /* 지도과목 */ ";
         query += "     , (select concat(count(*), '회 ', ifnull(sum(s1.appr_tm), 0), '시간') ";
         query += "         from service20_mp_att s1 ";
         query += "        where s1.mp_id = t1.mp_id ";
@@ -3481,7 +3493,7 @@ class MP0105M_detail_2(generics.ListAPIView):
         query += "                  s1.att_sdt >= concat(t2.rep_ym, '01') ";
         query += "              and s1.att_sdt  < concat(date_format(date(concat(t2.rep_ym, '01') + interval 1 month), '%%y%%m'), '01')";
         query += "              ) ";
-        query += "       ) as att_desc   /*출석현황*/  ";
+        query += "       ) as aaa   /*출석현황*/  ";
         query += "     , null as rep_dt ";
         query += "     , null as req_dt              ";
         query += "     , t3.tchr_id as appr_id ";
