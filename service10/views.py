@@ -62,8 +62,9 @@ def post_login(request):
 		print(query_result)
 		if query_result == 0:
 			v_mntr_id = ''
-		else
+		else:
 			v_mntr_id = str(query_result[0].mntr_id)
+
 		context = {'message': message,
 					'apl_nm' : rows.apl_nm,
 					'univ_cd' : rows.univ_cd,
