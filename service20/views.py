@@ -2389,7 +2389,7 @@ class MP0102M_detail(generics.ListAPIView):
 #####################################################################################
 
 # 프로그램 수행계획서 리스트 ###################################################
-class MP0103M_combo_1_Serializer(serializers.ModelSerializer):
+class MP0103M_v1_Serializer(serializers.ModelSerializer):
 
     mnt_fr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     mnt_to_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
@@ -2400,9 +2400,9 @@ class MP0103M_combo_1_Serializer(serializers.ModelSerializer):
       
 
 
-class MP0103M_combo_1(generics.ListAPIView):
+class MP0103M_v1(generics.ListAPIView):
     queryset = mpgm.objects.all()
-    serializer_class = MP0103M_combo_1_Serializer
+    serializer_class = MP0103M_v1_Serializer
 
     def list(self, request):
         mp_id = request.GET.get('mp_id', "")
