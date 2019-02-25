@@ -54,7 +54,7 @@ def post_login(request):
 		message = "Ok"
 		rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
 
-		#mentor_query
+	    #mentor_query
 	    mentor_query = " select mntr_id from service20_mentor where apl_id = '"+str(ida)+"'"
 	    mentor_cursor = connection.cursor()
 	    query_result = mentor_cursor.execute(mentor_query)  
