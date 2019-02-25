@@ -2389,6 +2389,47 @@ class MP0102M_detail(generics.ListAPIView):
 #####################################################################################
 
 # 프로그램 수행계획서 리스트 ###################################################
+class MP0103M_combo_1_Serializer(serializers.ModelSerializer):
+
+    mnt_fr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+    mnt_to_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+    
+    class Meta:
+        model = mpgm
+        fields = ('mnt_fr_dt','mnt_to_dt')
+      
+
+
+class MP0103M_combo_1(generics.ListAPIView):
+    queryset = mpgm.objects.all()
+    serializer_class = MP0103M_combo_1_Serializer
+
+    def list(self, request):
+        mp_id = request.GET.get('mp_id', "")
+
+        queryset = self.get_queryset()
+
+        query += " select t1.id,t1.mnt_fr_dt";
+        query += "      , t1.mnt_to_dt";
+        query += "   from service20_mpgm t1";
+        query += "  where t1.mp_id  = '" + mp_id +"'";
+
+        
+
+        queryset = mpgm.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+
+# 프로그램 수행계획서 리스트 ###################################################
 class MP0103M_list_Serializer(serializers.ModelSerializer):
 
     mnte_nm = serializers.SerializerMethodField()
