@@ -382,6 +382,10 @@ def login_login(request):
                         mentor_cursor = connection.cursor()
                         query_result = mentor_cursor.execute(mentor_query)    
 
+                        if query_result == 0:
+                            v_mntr_id = ''
+                        else
+                            v_mntr_id = str(query_result[0].mntr_id)
                                             
                         context = {'message': message,
                         'apl_id' : str(row[0]),
@@ -423,7 +427,7 @@ def login_login(request):
                         'score03' : str(row[37]),
                         'score04' : str(row[38]),
                         'score05' : str(row[39]),
-                        'mntr_id' : str(query_result[0].mntr_id)
+                        'mntr_id' : v_mntr_id
                         }
                         row = cursor.fetchone()                                                                     
                     # 로그인처리 - 종료
