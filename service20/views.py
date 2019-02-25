@@ -384,7 +384,7 @@ def login_login(request):
 
                         if query_result == 0:
                             v_mntr_id = ''
-                        else
+                        else:
                             v_mntr_id = str(query_result[0].mntr_id)
                                             
                         context = {'message': message,
