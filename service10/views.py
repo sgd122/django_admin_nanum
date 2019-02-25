@@ -99,7 +99,7 @@ def post_login(request):
 					'score04' : rows.score04,
 					'score04_tp' : rows.score04_tp,
 					'score05' : rows.score05,
-					'mntr_id' : query_result[0].mntr_id
+					'mntr_id' : str(query_result[0].mntr_id)
 					}
 	
 		print(context)

@@ -423,7 +423,7 @@ def login_login(request):
                         'score03' : str(row[37]),
                         'score04' : str(row[38]),
                         'score05' : str(row[39]),
-                        'mntr_id' : query_result[0].mntr_id
+                        'mntr_id' : str(query_result[0].mntr_id)
                         }
                         row = cursor.fetchone()                                                                     
                     # 로그인처리 - 종료
