@@ -3797,7 +3797,7 @@ def MP0105M_update(request,pk):
         update_text += " , coatching   = '"+str(coatching)+"'    /*학습외 지도(상담)*/"    
         update_text += " , spcl_note   = '"+str(spcl_note)+"'    /*특이사항*/         "    
         update_text += " , mtr_revw    = '"+str(mtr_revw) +"'    /*소감문*/           "    
-        update_text += " , rep_dt      = case rep_dt is null then rep_dt else now() end    /*보고서작성일*/     "    
+        update_text += " , rep_dt      = case when rep_dt is null then rep_dt else now() end    /*보고서작성일*/     "    
 
         update_text += " , mnte_id     = '" +mnte_id+"'      /*담당멘티id*/ "
         update_text += " , mnte_nm     = '" +mte_nm+"'      /*담당멘티명*/ "
