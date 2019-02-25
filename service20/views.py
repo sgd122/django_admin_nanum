@@ -33,7 +33,7 @@ def login_login(request):
         pswd =  request.POST.get('user_pw')
         # 로그인할 유저정보를 넣어주자 (모두 문자열)
         login_info = {'id':id,'pswd': pswd,'dest':'http://nanum.pusan.ac.kr:8000/service20/login/returnsso/'}
-        login_info = {'id':'514965','pswd': 'gks3089#','dest':'http://nanum.pusan.ac.kr:8000/service20/login/returnsso/'}
+        # login_info = {'id':'514965','pswd': 'gks3089#','dest':'http://nanum.pusan.ac.kr:8000/service20/login/returnsso/'}
         # HTTP GET Request: requests대신 s 객체를 사용한다.
         with requests.Session() as s:
             first_page = s.post('https://onestop.pusan.ac.kr/new_pass/exorgan/exidentify.asp', data=login_info)
