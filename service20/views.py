@@ -3613,6 +3613,11 @@ def MP0105M_update(request,pk):
     upd_dt    = request.POST.get('upd_dt   ', "")
     upd_pgm   = request.POST.get('upd_pgm  ', "")
 
+    teacher   = request.POST.get('upd_pgm  ', "")
+    sch_yr    = request.POST.get('upd_pgm  ', "")
+    obj_sub   = request.POST.get('upd_pgm  ', "")
+    aaa       = request.POST.get('upd_pgm  ', "")
+
     update_text = ""
     if pk == 1:
         # /*보고서현황작성_승인요청*/
@@ -3622,6 +3627,15 @@ def MP0105M_update(request,pk):
         update_text += " , COATCHING   = '"+str(coatching)+"'    /*학습외 지도(상담)*/"    
         update_text += " , SPCL_NOTE   = '"+str(spcl_note)+"'    /*특이사항*/         "    
         update_text += " , MTR_REVW    = '"+str(mtr_revw) +"'    /*소감문*/           "    
+
+        update_text += "     , mnte_id     = '" +mnte_id+"'      /*담당멘티id*/ ";
+        update_text += "     , mnte_nm     = '" +mnte_nm+"'      /*담당멘티명*/ ";
+        update_text += "     , tchr_id     = '" +tchr_id+"'      /*담당교사id*/ ";
+        update_text += "     , tchr_nm     = '" +teacher+"'      /*담당교사명*/ ";
+        update_text += "     , sch_nm      = '" +sch_yr+"'       /*학교명*/ ";
+        update_text += "     , mtr_sub     = '" +obj_sub+"'      /*지도과목*/ ";
+        update_text += "     , att_desc    = '" +aaa+"'          /*출석현황*/   ";
+
         update_text += " , REP_DT      = NOW()    /*보고서작성일*/     "    
         update_text += " , UPD_ID      = '"+str(upd_id)   +"'    /*수정자ID*/         "    
         update_text += " , UPD_IP      = '"+str(upd_ip)   +"'    /*수정자IP*/         "    
@@ -3631,6 +3645,8 @@ def MP0105M_update(request,pk):
         update_text += " AND MP_ID  = '" +mp_id+"' "
         update_text += " AND APL_NO = '"+str(apl_no)+"' "
         update_text += " AND REP_NO = '"+str(rep_no)+"' "
+
+        
     elif pk == 2:
         # /*보고서현황작성_승인요청*/
         update_text = " update service20_mp_rep "
