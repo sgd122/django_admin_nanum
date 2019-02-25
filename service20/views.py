@@ -2409,7 +2409,7 @@ class MP0103M_combo_1(generics.ListAPIView):
 
         queryset = self.get_queryset()
 
-        query += " select t1.id,t1.mnt_fr_dt";
+        query = " select t1.id,t1.mnt_fr_dt";
         query += "      , t1.mnt_to_dt";
         query += "   from service20_mpgm t1";
         query += "  where t1.mp_id  = '" + mp_id +"'";
