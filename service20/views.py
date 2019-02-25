@@ -3741,10 +3741,11 @@ def MP0105M_update(request,pk):
     upd_dt    = request.POST.get('upd_dt', "")
     upd_pgm   = request.POST.get('upd_pgm', "")
 
-    teacher   = request.POST.get('upd_pgm', "")
-    sch_yr    = request.POST.get('upd_pgm', "")
-    obj_sub   = request.POST.get('upd_pgm', "")
-    aaa       = request.POST.get('upd_pgm', "")
+    teacher   = request.POST.get('teacher', "")
+    sch_yr    = request.POST.get('sch_yr', "")
+    obj_sub   = request.POST.get('obj_sub', "")
+    aaa       = request.POST.get('aaa', "")
+    mte_nm   = request.POST.get('mte_nm', "")
 
     update_text = ""
     if pk == 1:
@@ -3757,7 +3758,7 @@ def MP0105M_update(request,pk):
         update_text += " , mtr_revw    = '"+str(mtr_revw) +"'    /*소감문*/           "    
 
         update_text += "     , mnte_id     = '" +mnte_id+"'      /*담당멘티id*/ ";
-        update_text += "     , mnte_nm     = '" +mnte_nm+"'      /*담당멘티명*/ ";
+        update_text += "     , mnte_nm     = '" +mte_nm+"'      /*담당멘티명*/ ";
         update_text += "     , tchr_id     = '" +tchr_id+"'      /*담당교사id*/ ";
         update_text += "     , tchr_nm     = '" +teacher+"'      /*담당교사명*/ ";
         update_text += "     , sch_nm      = '" +sch_yr+"'       /*학교명*/ ";
@@ -3786,7 +3787,7 @@ def MP0105M_update(request,pk):
         update_text += " , rep_dt      = case rep_dt is null then rep_dt else now() end    /*보고서작성일*/     "    
 
         update_text += "     , mnte_id     = '" +mnte_id+"'      /*담당멘티id*/ ";
-        update_text += "     , mnte_nm     = '" +mnte_nm+"'      /*담당멘티명*/ ";
+        update_text += "     , mnte_nm     = '" +mte_nm+"'      /*담당멘티명*/ ";
         update_text += "     , tchr_id     = '" +tchr_id+"'      /*담당교사id*/ ";
         update_text += "     , tchr_nm     = '" +teacher+"'      /*담당교사명*/ ";
         update_text += "     , sch_nm      = '" +sch_yr+"'       /*학교명*/ ";
