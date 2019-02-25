@@ -102,7 +102,7 @@ def post_login(request):
                     'mntr_id' : query_result[0].mntr_id
 					}
 	
-
+		print(context)
 	#return HttpResponse(json.dumps(context), content_type="application/json")
 	return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
