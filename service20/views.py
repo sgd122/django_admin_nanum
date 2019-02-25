@@ -3297,11 +3297,10 @@ class MP0105M_detail(generics.ListAPIView):
 
 
     def list(self, request):
-        l_yr = request.GET.get('yr', "")
+        
         l_mp_id = request.GET.get('mp_id', "")
         l_apl_id = request.GET.get('apl_id', "")
-        l_apl_no = request.GET.get('apl_no', "")
-        l_rep_no = request.GET.get('rep_no', "")
+        l_rep_ym = request.GET.get('rep_ym', "")
 
         queryset = self.get_queryset()
 
@@ -3348,8 +3347,7 @@ class MP0105M_detail(generics.ListAPIView):
         query += " where 1=1 "
         query += " and t1.mp_id     = '"+l_mp_id+"'     "
         query += " and t2.apl_id    =  '"+l_apl_id+"' "
-        query += " and t1.apl_no    = '"+l_apl_no+"' "
-        query += " and t1.rep_no    = '"+l_rep_no+"' "
+        query += " and t1.rep_ym    = '"+l_rep_ym+"' "
 
         queryset = mp_rep.objects.raw(query)
 
@@ -3362,6 +3360,207 @@ class MP0105M_detail(generics.ListAPIView):
             return self.get_paginated_response(serializer.data)
 
         return Response(serializer.data)                
+
+class MP0105M_detail_2_Serializer(serializers.ModelSerializer):
+
+    # testField = serializers.SerializerMethodField()
+    mp_id = serializers.SerializerMethodField()
+    rep_div_nm = serializers.SerializerMethodField()
+    apl_m = serializers.SerializerMethodField()
+    tchr_id = serializers.SerializerMethodField()
+    tchr_nm = serializers.SerializerMethodField()
+    mnte_id = serializers.SerializerMethodField()
+    mnte_nm = serializers.SerializerMethodField()
+    sch_yr = serializers.SerializerMethodField()
+    mtr_sub = serializers.SerializerMethodField()
+    att_desc = serializers.SerializerMethodField()
+    rep_dt = serializers.SerializerMethodField()
+    req_dt = serializers.SerializerMethodField()
+    appr_id = serializers.SerializerMethodField()
+    appr_nm = serializers.SerializerMethodField()
+    appr_dt = serializers.SerializerMethodField()
+    mgr_id = serializers.SerializerMethodField()
+    mgr_dt = serializers.SerializerMethodField()
+    status_nm = serializers.SerializerMethodField()
+    mtr_desc = serializers.SerializerMethodField()
+    coatching = serializers.SerializerMethodField()
+    spcl_note = serializers.SerializerMethodField()
+    mtr_revw = serializers.SerializerMethodField()
+    apl_no = serializers.SerializerMethodField()
+    apl_id = serializers.SerializerMethodField()
+
+    req_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+    appr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+    mgr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+    class Meta:
+        model = mp_rep
+        fields = ('mp_id','apl_no','rep_no','rep_div','rep_ttl','mtr_obj','rep_dt','req_dt','mtr_desc','coatching','spcl_note','mtr_revw','appr_id','appr_nm','appr_dt','mgr_id','mgr_dt','status','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','rep_ym')
+    
+    def get_mp_id(self,obj):
+        return obj.mp_id
+    def get_rep_div_nm(self,obj):
+        return obj.rep_div_nm
+    def get_apl_m(self,obj):
+        return obj.apl_m
+    def get_tchr_id(self,obj):
+        return obj.tchr_id
+    def get_tchr_nm(self,obj):
+        return obj.tchr_nm
+    def get_mnte_id(self,obj):
+        return obj.mnte_id
+    def get_mnte_nm(self,obj):
+        return obj.mnte_nm
+    def get_sch_yr(self,obj):
+        return obj.sch_yr
+    def get_mtr_sub(self,obj):
+        return obj.mtr_sub
+    def get_att_desc(self,obj):
+        return obj.att_desc
+    def get_rep_dt(self,obj):
+        return obj.rep_dt
+    def get_req_dt(self,obj):
+        return obj.req_dt
+    def get_appr_id(self,obj):
+        return obj.appr_id
+    def get_appr_nm(self,obj):
+        return obj.appr_nm
+    def get_appr_dt(self,obj):
+        return obj.appr_dt
+    def get_mgr_id(self,obj):
+        return obj.mgr_id
+    def get_mgr_dt(self,obj):
+        return obj.mgr_dt
+    def get_status_nm(self,obj):
+        return obj.status_nm
+    def get_mtr_desc(self,obj):
+        return obj.mtr_desc
+    def get_coatching(self,obj):
+        return obj.coatching
+    def get_spcl_note(self,obj):
+        return obj.spcl_note
+    def get_mtr_revw(self,obj):
+        return obj.mtr_revw
+    def get_apl_no(self,obj):
+        return obj.apl_no
+    def get_apl_id(self,obj):
+        return obj.apl_id   
+
+class MP0105M_detail_2(generics.ListAPIView):
+    queryset = mp_rep.objects.all()
+    serializer_class = MP0105M_detail_2_Serializer
+
+
+    def list(self, request):
+        mp_id = request.GET.get('mp_id', "")
+        apl_id = request.GET.get('apl_id', "")
+        rep_ym = request.GET.get('rep_ym', "")
+
+        queryset = self.get_queryset()
+
+        # /*보고서 상세*/
+        query = "select t1.mp_id       /* 멘토링 프로그램id   */ ";
+        query += "     , t2.rep_div     /* 보고서 구분(mp0062) */";
+        query += "     , t2.rep_ttl     /* 보고서 제목 : 내용  */";
+        query += "     , (select std_detl_code_nm ";
+        query += "          from service20_com_cdd ";
+        query += "         where std_grp_code  = 'mp0062' ";
+        query += "           and std_detl_code = t2.rep_div)   as rep_div_nm     ";
+        query += "     , concat(t1.apl_id, '/', t1.apl_nm)     as apl_m       /* 지원자(멘토,학생) 명*/ ";
+        query += "     , t3.tchr_id     /* 지도교사 id */";
+        query += "     , t3.tchr_nm     /* 지도교사 명 */     ";
+        query += "     , t3.mnte_id     /* 멘티id */ ";
+        query += "     , t3.mnte_nm ";
+        query += "     , t3.sch_yr      /* 학교명/학년 */ ";
+        query += "     , t3.mtr_sub     /* 지도과목 */ ";
+        query += "     , (select concat(count(*), '회 ', ifnull(sum(s1.appr_tm), 0), '시간') ";
+        query += "         from service20_mp_att s1 ";
+        query += "        where s1.mp_id = t1.mp_id ";
+        query += "          and s1.apl_no = t1.apl_no ";
+        query += "          and ";
+        query += "              (";
+        query += "                  s1.att_sdt >= concat(t2.rep_ym, '01') ";
+        query += "              and s1.att_sdt  < concat(date_format(date(concat(t2.rep_ym, '01') + interval 1 month), '%y%m'), '01')";
+        query += "              ) ";
+        query += "       ) as att_desc   /*출석현황*/  ";
+        query += "     , null as rep_dt ";
+        query += "     , null as req_dt              ";
+        query += "     , t3.tchr_id as appr_id ";
+        query += "     , t3.tchr_nm as appr_nm ";
+        query += "     , null       as appr_dt ";
+        query += "     , t4.mgr_id  as mgr_id ";
+        query += "     , null       as mgr_dt";
+        query += "     , t2.status ";
+        query += "     , c1.std_detl_code_nm as status_nm     ";
+        query += "     , t2.mtr_obj ";
+        query += "     , '' as mtr_desc ";
+        query += "     , '' as coatching ";
+        query += "     , '' as spcl_note ";
+        query += "     , '' as mtr_revw    ";
+        query += "     ";
+        query += "     , t1.apl_no ";
+        query += "     , t1.apl_id ";
+        query += "     , t2.rep_no ";
+        query += "     , t2.rep_ym ";
+        query += "  from service20_mp_mtr t1 ";
+        query += "   left join service20_mp_rep t2 ";
+        query += "       on (";
+        query += "           t2.mp_id = t1.mp_id ";
+        query += "       and t2.apl_no = t1.apl_no";
+        query += "       ) ";
+        query += "   left join service20_mpgm t4 ";
+        query += "       on (";
+        query += "           t4.mp_id = t1.mp_id";
+        query += "       ) ";
+        query += "   left join ";
+        query += "       (select distinct s2.tchr_id  ";
+        query += "            , s2.tchr_nm  ";
+        query += "            , s2.mnte_id  ";
+        query += "            , s2.mnte_nm ";
+        query += "            , concat(s2.sch_nm, '/', s2.sch_yr, '학년') as sch_yr /* 학교명/학년 */ ";
+        query += "            , s3.mtr_sub /* 지도과목 */";
+        query += "            , truncate(rand()*7 + 1, 0) as att_desc  ";
+        query += "            , s3.mtr_obj ";
+        query += "            , s1.mp_id ";
+        query += "            , s1.apl_no ";
+        query += "            , s1.apl_id ";
+        query += "         from service20_mp_mtr s1 ";
+        query += "          left join service20_mp_mte s2 ";
+        query += "              on (";
+        query += "                  s2.mp_id = s1.mp_id ";
+        query += "              and s2.apl_no = s1.apl_no";
+        query += "              ) ";
+        query += "          left join service20_mp_plnh s3 ";
+        query += "              on (";
+        query += "                  s3.mp_id = s1.mp_id ";
+        query += "              and s3.apl_no = s1.apl_no";
+        query += "              ) ";
+        query += "       ) t3 ";
+        query += "       on (";
+        query += "           t3.mp_id = t1.mp_id ";
+        query += "       and t3.apl_no = t1.apl_no";
+        query += "       ) ";
+        query += "   left join service20_com_cdd c1 ";
+        query += "       on (";
+        query += "           c1.std_grp_code = 'mp0070'  ";
+        query += "       and c1.std_detl_code = t2.status";
+        query += "       ) ";
+        query += " where t1.mp_id = '"+mp_id+"' ";
+        query += "   and t1.apl_id = '"+apl_id+"' ";
+        query += "   and t2.status = '00' ";
+        query += "   and t2.rep_ym = '"+rep_ym+"'";
+
+
+        queryset = mp_rep.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)        
 
 # 보고서 현황 save
 @csrf_exempt
