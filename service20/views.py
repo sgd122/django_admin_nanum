@@ -3479,7 +3479,7 @@ class MP0105M_detail_2(generics.ListAPIView):
         query += "          and ";
         query += "              (";
         query += "                  s1.att_sdt >= concat(t2.rep_ym, '01') ";
-        query += "              and s1.att_sdt  < concat(date_format(date(concat(t2.rep_ym, '01') + interval 1 month), '%y%m'), '01')";
+        query += "              and s1.att_sdt  < concat(date_format(date(concat(t2.rep_ym, '01') + interval 1 month), '%%y%%m'), '01')";
         query += "              ) ";
         query += "       ) as att_desc   /*출석현황*/  ";
         query += "     , null as rep_dt ";
