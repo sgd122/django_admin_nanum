@@ -3394,7 +3394,7 @@ class MP0105M_detail_2_Serializer(serializers.ModelSerializer):
     mgr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     class Meta:
         model = mp_rep
-        fields = ('mp_id','apl_no','rep_no','rep_div','rep_ttl','mtr_obj','rep_dt','req_dt','mtr_desc','coatching','spcl_note','mtr_revw','appr_id','appr_nm','appr_dt','mgr_id','mgr_dt','status','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','rep_ym')
+        fields = ('mp_id','apl_no','rep_no','rep_div','rep_ttl','mtr_obj','rep_dt','req_dt','mtr_desc','coatching','spcl_note','mtr_revw','appr_id','appr_nm','appr_dt','mgr_id','mgr_dt','status','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','rep_ym','sch_yr','rep_div_nm','apl_m','tchr_id','tchr_nm','mnte_id','mnte_nm','mtr_sub','att_desc','status_nm','apl_id')
     
     def get_mp_id(self,obj):
         return obj.mp_id
