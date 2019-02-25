@@ -3746,6 +3746,7 @@ def MP0105M_update(request,pk):
     obj_sub   = request.POST.get('obj_sub', "")
     aaa       = request.POST.get('aaa', "")
     mte_nm   = request.POST.get('mte_nm', "")
+    status   = request.POST.get('status', "")
 
     update_text = ""
     if pk == 1:
@@ -3764,6 +3765,7 @@ def MP0105M_update(request,pk):
         update_text += " , sch_nm      = '" +sch_yr+"'       /*학교명*/ "
         update_text += " , mtr_sub     = '" +obj_sub+"'      /*지도과목*/ "
         update_text += " , att_desc    = '" +aaa+"'          /*출석현황*/   "
+        update_text += " , status    = '" +status+"'          /*status*/   "
 
         update_text += " , rep_dt      = now()    /*보고서작성일*/     "    
         update_text += " , upd_id      = '"+str(upd_id)   +"'    /*수정자id*/         "    
@@ -3793,6 +3795,7 @@ def MP0105M_update(request,pk):
         update_text += " , sch_nm      = '" +sch_yr+"'       /*학교명*/ "
         update_text += " , mtr_sub     = '" +obj_sub+"'      /*지도과목*/ "
         update_text += " , att_desc    = '" +aaa+"'          /*출석현황*/   "
+        update_text += " , status    = '" +status+"'          /*status*/   "
 
         update_text += " , req_dt      = now()    /*승인요청일*/       "
         update_text += " , upd_id      = '"+str(upd_id)   +"'    /*수정자id*/         "    
