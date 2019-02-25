@@ -145,7 +145,7 @@ urlpatterns = [
     #
     ########################################################################################
     # 프로그램 수행계획서 콤보
-    path('MP0103M/combo/1/', MP0103M_combo_1.as_view(), name='MP0103M_combo_1'),
+    path('MP0103M/v1/', MP0103M_v1.as_view(), name='MP0103M_v1'),
     # 프로그램 수행계획서 리스트
     path('MP0103M/list/', MP0103M_list.as_view(), name='MP0103M_list'),
     # 프로그램 수행계획서 상세
