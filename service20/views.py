@@ -2389,6 +2389,47 @@ class MP0102M_detail(generics.ListAPIView):
 #####################################################################################
 
 # 프로그램 수행계획서 리스트 ###################################################
+class MP0103M_combo_1_Serializer(serializers.ModelSerializer):
+
+    mnt_fr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+    mnt_to_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+    
+    class Meta:
+        model = mpgm
+        fields = ('mnt_fr_dt','mnt_to_dt')
+      
+
+
+class MP0103M_combo_1(generics.ListAPIView):
+    queryset = mpgm.objects.all()
+    serializer_class = MP0103M_combo_1_Serializer
+
+    def list(self, request):
+        mp_id = request.GET.get('mp_id', "")
+
+        queryset = self.get_queryset()
+
+        query += " select t1.id,t1.mnt_fr_dt";
+        query += "      , t1.mnt_to_dt";
+        query += "   from service20_mpgm t1";
+        query += "  where t1.mp_id  = '" + mp_id +"'";
+
+        
+
+        queryset = mpgm.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+
+# 프로그램 수행계획서 리스트 ###################################################
 class MP0103M_list_Serializer(serializers.ModelSerializer):
 
     mnte_nm = serializers.SerializerMethodField()
@@ -3613,6 +3654,11 @@ def MP0105M_update(request,pk):
     upd_dt    = request.POST.get('upd_dt   ', "")
     upd_pgm   = request.POST.get('upd_pgm  ', "")
 
+    teacher   = request.POST.get('upd_pgm  ', "")
+    sch_yr    = request.POST.get('upd_pgm  ', "")
+    obj_sub   = request.POST.get('upd_pgm  ', "")
+    aaa       = request.POST.get('upd_pgm  ', "")
+
     update_text = ""
     if pk == 1:
         # /*보고서현황작성_승인요청*/
@@ -3622,6 +3668,15 @@ def MP0105M_update(request,pk):
         update_text += " , COATCHING   = '"+str(coatching)+"'    /*학습외 지도(상담)*/"    
         update_text += " , SPCL_NOTE   = '"+str(spcl_note)+"'    /*특이사항*/         "    
         update_text += " , MTR_REVW    = '"+str(mtr_revw) +"'    /*소감문*/           "    
+
+        update_text += "     , mnte_id     = '" +mnte_id+"'      /*담당멘티id*/ ";
+        update_text += "     , mnte_nm     = '" +mnte_nm+"'      /*담당멘티명*/ ";
+        update_text += "     , tchr_id     = '" +tchr_id+"'      /*담당교사id*/ ";
+        update_text += "     , tchr_nm     = '" +teacher+"'      /*담당교사명*/ ";
+        update_text += "     , sch_nm      = '" +sch_yr+"'       /*학교명*/ ";
+        update_text += "     , mtr_sub     = '" +obj_sub+"'      /*지도과목*/ ";
+        update_text += "     , att_desc    = '" +aaa+"'          /*출석현황*/   ";
+
         update_text += " , REP_DT      = NOW()    /*보고서작성일*/     "    
         update_text += " , UPD_ID      = '"+str(upd_id)   +"'    /*수정자ID*/         "    
         update_text += " , UPD_IP      = '"+str(upd_ip)   +"'    /*수정자IP*/         "    
@@ -3631,6 +3686,8 @@ def MP0105M_update(request,pk):
         update_text += " AND MP_ID  = '" +mp_id+"' "
         update_text += " AND APL_NO = '"+str(apl_no)+"' "
         update_text += " AND REP_NO = '"+str(rep_no)+"' "
+
+        
     elif pk == 2:
         # /*보고서현황작성_승인요청*/
         update_text = " update service20_mp_rep "
