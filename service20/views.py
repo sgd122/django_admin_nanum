@@ -51,19 +51,19 @@ def login_login(request):
                 ########################################################################
                 # 어학 - 시작
                 ########################################################################
-                query = "select t3.apl_id         /* 학번 */";
-                query += "     , t3.apl_nm         /* 성명 */";
-                query += "     , t3.lang_kind_cd   /* 어학종류코드 */";
-                query += "     , t3.lang_kind_nm   /* 어학종류명 */";
-                query += "     , t3.lang_cd        /* 어학상위코드 */";
-                query += "     , t3.lang_nm        /* 어학상위코드명 */";
-                query += "     , t3.lang_detail_cd /* 어학하위코드 */";
-                query += "     , t3.lang_detail_nm /* 어학하위코드명 */";
-                query += "     , t3.frexm_nm       /* 외국어시험명 */";
-                query += "     , t3.score          /* 시험점수 */";
-                query += "     , t3.grade          /* 시험등급 */";
-                query += "  from service20_vw_nanum_foreign_exam t3     /* 유효한 외국어 성적 리스트 view(임시) */";
-                query += " where 1=1";
+                query = "select t3.apl_id         /* 학번 */"
+                query += "     , t3.apl_nm         /* 성명 */"
+                query += "     , t3.lang_kind_cd   /* 어학종류코드 */"
+                query += "     , t3.lang_kind_nm   /* 어학종류명 */"
+                query += "     , t3.lang_cd        /* 어학상위코드 */"
+                query += "     , t3.lang_nm        /* 어학상위코드명 */"
+                query += "     , t3.lang_detail_cd /* 어학하위코드 */"
+                query += "     , t3.lang_detail_nm /* 어학하위코드명 */"
+                query += "     , t3.frexm_nm       /* 외국어시험명 */"
+                query += "     , t3.score          /* 시험점수 */"
+                query += "     , t3.grade          /* 시험등급 */"
+                query += "  from service20_vw_nanum_foreign_exam t3     /* 유효한 외국어 성적 리스트 view(임시) */"
+                query += " where 1=1"
                 query += " and t3.apl_id='"+v_userid+"'" 
                 conn = pymssql.connect(server='192.168.2.124', user='nanum', password='n@num*!@', database='hakjuk', port='1221')
                 cursor = conn.cursor()   
@@ -89,40 +89,40 @@ def login_login(request):
                     # 삭제 (어학)
 
                     # insert(어학)
-                    query = "insert into service20_vw_nanum_foreign_exam     -- 유효한 외국어 성적 리스트 view(임시)";
-                    query += "   ( apl_id         /* 학번 */";
-                    query += "     , apl_nm         /* 성명 */";
-                    query += "     , lang_kind_cd   /* 어학종류코드 */";
-                    query += "     , lang_kind_nm   /* 어학종류명 */";
-                    query += "     , lang_cd        /* 어학상위코드 */";
-                    query += "     , lang_nm        /* 어학상위코드명 */";
-                    query += "     , lang_detail_cd /* 어학하위코드 */";
-                    query += "     , lang_detail_nm /* 어학하위코드명 */";
-                    query += "     , frexm_nm       /* 외국어시험명 */";
-                    query += "     , score          /* 시험점수 */";
-                    query += "     , grade          /* 시험등급 */";
-                    query += ")";
-                    query += "values";
-                    query += "     ( CASE WHEN '"+str(l_apl_id)+"' =  'None' THEN NULL ELSE '"+str(l_apl_id)+"' END         /* 학번 */";
-                    query += "     ,CASE WHEN '"+str(l_apl_nm)+"' =  'None' THEN NULL ELSE '"+str(l_apl_nm)+"' END         /* 성명 */";
-                    query += "     ,CASE WHEN '"+str(l_lang_kind_cd)+"' =  'None' THEN NULL ELSE '"+str(l_lang_kind_cd)+"' END   /* 어학종류코드 */";
-                    query += "     ,CASE WHEN '"+str(l_lang_kind_nm)+"' =  'None' THEN NULL ELSE '"+str(l_lang_kind_nm)+"' END   /* 어학종류명 */";
-                    query += "     ,CASE WHEN '"+str(l_lang_cd)+"' =  'None' THEN NULL ELSE '"+str(l_lang_cd)+"' END        /* 어학상위코드 */";
-                    query += "     ,CASE WHEN '"+str(l_lang_nm)+"' =  'None' THEN NULL ELSE '"+str(l_lang_nm)+"' END        /* 어학상위코드명 */";
-                    query += "     ,CASE WHEN '"+str(l_lang_detail_cd)+"' =  'None' THEN NULL ELSE '"+str(l_lang_detail_cd)+"' END /* 어학하위코드 */";
-                    query += "     ,CASE WHEN '"+str(l_lang_detail_nm)+"' =  'None' THEN NULL ELSE '"+str(l_lang_detail_nm)+"' END /* 어학하위코드명 */";
-                    query += "     ,CASE WHEN '"+str(l_frexm_nm)+"' =  'None' THEN NULL ELSE '"+str(l_frexm_nm)+"' END       /* 외국어시험명 */";
-                    query += "     ,CASE WHEN '"+str(l_score)+"' =  'None' THEN NULL ELSE '"+str(l_score)+"' END          /* 시험점수 */";
-                    query += "     ,CASE WHEN '"+str(l_grade)+"' =  'None' THEN NULL ELSE '"+str(l_grade)+"' END          /* 시험등급 */";
-                    # query += "     ,CASE WHEN '"+str(l_ins_id)+"' =  'None' THEN NULL ELSE '"+str(l_ins_id)+"' END         /* 입력자id */";
-                    # query += "     ,CASE WHEN '"+str(l_ins_ip)+"' =  'None' THEN NULL ELSE '"+str(l_ins_ip)+"' END         /* 입력자ip */";
-                    # query += "     ,CASE WHEN '"+str(l_ins_dt)+"' =  'None' THEN NULL ELSE '"+str(l_ins_dt)+"' END         /* 입력일시 */";
-                    # query += "     ,CASE WHEN '"+str(l_ins_pgm)+"' =  'None' THEN NULL ELSE '"+str(l_ins_pgm)+"' END        /* 입력프로그램id */";
-                    # query += "     ,CASE WHEN '"+str(l_upd_id)+"' =  'None' THEN NULL ELSE '"+str(l_upd_id)+"' END         /* 수정자id */";
-                    # query += "     ,CASE WHEN '"+str(l_upd_ip)+"' =  'None' THEN NULL ELSE '"+str(l_upd_ip)+"' END         /* 수정자ip */";
-                    # query += "     ,CASE WHEN '"+str(l_upd_dt)+"' =  'None' THEN NULL ELSE '"+str(l_upd_dt)+"' END         /* 수정일시 */";
-                    # query += "     ,CASE WHEN '"+str(l_upd_pgm)+"' =  'None' THEN NULL ELSE '"+str(l_upd_pgm)+"' END        /* 수정프로그램id */";
-                    query += ")";
+                    query = "insert into service20_vw_nanum_foreign_exam     -- 유효한 외국어 성적 리스트 view(임시)"
+                    query += "   ( apl_id         /* 학번 */"
+                    query += "     , apl_nm         /* 성명 */"
+                    query += "     , lang_kind_cd   /* 어학종류코드 */"
+                    query += "     , lang_kind_nm   /* 어학종류명 */"
+                    query += "     , lang_cd        /* 어학상위코드 */"
+                    query += "     , lang_nm        /* 어학상위코드명 */"
+                    query += "     , lang_detail_cd /* 어학하위코드 */"
+                    query += "     , lang_detail_nm /* 어학하위코드명 */"
+                    query += "     , frexm_nm       /* 외국어시험명 */"
+                    query += "     , score          /* 시험점수 */"
+                    query += "     , grade          /* 시험등급 */"
+                    query += ")"
+                    query += "values"
+                    query += "     ( CASE WHEN '"+str(l_apl_id)+"' =  'None' THEN NULL ELSE '"+str(l_apl_id)+"' END         /* 학번 */"
+                    query += "     ,CASE WHEN '"+str(l_apl_nm)+"' =  'None' THEN NULL ELSE '"+str(l_apl_nm)+"' END         /* 성명 */"
+                    query += "     ,CASE WHEN '"+str(l_lang_kind_cd)+"' =  'None' THEN NULL ELSE '"+str(l_lang_kind_cd)+"' END   /* 어학종류코드 */"
+                    query += "     ,CASE WHEN '"+str(l_lang_kind_nm)+"' =  'None' THEN NULL ELSE '"+str(l_lang_kind_nm)+"' END   /* 어학종류명 */"
+                    query += "     ,CASE WHEN '"+str(l_lang_cd)+"' =  'None' THEN NULL ELSE '"+str(l_lang_cd)+"' END        /* 어학상위코드 */"
+                    query += "     ,CASE WHEN '"+str(l_lang_nm)+"' =  'None' THEN NULL ELSE '"+str(l_lang_nm)+"' END        /* 어학상위코드명 */"
+                    query += "     ,CASE WHEN '"+str(l_lang_detail_cd)+"' =  'None' THEN NULL ELSE '"+str(l_lang_detail_cd)+"' END /* 어학하위코드 */"
+                    query += "     ,CASE WHEN '"+str(l_lang_detail_nm)+"' =  'None' THEN NULL ELSE '"+str(l_lang_detail_nm)+"' END /* 어학하위코드명 */"
+                    query += "     ,CASE WHEN '"+str(l_frexm_nm)+"' =  'None' THEN NULL ELSE '"+str(l_frexm_nm)+"' END       /* 외국어시험명 */"
+                    query += "     ,CASE WHEN '"+str(l_score)+"' =  'None' THEN NULL ELSE '"+str(l_score)+"' END          /* 시험점수 */"
+                    query += "     ,CASE WHEN '"+str(l_grade)+"' =  'None' THEN NULL ELSE '"+str(l_grade)+"' END          /* 시험등급 */"
+                    # query += "     ,CASE WHEN '"+str(l_ins_id)+"' =  'None' THEN NULL ELSE '"+str(l_ins_id)+"' END         /* 입력자id */"
+                    # query += "     ,CASE WHEN '"+str(l_ins_ip)+"' =  'None' THEN NULL ELSE '"+str(l_ins_ip)+"' END         /* 입력자ip */"
+                    # query += "     ,CASE WHEN '"+str(l_ins_dt)+"' =  'None' THEN NULL ELSE '"+str(l_ins_dt)+"' END         /* 입력일시 */"
+                    # query += "     ,CASE WHEN '"+str(l_ins_pgm)+"' =  'None' THEN NULL ELSE '"+str(l_ins_pgm)+"' END        /* 입력프로그램id */"
+                    # query += "     ,CASE WHEN '"+str(l_upd_id)+"' =  'None' THEN NULL ELSE '"+str(l_upd_id)+"' END         /* 수정자id */"
+                    # query += "     ,CASE WHEN '"+str(l_upd_ip)+"' =  'None' THEN NULL ELSE '"+str(l_upd_ip)+"' END         /* 수정자ip */"
+                    # query += "     ,CASE WHEN '"+str(l_upd_dt)+"' =  'None' THEN NULL ELSE '"+str(l_upd_dt)+"' END         /* 수정일시 */"
+                    # query += "     ,CASE WHEN '"+str(l_upd_pgm)+"' =  'None' THEN NULL ELSE '"+str(l_upd_pgm)+"' END        /* 수정프로그램id */"
+                    query += ")"
                     cursor3 = connection.cursor()
                     query_result = cursor3.execute(query)    
                     # insert(어학)
@@ -133,21 +133,21 @@ def login_login(request):
                 ########################################################################
                 # 봉사 - 시작
                 ########################################################################
-                query = "select t3.apl_id          /* 학번 */";
-                query += "     , t3.apl_nm          /* 성명 */";
-                query += "     , t3.nation_inout_cd /* 국내외구분코드 */";
-                query += "     , t3.nation_inout_nm /* 국내외구분명 */";
-                query += "     , t3.sch_inout_cd    /* 교내외구분코드 */";
-                query += "     , t3.sch_inout_nm    /* 교내외구분명 */";
-                query += "     , t3.activity_nm     /* 봉사명 */";
-                query += "     , t3.manage_org_nm   /* 주관기관명 */";
-                query += "     , t3.start_date      /* 시작일자 */";
-                query += "     , t3.start_time      /* 시작시간 */";
-                query += "     , t3.end_date        /* 종료일자 */";
-                query += "     , t3.end_time        /* 종료시간 */";
-                query += "     , t3.tot_time        /* 총시간 */";
-                query += "  from service20_vw_nanum_service_activ t3     /* 학생 봉사 시간 view(임시) */";
-                query += " where 1=1";
+                query = "select t3.apl_id          /* 학번 */"
+                query += "     , t3.apl_nm          /* 성명 */"
+                query += "     , t3.nation_inout_cd /* 국내외구분코드 */"
+                query += "     , t3.nation_inout_nm /* 국내외구분명 */"
+                query += "     , t3.sch_inout_cd    /* 교내외구분코드 */"
+                query += "     , t3.sch_inout_nm    /* 교내외구분명 */"
+                query += "     , t3.activity_nm     /* 봉사명 */"
+                query += "     , t3.manage_org_nm   /* 주관기관명 */"
+                query += "     , t3.start_date      /* 시작일자 */"
+                query += "     , t3.start_time      /* 시작시간 */"
+                query += "     , t3.end_date        /* 종료일자 */"
+                query += "     , t3.end_time        /* 종료시간 */"
+                query += "     , t3.tot_time        /* 총시간 */"
+                query += "  from service20_vw_nanum_service_activ t3     /* 학생 봉사 시간 view(임시) */"
+                query += " where 1=1"
                 query += " and t3.apl_id='"+v_userid+"'" 
                 conn = pymssql.connect(server='192.168.2.124', user='nanum', password='n@num*!@', database='hakjuk', port='1221')
                 cursor = conn.cursor()   
@@ -175,52 +175,52 @@ def login_login(request):
                     # 삭제 (봉사)
 
                     # insert(봉사)
-                    query = "insert into service20_vw_nanum_service_activ     -- 학생 봉사 시간 view(임시)";
-                    query += "   ( apl_id          /* 학번 */";
-                    query += "     , apl_nm          /* 성명 */";
-                    query += "     , nation_inout_cd /* 국내외구분코드 */";
-                    query += "     , nation_inout_nm /* 국내외구분명 */";
-                    query += "     , sch_inout_cd    /* 교내외구분코드 */";
-                    query += "     , sch_inout_nm    /* 교내외구분명 */";
-                    query += "     , activity_nm     /* 봉사명 */";
-                    query += "     , manage_org_nm   /* 주관기관명 */";
-                    query += "     , start_date      /* 시작일자 */";
-                    query += "     , start_time      /* 시작시간 */";
-                    query += "     , end_date        /* 종료일자 */";
-                    query += "     , end_time        /* 종료시간 */";
-                    query += "     , tot_time        /* 총시간 */";
-                    # query += "     , ins_id          /* 입력자id */";
-                    # query += "     , ins_ip          /* 입력자ip */";
-                    # query += "     , ins_dt          /* 입력일시 */";
-                    # query += "     , ins_pgm         /* 입력프로그램id */";
-                    # query += "     , upd_id          /* 수정자id */";
-                    # query += "     , upd_ip          /* 수정자ip */";
-                    # query += "     , upd_dt          /* 수정일시 */";
-                    # query += "     , upd_pgm         /* 수정프로그램id */";
-                    query += ")";
-                    query += "values";
-                    query += "     ( CASE WHEN '"+str(l_apl_id)+"' =  'None' THEN NULL ELSE '"+str(l_apl_id)+"' END         /* 학번 */";
-                    query += "     ,CASE WHEN '"+str(l_apl_nm)+"' =  'None' THEN NULL ELSE '"+str(l_apl_nm)+"' END         /* 성명 */";
-                    query += "     , CASE WHEN '"+str(l_nation_inout_cd)+"' =  'None' THEN NULL ELSE '"+str(l_nation_inout_cd)+"' END /* 국내외구분코드 */";
-                    query += "     , CASE WHEN '"+str(l_nation_inout_nm)+"' =  'None' THEN NULL ELSE '"+str(l_nation_inout_nm)+"' END /* 국내외구분명 */";
-                    query += "     , CASE WHEN '"+str(l_sch_inout_cd)+"' =  'None' THEN NULL ELSE '"+str(l_sch_inout_cd)+"' END    /* 교내외구분코드 */";
-                    query += "     , CASE WHEN '"+str(l_sch_inout_nm)+"' =  'None' THEN NULL ELSE '"+str(l_sch_inout_nm)+"' END    /* 교내외구분명 */";
-                    query += "     , CASE WHEN '"+str(l_activity_nm)+"' =  'None' THEN NULL ELSE '"+str(l_activity_nm)+"'END     /* 봉사명 */";
-                    query += "     , CASE WHEN '"+str(l_manage_org_nm)+"' =  'None' THEN NULL ELSE '"+str(l_manage_org_nm)+"' END   /* 주관기관명 */";
-                    query += "     , CASE WHEN '"+str(l_start_date)+"' =  'None' THEN NULL ELSE '"+str(l_start_date)+"' END      /* 시작일자 */";
-                    query += "     , CASE WHEN '"+str(l_start_time)+"' =  'None' THEN NULL ELSE '"+str(l_start_time)+"' END      /* 시작시간 */";
-                    query += "     , CASE WHEN '"+str(l_end_date)+"' =  'None' THEN NULL ELSE '"+str(l_end_date)+"' END        /* 종료일자 */";
-                    query += "     , CASE WHEN '"+str(l_end_time)+"' =  'None' THEN NULL ELSE  '"+str(l_end_time)+"' END       /* 종료시간 */";
-                    query += "     , CASE WHEN '"+str(l_tot_time)+"' =  'None' THEN NULL ELSE '"+str(l_tot_time)+"' END        /* 총시간 */";
-                    # query += "     , CASE WHEN '"+str(l_ins_id)+"' =  'None' THEN NULL ELSE '"+str(l_ins_id)+"' END          /* 입력자id */";
-                    # query += "     , CASE WHEN '"+str(l_ins_ip)+"' =  'None' THEN NULL ELSE '"+str(l_ins_ip)+"' END          /* 입력자ip */";
-                    # query += "     , CASE WHEN '"+str(l_ins_dt)+"' =  'None' THEN NULL ELSE '"+str(l_ins_ip)+"' END          /* 입력일시 */";
-                    # query += "     , CASE WHEN '"+str(l_ins_pgm)+"' =  'None' THEN NULL ELSE '"+str(l_ins_pgm)+"' END         /* 입력프로그램id */";
-                    # query += "     , CASE WHEN '"+str(l_upd_id)+"' =  'None' THEN NULL ELSE '"+str(l_upd_id)+"' END          /* 수정자id */";
-                    # query += "     , CASE WHEN '"+str(l_upd_ip)+"' =  'None' THEN NULL ELSE '"+str(l_upd_ip)+"' END          /* 수정자ip */";
-                    # query += "     , CASE WHEN '"+str(l_upd_dt)+"' =  'None' THEN NULL ELSE '"+str(l_upd_dt)+"' END          /* 수정일시 */";
-                    # query += "     , CASE WHEN '"+str(l_upd_pgm)+"' =  'None' THEN NULL ELSE '"+str(l_upd_pgm)+"' END         /* 수정프로그램id */";
-                    query += ")";
+                    query = "insert into service20_vw_nanum_service_activ     -- 학생 봉사 시간 view(임시)"
+                    query += "   ( apl_id          /* 학번 */"
+                    query += "     , apl_nm          /* 성명 */"
+                    query += "     , nation_inout_cd /* 국내외구분코드 */"
+                    query += "     , nation_inout_nm /* 국내외구분명 */"
+                    query += "     , sch_inout_cd    /* 교내외구분코드 */"
+                    query += "     , sch_inout_nm    /* 교내외구분명 */"
+                    query += "     , activity_nm     /* 봉사명 */"
+                    query += "     , manage_org_nm   /* 주관기관명 */"
+                    query += "     , start_date      /* 시작일자 */"
+                    query += "     , start_time      /* 시작시간 */"
+                    query += "     , end_date        /* 종료일자 */"
+                    query += "     , end_time        /* 종료시간 */"
+                    query += "     , tot_time        /* 총시간 */"
+                    # query += "     , ins_id          /* 입력자id */"
+                    # query += "     , ins_ip          /* 입력자ip */"
+                    # query += "     , ins_dt          /* 입력일시 */"
+                    # query += "     , ins_pgm         /* 입력프로그램id */"
+                    # query += "     , upd_id          /* 수정자id */"
+                    # query += "     , upd_ip          /* 수정자ip */"
+                    # query += "     , upd_dt          /* 수정일시 */"
+                    # query += "     , upd_pgm         /* 수정프로그램id */"
+                    query += ")"
+                    query += "values"
+                    query += "     ( CASE WHEN '"+str(l_apl_id)+"' =  'None' THEN NULL ELSE '"+str(l_apl_id)+"' END         /* 학번 */"
+                    query += "     ,CASE WHEN '"+str(l_apl_nm)+"' =  'None' THEN NULL ELSE '"+str(l_apl_nm)+"' END         /* 성명 */"
+                    query += "     , CASE WHEN '"+str(l_nation_inout_cd)+"' =  'None' THEN NULL ELSE '"+str(l_nation_inout_cd)+"' END /* 국내외구분코드 */"
+                    query += "     , CASE WHEN '"+str(l_nation_inout_nm)+"' =  'None' THEN NULL ELSE '"+str(l_nation_inout_nm)+"' END /* 국내외구분명 */"
+                    query += "     , CASE WHEN '"+str(l_sch_inout_cd)+"' =  'None' THEN NULL ELSE '"+str(l_sch_inout_cd)+"' END    /* 교내외구분코드 */"
+                    query += "     , CASE WHEN '"+str(l_sch_inout_nm)+"' =  'None' THEN NULL ELSE '"+str(l_sch_inout_nm)+"' END    /* 교내외구분명 */"
+                    query += "     , CASE WHEN '"+str(l_activity_nm)+"' =  'None' THEN NULL ELSE '"+str(l_activity_nm)+"'END     /* 봉사명 */"
+                    query += "     , CASE WHEN '"+str(l_manage_org_nm)+"' =  'None' THEN NULL ELSE '"+str(l_manage_org_nm)+"' END   /* 주관기관명 */"
+                    query += "     , CASE WHEN '"+str(l_start_date)+"' =  'None' THEN NULL ELSE '"+str(l_start_date)+"' END      /* 시작일자 */"
+                    query += "     , CASE WHEN '"+str(l_start_time)+"' =  'None' THEN NULL ELSE '"+str(l_start_time)+"' END      /* 시작시간 */"
+                    query += "     , CASE WHEN '"+str(l_end_date)+"' =  'None' THEN NULL ELSE '"+str(l_end_date)+"' END        /* 종료일자 */"
+                    query += "     , CASE WHEN '"+str(l_end_time)+"' =  'None' THEN NULL ELSE  '"+str(l_end_time)+"' END       /* 종료시간 */"
+                    query += "     , CASE WHEN '"+str(l_tot_time)+"' =  'None' THEN NULL ELSE '"+str(l_tot_time)+"' END        /* 총시간 */"
+                    # query += "     , CASE WHEN '"+str(l_ins_id)+"' =  'None' THEN NULL ELSE '"+str(l_ins_id)+"' END          /* 입력자id */"
+                    # query += "     , CASE WHEN '"+str(l_ins_ip)+"' =  'None' THEN NULL ELSE '"+str(l_ins_ip)+"' END          /* 입력자ip */"
+                    # query += "     , CASE WHEN '"+str(l_ins_dt)+"' =  'None' THEN NULL ELSE '"+str(l_ins_ip)+"' END          /* 입력일시 */"
+                    # query += "     , CASE WHEN '"+str(l_ins_pgm)+"' =  'None' THEN NULL ELSE '"+str(l_ins_pgm)+"' END         /* 입력프로그램id */"
+                    # query += "     , CASE WHEN '"+str(l_upd_id)+"' =  'None' THEN NULL ELSE '"+str(l_upd_id)+"' END          /* 수정자id */"
+                    # query += "     , CASE WHEN '"+str(l_upd_ip)+"' =  'None' THEN NULL ELSE '"+str(l_upd_ip)+"' END          /* 수정자ip */"
+                    # query += "     , CASE WHEN '"+str(l_upd_dt)+"' =  'None' THEN NULL ELSE '"+str(l_upd_dt)+"' END          /* 수정일시 */"
+                    # query += "     , CASE WHEN '"+str(l_upd_pgm)+"' =  'None' THEN NULL ELSE '"+str(l_upd_pgm)+"' END         /* 수정프로그램id */"
+                    query += ")"
                     cursor4 = connection.cursor()
                     query_result = cursor4.execute(query)    
                     # insert(봉사)
@@ -229,47 +229,47 @@ def login_login(request):
                 ########################################################################
 
                 # 로그인처리 - 시작                
-                query = "select t3.apl_id      /* 학번 */ ";
-                query += "     , t3.apl_nm      /* 성명 */ ";
-                query += "     , t3.apl_nm_e    /* 성명_영문 */ ";
-                query += "     , t3.unv_cd      /* 대학교코드 */ ";
-                query += "     , t3.unv_nm      /* 대학교명 */ ";
-                query += "     , t3.grad_div_cd /* 대학원구분코드 */ ";
-                query += "     , t3.grad_div_nm /* 대학원구분명 */ ";
-                query += "     , t3.cllg_cd     /* 대학코드 */ ";
-                query += "     , t3.cllg_nm     /* 대학명 */ ";
-                query += "     , t3.dept_cd     /* 학과코드 */ ";
-                query += "     , t3.dept_nm     /* 학과명 */ ";
-                query += "     , t3.mjr_cd      /* 전공코드 */ ";
-                query += "     , t3.mjr_nm      /* 전공명 */ ";
-                query += "     , t3.brth_dt     /* 생년월일 */ ";
-                query += "     , t3.gen_cd      /* 성별코드 */ ";
-                query += "     , t3.gen_nm      /* 성별명 */ ";
-                query += "     , t3.yr          /* 학년도 */ ";
-                query += "     , t3.sch_yr      /* 학년 */ ";
-                query += "     , t3.term_div    /* 학기코드 */ ";
-                query += "     , t3.term_nm     /* 학기명 */ ";
-                query += "     , t3.stds_div    /* 학적상태코드 */ ";
-                query += "     , t3.stds_nm     /* 학적상태명 */ ";
-                query += "     , t3.mob_no      /* 휴대전화번호 */ ";
-                query += "     , t3.tel_no      /* 집전화 */ ";
-                query += "     , t3.tel_no_g    /* 보호자연락처 */ ";
-                query += "     , t3.h_addr      /* 집주소 */ ";
-                query += "     , t3.post_no     /* 우편번호 */ ";
-                query += "     , t3.email_addr  /* 이메일주소 */ ";
-                query += "     , t3.bank_acct   /* 은행계좌번호 */ ";
-                query += "     , t3.bank_cd     /* 은행코드 */ ";
-                query += "     , t3.bank_nm     /* 은행명 */ ";
-                query += "     , t3.bank_dpsr   /* 예금주 */ ";
-                query += "     , t3.pr_yr       /* 직전 학년도 */ ";
-                query += "     , t3.pr_sch_yr   /* 직전 학년 */ ";
-                query += "     , t3.pr_term_div /* 직전학기코드 */ ";
-                query += "     , t3.score01     /* 직전학기 석차 */ ";
-                query += "     , t3.score02     /* 직전학기 총원 */ ";
-                query += "     , t3.score03     /* 직전학기 학점 */ ";
-                query += "     , t3.score04     /* 봉사점수합계 */ ";
-                query += "     , t3.score05     /* 자격증 개수 */ ";
-                query += " from vw_nanum_stdt t3     /* 부산대학교 학생 정보 */ ";              
+                query = "select t3.apl_id      /* 학번 */ "
+                query += "     , t3.apl_nm      /* 성명 */ "
+                query += "     , t3.apl_nm_e    /* 성명_영문 */ "
+                query += "     , t3.unv_cd      /* 대학교코드 */ "
+                query += "     , t3.unv_nm      /* 대학교명 */ "
+                query += "     , t3.grad_div_cd /* 대학원구분코드 */ "
+                query += "     , t3.grad_div_nm /* 대학원구분명 */ "
+                query += "     , t3.cllg_cd     /* 대학코드 */ "
+                query += "     , t3.cllg_nm     /* 대학명 */ "
+                query += "     , t3.dept_cd     /* 학과코드 */ "
+                query += "     , t3.dept_nm     /* 학과명 */ "
+                query += "     , t3.mjr_cd      /* 전공코드 */ "
+                query += "     , t3.mjr_nm      /* 전공명 */ "
+                query += "     , t3.brth_dt     /* 생년월일 */ "
+                query += "     , t3.gen_cd      /* 성별코드 */ "
+                query += "     , t3.gen_nm      /* 성별명 */ "
+                query += "     , t3.yr          /* 학년도 */ "
+                query += "     , t3.sch_yr      /* 학년 */ "
+                query += "     , t3.term_div    /* 학기코드 */ "
+                query += "     , t3.term_nm     /* 학기명 */ "
+                query += "     , t3.stds_div    /* 학적상태코드 */ "
+                query += "     , t3.stds_nm     /* 학적상태명 */ "
+                query += "     , t3.mob_no      /* 휴대전화번호 */ "
+                query += "     , t3.tel_no      /* 집전화 */ "
+                query += "     , t3.tel_no_g    /* 보호자연락처 */ "
+                query += "     , t3.h_addr      /* 집주소 */ "
+                query += "     , t3.post_no     /* 우편번호 */ "
+                query += "     , t3.email_addr  /* 이메일주소 */ "
+                query += "     , t3.bank_acct   /* 은행계좌번호 */ "
+                query += "     , t3.bank_cd     /* 은행코드 */ "
+                query += "     , t3.bank_nm     /* 은행명 */ "
+                query += "     , t3.bank_dpsr   /* 예금주 */ "
+                query += "     , t3.pr_yr       /* 직전 학년도 */ "
+                query += "     , t3.pr_sch_yr   /* 직전 학년 */ "
+                query += "     , t3.pr_term_div /* 직전학기코드 */ "
+                query += "     , t3.score01     /* 직전학기 석차 */ "
+                query += "     , t3.score02     /* 직전학기 총원 */ "
+                query += "     , t3.score03     /* 직전학기 학점 */ "
+                query += "     , t3.score04     /* 봉사점수합계 */ "
+                query += "     , t3.score05     /* 자격증 개수 */ "
+                query += " from vw_nanum_stdt t3     /* 부산대학교 학생 정보 */ "              
                 query += " where t3.apl_id='"+v_userid+"'" 
                 # query += " where t3.apl_id='201866148'"                 
                 conn = pymssql.connect(server='192.168.2.124', user='nanum', password='n@num*!@', database='hakjuk', port='1221')
@@ -2409,10 +2409,10 @@ class MP0103M_v1(generics.ListAPIView):
 
         queryset = self.get_queryset()
 
-        query = " select t1.mp_id,t1.mnt_fr_dt";
-        query += "      , t1.mnt_to_dt";
-        query += "   from service20_mpgm t1";
-        query += "  where t1.mp_id  = '" + mp_id +"'";
+        query = " select t1.mp_id,t1.mnt_fr_dt"
+        query += "      , t1.mnt_to_dt"
+        query += "   from service20_mpgm t1"
+        query += "  where t1.mp_id  = '" + mp_id +"'"
 
         
 
@@ -2826,79 +2826,79 @@ def MP0103M_Insert(request):
     for i in range(1,row_mnt_dt_cnt):
         
         # /* 계획서 최초 작성 시 보고서 insert */
-        # /* 화면으로부터 넘겨받은 mnt_dt_cnt로 for(i = 1; i < mnt_dt_cnt; i++) */
+        # /* 화면으로부터 넘겨받은 mnt_dt_cnt로 for(i = 1 i < mnt_dt_cnt i++) */
         # /* MP0103M/insert 시 같이 수행되게 해주세요 */
-        query += "insert into service20_mp_rep (";
-        query += "  mp_id";
-        query += ", apl_no";
-        query += ", rep_no";
-        query += ", rep_div";
-        query += ", rep_ym";
-        query += ", mnte_id";
-        query += ", mnte_nm";
-        query += ", tchr_id";
-        query += ", tchr_nm";
-        query += ", sch_nm";
-        query += ", mtr_sub";
-        query += ", att_desc";
-        query += ", rep_ttl";
-        query += ", mtr_obj";
-        query += ", rep_dt";
-        query += ", req_dt";
-        query += ", mtr_desc";
-        query += ", coatching";
-        query += ", spcl_note";
-        query += ", mtr_revw";
-        query += ", appr_id";
-        query += ", appr_nm";
-        query += ", appr_dt";
-        query += ", mgr_id";
-        query += ", mgr_dt";
-        query += ", status";
-        query += ", ins_id";
-        query += ", ins_ip";
-        query += ", ins_dt";
-        query += ", ins_pgm";
-        query += ", upd_id";
-        query += ", upd_ip";
-        query += ", upd_dt";
-        query += ", upd_pgm";
-        query += ")";
-        query += "select t1.mp_id  as mp_id";
-        query += "     , t1.apl_no as apl_no";
-        query += "     , '" + i + "''        as rep_no /* {!i} */";
-        query += "     , 'M'       as rep_div /*m - 교육 */";
-        query += "     , '" + str(rep_ym) + "'  as rep_ym /* {!rep_ym} */";
-        query += "     , null      as mnte_id";
-        query += "     , null      as mnte_nm";
-        query += "     , null      as tchr_id";
-        query += "     , null      as tchr_nm";
-        query += "     , null      as sch_nm";
-        query += "     , null      as mtr_sub";
-        query += "     , null      as att_desc";
-        query += "     , concat(date_format(date(t1.mnt_fr_dt + interval "+i+"-1 month), '%%y'), '년 ', date_format(date(t1.mnt_fr_dt + interval "+i+"-1 month), '%%m'), '월 보고서') as rep_ttl";
-        query += "     , null      as mtr_obj";
-        query += "     , null      as rep_dt";
-        query += "     , null      as req_dt";
-        query += "     , null      as mtr_desc";
-        query += "     , null      as coatching";
-        query += "     , null      as spcl_note";
-        query += "     , null      as mtr_revw";
-        query += "     , null      as appr_id";
-        query += "     , null      as appr_nm";
-        query += "     , null      as appr_dt";
-        query += "     , null      as mgr_id";
-        query += "     , null      as mgr_dt";
-        query += "     , '00'      as status";
-        query += "     , '" + str(ins_id) + "' as ins_id   /* {!login_id} */";
-        query += "     , '" + str(ins_ip) + "' as ins_ip   /* {!ins_ip} */";
-        query += "     , now()     as ins_dt";
-        query += "     , '" + str(ins_pgm) + "'   as ins_pgm  /* {!ins_pgm} */";
-        query += "     , '" + str(upd_id) + "' as upd_id";
-        query += "     , '" + str(upd_ip) + "' as upd_ip";
-        query += "     , now() as upd_dt";
-        query += "     , '" + str(upd_pgm) + "' as upd_pgm";
-        query += "  from service20_mp_mtr t1";
+        query += "insert into service20_mp_rep ("
+        query += "  mp_id"
+        query += ", apl_no"
+        query += ", rep_no"
+        query += ", rep_div"
+        query += ", rep_ym"
+        query += ", mnte_id"
+        query += ", mnte_nm"
+        query += ", tchr_id"
+        query += ", tchr_nm"
+        query += ", sch_nm"
+        query += ", mtr_sub"
+        query += ", att_desc"
+        query += ", rep_ttl"
+        query += ", mtr_obj"
+        query += ", rep_dt"
+        query += ", req_dt"
+        query += ", mtr_desc"
+        query += ", coatching"
+        query += ", spcl_note"
+        query += ", mtr_revw"
+        query += ", appr_id"
+        query += ", appr_nm"
+        query += ", appr_dt"
+        query += ", mgr_id"
+        query += ", mgr_dt"
+        query += ", status"
+        query += ", ins_id"
+        query += ", ins_ip"
+        query += ", ins_dt"
+        query += ", ins_pgm"
+        query += ", upd_id"
+        query += ", upd_ip"
+        query += ", upd_dt"
+        query += ", upd_pgm"
+        query += ")"
+        query += "select t1.mp_id  as mp_id"
+        query += "     , t1.apl_no as apl_no"
+        query += "     , '" + i + "''        as rep_no /* {!i} */"
+        query += "     , 'M'       as rep_div /*m - 교육 */"
+        query += "     , '" + str(rep_ym) + "'  as rep_ym /* {!rep_ym} */"
+        query += "     , null      as mnte_id"
+        query += "     , null      as mnte_nm"
+        query += "     , null      as tchr_id"
+        query += "     , null      as tchr_nm"
+        query += "     , null      as sch_nm"
+        query += "     , null      as mtr_sub"
+        query += "     , null      as att_desc"
+        query += "     , concat(date_format(date(t1.mnt_fr_dt + interval "+i+"-1 month), '%%y'), '년 ', date_format(date(t1.mnt_fr_dt + interval "+i+"-1 month), '%%m'), '월 보고서') as rep_ttl"
+        query += "     , null      as mtr_obj"
+        query += "     , null      as rep_dt"
+        query += "     , null      as req_dt"
+        query += "     , null      as mtr_desc"
+        query += "     , null      as coatching"
+        query += "     , null      as spcl_note"
+        query += "     , null      as mtr_revw"
+        query += "     , null      as appr_id"
+        query += "     , null      as appr_nm"
+        query += "     , null      as appr_dt"
+        query += "     , null      as mgr_id"
+        query += "     , null      as mgr_dt"
+        query += "     , '00'      as status"
+        query += "     , '" + str(ins_id) + "' as ins_id   /* {!login_id} */"
+        query += "     , '" + str(ins_ip) + "' as ins_ip   /* {!ins_ip} */"
+        query += "     , now()     as ins_dt"
+        query += "     , '" + str(ins_pgm) + "'   as ins_pgm  /* {!ins_pgm} */"
+        query += "     , '" + str(upd_id) + "' as upd_id"
+        query += "     , '" + str(upd_ip) + "' as upd_ip"
+        query += "     , now() as upd_dt"
+        query += "     , '" + str(upd_pgm) + "' as upd_pgm"
+        query += "  from service20_mp_mtr t1"
         query += " where t1.mp_id  = '" + str(mp_id) + "'"
         query += "   and t1.apl_id = '" + str(apl_id) + "' /* {!apl_id} */"
 
@@ -3598,96 +3598,96 @@ class MP0105M_detail_2(generics.ListAPIView):
         queryset = self.get_queryset()
 
         # /*보고서 상세*/
-        query = "select t2.id,t1.mp_id       /* 멘토링 프로그램id   */ ";
-        query += "     , t2.rep_div     /* 보고서 구분(mp0062) */";
-        query += "     , t2.rep_ttl     /* 보고서 제목 : 내용  */";
-        query += "     , (select std_detl_code_nm ";
-        query += "          from service20_com_cdd ";
-        query += "         where std_grp_code  = 'mp0062' ";
-        query += "           and std_detl_code = t2.rep_div)   as rep_div_nm     ";
-        query += "     , concat(t1.apl_id, '/', t1.apl_nm)     as apl_m       /* 지원자(멘토,학생) 명*/ ";
-        query += "     , t3.tchr_id     /* 지도교사 id */";
-        query += "     , t3.tchr_nm  as teacher   /* 지도교사 명 */     ";
-        query += "     , t3.mnte_id     /* 멘티id */ ";
-        query += "     , t3.mnte_nm  as mte_nm";
-        query += "     , t3.sch_yr      /* 학교명/학년 */ ";
-        query += "     , t3.mtr_sub  as obj_sub   /* 지도과목 */ ";
-        query += "     , (select concat(count(*), '회 ', ifnull(sum(s1.appr_tm), 0), '시간') ";
-        query += "         from service20_mp_att s1 ";
-        query += "        where s1.mp_id = t1.mp_id ";
-        query += "          and s1.apl_no = t1.apl_no ";
-        query += "          and ";
-        query += "              (";
-        query += "                  s1.att_sdt >= concat(t2.rep_ym, '01') ";
-        query += "              and s1.att_sdt  < concat(date_format(date(concat(t2.rep_ym, '01') + interval 1 month), '%%y%%m'), '01')";
-        query += "              ) ";
-        query += "       ) as aaa   /*출석현황*/  ";
-        query += "     , null as rep_dt ";
-        query += "     , null as req_dt              ";
-        query += "     , t3.tchr_id as appr_id ";
-        query += "     , t3.tchr_nm as appr_nm ";
-        query += "     , null       as appr_dt ";
-        query += "     , t4.mgr_id  as mgr_id ";
-        query += "     , null       as mgr_dt";
-        query += "     , t2.status ";
-        query += "     , c1.std_detl_code_nm as status_nm     ";
-        query += "     , t2.mtr_obj ";
-        query += "     , '' as mtr_desc ";
-        query += "     , '' as coatching ";
-        query += "     , '' as spcl_note ";
-        query += "     , '' as mtr_revw    ";
-        query += "     ";
-        query += "     , t1.apl_no ";
-        query += "     , t1.apl_id ";
-        query += "     , t2.rep_no ";
-        query += "     , t2.rep_ym ";
-        query += "  from service20_mp_mtr t1 ";
-        query += "   left join service20_mp_rep t2 ";
-        query += "       on (";
-        query += "           t2.mp_id = t1.mp_id ";
-        query += "       and t2.apl_no = t1.apl_no";
-        query += "       ) ";
-        query += "   left join service20_mpgm t4 ";
-        query += "       on (";
-        query += "           t4.mp_id = t1.mp_id";
-        query += "       ) ";
-        query += "   left join ";
-        query += "       (select distinct s2.tchr_id  ";
-        query += "            , s2.tchr_nm  ";
-        query += "            , s2.mnte_id  ";
-        query += "            , s2.mnte_nm ";
-        query += "            , concat(s2.sch_nm, '/', s2.sch_yr, '학년') as sch_yr /* 학교명/학년 */ ";
-        query += "            , s3.mtr_sub /* 지도과목 */";
-        query += "            , truncate(rand()*7 + 1, 0) as att_desc  ";
-        query += "            , s3.mtr_obj ";
-        query += "            , s1.mp_id ";
-        query += "            , s1.apl_no ";
-        query += "            , s1.apl_id ";
-        query += "         from service20_mp_mtr s1 ";
-        query += "          left join service20_mp_mte s2 ";
-        query += "              on (";
-        query += "                  s2.mp_id = s1.mp_id ";
-        query += "              and s2.apl_no = s1.apl_no";
-        query += "              ) ";
-        query += "          left join service20_mp_plnh s3 ";
-        query += "              on (";
-        query += "                  s3.mp_id = s1.mp_id ";
-        query += "              and s3.apl_no = s1.apl_no";
-        query += "              ) ";
-        query += "       ) t3 ";
-        query += "       on (";
-        query += "           t3.mp_id = t1.mp_id ";
-        query += "       and t3.apl_no = t1.apl_no";
-        query += "       ) ";
-        query += "   left join service20_com_cdd c1 ";
-        query += "       on (";
-        query += "           c1.std_grp_code = 'mp0070'  ";
-        query += "       and c1.std_detl_code = t2.status";
-        query += "       ) ";
-        query += " where t1.mp_id = '"+str(mp_id)+"' ";
-        query += "   and t1.apl_id = '"+str(apl_id)+"' ";
-        query += "   and t2.status = '00' ";
-        query += "   and t2.rep_ym = '"+str(rep_ym)+"'";
+        query = "select t2.id,t1.mp_id       /* 멘토링 프로그램id   */ "
+        query += "     , t2.rep_div     /* 보고서 구분(mp0062) */"
+        query += "     , t2.rep_ttl     /* 보고서 제목 : 내용  */"
+        query += "     , (select std_detl_code_nm "
+        query += "          from service20_com_cdd "
+        query += "         where std_grp_code  = 'mp0062' "
+        query += "           and std_detl_code = t2.rep_div)   as rep_div_nm     "
+        query += "     , concat(t1.apl_id, '/', t1.apl_nm)     as apl_m       /* 지원자(멘토,학생) 명*/ "
+        query += "     , t3.tchr_id     /* 지도교사 id */"
+        query += "     , t3.tchr_nm  as teacher   /* 지도교사 명 */     "
+        query += "     , t3.mnte_id     /* 멘티id */ "
+        query += "     , t3.mnte_nm  as mte_nm"
+        query += "     , t3.sch_yr      /* 학교명/학년 */ "
+        query += "     , t3.mtr_sub  as obj_sub   /* 지도과목 */ "
+        query += "     , (select concat(count(*), '회 ', ifnull(sum(s1.appr_tm), 0), '시간') "
+        query += "         from service20_mp_att s1 "
+        query += "        where s1.mp_id = t1.mp_id "
+        query += "          and s1.apl_no = t1.apl_no "
+        query += "          and "
+        query += "              ("
+        query += "                  s1.att_sdt >= concat(t2.rep_ym, '01') "
+        query += "              and s1.att_sdt  < concat(date_format(date(concat(t2.rep_ym, '01') + interval 1 month), '%%y%%m'), '01')"
+        query += "              ) "
+        query += "       ) as aaa   /*출석현황*/  "
+        query += "     , null as rep_dt "
+        query += "     , null as req_dt              "
+        query += "     , t3.tchr_id as appr_id "
+        query += "     , t3.tchr_nm as appr_nm "
+        query += "     , null       as appr_dt "
+        query += "     , t4.mgr_id  as mgr_id "
+        query += "     , null       as mgr_dt"
+        query += "     , t2.status "
+        query += "     , c1.std_detl_code_nm as status_nm     "
+        query += "     , t2.mtr_obj "
+        query += "     , '' as mtr_desc "
+        query += "     , '' as coatching "
+        query += "     , '' as spcl_note "
+        query += "     , '' as mtr_revw    "
+        query += "     "
+        query += "     , t1.apl_no "
+        query += "     , t1.apl_id "
+        query += "     , t2.rep_no "
+        query += "     , t2.rep_ym "
+        query += "  from service20_mp_mtr t1 "
+        query += "   left join service20_mp_rep t2 "
+        query += "       on ("
+        query += "           t2.mp_id = t1.mp_id "
+        query += "       and t2.apl_no = t1.apl_no"
+        query += "       ) "
+        query += "   left join service20_mpgm t4 "
+        query += "       on ("
+        query += "           t4.mp_id = t1.mp_id"
+        query += "       ) "
+        query += "   left join "
+        query += "       (select distinct s2.tchr_id  "
+        query += "            , s2.tchr_nm  "
+        query += "            , s2.mnte_id  "
+        query += "            , s2.mnte_nm "
+        query += "            , concat(s2.sch_nm, '/', s2.sch_yr, '학년') as sch_yr /* 학교명/학년 */ "
+        query += "            , s3.mtr_sub /* 지도과목 */"
+        query += "            , truncate(rand()*7 + 1, 0) as att_desc  "
+        query += "            , s3.mtr_obj "
+        query += "            , s1.mp_id "
+        query += "            , s1.apl_no "
+        query += "            , s1.apl_id "
+        query += "         from service20_mp_mtr s1 "
+        query += "          left join service20_mp_mte s2 "
+        query += "              on ("
+        query += "                  s2.mp_id = s1.mp_id "
+        query += "              and s2.apl_no = s1.apl_no"
+        query += "              ) "
+        query += "          left join service20_mp_plnh s3 "
+        query += "              on ("
+        query += "                  s3.mp_id = s1.mp_id "
+        query += "              and s3.apl_no = s1.apl_no"
+        query += "              ) "
+        query += "       ) t3 "
+        query += "       on ("
+        query += "           t3.mp_id = t1.mp_id "
+        query += "       and t3.apl_no = t1.apl_no"
+        query += "       ) "
+        query += "   left join service20_com_cdd c1 "
+        query += "       on ("
+        query += "           c1.std_grp_code = 'mp0070'  "
+        query += "       and c1.std_detl_code = t2.status"
+        query += "       ) "
+        query += " where t1.mp_id = '"+str(mp_id)+"' "
+        query += "   and t1.apl_id = '"+str(apl_id)+"' "
+        query += "   and t2.status = '00' "
+        query += "   and t2.rep_ym = '"+str(rep_ym)+"'"
 
 
         queryset = mp_rep.objects.raw(query)
@@ -3746,6 +3746,7 @@ def MP0105M_update(request,pk):
     obj_sub   = request.POST.get('obj_sub', "")
     aaa       = request.POST.get('aaa', "")
     mte_nm   = request.POST.get('mte_nm', "")
+    status   = request.POST.get('status', "")
 
     update_text = ""
     if pk == 1:
@@ -3757,13 +3758,14 @@ def MP0105M_update(request,pk):
         update_text += " , spcl_note   = '"+str(spcl_note)+"'    /*특이사항*/         "    
         update_text += " , mtr_revw    = '"+str(mtr_revw) +"'    /*소감문*/           "    
 
-        update_text += "     , mnte_id     = '" +mnte_id+"'      /*담당멘티id*/ ";
-        update_text += "     , mnte_nm     = '" +mte_nm+"'      /*담당멘티명*/ ";
-        update_text += "     , tchr_id     = '" +tchr_id+"'      /*담당교사id*/ ";
-        update_text += "     , tchr_nm     = '" +teacher+"'      /*담당교사명*/ ";
-        update_text += "     , sch_nm      = '" +sch_yr+"'       /*학교명*/ ";
-        update_text += "     , mtr_sub     = '" +obj_sub+"'      /*지도과목*/ ";
-        update_text += "     , att_desc    = '" +aaa+"'          /*출석현황*/   ";
+        update_text += " , mnte_id     = '" +mnte_id+"'      /*담당멘티id*/ "
+        update_text += " , mnte_nm     = '" +mte_nm+"'      /*담당멘티명*/ "
+        update_text += " , tchr_id     = '" +tchr_id+"'      /*담당교사id*/ "
+        update_text += " , tchr_nm     = '" +teacher+"'      /*담당교사명*/ "
+        update_text += " , sch_nm      = '" +sch_yr+"'       /*학교명*/ "
+        update_text += " , mtr_sub     = '" +obj_sub+"'      /*지도과목*/ "
+        update_text += " , att_desc    = '" +aaa+"'          /*출석현황*/   "
+        update_text += " , status    = '" +status+"'          /*status*/   "
 
         update_text += " , rep_dt      = now()    /*보고서작성일*/     "    
         update_text += " , upd_id      = '"+str(upd_id)   +"'    /*수정자id*/         "    
@@ -3786,13 +3788,14 @@ def MP0105M_update(request,pk):
         update_text += " , mtr_revw    = '"+str(mtr_revw) +"'    /*소감문*/           "    
         update_text += " , rep_dt      = case rep_dt is null then rep_dt else now() end    /*보고서작성일*/     "    
 
-        update_text += "     , mnte_id     = '" +mnte_id+"'      /*담당멘티id*/ ";
-        update_text += "     , mnte_nm     = '" +mte_nm+"'      /*담당멘티명*/ ";
-        update_text += "     , tchr_id     = '" +tchr_id+"'      /*담당교사id*/ ";
-        update_text += "     , tchr_nm     = '" +teacher+"'      /*담당교사명*/ ";
-        update_text += "     , sch_nm      = '" +sch_yr+"'       /*학교명*/ ";
-        update_text += "     , mtr_sub     = '" +obj_sub+"'      /*지도과목*/ ";
-        update_text += "     , att_desc    = '" +aaa+"'          /*출석현황*/   ";
+        update_text += " , mnte_id     = '" +mnte_id+"'      /*담당멘티id*/ "
+        update_text += " , mnte_nm     = '" +mte_nm+"'      /*담당멘티명*/ "
+        update_text += " , tchr_id     = '" +tchr_id+"'      /*담당교사id*/ "
+        update_text += " , tchr_nm     = '" +teacher+"'      /*담당교사명*/ "
+        update_text += " , sch_nm      = '" +sch_yr+"'       /*학교명*/ "
+        update_text += " , mtr_sub     = '" +obj_sub+"'      /*지도과목*/ "
+        update_text += " , att_desc    = '" +aaa+"'          /*출석현황*/   "
+        update_text += " , status    = '" +status+"'          /*status*/   "
 
         update_text += " , req_dt      = now()    /*승인요청일*/       "
         update_text += " , upd_id      = '"+str(upd_id)   +"'    /*수정자id*/         "    
