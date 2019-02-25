@@ -3478,8 +3478,8 @@ class MP0105M_detail_2(generics.ListAPIView):
         query += "         where std_grp_code  = 'mp0062' ";
         query += "           and std_detl_code = t2.rep_div)   as rep_div_nm     ";
         query += "     , concat(t1.apl_id, '/', t1.apl_nm)     as apl_m       /* 지원자(멘토,학생) 명*/ ";
-        query += "     , t3.tchr_id  as teacher   /* 지도교사 id */";
-        query += "     , t3.tchr_nm     /* 지도교사 명 */     ";
+        query += "     , t3.tchr_id     /* 지도교사 id */";
+        query += "     , t3.tchr_nm  as teacher   /* 지도교사 명 */     ";
         query += "     , t3.mnte_id     /* 멘티id */ ";
         query += "     , t3.mnte_nm  as mte_nm";
         query += "     , t3.sch_yr      /* 학교명/학년 */ ";
