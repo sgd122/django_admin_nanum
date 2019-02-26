@@ -4387,6 +4387,7 @@ def com_upload(request):
     req = request
     DIR = os.getcwd()
     UPLOAD_DIR = str(DIR) + '/media/mp_mtr/'
+    UPLOAD_DIR = '/NANUM/www/img/mp_mtr/'
     if request.method == 'POST':
         l_user_id = request.POST.get("user_id")
         l_mp_id = request.POST.get("mp_id")
@@ -4407,6 +4408,7 @@ def com_upload(request):
 
         cursor = connection.cursor()
         fullFile = str(UPLOAD_DIR) + str(n_filename)
+        fullFile = "/img/mp_mtr/"+ str(n_filename)
         insert_sql = "update service20_mp_mtr set  id_pic = '" + str(fullFile) + "' where mp_id = '"+ str(l_mp_id) + "' and apl_id = '" +  str(l_user_id) +"' "
         print(insert_sql)
         cursor.execute(insert_sql)
