@@ -1116,7 +1116,7 @@ class MS0101M_detail_fe(generics.ListAPIView):
     def list(self, request):
         ida = request.GET.get('user_id', None)
         
-        query = "select t3.apl_id         /* 학번 */"
+        query = "select t3.id,t3.apl_id         /* 학번 */"
         query += "     , t3.apl_nm         /* 성명 */"
         query += "     , t3.lang_kind_cd   /* 어학종류코드 */"
         query += "     , t3.lang_kind_nm   /* 어학종류명 */"
@@ -1159,7 +1159,7 @@ class MS0101M_detail_sa(generics.ListAPIView):
         ida = request.GET.get('user_id', None)
         
 
-        query = "select t3.apl_id          /* 학번 */"
+        query = "select t3.id,t3.apl_id          /* 학번 */"
         query += "     , t3.apl_nm          /* 성명 */"
         query += "     , t3.nation_inout_cd /* 국내외구분코드 */"
         query += "     , t3.nation_inout_nm /* 국내외구분명 */"
