@@ -21,6 +21,8 @@ urlpatterns = [
     # 공통(com)
     #
     ########################################################################################    
+    #파일업로드
+    path('com/upload/', com_upload, name='com_upload'), 
     #리턴URLTest
     path('login/login/', login_login, name='login_login'), 
     #리턴URLTest
