@@ -794,7 +794,7 @@ class com_user_sa(generics.ListAPIView):
             return self.get_paginated_response(serializer.data)
 
         return Response(serializer.data)
-        
+
 #####################################################################################
 # 공통 - END
 #####################################################################################
@@ -3737,7 +3737,7 @@ class MP0105M_detail_2(generics.ListAPIView):
         query += "     , t2.status "
         query += "     , c1.std_detl_code_nm as status_nm     "
         query += "     , t2.mtr_obj "
-        query += "     , '' as mtr_desc "
+        query += "     , fn_mp_att_select_01(t1.mp_id, t1.apl_id, t2.rep_ym ) as mtr_desc ";
         query += "     , '' as coatching "
         query += "     , '' as spcl_note "
         query += "     , '' as mtr_revw    "
