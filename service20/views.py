@@ -47,6 +47,7 @@ def login_login(request):
                 if gbn['value'] == 'False':
                     print('==>false')
                     message = "login_fail"
+                    context = {'login': 'fail',}
                 elif gbn['value'] == 'True':
                     print('==>true')
 
