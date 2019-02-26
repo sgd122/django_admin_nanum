@@ -1975,7 +1975,8 @@ def MP0101M_save(request):
     update_text += "      , (SELECT @curRank := 0) r ";
     update_text += "  WHERE 1=1 ";
     update_text += "    AND t1.apl_id = '"+apl_id+"' ";
-     
+    print("::_FROM_vw_nanum_foreign_exam::")
+    print(update_text) 
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)    
 
@@ -2028,7 +2029,8 @@ def MP0101M_save(request):
     update_text += "     , (SELECT @curRank := 0) r ";
     update_text += " WHERE 1=1 ";
     update_text += "   AND t1.apl_id = '"+apl_id+"' ";
-    
+    print("::_FROM_vw_nanum_foreign_exam::")
+    print(update_text) 
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)    
 
