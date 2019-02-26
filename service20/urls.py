@@ -39,6 +39,11 @@ urlpatterns = [
     path('com/list/my_mentee/', com_list_my_mentee.as_view(), name='com_list_my_mentee'),
     # 프로그램 찾기
     path('com/combo/program/', com_combo_program.as_view(), name='com_combo_program'),
+
+    # 어학점수
+    path('com/user/fe/', com_user_fe.as_view(), name='com_user_fe'),
+    # 봉사점수
+    path('com/user/sa/', com_user_sa.as_view(), name='com_user_sa'),
     ########################################################################################
     # 공통(com)
     #
@@ -70,10 +75,6 @@ urlpatterns = [
     path('MS0101M/save/', MS0101M_save, name='MS0101M_save'), 
     # 성적,봉사,어학 가져오기
     path('MS0101M/detail/', MS0101M_detail, name='MS0101M_detail'),
-    # 멘토링 프로그램 - 어학점수
-    path('MS0101M/detail/fe/', MS0101M_detail_fe.as_view(), name='MS0101M_detail_fe'),
-    # 멘토링 프로그램 - 봉사점수
-    path('MS0101M/detail/sa/', MS0101M_detail_sa.as_view(), name='MS0101M_detail_sa'),
     # 멘토스쿨(관리자) - 기본정보
     path('MS0101M/admin/list/', MS0101M_adm_list.as_view(), name='MS0101M_adm_list'),
     # 멘토링 프로그램(관리자) - 어학점수
