@@ -18,7 +18,7 @@ import json
 import requests
 import pymssql
 from bs4 import BeautifulSoup as bs
-
+import os
 # api/moim 으로 get하면 이 listview로 연결
 
 
@@ -4377,3 +4377,39 @@ class main_list_mento_count(generics.ListAPIView):
         #     return self.get_paginated_response(serializer.data)
 
         # return Response(serializer.data)        
+
+#파일업로드 테스트
+@csrf_exempt
+def com_upload(request):
+
+    req = request
+    DIR = os.getcwd()
+    UPLOAD_DIR = str(DIR) + '/media/mp_mtr/'
+    if request.method == 'POST':
+        l_user_id = request.POST.get("user_id")
+        l_mp_id = request.POST.get("mp_id")
+
+        print(l_user_id)
+        print(l_mp_id)
+        file = request.FILES['file']
+        filename = file._name
+        n_filename = str(l_user_id) + '_' + str(l_mp_id) + '' + os.path.splitext(filename)[1]
+        print(n_filename)
+        print (UPLOAD_DIR)
+        
+        fp = open('%s/%s' % (UPLOAD_DIR, n_filename) , 'wb')
+
+        for chunk in file.chunks():
+            fp.write(chunk)
+        fp.close()
+
+        cursor = connection.cursor()
+        fullFile = str(UPLOAD_DIR) + str(n_filename)
+        insert_sql = "update service20_mp_mtr set  id_pic = '" + str(fullFile) + "' where mp_id = '"+ str(l_mp_id) + "' and apl_id = '" +  str(l_user_id) +"' "
+        print(insert_sql)
+        cursor.execute(insert_sql)
+
+        return HttpResponse('File Uploaded')
+
+    return HttpResponse('Failed to Upload File')
+                
