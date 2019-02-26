@@ -2912,7 +2912,8 @@ def MP0103M_Insert(request):
         insert_text += " where t1.mp_id = '"+str(mp_id)+"' "
         insert_text += " and apl_id = '"+str(apl_id)+"' "
         insert_text += " )"
-
+        print("ins_1")
+        print(insert_text)
         cursor = connection.cursor()
         query_result = cursor.execute(insert_text)    
     
@@ -2995,7 +2996,8 @@ def MP0103M_Insert(request):
         query += "  from service20_mp_mtr t1"
         query += " where t1.mp_id  = '" + str(mp_id) + "'"
         query += "   and t1.apl_id = '" + str(apl_id) + "' /* {!apl_id} */"
-
+        print("query_"+str(i))
+        print(query)
         cursor = connection.cursor()
         query_result = cursor.execute(insert_text) 
 
