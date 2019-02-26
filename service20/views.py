@@ -4199,7 +4199,7 @@ class mpmgListSerializer(serializers.ModelSerializer):
     testField = serializers.SerializerMethodField()
     class Meta:
         model = mpgm
-        fields = ('mp_id','mp_name','status','img_src','testField')
+        fields = ('mp_id','mp_name','status','img_src','testField','apl_fr_dt','apl_to_dt','mp_intro')
 
     def get_testField(self, obj):
         return 'test'     
