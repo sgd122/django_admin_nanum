@@ -46,14 +46,14 @@ def login_login(request):
                 print(gbn['value'])
                 if gbn['value'] == 'False':
                     print('==>false')
+                    message = "login_fail"
                 elif gbn['value'] == 'True':
                     print('==>true')
 
-                userid = soup.find('input', {'name': 'userid'})
-                v_userid = userid['value']              
-                # MSSQL 접속
+                    userid = soup.find('input', {'name': 'userid'})
+                    v_userid = userid['value']              
+                    # MSSQL 접속
 
-                if v_userid == id:
 
                     ########################################################################
                     # 어학 - 시작
@@ -439,9 +439,7 @@ def login_login(request):
                             'mntr_id' : v_mntr_id
                             }
                             row = cursor.fetchone()                                                                     
-                        # 로그인처리 - 종료       
-                else:
-                    message = "login_fail"
+                        # 로그인처리 - 종료   
 
         
 #         context = {'message': message,'member_id':v_userid}
