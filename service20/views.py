@@ -32,6 +32,7 @@ def login_login(request):
         id =  request.POST.get('user_id')
         pswd =  request.POST.get('user_pw')
         # 로그인할 유저정보를 넣어주자 (모두 문자열)
+        print("login_start => " + str(id))
         login_info = {'id':id,'pswd': pswd,'dest':'http://nanum.pusan.ac.kr:8000/service20/login/returnsso/'}
         # login_info = {'id':'514965','pswd': 'gks3089#','dest':'http://nanum.pusan.ac.kr:8000/service20/login/returnsso/'}
         # HTTP GET Request: requests대신 s 객체를 사용한다.
@@ -40,16 +41,17 @@ def login_login(request):
             html = first_page.text
             if first_page.status_code != 200:
                 message = "login_fail"                  
+                print("login_200_error => " + str(id))
             else:
                 soup = bs(html, 'html.parser')
                 gbn = soup.find('input', {'name': 'gbn'}) # input태그 중에서 name이 _csrf인 것을 찾습니다.
                 print(gbn['value'])
                 if gbn['value'] == 'False':
-                    print('==>false')
+                    print("login_false => " + str(id))
                     message = "login_fail"
                     context = {'login': 'fail',}
                 elif gbn['value'] == 'True':
-                    print('==>true')
+                    print("login_true => " + str(id))
 
                     userid = soup.find('input', {'name': 'userid'})
                     v_userid = userid['value']              
@@ -72,7 +74,7 @@ def login_login(request):
                     query += "     , t3.grade          /* 시험등급 */"
                     query += "  from vw_nanum_foreign_exam t3     /* 유효한 외국어 성적 리스트 view(임시) */"
                     query += " where 1=1"
-                    query += " and t3.apl_id='"+v_userid+"'" 
+                    # query += " and t3.apl_id='"+v_userid+"'" 
                     conn = pymssql.connect(server='192.168.2.124', user='nanum', password='n@num*!@', database='hakjuk', port='1221')
                     cursor = conn.cursor()   
                     cursor.execute(query)  
@@ -97,7 +99,7 @@ def login_login(request):
                         # 삭제 (어학)
 
                         # insert(어학)
-                        query = "insert into service20_vw_nanum_foreign_exam     -- 유효한 외국어 성적 리스트 view(임시)"
+                        query = "insert into service20_vw_nanum_foreign_exam     /* 유효한 외국어 성적 리스트 view(임시) */"
                         query += "   ( apl_id         /* 학번 */"
                         query += "     , apl_nm         /* 성명 */"
                         query += "     , lang_kind_cd   /* 어학종류코드 */"
@@ -183,7 +185,7 @@ def login_login(request):
                         # 삭제 (봉사)
 
                         # insert(봉사)
-                        query = "insert into service20_vw_nanum_service_activ     -- 학생 봉사 시간 view(임시)"
+                        query = "insert into service20_vw_nanum_service_activ     /* 학생 봉사 시간 view(임시)*/ "
                         query += "   ( apl_id          /* 학번 */"
                         query += "     , apl_nm          /* 성명 */"
                         query += "     , nation_inout_cd /* 국내외구분코드 */"
