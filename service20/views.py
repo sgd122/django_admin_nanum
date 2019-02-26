@@ -3677,6 +3677,8 @@ class MP0105M_detail_2(generics.ListAPIView):
         query += "            , s1.mp_id "
         query += "            , s1.apl_no "
         query += "            , s1.apl_id "
+        query += "            , s2.grd_id "
+        query += "            , s2.grd_nm "
         query += "         from service20_mp_mtr s1 "
         query += "          left join service20_mp_mte s2 "
         query += "              on ("
