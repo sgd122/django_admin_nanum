@@ -378,6 +378,7 @@ def login_login(request):
                         # insert
 
                         #mentor_query
+                        rows_mentor = mentor.objects.filter(apl_id=str(row[0]))[0]
                         mentor_query = " select mntr_id from service20_mentor where apl_id = '"+str(row[0])+"'"
                         mentor_cursor = connection.cursor()
                         query_result = mentor_cursor.execute(mentor_query)    
@@ -385,7 +386,7 @@ def login_login(request):
                         if query_result == 0:
                             v_mntr_id = ''
                         else:
-                            v_mntr_id = str(query_result[0].mntr_id)
+                            v_mntr_id = str(rows_mentor.mntr_id)                            
                                             
                         context = {'message': message,
                         'apl_id' : str(row[0]),
