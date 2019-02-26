@@ -1963,7 +1963,7 @@ def MP0101M_save(request):
     update_text += "      , t1.lang_nm        /* 어학상위코드명 */ ";
     update_text += "      , t1.lang_detail_cd /* 어학하위코드 */ ";
     update_text += "      , t1.lang_detail_nm /* 어학하위코드명 */ ";
-    update_text += "      , '0' frexm_cd       /* 외국어시험 코드 * ";/
+    update_text += "      , '0' frexm_cd       /* 외국어시험 코드 * ";
     update_text += "      , t1.frexm_nm       /* 외국어시험명 */ ";
     update_text += "      , t1.score          /* 시험점수 */ ";
     update_text += "      , t1.grade          /* 시험등급 */ ";
@@ -2031,7 +2031,7 @@ def MP0101M_save(request):
     
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)    
-         
+
 
     context = {'message': 'Ok'}
 
