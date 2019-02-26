@@ -2831,6 +2831,9 @@ def MP0103M_Insert(request):
     upd_dt = request.POST.get('upd_dt', "")
     upd_pgm = request.POST.get('upd_pgm', "")
 
+    mnt_fr_dt = request.POST.get('mnt_fr_dt', "")
+    mnt_to_dt = request.POST.get('mnt_to_dt', "")
+
     maxRow = request.POST.get('maxRow', 0)              # 1번 insert
     
     mnt_dt_cnt = request.POST.get('mnt_dt_cnt', 0)      # 2번 insert
@@ -2971,7 +2974,7 @@ def MP0103M_Insert(request):
         query += "     , null      as sch_nm"
         query += "     , null      as mtr_sub"
         query += "     , null      as att_desc"
-        query += "     , concat(date_format(date(t1.mnt_fr_dt + interval "+str(i)+"-1 month), '%%y'), '년 ', date_format(date(t1.mnt_fr_dt + interval "+str(i)+"-1 month), '%%m'), '월 보고서') as rep_ttl"
+        query += "     , concat(date_format(date("+str(mnt_fr_dt)+" + interval "+str(i)+"-1 month), '%%y'), '년 ', date_format(date("+str(mnt_fr_dt)+" + interval "+str(i)+"-1 month), '%%m'), '월 보고서') as rep_ttl"
         query += "     , null      as mtr_obj"
         query += "     , null      as rep_dt"
         query += "     , null      as req_dt"
