@@ -1754,7 +1754,7 @@ def MP0101M_save(request):
 
     query = " select t2.mp_id,t2.yr FROM service20_mpgm t2  WHERE 1=1 "
     query += " AND t2.mp_id          = '"+mp_id+"'"
-    queryset = mp_mtr.objects.raw(query)[0]
+    queryset = mpgm.objects.raw(query)[0]
     
     model_instance = mp_mtr(
         mp_id=mp_id, 
