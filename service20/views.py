@@ -1964,6 +1964,7 @@ def MP0101M_detail(request):
             rows = vw_nanum_stdt.objects.filter(apl_id=ida)[0]
             rows2 = mp_sub.objects.filter(mp_id=ms_ida)
             rows3 = mpgm.objects.filter(mp_id=ms_ida)[0]
+            rows4 = mp_mtr.objects.filter(mp_id=ms_ida,apl_id=ida)[0]
 
 
             for val in rows2:
@@ -2013,6 +2014,7 @@ def MP0101M_detail(request):
                         'score05' : rows.score05,
                         'ms_id' : rows3.mp_id,
                         'ms_name' : rows3.mp_name,
+                        'apl_no'  : rows4.apl_no,
                         }
         
 
