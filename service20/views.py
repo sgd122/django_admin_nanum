@@ -377,8 +377,6 @@ def login_login(request):
                         query_result = cursor2.execute(insert_query)    
                         # insert
 
-                        #mentor_query
-                        rows_mentor = mentor.objects.filter(apl_id=str(row[0]))[0]
                         mentor_query = " select mntr_id from service20_mentor where apl_id = '"+str(row[0])+"'"
                         mentor_cursor = connection.cursor()
                         query_result = mentor_cursor.execute(mentor_query)    
@@ -386,6 +384,9 @@ def login_login(request):
                         if query_result == 0:
                             v_mntr_id = ''
                         else:
+                            #mentor_query
+                            rows_mentor = mentor.objects.filter(apl_id=str(row[0]))[0]
+                            
                             v_mntr_id = str(rows_mentor.mntr_id)                            
                                             
                         context = {'message': message,
@@ -843,10 +844,10 @@ def MS0101M_save(request):
     ms_ida = request.POST.get('ms_id', None)
     apl_max = request.POST.get('aplMax', 0)
     
-    #created,created_flag = vm_nanum_stdt.apl_id.get_or_create(user=request.user)
+    #created,created_flag = vw_nanum_stdt.apl_id.get_or_create(user=request.user)
     ms_id = programId
     ms_apl_max = ms_apl.objects.all().aggregate(vlMax=Max('apl_no'))
-    rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
+    rows = vw_nanum_stdt.objects.filter(apl_id=ida)[0]
     #ms_apl_max = ms_apl.objects.all().last()
     #ms_apl_max = ms_apl_max + 1
     apl_no = ms_apl_max
@@ -873,8 +874,8 @@ def MS0101M_save(request):
         mntr_id=ida,
         apl_id=apl_id,
         apl_nm=rows.apl_nm,
-        unv_cd=rows.univ_cd,
-        unv_nm=rows.univ_nm,
+        unv_cd=rows.unv_cd,
+        unv_nm=rows.unv_nm,
         cllg_cd=rows.cllg_cd,
         cllg_nm=rows.cllg_nm,
         dept_cd=rows.dept_cd,
@@ -884,7 +885,7 @@ def MS0101M_save(request):
         yr=rows.yr,
         term_div=rows.term_div,
         sch_yr=rows.sch_yr,
-        mob_no=rows.mob_nm.replace('-', ''),
+        mob_no=rows.mob_no.replace('-', ''),
         tel_no=rows.tel_no.replace('-', ''),
         tel_no_g=rows.tel_no_g.replace('-', ''),
         h_addr=rows.h_addr,
@@ -939,8 +940,8 @@ def MS0101M_detail(request):
     l_yr = request.POST.get('yr', None)
     
     
-    #created,created_flag = vm_nanum_stdt.apl_id.get_or_create(user=request.user)
-    created_flag = vm_nanum_stdt.objects.filter(apl_id=ida).exists()
+    #created,created_flag = vw_nanum_stdt.apl_id.get_or_create(user=request.user)
+    created_flag = vw_nanum_stdt.objects.filter(apl_id=ida).exists()
     msch_flag = msch.objects.filter(ms_id=ms_ida,status='20').exists()
     # ms_apl_flag = ms_apl.objects.filter(apl_id=ida,ms_id=ms_ida).exists()
     ms_apl_flag = ms_apl.objects.filter(apl_id=ida,yr=l_yr,ms_id=ms_ida).exists()
@@ -950,8 +951,8 @@ def MS0101M_detail(request):
     else:
         applyYn = 'Y'
 
-    #rows = vm_nanum_stdt.objects.filter(apl_id=ida)
-    #rows2 = vm_nanum_stdt.objects.get("apl_nm")
+    #rows = vw_nanum_stdt.objects.filter(apl_id=ida)
+    #rows2 = vw_nanum_stdt.objects.get("apl_nm")
     if not created_flag:
         message = "Fail"
         context = {'message': message}
@@ -962,7 +963,7 @@ def MS0101M_detail(request):
         else:
 
             message = "Ok"
-            rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
+            rows = vw_nanum_stdt.objects.filter(apl_id=ida)[0]
             rows2 = ms_sub.objects.filter(ms_id=ms_ida)
             rows3 = msch.objects.filter(ms_id=ms_ida)[0]
 
@@ -976,12 +977,11 @@ def MS0101M_detail(request):
             #question03 = com_cdd.objects.filter(std_grp_code=key1)[2].rmrk
             #question04 = com_cdd.objects.filter(std_grp_code=key1)[3].rmrk
             #question05 = com_cdd.objects.filter(std_grp_code=key1)[4].rmrk
-
             context = {'message': message,
                         'applyYn' : applyYn,
                         'apl_nm' : rows.apl_nm,
-                        'univ_cd' : rows.univ_cd,
-                        'univ_nm' : rows.univ_nm,
+                        'unv_cd' : rows.unv_cd,
+                        'unv_nm' : rows.unv_nm,
                         'grad_div_cd' : rows.grad_div_cd,
                         'grad_div_nm' : rows.grad_div_nm,
                         'cllg_cd' : rows.cllg_cd,
@@ -997,9 +997,9 @@ def MS0101M_detail(request):
                         'sch_yr' : rows.sch_yr,
                         'term_div' : rows.term_div,
                         'term_nm' : rows.term_nm,
-                        'stdt_div' : rows.stdt_div,
-                        'stdt_nm' : rows.stdt_nm,
-                        'mob_nm' : rows.mob_nm,
+                        'stds_div' : rows.stds_div,
+                        'stds_nm' : rows.stds_nm,
+                        'mob_no' : rows.mob_no,
                         'tel_no' : rows.tel_no,
                         'tel_no_g' : rows.tel_no_g,
                         'h_addr' : rows.h_addr,
@@ -1016,7 +1016,6 @@ def MS0101M_detail(request):
                         'score02' : rows.score02,
                         'score03' : rows.score03,
                         'score04' : rows.score04,
-                        'score04_tp' : rows.score04_tp,
                         'score05' : rows.score05,
                         'ms_id' : rows3.ms_id,
                         'ms_name' : rows3.ms_name,
@@ -1619,10 +1618,10 @@ def MP0101M_save(request):
     ms_ida = request.POST.get('ms_id', None)
     apl_max = request.POST.get('aplMax', 0)
     
-    #created,created_flag = vm_nanum_stdt.apl_id.get_or_create(user=request.user)
+    #created,created_flag = vw_nanum_stdt.apl_id.get_or_create(user=request.user)
     mp_id = programId
     mp_mtr_max = mp_mtr.objects.all().aggregate(vlMax=Max('apl_no'))
-    rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
+    rows = vw_nanum_stdt.objects.filter(apl_id=ida)[0]
     #mp_mtr_max = mp_mtr.objects.all().last()
     #mp_mtr_max = mp_mtr_max + 1
     apl_no = mp_mtr_max
@@ -1649,8 +1648,8 @@ def MP0101M_save(request):
         mntr_id=ida,
         apl_id=apl_id,
         apl_nm=rows.apl_nm,
-        unv_cd=rows.univ_cd,
-        unv_nm=rows.univ_nm,
+        unv_cd=rows.unv_cd,
+        unv_nm=rows.unv_nm,
         cllg_cd=rows.cllg_cd,
         cllg_nm=rows.cllg_nm,
         dept_cd=rows.dept_cd,
@@ -1660,7 +1659,7 @@ def MP0101M_save(request):
         yr=rows.yr,
         term_div=rows.term_div,
         sch_yr=rows.sch_yr,
-        mob_no=rows.mob_nm.replace('-', ''),
+        mob_no=rows.mob_no.replace('-', ''),
         tel_no=rows.tel_no.replace('-', ''),
         tel_no_g=rows.tel_no_g.replace('-', ''),
         h_addr=rows.h_addr,
@@ -1716,7 +1715,7 @@ def MP0101M_detail(request):
     ms_ida = request.POST.get('ms_id', None)
     l_yr = request.POST.get('yr', None)
 
-    created_flag = vm_nanum_stdt.objects.filter(apl_id=ida).exists()
+    created_flag = vw_nanum_stdt.objects.filter(apl_id=ida).exists()
     mpgm_flag = mpgm.objects.filter(mp_id=ms_ida,status='20').exists()
     ms_apl_flag = mp_mtr.objects.filter(apl_id=ida,mp_id=ms_ida).exists()
     print(mpgm_flag)
@@ -1738,7 +1737,7 @@ def MP0101M_detail(request):
         else:
             print('2')
             message = "Ok"
-            rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
+            rows = vw_nanum_stdt.objects.filter(apl_id=ida)[0]
             rows2 = mp_sub.objects.filter(mp_id=ms_ida)
             rows3 = mpgm.objects.filter(mp_id=ms_ida)[0]
 
@@ -1751,8 +1750,8 @@ def MP0101M_detail(request):
             context = {'message': message,
                         'applyYn' : applyYn,
                         'apl_nm' : rows.apl_nm,
-                        'univ_cd' : rows.univ_cd,
-                        'univ_nm' : rows.univ_nm,
+                        'unv_cd' : rows.unv_cd,
+                        'unv_nm' : rows.unv_nm,
                         'grad_div_cd' : rows.grad_div_cd,
                         'grad_div_nm' : rows.grad_div_nm,
                         'cllg_cd' : rows.cllg_cd,
@@ -1768,9 +1767,9 @@ def MP0101M_detail(request):
                         'sch_yr' : rows.sch_yr,
                         'term_div' : rows.term_div,
                         'term_nm' : rows.term_nm,
-                        'stdt_div' : rows.stdt_div,
-                        'stdt_nm' : rows.stdt_nm,
-                        'mob_nm' : rows.mob_nm,
+                        'stds_div' : rows.stds_div,
+                        'stds_nm' : rows.stds_nm,
+                        'mob_no' : rows.mob_no,
                         'tel_no' : rows.tel_no,
                         'tel_no_g' : rows.tel_no_g,
                         'h_addr' : rows.h_addr,
@@ -1787,7 +1786,6 @@ def MP0101M_detail(request):
                         'score02' : rows.score02,
                         'score03' : rows.score03,
                         'score04' : rows.score04,
-                        'score04_tp' : rows.score04_tp,
                         'score05' : rows.score05,
                         'ms_id' : rows3.mp_id,
                         'ms_name' : rows3.mp_name,
@@ -4033,7 +4031,7 @@ def post_user_info(request):
     ida = request.POST.get('user_id', None)
     ms_ida = request.POST.get('ms_id', None)
     
-    created_flag = vm_nanum_stdt.objects.filter(apl_id=ida).exists()
+    created_flag = vw_nanum_stdt.objects.filter(apl_id=ida).exists()
     ms_apl_flag = ms_apl.objects.filter(apl_id=ida,ms_id=ms_ida).exists()
     if not ms_apl_flag:
         applyYn = 'N'
@@ -4046,7 +4044,7 @@ def post_user_info(request):
     else:
         
         message = "Ok"
-        rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
+        rows = vw_nanum_stdt.objects.filter(apl_id=ida)[0]
         rows2 = mp_sub.objects.filter(mp_id=ms_ida)
         rows3 = msch.objects.filter(ms_id=ms_ida)[0]
 
@@ -4055,49 +4053,48 @@ def post_user_info(request):
             key1 = val.att_id
 
         context = {'message': message,
-                    'applyYn' : applyYn,
-                    'apl_nm' : rows.apl_nm,
-                    'univ_cd' : rows.univ_cd,
-                    'univ_nm' : rows.univ_nm,
-                    'grad_div_cd' : rows.grad_div_cd,
-                    'grad_div_nm' : rows.grad_div_nm,
-                    'cllg_cd' : rows.cllg_cd,
-                    'cllg_nm' : rows.cllg_nm,
-                    'dept_cd' : rows.dept_cd,
-                    'dept_nm' : rows.dept_nm,
-                    'mjr_cd' : rows.mjr_cd,
-                    'mjr_nm' : rows.mjr_nm,
-                    'brth_dt' : rows.brth_dt,
-                    'gen_cd' : rows.gen_cd,
-                    'gen_nm' : rows.gen_nm,
-                    'yr' : rows.yr,
-                    'sch_yr' : rows.sch_yr,
-                    'term_div' : rows.term_div,
-                    'term_nm' : rows.term_nm,
-                    'stdt_div' : rows.stdt_div,
-                    'stdt_nm' : rows.stdt_nm,
-                    'mob_nm' : rows.mob_nm,
-                    'tel_no' : rows.tel_no,
-                    'tel_no_g' : rows.tel_no_g,
-                    'h_addr' : rows.h_addr,
-                    'post_no' : rows.post_no,
-                    'email_addr' : rows.email_addr,
-                    'bank_acct' : rows.bank_acct,
-                    'bank_cd' : rows.bank_cd,
-                    'bank_nm' : rows.bank_nm,
-                    'bank_dpsr' : rows.bank_dpsr,
-                    'pr_yr' : rows.pr_yr,
-                    'pr_sch_yr' : rows.pr_sch_yr,
-                    'pr_term_div' : rows.pr_term_div,
-                    'score01' : rows.score01,
-                    'score02' : rows.score02,
-                    'score03' : rows.score03,
-                    'score04' : rows.score04,
-                    'score04_tp' : rows.score04_tp,
-                    'score05' : rows.score05,
-                    'ms_id' : rows3.ms_id,
-                    'ms_name' : rows3.ms_name,
-                    }
+                        'applyYn' : applyYn,
+                        'apl_nm' : rows.apl_nm,
+                        'unv_cd' : rows.unv_cd,
+                        'unv_nm' : rows.unv_nm,
+                        'grad_div_cd' : rows.grad_div_cd,
+                        'grad_div_nm' : rows.grad_div_nm,
+                        'cllg_cd' : rows.cllg_cd,
+                        'cllg_nm' : rows.cllg_nm,
+                        'dept_cd' : rows.dept_cd,
+                        'dept_nm' : rows.dept_nm,
+                        'mjr_cd' : rows.mjr_cd,
+                        'mjr_nm' : rows.mjr_nm,
+                        'brth_dt' : rows.brth_dt,
+                        'gen_cd' : rows.gen_cd,
+                        'gen_nm' : rows.gen_nm,
+                        'yr' : rows.yr,
+                        'sch_yr' : rows.sch_yr,
+                        'term_div' : rows.term_div,
+                        'term_nm' : rows.term_nm,
+                        'stds_div' : rows.stds_div,
+                        'stds_nm' : rows.stds_nm,
+                        'mob_no' : rows.mob_no,
+                        'tel_no' : rows.tel_no,
+                        'tel_no_g' : rows.tel_no_g,
+                        'h_addr' : rows.h_addr,
+                        'post_no' : rows.post_no,
+                        'email_addr' : rows.email_addr,
+                        'bank_acct' : rows.bank_acct,
+                        'bank_cd' : rows.bank_cd,
+                        'bank_nm' : rows.bank_nm,
+                        'bank_dpsr' : rows.bank_dpsr,
+                        'pr_yr' : rows.pr_yr,
+                        'pr_sch_yr' : rows.pr_sch_yr,
+                        'pr_term_div' : rows.pr_term_div,
+                        'score01' : rows.score01,
+                        'score02' : rows.score02,
+                        'score03' : rows.score03,
+                        'score04' : rows.score04,
+                        'score05' : rows.score05,
+                        'ms_id' : rows3.ms_id,
+                        'ms_name' : rows3.ms_name,
+                        }
     
 
     #return HttpResponse(json.dumps(context), content_type="application/json")
