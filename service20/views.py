@@ -62,7 +62,7 @@ def login_login(request):
                 query += "     , t3.frexm_nm       /* 외국어시험명 */"
                 query += "     , t3.score          /* 시험점수 */"
                 query += "     , t3.grade          /* 시험등급 */"
-                query += "  from service20_vw_nanum_foreign_exam t3     /* 유효한 외국어 성적 리스트 view(임시) */"
+                query += "  from vw_nanum_foreign_exam t3     /* 유효한 외국어 성적 리스트 view(임시) */"
                 query += " where 1=1"
                 query += " and t3.apl_id='"+v_userid+"'" 
                 conn = pymssql.connect(server='192.168.2.124', user='nanum', password='n@num*!@', database='hakjuk', port='1221')
@@ -146,7 +146,7 @@ def login_login(request):
                 query += "     , t3.end_date        /* 종료일자 */"
                 query += "     , t3.end_time        /* 종료시간 */"
                 query += "     , t3.tot_time        /* 총시간 */"
-                query += "  from service20_vw_nanum_service_activ t3     /* 학생 봉사 시간 view(임시) */"
+                query += "  from vw_nanum_service_activ t3     /* 학생 봉사 시간 view(임시) */"
                 query += " where 1=1"
                 query += " and t3.apl_id='"+v_userid+"'" 
                 conn = pymssql.connect(server='192.168.2.124', user='nanum', password='n@num*!@', database='hakjuk', port='1221')
@@ -3523,13 +3523,15 @@ class MP0105M_detail_2_Serializer(serializers.ModelSerializer):
     mte_nm = serializers.SerializerMethodField()
     obj_sub = serializers.SerializerMethodField()
     aaa = serializers.SerializerMethodField()
+    grd_id = serializers.SerializerMethodField()
+    grd_nm = serializers.SerializerMethodField()
 
     req_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     appr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     mgr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     class Meta:
         model = mp_rep
-        fields = ('mp_id','apl_no','rep_no','rep_div','rep_ttl','mtr_obj','rep_dt','req_dt','mtr_desc','coatching','spcl_note','mtr_revw','appr_id','appr_nm','appr_dt','mgr_id','mgr_dt','status','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','rep_ym','sch_yr','rep_div_nm','apl_m','tchr_id','tchr_nm','mnte_id','mnte_nm','mtr_sub','att_desc','status_nm','apl_id','teacher','mte_nm','obj_sub','aaa','mgr_nm')
+        fields = ('mp_id','apl_no','rep_no','rep_div','rep_ttl','mtr_obj','rep_dt','req_dt','mtr_desc','coatching','spcl_note','mtr_revw','appr_id','appr_nm','appr_dt','mgr_id','mgr_dt','status','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','rep_ym','sch_yr','rep_div_nm','apl_m','tchr_id','tchr_nm','mnte_id','mnte_nm','mtr_sub','att_desc','status_nm','apl_id','teacher','mte_nm','obj_sub','aaa','mgr_nm','grd_id','grd_nm')
     
     def get_mp_id(self,obj):
         return obj.mp_id
@@ -3588,7 +3590,11 @@ class MP0105M_detail_2_Serializer(serializers.ModelSerializer):
     def get_obj_sub(self,obj):
         return obj.obj_sub
     def get_aaa(self,obj):    
-        return obj.aaa    
+        return obj.aaa 
+    def get_grd_id(self,obj):
+        return obj.grd_id       
+    def get_grd_nm(self,obj):
+        return obj.grd_nm
 
 class MP0105M_detail_2(generics.ListAPIView):
     queryset = mp_rep.objects.all()
@@ -3647,6 +3653,8 @@ class MP0105M_detail_2(generics.ListAPIView):
         query += "     , t1.apl_id "
         query += "     , t2.rep_no "
         query += "     , t2.rep_ym "
+        query += "     , t3.grd_id    /*주보호자id*/";
+        query += "     , t3.grd_nm    /*보호자명*/";
         query += "  from service20_mp_mtr t1 "
         query += "   left join service20_mp_rep t2 "
         query += "       on ("
@@ -3756,6 +3764,8 @@ def MP0105M_update(request,pk):
     appr_id  = request.POST.get('appr_id', "")
     appr_nm  = request.POST.get('appr_nm', "")
     mgr_id   = request.POST.get('mgr_id', "")
+    grd_id   = request.POST.get('grd_id', "")
+    grd_nm   = request.POST.get('grd_nm', "")
 
     update_text = ""
     if pk == 1:
@@ -3778,6 +3788,9 @@ def MP0105M_update(request,pk):
         update_text += " , appr_id     = '" +str(appr_id)+"'       "
         update_text += " , appr_nm     = '" +str(appr_nm)+"'       "
         update_text += " , mgr_id      = '" +str(mgr_id)+"'        "
+
+        update_text += " , grd_id      = '" +str(grd_id)+"'      /*주보호자id*/";
+        update_text += " , grd_nm      = '" +str(grd_nm)+"'      /*보호자명*/";
 
         update_text += " , rep_dt      = now()    /*보고서작성일*/     "    
         update_text += " , upd_id      = '"+str(upd_id)   +"'    /*수정자id*/         "    
@@ -3811,6 +3824,9 @@ def MP0105M_update(request,pk):
         update_text += " , appr_id     = '" +str(appr_id)+"'       "
         update_text += " , appr_nm     = '" +str(appr_nm)+"'       "
         update_text += " , mgr_id      = '" +str(mgr_id)+"'        "
+
+        update_text += " , grd_id      = '" +str(grd_id)+"'      /*주보호자id*/";
+        update_text += " , grd_nm      = '" +str(grd_nm)+"'      /*보호자명*/";
 
         update_text += " , req_dt      = now()    /*승인요청일*/       "
         update_text += " , upd_id      = '"+str(upd_id)   +"'    /*수정자id*/         "    
