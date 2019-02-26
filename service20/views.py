@@ -2201,10 +2201,14 @@ class MP0101M_adm_list(generics.ListAPIView):
 # 멘토링 프로그램(관리자) - 어학
 class MP0101M_adm_list_fe_Serializer(serializers.ModelSerializer):
     
+    fn_score = serializers.SerializerMethodField()
+
     class Meta:
         model = mp_mtr_fe
-        fields = ('frexm_cd','frexm_nm','score','grade')
+        fields = ('frexm_cd','frexm_nm','score','grade','fn_score')
 
+    def get_fn_score(self,obj):
+        return obj.fn_score
 
 class MP0101M_adm_list_fe(generics.ListAPIView):
     queryset = mp_mtr.objects.all()
@@ -2218,8 +2222,9 @@ class MP0101M_adm_list_fe(generics.ListAPIView):
         query = " select id,  "
         query += "        frexm_cd,  "
         query += "        frexm_nm,  "
-        query += "        score,  "
-        query += "        grade  "
+        query += "        score,  "        
+        query += "        grade,  "
+        query += "   fn_mp_mtr_fe_select_01('"+str(mp_ida)+"','"+str(ida)+"') as fn_score "
         query += " FROM   service20_mp_mtr_fe  "
         query += " WHERE  mp_id = '"+str(mp_ida)+"'  "
         query += "        AND apl_id = '"+str(ida)+"' "
@@ -2239,10 +2244,14 @@ class MP0101M_adm_list_fe(generics.ListAPIView):
 # 멘토링 프로그램(관리자) - 봉사
 class MP0101M_adm_list_sa_Serializer(serializers.ModelSerializer):
     
+    fn_score = serializers.SerializerMethodField()
+
     class Meta:
         model = mp_mtr_sa
-        fields = ('mp_id','apl_no','sa_no','apl_id','apl_nm','nation_inout_cd','nation_inout_nm','sch_inout_cd','sch_inout_nm','activity_nm','manage_org_nm','start_date','start_time','end_date','end_time','tot_time')
+        fields = ('mp_id','apl_no','sa_no','apl_id','apl_nm','nation_inout_cd','nation_inout_nm','sch_inout_cd','sch_inout_nm','activity_nm','manage_org_nm','start_date','start_time','end_date','end_time','tot_time','fn_score')
 
+    def get_fn_score(self,obj):
+        return obj.fn_score
 
 class MP0101M_adm_list_sa(generics.ListAPIView):
     queryset = mp_mtr.objects.all()
@@ -2253,8 +2262,9 @@ class MP0101M_adm_list_sa(generics.ListAPIView):
         mp_ida = request.GET.get('mp_id', None)
         l_yr = request.GET.get('yr', None)
         
-        query = " select *  "
-        query += " FROM   service20_mp_mtr_sa  "
+        query = " select a.* , "
+        query += "   fn_mp_mtr_sa_select_01('"+str(mp_ida)+"','"+str(ida)+"') as fn_score "
+        query += " FROM   service20_mp_mtr_sa a  "
         query += " WHERE  mp_id = '"+str(mp_ida)+"'  "
         query += "        AND apl_id = '"+str(ida)+"' "
 
