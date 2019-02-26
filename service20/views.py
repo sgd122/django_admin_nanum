@@ -1102,6 +1102,79 @@ class MS0101M_adm_list(generics.ListAPIView):
         return Response(serializer.data)
 
 # 멘토링 프로그램(관리자) - 어학
+class MS0101M_detail_fe_Serializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = ms_apl_fe
+        fields = ('frexm_cd','frexm_nm','score','grade')
+
+
+class MS0101M_detail_fe(generics.ListAPIView):
+    queryset = ms_apl.objects.all()
+    serializer_class = MS0101M_detail_fe_Serializer
+    
+    def list(self, request):
+        ida = request.GET.get('user_id', None)
+        ms_ida = request.GET.get('ms_id', None)
+        l_yr = request.GET.get('yr', None)
+        
+        query = " select id,  "
+        query += "        frexm_cd,  "
+        query += "        frexm_nm,  "
+        query += "        score,  "
+        query += "        grade  "
+        query += " FROM   service20_ms_apl_fe  "
+        query += " WHERE  ms_id = '"+str(ms_ida)+"'  "
+        query += "        AND apl_id = '"+str(ida)+"' "
+
+        queryset = ms_apl_fe.objects.raw(query)
+        print(query)
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+# 멘토링 프로그램(관리자) - 봉사
+class MS0101M_detail_sa_Serializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = ms_apl_sa
+        fields = ('ms_id','apl_no','sa_no','apl_id','apl_nm','nation_inout_cd','nation_inout_nm','sch_inout_cd','sch_inout_nm','activity_nm','manage_org_nm','start_date','start_time','end_date','end_time','tot_time')
+
+
+class MS0101M_detail_sa(generics.ListAPIView):
+    queryset = ms_apl.objects.all()
+    serializer_class = MS0101M_detail_sa_Serializer
+    
+    def list(self, request):
+        ida = request.GET.get('user_id', None)
+        ms_ida = request.GET.get('ms_id', None)
+        l_yr = request.GET.get('yr', None)
+        
+        query = " select *  "
+        query += " FROM   service20_ms_apl_sa  "
+        query += " WHERE  ms_id = '"+str(ms_ida)+"'  "
+        query += "        AND apl_id = '"+str(ida)+"' "
+
+        queryset = ms_apl_sa.objects.raw(query)
+        print(query)
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+
+# 멘토링 프로그램(관리자) - 어학
 class MS0101M_adm_list_fe_Serializer(serializers.ModelSerializer):
     
     class Meta:

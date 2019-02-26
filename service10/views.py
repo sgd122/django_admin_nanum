@@ -65,7 +65,7 @@ def post_login(request):
 			v_mntr_id = ''
 		else:
 			#mentor_query
-			rows_mentor = mentor.objects.filter(apl_id=str(row[0]))[0]
+			rows_mentor = mentor.objects.filter(apl_id=str(ida))[0]
 			v_mntr_id = str(rows_mentor.mntr_id)
 
 		context = {'message': message,
