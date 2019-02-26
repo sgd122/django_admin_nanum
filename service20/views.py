@@ -4197,6 +4197,9 @@ def Service20_01_View(request):
 class mpmgListSerializer(serializers.ModelSerializer):
 
     testField = serializers.SerializerMethodField()
+
+    apl_fr_dt = serializers.DateTimeField(format='%Y-%m-%d')
+    apl_to_dt = serializers.DateTimeField(format='%Y-%m-%d')
     class Meta:
         model = mpgm
         fields = ('mp_id','mp_name','status','img_src','testField','apl_fr_dt','apl_to_dt','mp_intro')
