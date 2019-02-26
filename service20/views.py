@@ -1817,6 +1817,8 @@ def MP0101M_save(request):
     ms_ida = request.POST.get('ms_id', None)
     apl_max = request.POST.get('aplMax', 0)
     
+    print("::ida::")
+    print(ida)
     #created,created_flag = vw_nanum_stdt.apl_id.get_or_create(user=request.user)
     mp_id = programId
     mp_mtr_max = mp_mtr.objects.all().aggregate(vlMax=Max('apl_no'))
@@ -4412,4 +4414,3 @@ def com_upload(request):
         return HttpResponse('File Uploaded')
 
     return HttpResponse('Failed to Upload File')
-                
