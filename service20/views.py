@@ -1952,8 +1952,8 @@ def MP0101M_save(request):
     update_text += "      , ins_dt         /* 입력일시 */ ";
     update_text += "      , ins_pgm        /* 입력프로그램id */ ";
     update_text += " ) ";
-    update_text += " select '"+mp_id+"' AS mp_id ";
-    update_text += "      , 1 apl_no         /* 지원 no */ ";
+    update_text += " select '"+str(mp_id)+"' AS mp_id ";
+    update_text += "      , '"+str(apl_no)+"' apl_no         /* 지원 no */ ";
     update_text += "      , @curRank := @curRank +1 AS fe_no  ";
     update_text += "      , t1.apl_id         /* 학번 */ ";
     update_text += "      , t1.apl_nm         /* 성명 */ ";
@@ -1963,7 +1963,7 @@ def MP0101M_save(request):
     update_text += "      , t1.lang_nm        /* 어학상위코드명 */ ";
     update_text += "      , t1.lang_detail_cd /* 어학하위코드 */ ";
     update_text += "      , t1.lang_detail_nm /* 어학하위코드명 */ ";
-    update_text += "      , '0' frexm_cd       /* 외국어시험 코드 * ";
+    update_text += "      , '0' frexm_cd       /* 외국어시험 코드 */ ";
     update_text += "      , t1.frexm_nm       /* 외국어시험명 */ ";
     update_text += "      , t1.score          /* 시험점수 */ ";
     update_text += "      , t1.grade          /* 시험등급 */ ";
@@ -2005,8 +2005,8 @@ def MP0101M_save(request):
     update_text += "     , ins_dt          /* 입력일시 */ ";
     update_text += "     , ins_pgm         /* 입력프로그램id */ ";
     update_text += ") ";
-    update_text += "select '"+mp_id+"' AS mp_id ";
-    update_text += "     , 1 apl_no         /* 지원 no */ ";
+    update_text += "select '"+str(mp_id)+"' AS mp_id ";
+    update_text += "     , '"+str(apl_no)+"' apl_no         /* 지원 no */ ";
     update_text += "     , @curRank := @curRank +1 AS sa_no ";
     update_text += "     , t1.apl_id          /* 학번 */ ";
     update_text += "     , t1.apl_nm          /* 성명 */ ";
