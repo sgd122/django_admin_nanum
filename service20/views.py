@@ -1558,6 +1558,7 @@ class MP0101M_list_Serializer(serializers.ModelSerializer):
     status = serializers.SerializerMethodField()
     statusCode = serializers.SerializerMethodField()
     status_nm  = serializers.SerializerMethodField()
+    sup_org_nm = serializers.SerializerMethodField()
 
     apl_fr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     apl_to_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
@@ -1566,7 +1567,7 @@ class MP0101M_list_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = mpgm
-        fields = ('mp_id','mp_name','status','statusCode','yr','yr_seq','sup_org','applyFlag','applyStatus','apl_fr_dt','apl_to_dt','mnt_fr_dt','mnt_to_dt','cnt_trn','status','status_nm','applyFlagNm')
+        fields = ('mp_id','mp_name','status','statusCode','yr','yr_seq','sup_org','applyFlag','applyStatus','apl_fr_dt','apl_to_dt','mnt_fr_dt','mnt_to_dt','cnt_trn','status','status_nm','applyFlagNm','sup_org_nm')
 
     def get_applyFlag(self, obj):
         return obj.applyFlag    
@@ -1590,6 +1591,8 @@ class MP0101M_list_Serializer(serializers.ModelSerializer):
         return obj.status_nm   
     def get_status(self,obj):
         return obj.status
+    def get_sup_org_nm(self,obj):
+        return obj.sup_org_nm
 
 
 class MP0101M_list(generics.ListAPIView):
@@ -1625,13 +1628,14 @@ class MP0101M_list(generics.ListAPIView):
         query += "              WHERE  std_grp_code = 'MP0053'  "
         query += "                 AND std_detl_code = B.status)  "
         query += " end                                         AS applyFlagNm,  "
-
+        query += " c1.std_detl_code_nm   AS sup_org_nm, "
         query += "        A.*  "
         query += " FROM   service20_mpgm A  "
         query += "        LEFT JOIN service20_mp_mtr B  "
         query += "               ON ( A.mp_id = B.mp_id  "
         # query += "                    AND A.yr = B.yr  "
         query += "                    AND B.apl_id = '"+str(ida)+"' )  "
+        query += "        LEFT JOIN service20_com_cdd c1 ON (c1.std_grp_code  = 'mp0004' AND c1.std_detl_code = A.sup_org) "
         query += " WHERE  A.yr = '"+str(l_yr)+"'  "
         query += "        AND A.apl_term = '"+str(l_apl_term)+"'  "
         # query += "        AND (SELECT Count(1)  "
@@ -1643,6 +1647,7 @@ class MP0101M_list(generics.ListAPIView):
         query += "            || '%%'  "
         query += " ORDER  BY A.apl_fr_dt DESC,  "
         query += "           A.apl_to_dt DESC  "
+
 
         print(query)
         queryset = mpgm.objects.raw(query)
