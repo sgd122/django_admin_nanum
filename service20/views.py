@@ -1101,12 +1101,12 @@ class MS0101M_adm_list(generics.ListAPIView):
 
         return Response(serializer.data)
 
-# 멘토링 프로그램(관리자) - 어학
+# 멘토링 프로그램 - 어학
 class MS0101M_detail_fe_Serializer(serializers.ModelSerializer):
     
     class Meta:
-        model = ms_apl_fe
-        fields = ('frexm_cd','frexm_nm','score','grade')
+        model = vw_nanum_foreign_exam
+        fields = ('apl_id','apl_nm','lang_kind_cd','lang_kind_nm','lang_cd','lang_nm','lang_detail_cd','lang_detail_nm','frexm_nm','score','grade')
 
 
 class MS0101M_detail_fe(generics.ListAPIView):
@@ -1115,19 +1115,23 @@ class MS0101M_detail_fe(generics.ListAPIView):
     
     def list(self, request):
         ida = request.GET.get('user_id', None)
-        ms_ida = request.GET.get('ms_id', None)
-        l_yr = request.GET.get('yr', None)
         
-        query = " select id,  "
-        query += "        frexm_cd,  "
-        query += "        frexm_nm,  "
-        query += "        score,  "
-        query += "        grade  "
-        query += " FROM   service20_ms_apl_fe  "
-        query += " WHERE  ms_id = '"+str(ms_ida)+"'  "
-        query += "        AND apl_id = '"+str(ida)+"' "
+        query = "select t3.apl_id         /* 학번 */"
+        query += "     , t3.apl_nm         /* 성명 */"
+        query += "     , t3.lang_kind_cd   /* 어학종류코드 */"
+        query += "     , t3.lang_kind_nm   /* 어학종류명 */"
+        query += "     , t3.lang_cd        /* 어학상위코드 */"
+        query += "     , t3.lang_nm        /* 어학상위코드명 */"
+        query += "     , t3.lang_detail_cd /* 어학하위코드 */"
+        query += "     , t3.lang_detail_nm /* 어학하위코드명 */"
+        query += "     , t3.frexm_nm       /* 외국어시험명 */"
+        query += "     , t3.score          /* 시험점수 */"
+        query += "     , t3.grade          /* 시험등급 */"
+        query += "  from service20_vw_nanum_foreign_exam t3     /* 유효한 외국어 성적 리스트 view(임시) */"
+        query += " where 1=1"
+        query += " and t3.apl_id='"+str(ida)+"'" 
 
-        queryset = ms_apl_fe.objects.raw(query)
+        queryset = vw_nanum_foreign_exam.objects.raw(query)
         print(query)
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
@@ -1139,12 +1143,12 @@ class MS0101M_detail_fe(generics.ListAPIView):
 
         return Response(serializer.data)
 
-# 멘토링 프로그램(관리자) - 봉사
+# 멘토링 프로그램 - 봉사
 class MS0101M_detail_sa_Serializer(serializers.ModelSerializer):
     
     class Meta:
-        model = ms_apl_sa
-        fields = ('ms_id','apl_no','sa_no','apl_id','apl_nm','nation_inout_cd','nation_inout_nm','sch_inout_cd','sch_inout_nm','activity_nm','manage_org_nm','start_date','start_time','end_date','end_time','tot_time')
+        model = vw_nanum_service_activ
+        fields = ('apl_id','apl_nm','nation_inout_cd','nation_inout_nm','sch_inout_cd','sch_inout_nm','activity_nm','manage_org_nm','start_date','start_time','end_date','end_time','tot_time')
 
 
 class MS0101M_detail_sa(generics.ListAPIView):
@@ -1153,15 +1157,26 @@ class MS0101M_detail_sa(generics.ListAPIView):
     
     def list(self, request):
         ida = request.GET.get('user_id', None)
-        ms_ida = request.GET.get('ms_id', None)
-        l_yr = request.GET.get('yr', None)
         
-        query = " select *  "
-        query += " FROM   service20_ms_apl_sa  "
-        query += " WHERE  ms_id = '"+str(ms_ida)+"'  "
-        query += "        AND apl_id = '"+str(ida)+"' "
 
-        queryset = ms_apl_sa.objects.raw(query)
+        query = "select t3.apl_id          /* 학번 */"
+        query += "     , t3.apl_nm          /* 성명 */"
+        query += "     , t3.nation_inout_cd /* 국내외구분코드 */"
+        query += "     , t3.nation_inout_nm /* 국내외구분명 */"
+        query += "     , t3.sch_inout_cd    /* 교내외구분코드 */"
+        query += "     , t3.sch_inout_nm    /* 교내외구분명 */"
+        query += "     , t3.activity_nm     /* 봉사명 */"
+        query += "     , t3.manage_org_nm   /* 주관기관명 */"
+        query += "     , t3.start_date      /* 시작일자 */"
+        query += "     , t3.start_time      /* 시작시간 */"
+        query += "     , t3.end_date        /* 종료일자 */"
+        query += "     , t3.end_time        /* 종료시간 */"
+        query += "     , t3.tot_time        /* 총시간 */"
+        query += "  from service20_vw_nanum_service_activ t3     /* 학생 봉사 시간 view(임시) */"
+        query += " where 1=1"
+        query += "   AND apl_id = '"+str(ida)+"' "
+
+        queryset = vw_nanum_service_activ.objects.raw(query)
         print(query)
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
