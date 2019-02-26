@@ -2922,7 +2922,7 @@ def MP0103M_Insert(request):
         # /* 계획서 최초 작성 시 보고서 insert */
         # /* 화면으로부터 넘겨받은 mnt_dt_cnt로 for(i = 1 i < mnt_dt_cnt i++) */
         # /* MP0103M/insert 시 같이 수행되게 해주세요 */
-        query += "insert into service20_mp_rep ("
+        query = "insert into service20_mp_rep ("
         query += "  mp_id"
         query += ", apl_no"
         query += ", rep_no"
