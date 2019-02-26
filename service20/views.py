@@ -2974,7 +2974,7 @@ def MP0103M_Insert(request):
         query += "     , null      as sch_nm"
         query += "     , null      as mtr_sub"
         query += "     , null      as att_desc"
-        query += "     , concat(date_format(date("+str(mnt_fr_dt)+" + interval "+str(i)+"-1 month), '%%y'), '년 ', date_format(date("+str(mnt_fr_dt)+" + interval "+str(i)+"-1 month), '%%m'), '월 보고서') as rep_ttl"
+        query += "     , concat(date_format(date( STR_TO_DATE('"+str(mnt_fr_dt)+"','%%Y-%%m-%%d %%H:%%i:%%S') + interval "+str(i)+"-1 month), '%%y'), '년 ', date_format(date( STR_TO_DATE('"+str(mnt_fr_dt)+"','%%Y-%%m-%%d %%H:%%i:%%S') + interval "+str(i)+"-1 month), '%%m'), '월 보고서') as rep_ttl"
         query += "     , null      as mtr_obj"
         query += "     , null      as rep_dt"
         query += "     , null      as req_dt"
