@@ -2961,7 +2961,7 @@ def MP0103M_Insert(request):
         query += ")"
         query += "select t1.mp_id  as mp_id"
         query += "     , t1.apl_no as apl_no"
-        query += "     , '" + str(i) + "''        as rep_no /* {!i} */"
+        query += "     , '" + str(i) + "'        as rep_no /* {!i} */"
         query += "     , 'M'       as rep_div /*m - 교육 */"
         query += "     , '" + str(rep_ym) + "'  as rep_ym /* {!rep_ym} */"
         query += "     , null      as mnte_id"
