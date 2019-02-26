@@ -1752,7 +1752,7 @@ def MP0101M_save(request):
         v_unv_nm = rows.unv_nm
 
 
-    query = " select t2.id,t2.yr FROM service20_mpgm t2  WHERE 1=1 "
+    query = " select t2.mp_id,t2.yr FROM service20_mpgm t2  WHERE 1=1 "
     query += " AND t2.mp_id          = '"+mp_id+"'"
     queryset = mp_mtr.objects.raw(query)[0]
     
