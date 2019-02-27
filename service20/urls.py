@@ -339,13 +339,36 @@ urlpatterns = [
     path('sms_result/', sms_result, name='sms_result'), 
 
 
+    path('mssql/', mssql, name='mssql'), 
+    path('mssql2/', mssql2, name='mssql'), 
+
     #리턴URLTest
     path('returnsso/', returnsso, name='returnsso'), 
-
-
+    #리턴URLTest
+    path('returnsso2/', returnsso2, name='returnsso2'), 
 
     #개인정보리턴
     path('agree_cont1/', agree_cont1.as_view(), name='agree_cont1'), 
+
+
+
+    #멘토스쿨공통코드학년가져오기
+    path('ms_com_cd1/', ms_com_cd1.as_view(), name='ms_com_cd1'), 
+
+    #멘토스쿨공통코드학년저장하기
+    path('ms_com_save1/', ms_com_save1, name='ms_com_save1'), 
+
+
+
+    #파일업로드
+    path('upload/', upload, name='upload'), 
+
+    #공지사항
+    path('bbs1/', bbs1.as_view(), name='bbs1'), 
+
+    ###모바일
+    #멘토링 프로그램 List
+
     ########################################################################################
     # view2 부분 (종료)
     #

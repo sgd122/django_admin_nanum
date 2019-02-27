@@ -24,8 +24,9 @@ from django import forms
 import django_excel as excel
 # api/moim 으로 get하면 이 listview로 연결
 
-
-
+# pymssql 패키지 import
+import pymssql
+import pyodbc
 
 #멘토스쿨 콤보박스
 class msComboListViewSerializer(serializers.ModelSerializer):
@@ -54,7 +55,7 @@ class msComboListView(generics.ListAPIView):
 class msComboListViewDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = msch
-        fields = ('ms_id','status','ms_name','ms_sname','ms_intro','mng_area','mgr_id','mgr_nm','mng_org','sup_org','yr','yr_seq','apl_ntc_fr_dt','apl_ntc_to_dt','apl_term','apl_fr_dt','apl_to_dt','trn_term','trn_fr_dt','trn_to_dt','tot_apl','cnt_apl','cnt_doc_suc','cnt_doc_res','cnt_intv_pl','cnt_intv_ac','intv_dt','cnt_intv_suc','cnt_iintv_res','cnt_trn','cnt_mtr','doc_dt','doc_mgr','intv_in_dt','intv_in_mgr','fin_dt','fin_mgr')
+        fields = ('ms_id','status','ms_name','ms_sname','ms_intro','mng_area','mgr_id','mgr_nm','mng_org','sup_org','yr','yr_seq','apl_ntc_fr_dt','apl_ntc_to_dt','apl_term','apl_fr_dt','apl_to_dt','trn_term','trn_fr_dt','trn_to_dt','tot_apl','cnt_apl','cnt_doc_suc','cnt_doc_res','cnt_intv_pl','cnt_intv_ac','intv_dt','cnt_intv_suc','cnt_iintv_res','cnt_trn','cnt_mtr','doc_dt','doc_in_dt','doc_in_mgr','intv_in_dt','intv_in_mgr','fin_dt','fin_in_dt','fin_in_mgr')
 
 class msComboListViewDetail(generics.ListAPIView):
     queryset = msch.objects.all()
@@ -1031,11 +1032,13 @@ def mpFn4(request):
     cursor.execute(query_a)
     results_a = namedtuplefetchall(cursor)  
 
+    print("a")
     query_b = "select * from service20_mp_mtr where doc_rslt = 'P' and mp_id = '"+ mp_id + "'order by id"
-
+    print(query_b)
     cursor.execute(query_b)
     results_b = namedtuplefetchall(cursor)  
 
+    print(query_b)
      
 
     #면접 그룹 인원수
@@ -1163,13 +1166,16 @@ def mpFn6_Submit(request):
 def mpFn6_Submit2(request):
     apl_id = request.GET.get('apl_id', None)
     mp_id = request.GET.get('mp_id', None)
-
+    print(apl_id)
+    print(mp_id)
+    print("울트라 잘된다.............................................")
     cursor = connection.cursor()
     insert_sql = "update service20_mp_mtr set "
     insert_sql += "doc_rslt='N' "
     insert_sql += " where doc_rslt<>'P'" 
     insert_sql += " and mp_id='"+ mp_id +"'" 
 
+    print(insert_sql)
     cursor.execute(insert_sql)
 
     message = "Ok" 
@@ -1246,13 +1252,14 @@ class mpPop1_Det1Serializer(serializers.ModelSerializer):
 
 class mpPop1_Det1(generics.ListAPIView):
 
- 
+    print("aaa111")
+
     queryset = mp_mtr.objects.all()
     serializer_class = mpPop1_Det1Serializer
 
     def list(self, request):
 
-  
+        print("aaa222")
         mp_id = request.GET.get('mp_id', None)
         apl_id = request.GET.get('apl_id', None)
 
@@ -1634,12 +1641,81 @@ def sms_result(request):
 
 
 @csrf_exempt
-def returnsso(request,response):
+def mssql(request):
+    vlSelectNo = request.GET.get('id')
+    vlFlag = request.GET.get('flag')
+    # MSSQL 접속
+    conn = pymssql.connect(server='192.168.2.124', user='nanum', password='n@num*!@', database='hakjuk', port='1221')
+    
+    print("a1")
+    cursor = conn.cursor()
+    print("a22")
+    cursor.execute("select apl_id,apl_nm dept_nm from vw_nanum_stdt where apl_id = '201632113'")  
+    print("a33")
+    row = cursor.fetchone()  
+    print(row)
+    while row:
+        print(str(row[0]))
+        row = cursor.fetchone() 
+    message = "Ok"
+    context = {'message': message
+                    
+    }
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+
+
+@csrf_exempt
+def mssql2(request):
+    vlSelectNo = request.GET.get('id')
+    vlFlag = request.GET.get('flag')
+    # MSSQL 접속
+    #conn = pymssql.connect(server='192.168.2.124', user='nanum', password='n@num*!@', database='HAKJUK', port='1221')
+    print("a0")
+    conn =  pyodbc.connect('driver={ODBC Driver 17 for SQL Server};server=192.168.2.124;database=HAKJUK;uid=nanum;pwd=n@num*!@,port=1221')
+
+    print("a1")
+    cursor = conn.cursor()
+    print("a2")
+    cursor.execute("select apl_id from WM_HANUM_STDT where apl_id = '201678120'")  
+    print("a3")
+    row = cursor.fetchone()  
+    while row:
+        print(str(row[0]) + " " + str(row[1]) + " " + str(row[2]))
+        row = cursor.fetchone() 
+    message = "Ok"
+    context = {'message': message
+                    
+    }
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+
+
+@csrf_exempt
+def returnsso(request):
+        a =  request.POST.get('gbn')
+        b =  request.POST.get('sta')
+        request.session['member_id'] = 'aaaaaasss'
+
         message = "Ok"
         context = {'message': message,
-    
         }
         return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+
+
+
+@csrf_exempt
+def returnsso2(request):
+        
+        print(request.session['member_id'])
+
+        if request.session['member_id'] == None:
+            message = 'NoSession'
+        else:
+            message = request.session['member_id']
+        
+        context = {'message': message,
+        }
+        return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+
 
 
 
@@ -1668,3 +1744,141 @@ class agree_cont1(generics.ListAPIView):
             return self.get_paginated_response(serializer.data)
 
         return Response(serializer.data)
+
+
+
+
+
+#멘토스쿨공통코드학년가져오기
+class ms_com_cd1Serializer(serializers.ModelSerializer):
+
+    yn = serializers.SerializerMethodField()
+
+    class Meta:
+        model = com_cdd
+        fields = ('id','std_grp_code','std_detl_code','std_detl_code_nm','sort_seq_no','yn')
+
+    def get_yn(self,obj):
+        return obj.yn
+
+class ms_com_cd1(generics.ListAPIView):
+    queryset = com_cdd.objects.all()
+    serializer_class = ms_com_cd1Serializer
+
+    def list(self, request):    
+        queryset = self.get_queryset()
+
+        l_ms_id = request.GET.get('ms_id',None)
+
+        #queryset = queryset.filter(std_grp_code="MS0010")
+        query = "select id, std_grp_code, std_detl_code, std_detl_code_nm, rmrk, sort_seq_no "
+        query += ",(select (case when count(1) >0 then 'Y' else 'N' end) as YN from service20_ms_sub where ms_id = '"+l_ms_id+"' and att_id = A.std_grp_code and att_cdd = A.std_detl_code) as yn "
+        query += " from service20_com_cdd A where std_grp_code in  ('MS0010','MS0011','MS0012')"
+        queryset = com_cdd.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+
+
+#멘토스쿨 설정값 저장하기
+@csrf_exempt
+def ms_com_save1(request):
+    l_id = request.GET.get('id', None)
+    l_ms_id = request.GET.get('ms_id', None)
+    l_std_grp_code = request.GET.get('std_grp_code', None)
+    l_std_detl_code = request.GET.get('std_detl_code', None)
+    l_tflag = request.GET.get('tflag', None)
+    
+    print(l_id)
+    print(l_ms_id)
+    print(l_std_detl_code)
+    print(l_tflag)
+    
+    cursor = connection.cursor()
+    if l_tflag=='d':
+        insert_sql = "delete from service20_ms_sub where  ms_id = '" + str(l_ms_id) + "' and att_id = '"+ l_std_grp_code + "' and att_cdd = '"+ l_id+ "' "
+        print(insert_sql)  
+
+    if l_tflag=='i':
+        insert_sql = "insert into service20_ms_sub(ms_id, att_id, att_seq, att_cdh, att_cdd, att_val, att_unit, use_yn, sort_seq) "
+        insert_sql += "select '" + str(l_ms_id) + "'," 
+        insert_sql += "'" + str(l_std_grp_code) +"'," 
+        insert_sql += "(select COALESCE(max(att_seq),0) + 1 from service20_ms_sub where ms_id = '" + str(l_ms_id) +"') ," 
+        insert_sql += "std_grp_code, std_detl_code, std_detl_code_nm, '', 'Y', sort_seq_no from service20_com_cdd where std_grp_code = '"+ str(l_std_grp_code) +"' and std_detl_code = '"+ str(l_std_detl_code)+ "'"
+        print(insert_sql) 
+    cursor.execute(insert_sql)
+    message = "Ok" 
+    context = {'message': message,}
+    
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+
+
+
+
+#파일업로드 테스트
+@csrf_exempt
+def upload(request):
+
+    req = request
+    DIR = os.getcwd()
+    UPLOAD_DIR = str(DIR) + '/media/mp_mtr/'
+    if request.method == 'POST':
+        l_user_id = request.POST.get("user_id")
+        l_mp_id = request.POST.get("mp_id")
+
+        print(l_user_id)
+        print(l_mp_id)
+        file = request.FILES['file']
+        filename = file._name
+        n_filename = str(l_user_id) + '_' + str(l_mp_id) + '' + os.path.splitext(filename)[1]
+        print(n_filename)
+        print (UPLOAD_DIR)
+        
+        fp = open('%s/%s' % (UPLOAD_DIR, n_filename) , 'wb')
+
+        for chunk in file.chunks():
+            fp.write(chunk)
+        fp.close()
+
+        cursor = connection.cursor()
+        fullFile = str(UPLOAD_DIR) + str(n_filename)
+        insert_sql = "update service20_mp_mtr set  id_pic = '" + str(fullFile) + "' where mp_id = '"+ str(l_mp_id) + "' and apl_id = '" +  str(l_user_id) +"' "
+        print(insert_sql)
+        cursor.execute(insert_sql)
+
+        return HttpResponse('File Uploaded')
+
+    return HttpResponse('Failed to Upload File')
+
+
+
+
+#공지사항
+class bbs1Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = bbs1
+        fields = ('subject','name','html','hits','ins_dt','ins_id')
+
+class bbs1(generics.ListAPIView):
+    queryset = bbs1.objects.all()
+    serializer_class = bbs1Serializer
+
+    def list(self, request):   
+        queryset = self.get_queryset()
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+
