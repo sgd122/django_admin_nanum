@@ -1876,7 +1876,7 @@ def MP0101M_save(request):
         apl_no = apl_no + 1
 
     
-    query = "select ifnull(max(apl_no),1) as apl_no from service20_mp_mtr where apl_id = '"+ida+"' and mp_id = '"+ms_ida+"'"  
+    query = "select ifnull(max(apl_no),1) as apl_no from service20_mp_mtr where apl_id = '"+apl_id+"' and mp_id = '"+mp_id+"'"  
     cursor = connection.cursor()
     cursor.execute(query)    
     results = namedtuplefetchall(cursor)    
