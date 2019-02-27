@@ -1859,3 +1859,23 @@ class bbs1(models.Model):
   upd_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정자IP' )
   upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
   upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
+
+
+
+
+class com_evt(models.Model):
+  evt_gb = models.CharField(max_length=10, null=False, verbose_name='이벤트구분' )
+  evt_userid = models.CharField(max_length=14, null=False, verbose_name='이벤트사용자ID' )
+  evt_ip = models.CharField(max_length=22, null=False, verbose_name='이벤트발생 IP' )
+  evt_dat = models.CharField(max_length=14, null=False, verbose_name='이벤트일시' )
+  evt_desc = models.CharField(max_length=500, null=True, blank=True, verbose_name='이벤트 내용' )
+  ins_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='입력자ID' )
+  ins_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력자IP' )
+  ins_dt = models.DateTimeField(null=True, blank=True, verbose_name='입력일시' )
+  ins_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력프로그램ID' )
+
+  class Meta:
+    verbose_name = '이벤트로그'
+    verbose_name_plural =  verbose_name
+
+
