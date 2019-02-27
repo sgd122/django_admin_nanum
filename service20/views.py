@@ -2851,24 +2851,31 @@ class MP0101M_report_list_Serializer(serializers.ModelSerializer):
     mpgm_yr = serializers.SerializerMethodField()
     mnt_term = serializers.SerializerMethodField()
     mnt_term_nm = serializers.SerializerMethodField()
+    pr_yr = serializers.SerializerMethodField()
+    pr_sch_yr = serializers.SerializerMethodField()
+    pr_term_div = serializers.SerializerMethodField()
+    pr_term_cnt = serializers.SerializerMethodField()
 
     acpt_dt = serializers.DateTimeField(format='%Y-%m-%d')
 
     class Meta:
         model = mp_mtr
-        fields = ('mp_id','apl_no','mntr_id','indv_div','team_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','bank_acct','bank_cd','bank_nm','bank_dpsr','cnt_mp_a','cnt_mp_p','cnt_mp_c','cnt_mp_g','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','fnl_rslt','acpt_dt','acpt_div','acpt_cncl_rsn','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','mp_name','statusNm','statusCode','id_pic','mpgm_yr','mnt_term','mnt_term_nm')
+        fields = ('mp_id','apl_no','mntr_id','indv_div','team_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','bank_acct','bank_cd','bank_nm','bank_dpsr','cnt_mp_a','cnt_mp_p','cnt_mp_c','cnt_mp_g','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','fnl_rslt','acpt_dt','acpt_div','acpt_cncl_rsn','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','mp_name','statusNm','statusCode','id_pic','mpgm_yr','mnt_term','mnt_term_nm','pr_yr','pr_sch_yr','pr_term_div','pr_term_cnt')
 
     def get_mp_name(self,obj):
         return obj.mp_name
 
-    # def get_pr_yr(self,obj):
-    #     return obj.pr_yr
+    def get_pr_yr(self,obj):
+        return obj.pr_yr
 
-    # def get_pr_sch_yr(self,obj):
-    #     return obj.pr_sch_yr
+    def get_pr_sch_yr(self,obj):
+        return obj.pr_sch_yr
 
-    # def get_pr_term_div(self,obj):
-    #     return obj.pr_term_div  
+    def get_pr_term_div(self,obj):
+        return obj.pr_term_div  
+
+    def get_pr_term_cnt(self,obj):
+        return obj.pr_term_cnt      
 
     def get_statusNm(self,obj):
         now = datetime.datetime.today()
@@ -2927,12 +2934,18 @@ class MP0101M_report_list(generics.ListAPIView):
         query = "select c.yr AS mpgm_yr,  "
         query += "       c.mnt_term,  "
         query += "       c.mp_name,  "
+        query += "       b.pr_yr,  "
+        query += "       b.pr_sch_yr,  "
+        query += "       b.pr_term_div, "
+        query += "       cast( ((b.pr_sch_yr-1)*2)+(substr(b.pr_term_div,1,1)*1) as UNSIGNED) pr_term_cnt, "
         query += "       d.std_detl_code_nm AS mnt_term_nm,  "
         query += "       a.*  "
         query += "FROM   service20_mp_mtr a,  " 
+        query += "       service20_vw_nanum_stdt b, "
         query += "       service20_mpgm c,  "
         query += "       service20_com_cdd d "
         query += " WHERE a.mp_id = c.mp_id  "
+        query += "   AND a.apl_id = b.apl_id "
         query += "   AND a.mp_id = '"+str(mp_ida)+"'  "
         query += "   AND a.apl_id = '"+str(ida)+"' "
         query += "   AND d.std_grp_code  = 'MS0022' "
