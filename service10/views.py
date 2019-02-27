@@ -46,6 +46,8 @@ def post_login(request):
 	#rows = vm_nanum_stdt.objects.filter(apl_id=ida)
 	#rows2 = vm_nanum_stdt.objects.get("apl_nm")
 	
+	client_ip = request.META['REMOTE_ADDR']
+	print("::client_ip::"+str(client_ip))
 
 	if not created_flag:
 		message = "Fail"
@@ -60,6 +62,7 @@ def post_login(request):
 		mentor_cursor = connection.cursor()
 		query_result = mentor_cursor.execute(mentor_query)  
 
+		client_ip = request.META['REMOTE_ADDR']
 		query = " insert into service20_com_evt     /* 이벤트로그 */ ";
 		query += "      ( evt_gb     /* 이벤트구분 */ ";
 		query += "     , evt_userid /* 이벤트사용자id */ ";
