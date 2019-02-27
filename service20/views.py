@@ -1855,6 +1855,8 @@ class MP0101M_list_Serializer(serializers.ModelSerializer):
     statusCode = serializers.SerializerMethodField()
     status_nm  = serializers.SerializerMethodField()
     sup_org_nm = serializers.SerializerMethodField()
+    code  = serializers.SerializerMethodField()
+    code_nm = serializers.SerializerMethodField()
 
     apl_fr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     apl_to_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
@@ -1863,7 +1865,7 @@ class MP0101M_list_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = mpgm
-        fields = ('mp_id','mp_name','status','statusCode','yr','yr_seq','sup_org','applyFlag','applyStatus','apl_fr_dt','apl_to_dt','mnt_fr_dt','mnt_to_dt','cnt_trn','status','status_nm','applyFlagNm','sup_org_nm')
+        fields = ('mp_id','mp_name','status','statusCode','yr','yr_seq','sup_org','applyFlag','applyStatus','apl_fr_dt','apl_to_dt','mnt_fr_dt','mnt_to_dt','cnt_trn','status','status_nm','applyFlagNm','sup_org_nm','code','code_nm')
 
     def get_applyFlag(self, obj):
         return obj.applyFlag    
@@ -1889,7 +1891,10 @@ class MP0101M_list_Serializer(serializers.ModelSerializer):
         return obj.status
     def get_sup_org_nm(self,obj):
         return obj.sup_org_nm
-
+    def get_code(self,obj):
+        return obj.code
+    def get_code_nm(self,obj):
+        return obj.code_nm
 
 class MP0101M_list(generics.ListAPIView):
     queryset = mpgm.objects.all()
@@ -1924,7 +1929,10 @@ class MP0101M_list(generics.ListAPIView):
         query += "                AND use_indc = 'y'  "
         query += "                AND std_detl_code = A.status))      AS status_nm,  "
         query += "        Ifnull(B.status, 'N')                       AS applyFlag,  "
-    
+        
+        query += " CASE WHEN E.score03 < D.att_val THEN '신청' ELSE CONCAT('신청불가 : 학점', D.att_val, '미만') END code_nm,CASE WHEN E.score03 < D.att_val THEN 'Y' ELSE 'N' END code, "
+
+
         query += " CASE  "
         query += "      WHEN Ifnull(B.status, 'N') = 'N' THEN '미지원' "
         query += "      ELSE (SELECT std_detl_code_nm  "
@@ -1940,11 +1948,27 @@ class MP0101M_list(generics.ListAPIView):
         # query += "                    AND A.yr = B.yr  "
         query += "                    AND B.apl_id = '"+str(ida)+"' )  "
         query += "        LEFT JOIN service20_com_cdd c1 ON (c1.std_grp_code  = 'MP0004' AND c1.std_detl_code = A.sup_org) "
+        
+
+        query += "        LEFT JOIN        (  /* 학점 제한 */ "
+        query += "               select att_val,mp_id "
+        query += "                 FROM service20_mp_sub t3 "
+        query += "                WHERE t3.att_id  = 'MP0071' "
+        query += "                  AND t3.att_cdh = 'MP0071' "
+        query += "                  AND t3.att_cdd = '10' "
+        query += "               ) D ON (A.mp_id = D.mp_id) "
+        query += " , service20_vw_nanum_stdt E "
+
         query += " WHERE  A.yr = '"+str(l_yr)+"'  "
         query += "        AND A.apl_term = '"+str(l_apl_term)+"'  "
+
+
+        query += "        AND E.apl_id = '"+str(ida)+"'"
         # query += "        AND (SELECT Count(1)  "
         # query += "             FROM   service20_mentor  "
         # query += "             WHERE  apl_id = '"+str(ida)+"') > 0  "
+        
+
         query += "        AND IF(A.status = '10'  "
         query += "               AND Now() > A.apl_to_dt, 'xx', A.status) LIKE  "
         query += "            Ifnull(Nullif('"+str(l_status)+"', ''), '%%')  "
