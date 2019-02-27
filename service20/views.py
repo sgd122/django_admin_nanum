@@ -888,25 +888,6 @@ class MS0101M_list(generics.ListAPIView):
         l_user_id = request.GET.get('user_id', None)
         l_status = request.GET.get('status', '')
 
-        # query = " select apl_to_dt,  "
-        # query += " if(A.status = '10'  "
-        # query += " and now() > A.apl_to_dt, 'xx', A.status) as statusCode,  "
-        # query += " if(A.status = '10'  "
-        # query += " and now() > A.apl_to_dt, '모집완료', (select std_detl_code_nm  "
-        # query += " from   service20_com_cdd  "
-        # query += " where  "
-        # query += " std_grp_code = 'MS0001'  "
-        # query += " and use_indc = 'y'  "
-        # query += " and std_detl_code = status)) as status_nm,  "
-
-        # query += " ifnull((select 'Y' from service20_ms_apl where yr = '"+str(l_yr)+"' and apl_id = '"+str(l_user_id)+"' and ms_id = A.ms_id),'N') AS applyFlag,A.* from service20_msch A where A.yr='"+str(l_yr)+"' and A.apl_term='"+str(l_apl_term)+"'"
-        
-        # query += " and if(A.status = '10' and now() > A.apl_to_dt, 'xx', A.status) "
-        # query += "  like ifnull(NULLIF('"+str(l_status)+"',''),'%%') || '%%' "
-
-        # query += " order by apl_fr_dt desc,apl_to_dt desc " 
-        # queryset = msch.objects.raw(query)
-
 
         query = " select apl_to_dt,  "
         query += "        IF(A.status = '10'  "
@@ -924,7 +905,7 @@ class MS0101M_list(generics.ListAPIView):
         query += "      WHEN Ifnull(B.status, 'N') = 'N' THEN '미지원' "
         query += "      ELSE (SELECT std_detl_code_nm  "
         query += "              FROM   service20_com_cdd  "
-        query += "              WHERE  std_grp_code = 'MP0053'  "
+        query += "              WHERE  std_grp_code = 'MS0024'  "
         query += "                 AND std_detl_code = B.status)  "
         query += " end                                         AS applyFlagNm,  "
         query += " c1.std_detl_code_nm   AS sup_org_nm, "
@@ -1051,7 +1032,7 @@ def MS0101M_save(request):
     query += " AND t2.ms_id          = '"+ms_id+"'"
     queryset = msch.objects.raw(query)[0]
 
-    rowsChk = msch.objects.filter(apl_id=apl_id,ms_id=ms_id).exists()
+    rowsChk = ms_apl.objects.filter(apl_id=apl_id,ms_id=ms_id).exists()
 
     if rowsChk == True:
         context = {'message': 'duplicate'}
