@@ -66,7 +66,29 @@ def login_login(request):
             first_page = s.post('https://onestop.pusan.ac.kr/new_pass/exorgan/exidentify.asp', data=login_info)
             html = first_page.text
             if first_page.status_code != 200:
-                message = "login_fail"                  
+                message = "login_fail"           
+                query = " insert into service20_com_evt     /* 이벤트로그 */ ";
+                query += "      ( evt_gb     /* 이벤트구분 */ ";
+                query += "     , evt_userid /* 이벤트사용자id */ ";
+                query += "     , evt_ip     /* 이벤트발생 ip */ ";
+                query += "     , evt_dat    /* 이벤트일시 */ ";
+                query += "     , evt_desc   /* 이벤트 내용 */ ";
+                query += "     , ins_id     /* 입력자id */ ";
+                query += "     , ins_ip     /* 입력자ip */ ";
+                query += "     , ins_dt     /* 입력일시 */ ";
+                query += "     , ins_pgm    /* 입력프로그램id */ ";
+                query += ") ";
+                query += " select 'EVT001'  AS evt_gb     /* 이벤트구분 - 로그인 */ ";
+                query += "     , '"+id+"' AS evt_userid /* 이벤트사용자id */ ";
+                query += "     , '"+str(client_ip)+"' AS evt_ip     /* 이벤트발생 ip */ ";
+                query += "     , REPLACE(REPLACE(REPLACE(SUBSTRING(NOW(),1, 19), '-',''),':',''),' ', '')        AS evt_dat    /* 이벤트일시 */ ";
+                query += "     , CONCAT('','200Error') evt_desc   /* 이벤트 내용 */ ";
+                query += "     , '"+id+"' AS ins_id     /* 입력자id */ ";
+                query += "     , '"+str(client_ip)+"' AS ins_ip     /* 입력자ip */ ";
+                query += "     , NOW()     AS ins_dt     /* 입력일시 */ ";
+                query += "     , 'LOGIN'   AS ins_pgm    /* 입력프로그램id */ ";
+                cursor_log = connection.cursor()
+                query_result = cursor_log.execute(query)           
                 print("login_200_error => " + str(id))
             else:
                 soup = bs(html, 'html.parser')
@@ -76,8 +98,54 @@ def login_login(request):
                     print("login_false => " + str(id))
                     message = "login_fail"
                     context = {'login': 'fail',}
+
+                    query = " insert into service20_com_evt     /* 이벤트로그 */ ";
+                    query += "      ( evt_gb     /* 이벤트구분 */ ";
+                    query += "     , evt_userid /* 이벤트사용자id */ ";
+                    query += "     , evt_ip     /* 이벤트발생 ip */ ";
+                    query += "     , evt_dat    /* 이벤트일시 */ ";
+                    query += "     , evt_desc   /* 이벤트 내용 */ ";
+                    query += "     , ins_id     /* 입력자id */ ";
+                    query += "     , ins_ip     /* 입력자ip */ ";
+                    query += "     , ins_dt     /* 입력일시 */ ";
+                    query += "     , ins_pgm    /* 입력프로그램id */ ";
+                    query += ") ";
+                    query += " select 'EVT001'  AS evt_gb     /* 이벤트구분 - 로그인 */ ";
+                    query += "     , '"+id+"' AS evt_userid /* 이벤트사용자id */ ";
+                    query += "     , '"+str(client_ip)+"' AS evt_ip     /* 이벤트발생 ip */ ";
+                    query += "     , REPLACE(REPLACE(REPLACE(SUBSTRING(NOW(),1, 19), '-',''),':',''),' ', '')        AS evt_dat    /* 이벤트일시 */ ";
+                    query += "     , CONCAT('','notPass') evt_desc   /* 이벤트 내용 */ ";
+                    query += "     , '"+id+"' AS ins_id     /* 입력자id */ ";
+                    query += "     , '"+str(client_ip)+"' AS ins_ip     /* 입력자ip */ ";
+                    query += "     , NOW()     AS ins_dt     /* 입력일시 */ ";
+                    query += "     , 'LOGIN'   AS ins_pgm    /* 입력프로그램id */ ";
+                    cursor_log = connection.cursor()
+                    query_result = cursor_log.execute(query)    
                 elif gbn['value'] == 'True':
                     print("login_true => " + str(id))
+
+                    query = " insert into service20_com_evt     /* 이벤트로그 */ ";
+                    query += "      ( evt_gb     /* 이벤트구분 */ ";
+                    query += "     , evt_userid /* 이벤트사용자id */ ";
+                    query += "     , evt_ip     /* 이벤트발생 ip */ ";
+                    query += "     , evt_dat    /* 이벤트일시 */ ";
+                    query += "     , evt_desc   /* 이벤트 내용 */ ";
+                    query += "     , ins_id     /* 입력자id */ ";
+                    query += "     , ins_ip     /* 입력자ip */ ";
+                    query += "     , ins_dt     /* 입력일시 */ ";
+                    query += "     , ins_pgm    /* 입력프로그램id */ ";
+                    query += ") ";
+                    query += " select 'EVT001'  AS evt_gb     /* 이벤트구분 - 로그인 */ ";
+                    query += "     , '"+id+"' AS evt_userid /* 이벤트사용자id */ ";
+                    query += "     , '"+str(client_ip)+"' AS evt_ip     /* 이벤트발생 ip */ ";
+                    query += "     , REPLACE(REPLACE(REPLACE(SUBSTRING(NOW(),1, 19), '-',''),':',''),' ', '')        AS evt_dat    /* 이벤트일시 */ ";
+                    query += "     , CONCAT('','success') evt_desc   /* 이벤트 내용 */ ";
+                    query += "     , '"+id+"' AS ins_id     /* 입력자id */ ";
+                    query += "     , '"+str(client_ip)+"' AS ins_ip     /* 입력자ip */ ";
+                    query += "     , NOW()     AS ins_dt     /* 입력일시 */ ";
+                    query += "     , 'LOGIN'   AS ins_pgm    /* 입력프로그램id */ ";
+                    cursor_log = connection.cursor()
+                    query_result = cursor_log.execute(query)  
 
                     userid = soup.find('input', {'name': 'userid'})
                     v_userid = userid['value']              
@@ -603,6 +671,115 @@ class com_combo_cnclRsn(generics.ListAPIView):
             return self.get_paginated_response(serializer.data)
 
         return Response(serializer.data)        
+
+class com_combo_repdiv_Serializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = com_cdd
+        fields = ('std_grp_code','std_detl_code','std_detl_code_nm','rmrk','sort_seq_no')
+
+
+class com_combo_repdiv(generics.ListAPIView):
+    queryset = com_cdd.objects.all()
+    serializer_class = com_combo_repdiv_Serializer
+
+    def list(self, request):
+        
+
+        queryset = self.get_queryset()
+        
+        
+        query = "select id,std_detl_code";
+        query += "     , std_detl_code_nm";
+        query += "  from service20_com_cdd";
+        query += " where std_grp_code = 'mp0062'";
+
+        queryset = com_cdd.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)        
+
+class com_combo_com_cdd_Serializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = com_cdd
+        fields = ('std_grp_code','std_detl_code','std_detl_code_nm','rmrk','sort_seq_no')
+
+
+class com_combo_com_cdd(generics.ListAPIView):
+    queryset = com_cdd.objects.all()
+    serializer_class = com_combo_com_cdd_Serializer
+
+    def list(self, request):
+        l_code = request.GET.get('code', "")
+
+        queryset = self.get_queryset()
+        
+        
+        query = "select id,std_detl_code";
+        query += "     , std_detl_code_nm";
+        query += "  from service20_com_cdd";
+        query += " where std_grp_code = '"+str(l_code)+"'";
+
+        queryset = com_cdd.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)        
+
+class com_combo_program2_Serializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = mpgm
+        fields = ('mp_id','mp_name','status','yr','apl_term')
+
+
+class com_combo_program2(generics.ListAPIView):
+    queryset = com_cdd.objects.all()
+    serializer_class = com_combo_program2_Serializer
+
+    def list(self, request):
+        yr = request.GET.get('yr', "")
+        apl_term = request.GET.get('apl_term', "")
+        status = request.GET.get('status', "")
+
+        queryset = self.get_queryset()
+        
+        
+        query = "select mp_id";
+        query += ", mp_name";
+        query += ", status";
+        query += ", yr";
+        query += ", apl_term";
+        query += " from service20_mpgm";
+        query += " where yr = '"+yr+"'";
+        query += " and apl_term = '"+apl_term+"'";
+        query += " and status = '"+status+"'";
+
+        queryset = mpgm.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)  
 
 class com_list_my_mentee_Serializer(serializers.ModelSerializer):
 
@@ -1726,6 +1903,14 @@ class MP0101M_list(generics.ListAPIView):
 
         query = "select ifnull((select 'Y' from service20_mp_mtr where yr = '"+str(l_yr)+"' and apl_id = '"+str(ida)+"' and mp_id = A.mp_id),'N') AS applyFlag,A.* from service20_mpgm A where A.yr='"+str(l_yr)+"' and A.apl_term='"+str(l_apl_term)+"'"
         
+        # SELECT att_val
+        #   FROM service20_mp_sub T3
+        #  WHERE T3.mp_id   = 'P182014'
+        #    AND T3.att_id  = 'MP0071'
+        #    AND T3.att_cdh = 'MP0071'
+        #    AND T3.att_cdd = '10'
+        #    /*미만*/
+
         # 멘토만 조회가능.
 
         query = " select apl_to_dt,  "
