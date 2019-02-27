@@ -187,7 +187,7 @@ def login_login(request):
                         l_grade = str(row[10])
 
                         # 삭제 (어학)
-                        delete_query = " delete from service20_vw_nanum_foreign_exam where apl_id = CASE WHEN '"+l_apl_id+"' "
+                        delete_query = " delete from service20_vw_nanum_foreign_exam where apl_id = '"+l_apl_id+"' "
                         cursor_delete = connection.cursor()
                         delete_query_result = cursor_delete.execute(delete_query)                       
                         # 삭제 (어학)
@@ -273,7 +273,7 @@ def login_login(request):
                         l_tot_time = str(row[12])
 
                         # 삭제 (봉사)
-                        delete_query = " delete from service20_vw_nanum_service_activ where apl_id = CASE WHEN '"+l_apl_id+"' "
+                        delete_query = " delete from service20_vw_nanum_service_activ where apl_id = '"+l_apl_id+"' "
                         cursor_delete = connection.cursor()
                         delete_query_result = cursor_delete.execute(delete_query)                       
                         # 삭제 (봉사)
@@ -769,7 +769,6 @@ class com_combo_program2(generics.ListAPIView):
         query += " from service20_mpgm";
         query += " where yr = '"+yr+"'";
         query += " and apl_term = '"+apl_term+"'";
-        query += " and status = '"+status+"'";
         query += " order by mp_id "
 
         queryset = mpgm.objects.raw(query)
