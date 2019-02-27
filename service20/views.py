@@ -1874,6 +1874,14 @@ def MP0101M_save(request):
     else:
         apl_no = mp_mtr_max['vlMax']
         apl_no = apl_no + 1
+
+    
+    query = "select ifnull(max(apl_no),1) as apl_no from service20_mp_mtr where apl_id = '"+ida+"' and mp_id = '"+ms_ida+"'"  
+    cursor = connection.cursor()
+    cursor.execute(query)    
+    results = namedtuplefetchall(cursor)    
+    apl_no = results[0].apl_no
+
     print("::apl_no::")
     print(apl_no)
     
