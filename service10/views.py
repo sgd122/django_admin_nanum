@@ -74,7 +74,7 @@ def post_login(request):
 		query += " select 'EVT001'  AS evt_gb     /* 이벤트구분 - 로그인 */ ";
 		query += "     , '"+ida+"' AS evt_userid /* 이벤트사용자id */ ";
 		query += "     , '0.0.0.1' AS evt_ip     /* 이벤트발생 ip */ ";
-		query += "     , DATE_FORMAT(NOW(),'%%Y%%m%%d%%h%%i%%S')        AS evt_dat    /* 이벤트일시 */ ";
+		query += "     , REPLACE(REPLACE(REPLACE(SUBSTRING(NOW(),1, 19), '-',''),':',''),' ', '')        AS evt_dat    /* 이벤트일시 */ ";
 		query += "     , CONCAT('','로그인') evt_desc   /* 이벤트 내용 */ ";
 		query += "     , '"+ida+"' AS ins_id     /* 입력자id */ ";
 		query += "     , '0.0.0.1' AS ins_ip     /* 입력자ip */ ";
