@@ -1857,6 +1857,7 @@ class MP0101M_list_Serializer(serializers.ModelSerializer):
     sup_org_nm = serializers.SerializerMethodField()
     code  = serializers.SerializerMethodField()
     code_nm = serializers.SerializerMethodField()
+    score03 = serializers.SerializerMethodField()
 
     apl_fr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     apl_to_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
@@ -1865,7 +1866,7 @@ class MP0101M_list_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = mpgm
-        fields = ('mp_id','mp_name','status','statusCode','yr','yr_seq','sup_org','applyFlag','applyStatus','apl_fr_dt','apl_to_dt','mnt_fr_dt','mnt_to_dt','cnt_trn','status','status_nm','applyFlagNm','sup_org_nm','code','code_nm')
+        fields = ('mp_id','mp_name','status','statusCode','yr','yr_seq','sup_org','applyFlag','applyStatus','apl_fr_dt','apl_to_dt','mnt_fr_dt','mnt_to_dt','cnt_trn','status','status_nm','applyFlagNm','sup_org_nm','code','code_nm','score03')
 
     def get_applyFlag(self, obj):
         return obj.applyFlag    
@@ -1895,6 +1896,8 @@ class MP0101M_list_Serializer(serializers.ModelSerializer):
         return obj.code
     def get_code_nm(self,obj):
         return obj.code_nm
+    def get_score03(self,obj):
+        return obj.score03
 
 class MP0101M_list(generics.ListAPIView):
     queryset = mpgm.objects.all()
@@ -1930,6 +1933,8 @@ class MP0101M_list(generics.ListAPIView):
         query += "                AND std_detl_code = A.status))      AS status_nm,  "
         query += "        Ifnull(B.status, 'N')                       AS applyFlag,  "
         
+
+        query += " E.score03, "
         query += " CASE WHEN E.score03 < D.att_val THEN '신청' ELSE CONCAT('신청불가 : 학점', D.att_val, '미만') END code_nm,CASE WHEN E.score03 < D.att_val THEN 'Y' ELSE 'N' END code, "
 
 

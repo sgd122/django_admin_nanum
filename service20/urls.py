@@ -40,9 +40,9 @@ urlpatterns = [
     path('com/combo/mp/status/', com_combo_mp_status.as_view(), name='com_combo_mp_status'),
     # 취소사유 콤보박스
     path('com/combo/cnclRsn/', com_combo_cnclRsn.as_view(), name='com_combo_cnclRsn'),
-    path('com/combo/repdiv/', com_combo_repdiv, name='com_combo_repdiv'), 
-    path('com/combo/com_cdd/', com_combo_com_cdd, name='com_combo_com_cdd'), 
-    path('com/combo/program2/', com_combo_program2, name='com_combo_program2'), 
+    path('com/combo/repdiv/', com_combo_repdiv.as_view(), name='com_combo_repdiv'), 
+    path('com/combo/com_cdd/', com_combo_com_cdd.as_view(), name='com_combo_com_cdd'), 
+    path('com/combo/program2/', com_combo_program2.as_view(), name='com_combo_program2'), 
     # 멘토의 학번으로 해당되는 멘티찾기
     path('com/list/my_mentee/', com_list_my_mentee.as_view(), name='com_list_my_mentee'),
     # 프로그램 찾기
