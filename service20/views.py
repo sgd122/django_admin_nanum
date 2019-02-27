@@ -924,7 +924,7 @@ class MS0101M_list(generics.ListAPIView):
         query += "      WHEN Ifnull(B.status, 'N') = 'N' THEN '미지원' "
         query += "      ELSE (SELECT std_detl_code_nm  "
         query += "              FROM   service20_com_cdd  "
-        query += "              WHERE  std_grp_code = 'MS0024'  "
+        query += "              WHERE  std_grp_code = 'MP0053'  "
         query += "                 AND std_detl_code = B.status)  "
         query += " end                                         AS applyFlagNm,  "
         query += " c1.std_detl_code_nm   AS sup_org_nm, "
