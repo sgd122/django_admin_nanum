@@ -702,7 +702,7 @@ class com_combo_program(generics.ListAPIView):
         return Response(serializer.data) 
 
 # 모집상태 콤보박스
-class com_combo_status_Serializer(serializers.ModelSerializer):
+class com_combo_ms_status_Serializer(serializers.ModelSerializer):
 
     
     class Meta:
@@ -710,9 +710,9 @@ class com_combo_status_Serializer(serializers.ModelSerializer):
         fields = ('std_detl_code','std_detl_code_nm')
 
 
-class com_combo_status(generics.ListAPIView):
+class com_combo_ms_status(generics.ListAPIView):
     queryset = com_cdd.objects.all()
-    serializer_class = com_combo_status_Serializer
+    serializer_class = com_combo_ms_status_Serializer
 
     def list(self, request):
         
@@ -722,6 +722,42 @@ class com_combo_status(generics.ListAPIView):
         query = " select '0'id,''std_detl_code,'전체'std_detl_code_nm "
         query += " union  "
         query += " select id,std_detl_code,std_detl_code_nm from service20_com_cdd where std_grp_code = 'MS0001' "
+        query += " union  "
+        query += " select '','xx','모집완료'  "
+
+        queryset = com_cdd.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)                
+
+# 모집상태 콤보박스
+class com_combo_mp_status_Serializer(serializers.ModelSerializer):
+
+    
+    class Meta:
+        model = com_cdd
+        fields = ('std_detl_code','std_detl_code_nm')
+
+
+class com_combo_mp_status(generics.ListAPIView):
+    queryset = com_cdd.objects.all()
+    serializer_class = com_combo_mp_status_Serializer
+
+    def list(self, request):
+        
+
+        queryset = self.get_queryset()
+        
+        query = " select '0'id,''std_detl_code,'전체'std_detl_code_nm "
+        query += " union  "
+        query += " select id,std_detl_code,std_detl_code_nm from service20_com_cdd where std_grp_code = 'MP0001' "
         query += " union  "
         query += " select '','xx','모집완료'  "
 
@@ -1699,7 +1735,7 @@ class MP0101M_list(generics.ListAPIView):
         query += "           AND Now() > A.apl_to_dt, '모집완료',  "
         query += "        (SELECT std_detl_code_nm  "
         query += "         FROM   service20_com_cdd  "
-        query += "         WHERE  std_grp_code = 'MS0001'  "
+        query += "         WHERE  std_grp_code = 'MP0001'  "
         query += "                AND use_indc = 'y'  "
         query += "                AND std_detl_code = A.status))      AS status_nm,  "
         query += "        Ifnull(B.status, 'N')                       AS applyFlag,  "
@@ -1806,7 +1842,7 @@ class MP0101M_list_all(generics.ListAPIView):
         query += "           AND Now() > A.apl_to_dt, '모집완료',  "
         query += "        (SELECT std_detl_code_nm  "
         query += "         FROM   service20_com_cdd  "
-        query += "         WHERE  std_grp_code = 'MS0001'  "
+        query += "         WHERE  std_grp_code = 'MP0001'  "
         query += "                AND use_indc = 'y'  "
         query += "                AND std_detl_code = A.status))      AS status_nm,  "
         query += "        Ifnull(B.status, 'N')                       AS applyFlag,  "
@@ -2288,7 +2324,7 @@ class MP0101M_adm_list(generics.ListAPIView):
         query += " and now() > C.apl_to_dt, '모집완료', (select std_detl_code_nm  "
         query += " from   service20_com_cdd  "
         query += " where  "
-        query += " std_grp_code = 'MS0001'  "
+        query += " std_grp_code = 'MP0001'  "
         query += " and use_indc = 'y'  "
         query += " and std_detl_code = C.status)) as status_nm,  "
 

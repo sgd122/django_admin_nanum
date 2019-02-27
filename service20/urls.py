@@ -34,7 +34,9 @@ urlpatterns = [
     # 학기 콤보박스
     path('com/combo/termdiv/', com_combo_termdiv.as_view(), name='com_combo_termdiv'),
     # 모집상태 콤보박스
-    path('com/combo/status/', com_combo_status.as_view(), name='com_combo_status'),
+    path('com/combo/ms/status/', com_combo_ms_status.as_view(), name='com_combo_ms_status'),
+    # 모집상태 콤보박스
+    path('com/combo/mp/status/', com_combo_mp_status.as_view(), name='com_combo_mp_status'),
     # 취소사유 콤보박스
     path('com/combo/cnclRsn/', com_combo_cnclRsn.as_view(), name='com_combo_cnclRsn'),
     # 멘토의 학번으로 해당되는 멘티찾기
