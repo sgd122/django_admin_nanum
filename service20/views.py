@@ -4140,14 +4140,14 @@ def MP0105M_update(request,pk):
 # 보고서 현황 리스트 ###################################################
 class MP0106M_list_Serializer(serializers.ModelSerializer):
 
-    back_acct_mask = serializers.SerializerMethodField()
+    bank_acct_mask = serializers.SerializerMethodField()
 
     class Meta:
         model = mp_exp
-        fields = ('mp_id','apl_no','exp_no','exp_mon','exp_div','exp_ttl','exp_dt','bank_dt','elap_tm','unit_price','appr_tm','sum_exp','bank_acct','bank_cd','bank_nm','bank_dpsr','mp_sname','mgr_id','mgr_dt','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','back_acct_mask')
+        fields = ('mp_id','apl_no','exp_no','exp_mon','exp_div','exp_ttl','exp_dt','bank_dt','elap_tm','unit_price','appr_tm','sum_exp','bank_acct','bank_cd','bank_nm','bank_dpsr','mp_sname','mgr_id','mgr_dt','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','bank_acct_mask')
 
-    def get_back_acct_mask(self,obj):
-        return obj.back_acct_mask
+    def get_bank_acct_mask(self,obj):
+        return obj.bank_acct_mask
 
 class MP0106M_list(generics.ListAPIView):
     queryset = mp_rep.objects.all()
@@ -4173,12 +4173,12 @@ class MP0106M_list(generics.ListAPIView):
         query += " , t1.bank_cd                            /*은행 코드        */ "
         query += " , t1.bank_nm                            /*은행 명           */ "
         query += " , t1.bank_dpsr                          /*예금주           */ "
-        query += ", concat(left(t1.bank_acct,2),repeat('*',length(t1.bank_acct)-4),right(t1.bank_acct,2))  as back_acct_mask ";
+        query += ", concat(left(t1.bank_acct,2),repeat('*',length(t1.bank_acct)-4),right(t1.bank_acct,2))  as bank_acct_mask ";
         query += " from service20_mp_exp t1                   /*프로그램 출석부(멘토)     */ "
         query += " left join service20_mp_mtr t3 on (t3.mp_id    = t1.mp_id "
         query += " and t3.apl_no   = t1.apl_no) "
         query += " where 1=1 "
-        # query += " and t1.mp_id    = '"+l_mp_id+"'     "
+        query += " and t1.mp_id    = '"+l_mp_id+"'     "
         query += " and t3.apl_id   = '"+l_apl_id+"' "
         query += " order by t1.exp_mon "
 
