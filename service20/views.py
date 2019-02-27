@@ -517,6 +517,8 @@ class com_combo_yr(generics.ListAPIView):
 
         queryset = self.get_queryset()
         
+        query = " select '0' id,DATE_FORMAT(now(),'%%Y')-1 as std_detl_code,DATE_FORMAT(now(),'%%Y')-1 as std_detl_code_nm "
+        query += " union "
         query = " select '1' id,DATE_FORMAT(now(),'%%Y') as std_detl_code,DATE_FORMAT(now(),'%%Y') as std_detl_code_nm "
         query += " union "
         query += " select '2' id,DATE_FORMAT(now(),'%%Y')+1 as std_detl_code,DATE_FORMAT(now(),'%%Y')+1 as std_detl_code_nm "
@@ -834,11 +836,13 @@ class com_user_sa(generics.ListAPIView):
 
 class MS0101M_list_Serializer(serializers.ModelSerializer):
 
-    status_nm = serializers.SerializerMethodField()
     applyFlag = serializers.SerializerMethodField()
+    applyFlagNm = serializers.SerializerMethodField()
     applyStatus = serializers.SerializerMethodField()
-    # status = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
     statusCode = serializers.SerializerMethodField()
+    status_nm  = serializers.SerializerMethodField()
+    sup_org_nm = serializers.SerializerMethodField()
     
     apl_fr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     apl_to_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
@@ -847,22 +851,32 @@ class MS0101M_list_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = msch
-        fields = ('ms_id','ms_name','status','statusCode','yr','yr_seq','sup_org','applyFlag','applyStatus','apl_fr_dt','apl_to_dt','cnt_trn','status','status_nm','trn_fr_dt','trn_to_dt')
+        fields = ('ms_id','ms_name','status','statusCode','yr','yr_seq','sup_org','applyFlag','applyStatus','apl_fr_dt','apl_to_dt','cnt_trn','status','status_nm','applyFlagNm','sup_org_nm')
 
     def get_applyFlag(self, obj):
         return obj.applyFlag    
+    def get_applyFlagNm(self, obj):
+        return obj.applyFlagNm    
     def get_applyStatus(self, obj):
-        if obj.applyFlag == 'Y':
+        
+        if obj.applyFlag == 'N':
             return '지원'
-        elif obj.applyFlag == 'N':
-            return '미지원'    
-        # return obj.applyStatus    
+        else:
+            # print(obj.applyFlag)
+            # rows = com_cdd.objects.filter(std_grp_code='MP0053',std_detl_code=obj.applyFlag)
+            # return str(rows[0].std_detl_code_nm)
+            return '미지원'
+        return obj.applyStatus    
 
     def get_statusCode(self,obj):
         return obj.statusCode 
 
     def get_status_nm(self,obj):
-        return obj.status_nm
+        return obj.status_nm   
+    def get_status(self,obj):
+        return obj.status
+    def get_sup_org_nm(self,obj):
+        return obj.sup_org_nm
 
 class MS0101M_list(generics.ListAPIView):
     queryset = msch.objects.all()
@@ -874,32 +888,68 @@ class MS0101M_list(generics.ListAPIView):
         l_user_id = request.GET.get('user_id', None)
         l_status = request.GET.get('status', '')
 
+        # query = " select apl_to_dt,  "
+        # query += " if(A.status = '10'  "
+        # query += " and now() > A.apl_to_dt, 'xx', A.status) as statusCode,  "
+        # query += " if(A.status = '10'  "
+        # query += " and now() > A.apl_to_dt, '모집완료', (select std_detl_code_nm  "
+        # query += " from   service20_com_cdd  "
+        # query += " where  "
+        # query += " std_grp_code = 'MS0001'  "
+        # query += " and use_indc = 'y'  "
+        # query += " and std_detl_code = status)) as status_nm,  "
+
+        # query += " ifnull((select 'Y' from service20_ms_apl where yr = '"+str(l_yr)+"' and apl_id = '"+str(l_user_id)+"' and ms_id = A.ms_id),'N') AS applyFlag,A.* from service20_msch A where A.yr='"+str(l_yr)+"' and A.apl_term='"+str(l_apl_term)+"'"
+        
+        # query += " and if(A.status = '10' and now() > A.apl_to_dt, 'xx', A.status) "
+        # query += "  like ifnull(NULLIF('"+str(l_status)+"',''),'%%') || '%%' "
+
+        # query += " order by apl_fr_dt desc,apl_to_dt desc " 
+        # queryset = msch.objects.raw(query)
+
+
         query = " select apl_to_dt,  "
-        query += " if(A.status = '10'  "
-        query += " and now() > A.apl_to_dt, 'xx', A.status) as statusCode,  "
-        query += " if(A.status = '10'  "
-        query += " and now() > A.apl_to_dt, '모집완료', (select std_detl_code_nm  "
-        query += " from   service20_com_cdd  "
-        query += " where  "
-        query += " std_grp_code = 'MS0001'  "
-        query += " and use_indc = 'y'  "
-        query += " and std_detl_code = status)) as status_nm,  "
-
-        query += " ifnull((select 'Y' from service20_ms_apl where yr = '"+str(l_yr)+"' and apl_id = '"+str(l_user_id)+"' and ms_id = A.ms_id),'N') AS applyFlag,A.* from service20_msch A where A.yr='"+str(l_yr)+"' and A.apl_term='"+str(l_apl_term)+"'"
-        
-        query += " and if(A.status = '10' and now() > A.apl_to_dt, 'xx', A.status) "
-        query += "  like ifnull(NULLIF('"+str(l_status)+"',''),'%%') || '%%' "
-
-        query += " order by apl_fr_dt desc,apl_to_dt desc " 
+        query += "        IF(A.status = '10'  "
+        query += "           AND Now() > A.apl_to_dt, 'xx', A.status) AS statusCode,  "
+        query += "        IF(A.status = '10'  "
+        query += "           AND Now() > A.apl_to_dt, '모집완료',  "
+        query += "        (SELECT std_detl_code_nm  "
+        query += "         FROM   service20_com_cdd  "
+        query += "         WHERE  std_grp_code = 'MS0001'  "
+        query += "                AND use_indc = 'y'  "
+        query += "                AND std_detl_code = A.status))      AS status_nm,  "
+        query += "        Ifnull(B.status, 'N')                       AS applyFlag,  "
+    
+        query += " CASE  "
+        query += "      WHEN Ifnull(B.status, 'N') = 'N' THEN '미지원' "
+        query += "      ELSE (SELECT std_detl_code_nm  "
+        query += "              FROM   service20_com_cdd  "
+        query += "              WHERE  std_grp_code = 'MS0024'  "
+        query += "                 AND std_detl_code = B.status)  "
+        query += " end                                         AS applyFlagNm,  "
+        query += " c1.std_detl_code_nm   AS sup_org_nm, "
+        query += "        A.*  "
+        query += " FROM   service20_msch A  "
+        query += "        LEFT JOIN service20_ms_apl B  "
+        query += "               ON ( A.ms_id = B.ms_id  "
+        # query += "                    AND A.yr = B.yr  "
+        query += "                    AND B.apl_id = '"+str(ida)+"' )  "
+        query += "        LEFT JOIN service20_com_cdd c1 ON (c1.std_grp_code  = 'MP0004' AND c1.std_detl_code = A.sup_org) "
+        query += " WHERE  A.yr = '"+str(l_yr)+"'  "
+        query += "        AND A.apl_term = '"+str(l_apl_term)+"'  "
+        # query += "        AND (SELECT Count(1)  "
+        # query += "             FROM   service20_mentor  "
+        # query += "             WHERE  apl_id = '"+str(ida)+"') > 0  "
+        query += "        AND IF(A.status = '10'  "
+        query += "               AND Now() > A.apl_to_dt, 'xx', A.status) LIKE  "
+        query += "            Ifnull(Nullif('"+str(l_status)+"', ''), '%%')  "
+        query += "            || '%%'  "
+        query += " ORDER  BY A.apl_fr_dt DESC,  "
+        query += "           A.apl_to_dt DESC  "
         queryset = msch.objects.raw(query)
 
         
         
-        # # 멘토만 조회가능.
-        # query = "select ifnull((select 'Y' from service20_ms_apl where yr = '"+str(l_yr)+"' and apl_id = '"+str(ida)+"' and ms_id = A.ms_id),'N') AS applyFlag,A.* from service20_msch A where A.yr='"+str(l_yr)+"' and A.apl_term='"+str(l_apl_term)+"' and (select count(1) from service20_mentor where apl_id = '"+ida+"') > 0 "
-        # query += " order by A.apl_fr_dt desc,A.apl_to_dt desc "
-
-        queryset = msch.objects.raw(query)
 
 
         serializer_class = self.get_serializer_class()
@@ -990,70 +1040,86 @@ def MS0101M_save(request):
     else:
         apl_no = ms_apl_max['vlMax']
         apl_no = apl_no + 1
-    
-    
+        
+    query = "select ifnull(max(apl_no),1) as apl_no from service20_ms_apl where apl_id = '"+apl_id+"' and ms_id = '"+ms_id+"'"  
+    cursor = connection.cursor()
+    cursor.execute(query)    
+    results = namedtuplefetchall(cursor)    
+    apl_no = results[0].apl_no
 
-    model_instance = ms_apl(
-        ms_id=ms_id, 
-        apl_no=apl_no, 
-        mntr_id=ida,
-        apl_id=apl_id,
-        apl_nm=rows.apl_nm,
-        unv_cd=rows.unv_cd,
-        unv_nm=rows.unv_nm,
-        cllg_cd=rows.cllg_cd,
-        cllg_nm=rows.cllg_nm,
-        dept_cd=rows.dept_cd,
-        dept_nm=rows.dept_nm,
-        brth_dt=rows.brth_dt,
-        gen=v_gen,
-        yr=rows.yr,
-        term_div=rows.term_div,
-        sch_yr=rows.sch_yr,
-        mob_no=rows.mob_no.replace('-', ''),
-        tel_no=rows.tel_no.replace('-', ''),
-        tel_no_g=rows.tel_no_g.replace('-', ''),
-        h_addr=rows.h_addr,
-        score1=rows.score01,
-        score2=rows.score02,
-        score3=rows.score03,
-        score4=rows.score04,
-        score5=rows.score05,
-        status='10', # 지원
-        )
-    model_instance.save()
-    
-    apl_max = int(apl_max)
+    query = " select t2.ms_id,t2.yr FROM service20_msch t2  WHERE 1=1 "
+    query += " AND t2.ms_id          = '"+ms_id+"'"
+    queryset = msch.objects.raw(query)[0]
 
-    for i in range(0,apl_max):
-        anst2 = request.POST.get('que'+str(i+1), None)
-        ques_no = request.POST.get('ques_no'+str(i+1), None)
+    rowsChk = msch.objects.filter(apl_id=apl_id,ms_id=ms_id).exists()
 
-        model_instance2 = ms_ans(
+    if rowsChk == True:
+        context = {'message': 'duplicate'}
+    else:
+        model_instance = ms_apl(
             ms_id=ms_id, 
-            test_div='10', 
-            apl_no=apl_no,
-            ques_no=ques_no,
+            apl_no=apl_no, 
+            mntr_id=ida,
             apl_id=apl_id,
             apl_nm=rows.apl_nm,
-            sort_seq =i+1,
-            ans_t2=anst2
+            unv_cd=rows.unv_cd,
+            unv_nm=rows.unv_nm,
+            cllg_cd=rows.cllg_cd,
+            cllg_nm=rows.cllg_nm,
+            dept_cd=rows.dept_cd,
+            dept_nm=rows.dept_nm,
+            brth_dt=rows.brth_dt,
+            gen=v_gen,
+            yr=queryset.yr,
+            term_div=rows.term_div,
+            sch_yr=rows.sch_yr,
+            mob_no=rows.mob_no.replace('-', ''),
+            tel_no=rows.tel_no.replace('-', ''),
+            tel_no_g=rows.tel_no_g.replace('-', ''),
+            h_addr=rows.h_addr,
+            score1=rows.score01,
+            score2=rows.score02,
+            score3=rows.score03,
+            score4=rows.score04,
+            score5=rows.score05,
+            status='10', # 지원
+            ins_id=apl_id,
+            ins_ip=str(client_ip),
+            ins_dt=datetime.datetime.today()
             )
-        model_instance2.save()
-
-    
-    # mp_mntr/ms_apl  -> mp_id만 조건 걸어서 count(*)
-    # 해당 cnt값을 mpgm/msch -> cnt_apl
-
-    update_text = " update service20_msch a "
-    update_text += " SET a.cnt_apl = (select count(*) from service20_ms_apl where ms_id = '"+mp_id+"') "
-    update_text += " WHERE 1=1 "
-    update_text += " AND a.ms_id = '"+mp_id+"' "
-    
-    cursor = connection.cursor()
-    query_result = cursor.execute(update_text)    
+        model_instance.save()
         
-    context = {'message': 'Ok'}
+        apl_max = int(apl_max)
+
+        for i in range(0,apl_max):
+            anst2 = request.POST.get('que'+str(i+1), None)
+            ques_no = request.POST.get('ques_no'+str(i+1), None)
+
+            model_instance2 = ms_ans(
+                ms_id=ms_id, 
+                test_div='10', 
+                apl_no=apl_no,
+                ques_no=ques_no,
+                apl_id=apl_id,
+                apl_nm=rows.apl_nm,
+                sort_seq =i+1,
+                ans_t2=anst2
+                )
+            model_instance2.save()
+
+        
+        # mp_mntr/ms_apl  -> mp_id만 조건 걸어서 count(*)
+        # 해당 cnt값을 mpgm/msch -> cnt_apl
+
+        update_text = " update service20_msch a "
+        update_text += " SET a.cnt_apl = (select count(*) from service20_ms_apl where ms_id = '"+ms_id+"') "
+        update_text += " WHERE 1=1 "
+        update_text += " AND a.ms_id = '"+ms_id+"' "
+        
+        cursor = connection.cursor()
+        query_result = cursor.execute(update_text)    
+            
+        context = {'message': 'Ok'}
 
     #return HttpResponse(json.dumss(context), content_type="application/json")
     return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
@@ -1665,7 +1731,7 @@ class MP0101M_list(generics.ListAPIView):
         query += "               ON ( A.mp_id = B.mp_id  "
         # query += "                    AND A.yr = B.yr  "
         query += "                    AND B.apl_id = '"+str(ida)+"' )  "
-        query += "        LEFT JOIN service20_com_cdd c1 ON (c1.std_grp_code  = 'mp0004' AND c1.std_detl_code = A.sup_org) "
+        query += "        LEFT JOIN service20_com_cdd c1 ON (c1.std_grp_code  = 'MP0004' AND c1.std_detl_code = A.sup_org) "
         query += " WHERE  A.yr = '"+str(l_yr)+"'  "
         query += "        AND A.apl_term = '"+str(l_apl_term)+"'  "
         # query += "        AND (SELECT Count(1)  "
@@ -1772,7 +1838,7 @@ class MP0101M_list_all(generics.ListAPIView):
         query += "               ON ( A.mp_id = B.mp_id  "
         # query += "                    AND A.yr = B.yr  "
         query += "                    AND B.apl_id = '"+str(ida)+"' )  "
-        query += "        LEFT JOIN service20_com_cdd c1 ON (c1.std_grp_code  = 'mp0004' AND c1.std_detl_code = A.sup_org) "
+        query += "        LEFT JOIN service20_com_cdd c1 ON (c1.std_grp_code  = 'MP0004' AND c1.std_detl_code = A.sup_org) "
         query += " WHERE  B.apl_id = '"+str(ida)+"'  "        
         query += " ORDER  BY A.apl_fr_dt DESC,  "
         query += "           A.apl_to_dt DESC  "
@@ -1882,7 +1948,6 @@ def MP0101M_save(request):
     cursor.execute(query)    
     results = namedtuplefetchall(cursor)    
     apl_no = results[0].apl_no
-
 
 
     print("::apl_no::")
