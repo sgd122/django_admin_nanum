@@ -690,10 +690,10 @@ class com_combo_repdiv(generics.ListAPIView):
         
         
         query = "select id,std_detl_code";
-        query += "     , std_detl_code_nm,sort_seq ";
+        query += "     , std_detl_code_nm,sort_seq_no ";
         query += "  from service20_com_cdd";
         query += " where std_grp_code = 'mp0062'";
-        query += " order by sort_seq "
+        query += " order by sort_seq_no "
 
         queryset = com_cdd.objects.raw(query)
 
@@ -725,10 +725,10 @@ class com_combo_com_cdd(generics.ListAPIView):
         
         
         query = "select id,std_detl_code";
-        query += "     , std_detl_code_nm, sort_seq";
+        query += "     , std_detl_code_nm, sort_seq_no";
         query += "  from service20_com_cdd";
         query += " where std_grp_code = '"+str(l_code)+"'";
-        query += " order by sort_seq "
+        query += " order by sort_seq_no "
 
         queryset = com_cdd.objects.raw(query)
 
