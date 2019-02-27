@@ -1896,7 +1896,7 @@ def MP0101M_save(request):
     
     rowsChk = mp_mtr.objects.filter(apl_id=apl_id,mp_id=mp_id).exists()
     print("::rowsChk::"+str(rowsChk))
-    if not rowsChk:
+    if rowsChk == False:
         context = {'message': 'duplicate'}
     else:
     
