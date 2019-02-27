@@ -693,6 +693,7 @@ class com_combo_repdiv(generics.ListAPIView):
         query += "     , std_detl_code_nm";
         query += "  from service20_com_cdd";
         query += " where std_grp_code = 'mp0062'";
+        query += " order by sort_seq "
 
         queryset = com_cdd.objects.raw(query)
 
@@ -727,6 +728,7 @@ class com_combo_com_cdd(generics.ListAPIView):
         query += "     , std_detl_code_nm";
         query += "  from service20_com_cdd";
         query += " where std_grp_code = '"+str(l_code)+"'";
+        query += " order by sort_seq "
 
         queryset = com_cdd.objects.raw(query)
 
@@ -768,6 +770,7 @@ class com_combo_program2(generics.ListAPIView):
         query += " where yr = '"+yr+"'";
         query += " and apl_term = '"+apl_term+"'";
         query += " and status = '"+status+"'";
+        query += " order by mp_id "
 
         queryset = mpgm.objects.raw(query)
 
