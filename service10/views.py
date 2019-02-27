@@ -57,10 +57,7 @@ def post_login(request):
 		message = "Ok"
 		rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
 
-		#mentor_query
-		mentor_query = " select mntr_id from service20_mentor where apl_id = '"+str(ida)+"'"
-		mentor_cursor = connection.cursor()
-		query_result = mentor_cursor.execute(mentor_query)  
+		
 
 		client_ip = request.META['REMOTE_ADDR']
 		query = " insert into service20_com_evt     /* 이벤트로그 */ ";
@@ -85,6 +82,11 @@ def post_login(request):
 		query += "     , 'LOGIN'   AS ins_pgm    /* 입력프로그램id */ ";
 		cursor_log = connection.cursor()
 		query_result = cursor_log.execute(query)  
+
+		#mentor_query
+		mentor_query = " select mntr_id from service20_mentor where apl_id = '"+str(ida)+"'"
+		mentor_cursor = connection.cursor()
+		query_result = mentor_cursor.execute(mentor_query)  
 
 
 		if query_result == 0:

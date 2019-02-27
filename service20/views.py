@@ -34,6 +34,7 @@ def login_login(request):
         pswd =  request.POST.get('user_pw')
         # 로그인할 유저정보를 넣어주자 (모두 문자열)
         print("login_start => " + str(id))
+        print("login_start(pswd) => " + str(pswd))
         login_info = {'id':id,'pswd': pswd,'dest':'http://nanum.pusan.ac.kr:8000/service20/login/returnsso/'}
         # login_info = {'id':'514965','pswd': 'gks3089#','dest':'http://nanum.pusan.ac.kr:8000/service20/login/returnsso/'}
         # HTTP GET Request: requests대신 s 객체를 사용한다.
@@ -55,7 +56,7 @@ def login_login(request):
         query += "     , '"+str(client_ip)+"' AS evt_ip     /* 이벤트발생 ip */ ";
         query += "     , REPLACE(REPLACE(REPLACE(SUBSTRING(NOW(),1, 19), '-',''),':',''),' ', '')        AS evt_dat    /* 이벤트일시 */ ";
         query += "     , CONCAT('','로그인') evt_desc   /* 이벤트 내용 */ ";
-        query += "     , '"+id+"' AS ins_id     /* 입력자id */ ";
+        query += "     , '"+str(id)+"' AS ins_id     /* 입력자id */ ";
         query += "     , '"+str(client_ip)+"' AS ins_ip     /* 입력자ip */ ";
         query += "     , NOW()     AS ins_dt     /* 입력일시 */ ";
         query += "     , 'LOGIN'   AS ins_pgm    /* 입력프로그램id */ ";
@@ -173,7 +174,15 @@ def login_login(request):
                     cursor = conn.cursor()   
                     cursor.execute(query)  
                     row = cursor.fetchone()  
+
+                    # 삭제 (어학)
+                    delete_query = " delete from service20_vw_nanum_foreign_exam where apl_id = '"+v_userid+"' "
+                    cursor_delete = connection.cursor()
+                    delete_query_result = cursor_delete.execute(delete_query)                       
+                    # 삭제 (어학)
+
                     while row:
+                    # for val in row:    
                         l_apl_id = str(row[0])
                         l_apl_nm = str(row[1])
                         l_lang_kind_cd = str(row[2])
@@ -184,13 +193,7 @@ def login_login(request):
                         l_lang_detail_nm = str(row[7])
                         l_frexm_nm = str(row[8])
                         l_score = str(row[9])
-                        l_grade = str(row[10])
-
-                        # 삭제 (어학)
-                        delete_query = " delete from service20_vw_nanum_foreign_exam where apl_id = '"+l_apl_id+"' "
-                        cursor_delete = connection.cursor()
-                        delete_query_result = cursor_delete.execute(delete_query)                       
-                        # 삭제 (어학)
+                        l_grade = str(row[10])   
 
                         # insert(어학)
                         query = "insert into service20_vw_nanum_foreign_exam     /* 유효한 외국어 성적 리스트 view(임시) */"
@@ -209,18 +212,18 @@ def login_login(request):
                         query += "values"
                         query += "     ( CASE WHEN '"+str(l_apl_id)+"' =  'None' THEN NULL ELSE '"+str(l_apl_id)+"' END         /* 학번 */"
                         query += "     ,CASE WHEN '"+str(l_apl_nm)+"' =  'None' THEN NULL ELSE '"+str(l_apl_nm)+"' END         /* 성명 */"
-                        query += "     ,CASE WHEN '"+str(l_lang_kind_cd)+"' =  'None' THEN NULL ELSE '"+str(l_lang_kind_cd)+"' END   /* 어학종류코드 */"
-                        query += "     ,CASE WHEN '"+str(l_lang_kind_nm)+"' =  'None' THEN NULL ELSE '"+str(l_lang_kind_nm)+"' END   /* 어학종류명 */"
-                        query += "     ,CASE WHEN '"+str(l_lang_cd)+"' =  'None' THEN NULL ELSE '"+str(l_lang_cd)+"' END        /* 어학상위코드 */"
-                        query += "     ,CASE WHEN '"+str(l_lang_nm)+"' =  'None' THEN NULL ELSE '"+str(l_lang_nm)+"' END        /* 어학상위코드명 */"
-                        query += "     ,CASE WHEN '"+str(l_lang_detail_cd)+"' =  'None' THEN NULL ELSE '"+str(l_lang_detail_cd)+"' END /* 어학하위코드 */"
-                        query += "     ,CASE WHEN '"+str(l_lang_detail_nm)+"' =  'None' THEN NULL ELSE '"+str(l_lang_detail_nm)+"' END /* 어학하위코드명 */"
-                        query += "     ,CASE WHEN '"+str(l_frexm_nm)+"' =  'None' THEN NULL ELSE '"+str(l_frexm_nm)+"' END       /* 외국어시험명 */"
-                        query += "     ,CASE WHEN '"+str(l_score)+"' =  'None' THEN NULL ELSE '"+str(l_score)+"' END          /* 시험점수 */"
-                        query += "     ,CASE WHEN '"+str(l_grade)+"' =  'None' THEN NULL ELSE '"+str(l_grade)+"' END          /* 시험등급 */"
-                        query += "     ,CASE WHEN '"+str(l_apl_id)+"' =  'None' THEN NULL ELSE '"+str(l_apl_id)+"' END         /* 입력자id */"
-                        query += "     ,CASE WHEN '"+str(client_ip)+"' =  'None' THEN NULL ELSE '"+str(client_ip)+"' END         /* 입력자ip */"
-                        query += "     ,now()         /* 입력일시 */"
+                        query += "     ,CASE WHEN '"+str(l_lang_kind_cd)+"' =  'None' THEN ' ' ELSE '"+str(l_lang_kind_cd)+"' END   /* 어학종류코드 */"
+                        query += "     ,CASE WHEN '"+str(l_lang_kind_nm)+"' =  'None' THEN ' ' ELSE '"+str(l_lang_kind_nm)+"' END   /* 어학종류명 */"
+                        query += "     ,CASE WHEN '"+str(l_lang_cd)+"' =  'None' THEN ' ' ELSE '"+str(l_lang_cd)+"' END        /* 어학상위코드 */"
+                        query += "     ,CASE WHEN '"+str(l_lang_nm)+"' =  'None' THEN ' ' ELSE '"+str(l_lang_nm)+"' END        /* 어학상위코드명 */"
+                        query += "     ,CASE WHEN '"+str(l_lang_detail_cd)+"' =  'None' THEN ' ' ELSE '"+str(l_lang_detail_cd)+"' END /* 어학하위코드 */"
+                        query += "     ,CASE WHEN '"+str(l_lang_detail_nm)+"' =  'None' THEN ' ' ELSE '"+str(l_lang_detail_nm)+"' END /* 어학하위코드명 */"
+                        query += "     ,CASE WHEN '"+str(l_frexm_nm)+"' =  'None' THEN ' ' ELSE '"+str(l_frexm_nm)+"' END       /* 외국어시험명 */"
+                        query += "     ,CASE WHEN '"+str(l_score)+"' =  'None' THEN '0' ELSE '"+str(l_score)+"' END          /* 시험점수 */"
+                        query += "     ,CASE WHEN '"+str(l_grade)+"' =  'None' THEN '0' ELSE '"+str(l_grade)+"' END          /* 시험등급 */"
+                        # query += "     ,CASE WHEN '"+str(l_apl_id)+"' =  'None' THEN NULL ELSE '"+str(l_apl_id)+"' END         /* 입력자id */"
+                        # query += "     ,CASE WHEN '"+str(client_ip)+"' =  'None' THEN NULL ELSE '"+str(client_ip)+"' END         /* 입력자ip */"
+                        # query += "     ,now()         /* 입력일시 */"
                         # query += "     ,CASE WHEN '"+str(l_ins_pgm)+"' =  'None' THEN NULL ELSE '"+str(l_ins_pgm)+"' END        /* 입력프로그램id */"
                         # query += "     ,CASE WHEN '"+str(l_upd_id)+"' =  'None' THEN NULL ELSE '"+str(l_upd_id)+"' END         /* 수정자id */"
                         # query += "     ,CASE WHEN '"+str(l_upd_ip)+"' =  'None' THEN NULL ELSE '"+str(l_upd_ip)+"' END         /* 수정자ip */"
@@ -230,6 +233,7 @@ def login_login(request):
                         cursor3 = connection.cursor()
                         query_result = cursor3.execute(query)    
                         # insert(어학)
+                        row = cursor.fetchone()  
                     ########################################################################
                     # 어학 - 종료
                     ########################################################################
@@ -257,7 +261,15 @@ def login_login(request):
                     cursor = conn.cursor()   
                     cursor.execute(query)  
                     row = cursor.fetchone()  
+
+                    # 삭제 (봉사)
+                    delete_query = " delete from service20_vw_nanum_service_activ where apl_id = '"+v_userid+"' "
+                    cursor_delete = connection.cursor()
+                    delete_query_result = cursor_delete.execute(delete_query)                       
+                    # 삭제 (봉사)
+
                     while row:
+                    # for val in row:        
                         l_apl_id = str(row[0])
                         l_apl_nm = str(row[1])
                         l_nation_inout_cd = str(row[2])
@@ -270,13 +282,7 @@ def login_login(request):
                         l_start_time = str(row[9])
                         l_end_date = str(row[10])
                         l_end_time = str(row[11])
-                        l_tot_time = str(row[12])
-
-                        # 삭제 (봉사)
-                        delete_query = " delete from service20_vw_nanum_service_activ where apl_id = '"+l_apl_id+"' "
-                        cursor_delete = connection.cursor()
-                        delete_query_result = cursor_delete.execute(delete_query)                       
-                        # 삭제 (봉사)
+                        l_tot_time = str(row[12])    
 
                         # insert(봉사)
                         query = "insert into service20_vw_nanum_service_activ     /* 학생 봉사 시간 view(임시)*/ "
@@ -305,20 +311,20 @@ def login_login(request):
                         query += "values"
                         query += "     ( CASE WHEN '"+str(l_apl_id)+"' =  'None' THEN NULL ELSE '"+str(l_apl_id)+"' END         /* 학번 */"
                         query += "     ,CASE WHEN '"+str(l_apl_nm)+"' =  'None' THEN NULL ELSE '"+str(l_apl_nm)+"' END         /* 성명 */"
-                        query += "     , CASE WHEN '"+str(l_nation_inout_cd)+"' =  'None' THEN NULL ELSE '"+str(l_nation_inout_cd)+"' END /* 국내외구분코드 */"
-                        query += "     , CASE WHEN '"+str(l_nation_inout_nm)+"' =  'None' THEN NULL ELSE '"+str(l_nation_inout_nm)+"' END /* 국내외구분명 */"
-                        query += "     , CASE WHEN '"+str(l_sch_inout_cd)+"' =  'None' THEN NULL ELSE '"+str(l_sch_inout_cd)+"' END    /* 교내외구분코드 */"
-                        query += "     , CASE WHEN '"+str(l_sch_inout_nm)+"' =  'None' THEN NULL ELSE '"+str(l_sch_inout_nm)+"' END    /* 교내외구분명 */"
-                        query += "     , CASE WHEN '"+str(l_activity_nm)+"' =  'None' THEN NULL ELSE '"+str(l_activity_nm)+"'END     /* 봉사명 */"
-                        query += "     , CASE WHEN '"+str(l_manage_org_nm)+"' =  'None' THEN NULL ELSE '"+str(l_manage_org_nm)+"' END   /* 주관기관명 */"
-                        query += "     , CASE WHEN '"+str(l_start_date)+"' =  'None' THEN NULL ELSE '"+str(l_start_date)+"' END      /* 시작일자 */"
-                        query += "     , CASE WHEN '"+str(l_start_time)+"' =  'None' THEN NULL ELSE '"+str(l_start_time)+"' END      /* 시작시간 */"
-                        query += "     , CASE WHEN '"+str(l_end_date)+"' =  'None' THEN NULL ELSE '"+str(l_end_date)+"' END        /* 종료일자 */"
-                        query += "     , CASE WHEN '"+str(l_end_time)+"' =  'None' THEN NULL ELSE  '"+str(l_end_time)+"' END       /* 종료시간 */"
-                        query += "     , CASE WHEN '"+str(l_tot_time)+"' =  'None' THEN NULL ELSE '"+str(l_tot_time)+"' END        /* 총시간 */"
-                        query += "     ,CASE WHEN '"+str(l_apl_id)+"' =  'None' THEN NULL ELSE '"+str(l_apl_id)+"' END         /* 입력자id */"
-                        query += "     ,CASE WHEN '"+str(client_ip)+"' =  'None' THEN NULL ELSE '"+str(client_ip)+"' END         /* 입력자ip */"
-                        query += "     ,now()         /* 입력일시 */"
+                        query += "     , CASE WHEN '"+str(l_nation_inout_cd)+"' =  'None' THEN ' ' ELSE '"+str(l_nation_inout_cd)+"' END /* 국내외구분코드 */"
+                        query += "     , CASE WHEN '"+str(l_nation_inout_nm)+"' =  'None' THEN ' ' ELSE '"+str(l_nation_inout_nm)+"' END /* 국내외구분명 */"
+                        query += "     , CASE WHEN '"+str(l_sch_inout_cd)+"' =  'None' THEN ' ' ELSE '"+str(l_sch_inout_cd)+"' END    /* 교내외구분코드 */"
+                        query += "     , CASE WHEN '"+str(l_sch_inout_nm)+"' =  'None' THEN ' ' ELSE '"+str(l_sch_inout_nm)+"' END    /* 교내외구분명 */"
+                        query += "     , CASE WHEN '"+str(l_activity_nm)+"' =  'None' THEN ' ' ELSE '"+str(l_activity_nm)+"'END     /* 봉사명 */"
+                        query += "     , CASE WHEN '"+str(l_manage_org_nm)+"' =  'None' THEN ' ' ELSE '"+str(l_manage_org_nm)+"' END   /* 주관기관명 */"
+                        query += "     , CASE WHEN '"+str(l_start_date)+"' =  'None' THEN ' ' ELSE '"+str(l_start_date)+"' END      /* 시작일자 */"
+                        query += "     , CASE WHEN '"+str(l_start_time)+"' =  'None' THEN ' ' ELSE '"+str(l_start_time)+"' END      /* 시작시간 */"
+                        query += "     , CASE WHEN '"+str(l_end_date)+"' =  'None' THEN ' ' ELSE '"+str(l_end_date)+"' END        /* 종료일자 */"
+                        query += "     , CASE WHEN '"+str(l_end_time)+"' =  'None' THEN ' ' ELSE  '"+str(l_end_time)+"' END       /* 종료시간 */"
+                        query += "     , CASE WHEN '"+str(l_tot_time)+"' =  'None' THEN ' ' ELSE '"+str(l_tot_time)+"' END        /* 총시간 */"
+                        # query += "     ,CASE WHEN '"+str(l_apl_id)+"' =  'None' THEN NULL ELSE '"+str(l_apl_id)+"' END         /* 입력자id */"
+                        # query += "     ,CASE WHEN '"+str(client_ip)+"' =  'None' THEN NULL ELSE '"+str(client_ip)+"' END         /* 입력자ip */"
+                        # query += "     ,now()         /* 입력일시 */"
                         # query += "     , CASE WHEN '"+str(l_ins_pgm)+"' =  'None' THEN NULL ELSE '"+str(l_ins_pgm)+"' END         /* 입력프로그램id */"
                         # query += "     , CASE WHEN '"+str(l_upd_id)+"' =  'None' THEN NULL ELSE '"+str(l_upd_id)+"' END          /* 수정자id */"
                         # query += "     , CASE WHEN '"+str(l_upd_ip)+"' =  'None' THEN NULL ELSE '"+str(l_upd_ip)+"' END          /* 수정자ip */"
@@ -328,6 +334,7 @@ def login_login(request):
                         cursor4 = connection.cursor()
                         query_result = cursor4.execute(query)    
                         # insert(봉사)
+                        row = cursor.fetchone()  
                     ########################################################################
                     # 봉사 - 종료
                     ########################################################################
