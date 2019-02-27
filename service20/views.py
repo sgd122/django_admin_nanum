@@ -851,7 +851,7 @@ class MS0101M_list_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = msch
-        fields = ('ms_id','ms_name','status','statusCode','yr','yr_seq','sup_org','applyFlag','applyStatus','apl_fr_dt','apl_to_dt','cnt_trn','status','status_nm','applyFlagNm','sup_org_nm')
+        fields = ('ms_id','ms_name','status','statusCode','yr','yr_seq','sup_org','applyFlag','applyStatus','apl_fr_dt','apl_to_dt','cnt_trn','status','status_nm','applyFlagNm','sup_org_nm','trn_fr_dt','trn_to_dt')
 
     def get_applyFlag(self, obj):
         return obj.applyFlag    
