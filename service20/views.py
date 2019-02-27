@@ -517,6 +517,8 @@ class com_combo_yr(generics.ListAPIView):
 
         queryset = self.get_queryset()
         
+        query = " select '0' id,DATE_FORMAT(now(),'%%Y')-1 as std_detl_code,DATE_FORMAT(now(),'%%Y')-1 as std_detl_code_nm "
+        query += " union "
         query = " select '1' id,DATE_FORMAT(now(),'%%Y') as std_detl_code,DATE_FORMAT(now(),'%%Y') as std_detl_code_nm "
         query += " union "
         query += " select '2' id,DATE_FORMAT(now(),'%%Y')+1 as std_detl_code,DATE_FORMAT(now(),'%%Y')+1 as std_detl_code_nm "
