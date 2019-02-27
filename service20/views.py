@@ -36,7 +36,7 @@ def login_login(request):
         login_info = {'id':id,'pswd': pswd,'dest':'http://nanum.pusan.ac.kr:8000/service20/login/returnsso/'}
         # login_info = {'id':'514965','pswd': 'gks3089#','dest':'http://nanum.pusan.ac.kr:8000/service20/login/returnsso/'}
         # HTTP GET Request: requests대신 s 객체를 사용한다.
-
+        client_ip = request.META['REMOTE_ADDR']
 
         query = " insert into service20_com_evt     /* 이벤트로그 */ ";
         query += "      ( evt_gb     /* 이벤트구분 */ ";
@@ -51,11 +51,11 @@ def login_login(request):
         query += ") ";
         query += " select 'EVT001'  AS evt_gb     /* 이벤트구분 - 로그인 */ ";
         query += "     , '"+id+"' AS evt_userid /* 이벤트사용자id */ ";
-        query += "     , '0.0.0.1' AS evt_ip     /* 이벤트발생 ip */ ";
+        query += "     , '"+str(client_ip)+"' AS evt_ip     /* 이벤트발생 ip */ ";
         query += "     , REPLACE(REPLACE(REPLACE(SUBSTRING(NOW(),1, 19), '-',''),':',''),' ', '')        AS evt_dat    /* 이벤트일시 */ ";
         query += "     , CONCAT('','로그인') evt_desc   /* 이벤트 내용 */ ";
         query += "     , '"+id+"' AS ins_id     /* 입력자id */ ";
-        query += "     , '0.0.0.1' AS ins_ip     /* 입력자ip */ ";
+        query += "     , '"+str(client_ip)+"' AS ins_ip     /* 입력자ip */ ";
         query += "     , NOW()     AS ins_dt     /* 입력일시 */ ";
         query += "     , 'LOGIN'   AS ins_pgm    /* 입력프로그램id */ ";
         cursor_log = connection.cursor()
@@ -149,9 +149,9 @@ def login_login(request):
                         query += "     ,CASE WHEN '"+str(l_frexm_nm)+"' =  'None' THEN NULL ELSE '"+str(l_frexm_nm)+"' END       /* 외국어시험명 */"
                         query += "     ,CASE WHEN '"+str(l_score)+"' =  'None' THEN NULL ELSE '"+str(l_score)+"' END          /* 시험점수 */"
                         query += "     ,CASE WHEN '"+str(l_grade)+"' =  'None' THEN NULL ELSE '"+str(l_grade)+"' END          /* 시험등급 */"
-                        # query += "     ,CASE WHEN '"+str(l_ins_id)+"' =  'None' THEN NULL ELSE '"+str(l_ins_id)+"' END         /* 입력자id */"
-                        # query += "     ,CASE WHEN '"+str(l_ins_ip)+"' =  'None' THEN NULL ELSE '"+str(l_ins_ip)+"' END         /* 입력자ip */"
-                        # query += "     ,CASE WHEN '"+str(l_ins_dt)+"' =  'None' THEN NULL ELSE '"+str(l_ins_dt)+"' END         /* 입력일시 */"
+                        query += "     ,CASE WHEN '"+str(l_apl_id)+"' =  'None' THEN NULL ELSE '"+str(l_apl_id)+"' END         /* 입력자id */"
+                        query += "     ,CASE WHEN '"+str(client_ip)+"' =  'None' THEN NULL ELSE '"+str(client_ip)+"' END         /* 입력자ip */"
+                        query += "     ,now()         /* 입력일시 */"
                         # query += "     ,CASE WHEN '"+str(l_ins_pgm)+"' =  'None' THEN NULL ELSE '"+str(l_ins_pgm)+"' END        /* 입력프로그램id */"
                         # query += "     ,CASE WHEN '"+str(l_upd_id)+"' =  'None' THEN NULL ELSE '"+str(l_upd_id)+"' END         /* 수정자id */"
                         # query += "     ,CASE WHEN '"+str(l_upd_ip)+"' =  'None' THEN NULL ELSE '"+str(l_upd_ip)+"' END         /* 수정자ip */"
@@ -247,9 +247,9 @@ def login_login(request):
                         query += "     , CASE WHEN '"+str(l_end_date)+"' =  'None' THEN NULL ELSE '"+str(l_end_date)+"' END        /* 종료일자 */"
                         query += "     , CASE WHEN '"+str(l_end_time)+"' =  'None' THEN NULL ELSE  '"+str(l_end_time)+"' END       /* 종료시간 */"
                         query += "     , CASE WHEN '"+str(l_tot_time)+"' =  'None' THEN NULL ELSE '"+str(l_tot_time)+"' END        /* 총시간 */"
-                        # query += "     , CASE WHEN '"+str(l_ins_id)+"' =  'None' THEN NULL ELSE '"+str(l_ins_id)+"' END          /* 입력자id */"
-                        # query += "     , CASE WHEN '"+str(l_ins_ip)+"' =  'None' THEN NULL ELSE '"+str(l_ins_ip)+"' END          /* 입력자ip */"
-                        # query += "     , CASE WHEN '"+str(l_ins_dt)+"' =  'None' THEN NULL ELSE '"+str(l_ins_ip)+"' END          /* 입력일시 */"
+                        query += "     ,CASE WHEN '"+str(l_apl_id)+"' =  'None' THEN NULL ELSE '"+str(l_apl_id)+"' END         /* 입력자id */"
+                        query += "     ,CASE WHEN '"+str(client_ip)+"' =  'None' THEN NULL ELSE '"+str(client_ip)+"' END         /* 입력자ip */"
+                        query += "     ,now()         /* 입력일시 */"
                         # query += "     , CASE WHEN '"+str(l_ins_pgm)+"' =  'None' THEN NULL ELSE '"+str(l_ins_pgm)+"' END         /* 입력프로그램id */"
                         # query += "     , CASE WHEN '"+str(l_upd_id)+"' =  'None' THEN NULL ELSE '"+str(l_upd_id)+"' END          /* 수정자id */"
                         # query += "     , CASE WHEN '"+str(l_upd_ip)+"' =  'None' THEN NULL ELSE '"+str(l_upd_ip)+"' END          /* 수정자ip */"
@@ -966,6 +966,8 @@ def MS0101M_save(request):
     ms_ida = request.POST.get('ms_id', None)
     apl_max = request.POST.get('aplMax', 0)
     
+    client_ip = request.META['REMOTE_ADDR']
+
     #created,created_flag = vw_nanum_stdt.apl_id.get_or_create(user=request.user)
     ms_id = programId
     ms_apl_max = ms_apl.objects.all().aggregate(vlMax=Max('apl_no'))
@@ -1843,6 +1845,7 @@ def MP0101M_save(request):
 
     ms_ida = request.POST.get('ms_id', None)
     apl_max = request.POST.get('aplMax', 0)
+    client_ip = request.META['REMOTE_ADDR']
     
     print("::ida::")
     print(ida)
@@ -1922,6 +1925,9 @@ def MP0101M_save(request):
         inv_agr_div = 'Y',
         inv_agr_dt = datetime.datetime.today(),
         status='10', # 지원
+        ins_id=apl_id,
+        ins_ip=str(client_ip),
+        ins_dt=datetime.datetime.today()
         )
     model_instance.save()
     
@@ -1939,7 +1945,10 @@ def MP0101M_save(request):
             apl_id=apl_id,
             apl_nm=rows.apl_nm,
             sort_seq =i+1,
-            ans_t2=anst2
+            ans_t2=anst2,
+            ins_id=apl_id,
+            ins_ip=str(client_ip),
+            ins_dt=datetime.datetime.today()
             )
         model_instance2.save()
 
@@ -1994,8 +2003,8 @@ def MP0101M_save(request):
     update_text += "      , t1.frexm_nm       /* 외국어시험명 */ ";
     update_text += "      , t1.score          /* 시험점수 */ ";
     update_text += "      , t1.grade          /* 시험등급 */ ";
-    update_text += "      , 'a' ins_id         /* 입력자id */ ";
-    update_text += "      , 'b' ins_ip         /* 입력자ip */ ";
+    update_text += "      , '"+apl_id+"' ins_id         /* 입력자id */ ";
+    update_text += "      , '"+str(client_ip)+"' ins_ip         /* 입력자ip */ ";
     update_text += "      , NOW() ins_dt         /* 입력일시 */ ";
     update_text += "      , 'c' ins_pgm        /* 입력프로그램id */ ";
     update_text += "   FROM service20_vw_nanum_foreign_exam t1     /* 유효한 외국어 성적 리스트 view(임시) */ ";
@@ -2048,8 +2057,8 @@ def MP0101M_save(request):
     update_text += "     , t1.end_date        /* 종료일자 */ ";
     update_text += "     , t1.end_time        /* 종료시간 */ ";
     update_text += "     , t1.tot_time        /* 총시간 */ ";
-    update_text += "     , 'a' ins_id         /* 입력자id */ ";
-    update_text += "     , 'b' ins_ip         /* 입력자ip */ ";
+    update_text += "     , '"+apl_id+"' ins_id         /* 입력자id */ ";
+    update_text += "     , '"+str(client_ip)+"' ins_ip         /* 입력자ip */ ";
     update_text += "     , NOW() ins_dt         /* 입력일시 */ ";
     update_text += "     , 'c' ins_pgm        /* 입력프로그램id */ ";
     update_text += "  FROM service20_vw_nanum_service_activ t1     /* 학생 봉사 시간 view(임시) */ ";
@@ -3045,6 +3054,7 @@ def MP0103M_Insert(request):
     mnt_dt_cnt = request.POST.get('mnt_dt_cnt', 0)      # 2번 insert
     rep_ym = request.POST.get('rep_ym', "")
     
+    client_ip = request.META['REMOTE_ADDR']
 
     update_text = " update service20_mp_plnh a "
     update_text += " , service20_mpgm b "
@@ -3108,12 +3118,12 @@ def MP0103M_Insert(request):
         insert_text += " , adddate(t2.mnt_fr_dt, 7*('"+str(pln_no)+"'*1-1) + 0) pln_sdt "
         insert_text += " , adddate(t2.mnt_fr_dt, 7*('"+str(pln_no)+"'*1-1) + 6) pln_edt "
         insert_text += " , '"+str(mtr_desc)+"' "
-        insert_text += " , '"+str(ins_id)+"' "
-        insert_text += " , '"+str(ins_ip)+"' "
+        insert_text += " , '"+str(apl_id)+"' "
+        insert_text += " , '"+str(client_ip)+"' "
         insert_text += " , now() "
         insert_text += " , '"+str(ins_pgm)+"' "
-        insert_text += " , '"+str(upd_id)+"' "
-        insert_text += " , '"+str(upd_ip)+"' "
+        insert_text += " , '"+str(apl_id)+"' "
+        insert_text += " , '"+str(client_ip)+"' "
         insert_text += " , now() "
         insert_text += " , '"+str(upd_pgm)+"' "
         insert_text += " from service20_mp_mtr t1 "
@@ -3194,12 +3204,12 @@ def MP0103M_Insert(request):
         query += "     , null      as mgr_id"
         query += "     , null      as mgr_dt"
         query += "     , '00'      as status"
-        query += "     , '" + str(ins_id) + "' as ins_id   /* {!login_id} */"
-        query += "     , '" + str(ins_ip) + "' as ins_ip   /* {!ins_ip} */"
+        query += "     , '" + str(apl_id) + "' as ins_id   /* {!login_id} */"
+        query += "     , '" + str(client_ip) + "' as ins_ip   /* {!ins_ip} */"
         query += "     , now()     as ins_dt"
         query += "     , '" + str(ins_pgm) + "'   as ins_pgm  /* {!ins_pgm} */"
-        query += "     , '" + str(upd_id) + "' as upd_id"
-        query += "     , '" + str(upd_ip) + "' as upd_ip"
+        query += "     , '" + str(apl_id) + "' as upd_id"
+        query += "     , '" + str(client_ip) + "' as upd_ip"
         query += "     , now() as upd_dt"
         query += "     , '" + str(upd_pgm) + "' as upd_pgm"
         query += "  from service20_mp_mtr t1"
@@ -3238,7 +3248,7 @@ def MP0103M_Update(request):
     
 
     maxRow = request.POST.get('maxRow', 0)
-    
+    client_ip = request.META['REMOTE_ADDR']
 
     row_max = int(maxRow)
 
@@ -3250,8 +3260,8 @@ def MP0103M_Update(request):
     update_text += " SET mtr_sub = '"+str(mtr_sub)+"' "
     # update_text += " , pln_sdt = ifnull(trim(NULLIF('"+str(mtr_pln_sdt)+"','')),DATE_FORMAT(now(),'%Y-%m-%d')) "
     # update_text += " , pln_edt = ifnull(trim(NULLIF('"+str(mtr_pln_edt)+"','')),DATE_FORMAT(now(),'%Y-%m-%d')) "
-    update_text += " , upd_id = '"+str(upd_id)+"' "
-    update_text += " , upd_ip = '"+str(upd_ip)+"' "
+    update_text += " , upd_id = '"+str(apl_id)+"' "
+    update_text += " , upd_ip = '"+str(client_ip)+"' "
     update_text += " , upd_dt = now() "
     update_text += " , upd_pgm = '"+str(upd_pgm)+"' "
     update_text += " WHERE mp_id = '"+str(mp_id)+"' "
@@ -3280,8 +3290,8 @@ def MP0103M_Update(request):
         update_text += " SET mtr_desc = '"+str(mtr_desc)+"' "
         # update_text += " , pln_sdt = ifnull(trim(NULLIF('"+str(mtr_pln_sdt)+"','')),DATE_FORMAT(now(),'%Y-%m-%d')) "
         # update_text += " , pln_edt = ifnull(trim(NULLIF('"+str(mtr_pln_edt)+"','')),DATE_FORMAT(now(),'%Y-%m-%d')) "
-        update_text += " , upd_id = '"+str(upd_id)+"' "
-        update_text += " , upd_ip = '"+str(upd_ip)+"' "
+        update_text += " , upd_id = '"+str(apl_id)+"' "
+        update_text += " , upd_ip = '"+str(client_ip)+"' "
         update_text += " , upd_dt = now() "
         update_text += " , upd_pgm = '"+str(upd_pgm)+"' "
         update_text += " WHERE mp_id = '"+str(mp_id)+"' "
@@ -4072,6 +4082,7 @@ def MP0105M_update(request,pk):
     mgr_id   = request.POST.get('mgr_id', "")
     grd_id   = request.POST.get('grd_id', "")
     grd_nm   = request.POST.get('grd_nm', "")
+    client_ip = request.META['REMOTE_ADDR']
 
     update_text = ""
     if pk == 1:
@@ -4100,7 +4111,7 @@ def MP0105M_update(request,pk):
 
         update_text += " , rep_dt      = now()    /*보고서작성일*/     "    
         update_text += " , upd_id      = '"+str(upd_id)   +"'    /*수정자id*/         "    
-        update_text += " , upd_ip      = '"+str(upd_ip)   +"'    /*수정자ip*/         "    
+        update_text += " , upd_ip      = '"+str(client_ip)   +"'    /*수정자ip*/         "    
         update_text += " , upd_dt      = now()    /*수정일시*/         "    
         update_text += " , upd_pgm     = '"+str(upd_pgm)  +"'    /*수정프로그램id*/   "    
         update_text += " where 1=1 "
@@ -4136,7 +4147,7 @@ def MP0105M_update(request,pk):
 
         update_text += " , req_dt      = now()    /*승인요청일*/       "
         update_text += " , upd_id      = '"+str(upd_id)   +"'    /*수정자id*/         "    
-        update_text += " , upd_ip      = '"+str(upd_ip)   +"'    /*수정자ip*/         "    
+        update_text += " , upd_ip      = '"+str(client_ip)   +"'    /*수정자ip*/         "    
         update_text += " , upd_dt      = now()    /*수정일시*/         "    
         update_text += " , upd_pgm     = '"+str(upd_pgm)  +"'    /*수정프로그램id*/   "    
         update_text += " where 1=1 "

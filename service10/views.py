@@ -47,7 +47,7 @@ def post_login(request):
 	#rows2 = vm_nanum_stdt.objects.get("apl_nm")
 	
 	client_ip = request.META['REMOTE_ADDR']
-	print("::client_ip::"+str(client_ip))
+
 
 	if not created_flag:
 		message = "Fail"
@@ -76,11 +76,11 @@ def post_login(request):
 		query += ") ";
 		query += " select 'EVT001'  AS evt_gb     /* 이벤트구분 - 로그인 */ ";
 		query += "     , '"+ida+"' AS evt_userid /* 이벤트사용자id */ ";
-		query += "     , '0.0.0.1' AS evt_ip     /* 이벤트발생 ip */ ";
+		query += "     , '"+str(client_ip)+"' AS evt_ip     /* 이벤트발생 ip */ ";
 		query += "     , REPLACE(REPLACE(REPLACE(SUBSTRING(NOW(),1, 19), '-',''),':',''),' ', '')        AS evt_dat    /* 이벤트일시 */ ";
 		query += "     , CONCAT('','로그인') evt_desc   /* 이벤트 내용 */ ";
 		query += "     , '"+ida+"' AS ins_id     /* 입력자id */ ";
-		query += "     , '0.0.0.1' AS ins_ip     /* 입력자ip */ ";
+		query += "     , '"+str(client_ip)+"' AS ins_ip     /* 입력자ip */ ";
 		query += "     , NOW()     AS ins_dt     /* 입력일시 */ ";
 		query += "     , 'LOGIN'   AS ins_pgm    /* 입력프로그램id */ ";
 		cursor_log = connection.cursor()
