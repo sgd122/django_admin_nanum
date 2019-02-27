@@ -2851,12 +2851,15 @@ class MP0101M_report_list_Serializer(serializers.ModelSerializer):
     pr_term_div = serializers.SerializerMethodField()
     statusNm = serializers.SerializerMethodField()
     statusCode = serializers.SerializerMethodField()
+    mpgm_yr = serializers.SerializerMethodField()
+    mnt_term = serializers.SerializerMethodField()
+    mnt_term_nm = serializers.SerializerMethodField()
 
     acpt_dt = serializers.DateTimeField(format='%Y-%m-%d')
 
     class Meta:
         model = mp_mtr
-        fields = ('mp_id','apl_no','mntr_id','indv_div','team_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','bank_acct','bank_cd','bank_nm','bank_dpsr','cnt_mp_a','cnt_mp_p','cnt_mp_c','cnt_mp_g','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','fnl_rslt','acpt_dt','acpt_div','acpt_cncl_rsn','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','mp_name','pr_yr','pr_sch_yr','pr_term_div','statusNm','statusCode','id_pic')
+        fields = ('mp_id','apl_no','mntr_id','indv_div','team_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','bank_acct','bank_cd','bank_nm','bank_dpsr','cnt_mp_a','cnt_mp_p','cnt_mp_c','cnt_mp_g','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','fnl_rslt','acpt_dt','acpt_div','acpt_cncl_rsn','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','mp_name','pr_yr','pr_sch_yr','pr_term_div','statusNm','statusCode','id_pic','mpgm_yr','mnt_term','mnt_term_nm')
 
     def get_mp_name(self,obj):
         return obj.mp_name
@@ -2905,6 +2908,12 @@ class MP0101M_report_list_Serializer(serializers.ModelSerializer):
         else:
             # 개설중
             return '1'      
+    def get_mpgm_yr(self,obj):
+        return obj.mpgm_yr
+    def get_mnt_term(self,obj):
+        return obj.mnt_term
+    def get_mnt_term_nm(self,obj):
+        return obj.mnt_term_nm
 
 class MP0101M_report_list(generics.ListAPIView):
     queryset = mp_mtr.objects.all()
@@ -2916,7 +2925,23 @@ class MP0101M_report_list(generics.ListAPIView):
         l_yr = request.GET.get('yr', None)
         
         # mpgm
-        query = "select C.mp_name,B.pr_yr,B.pr_sch_yr,B.pr_term_div,A.* from service20_mp_mtr A,service20_vw_nanum_stdt B,service20_mpgm C where A.apl_id=B.apl_id and A.mp_id = C.mp_id and A.mp_id = '"+str(mp_ida)+"' and A.apl_id='"+str(ida)+"'"
+        # query = "select C.yr as mpgm_yr,C.mnt_term,C.mp_name,B.pr_yr,B.pr_sch_yr,B.pr_term_div,A.* from service20_mp_mtr A,service20_vw_nanum_stdt B,service20_mpgm C where A.apl_id=B.apl_id and A.mp_id = C.mp_id and A.mp_id = '"+str(mp_ida)+"' and A.apl_id='"+str(ida)+"'"
+
+        query = "select c.yr AS mpgm_yr,  "
+        query += "       c.mnt_term,  "
+        query += "       c.mp_name,  "
+        query += "       d.std_detl_code_nm AS mnt_term_nm,  "
+        query += "       a.*  "
+        query += "FROM   service20_mp_mtr a,  " 
+        query += "       service20_mpgm c,  "
+        query += "       service20_com_cdd d "
+        query += " WHERE a.mp_id = c.mp_id  "
+        query += "   AND a.mp_id = '"+str(mp_ida)+"'  "
+        query += "   AND a.apl_id = '"+str(ida)+"' "
+        query += "   AND d.std_grp_code  = 'MS0022' "
+        query += "   AND d.std_detl_code = c.mnt_term "
+
+
         queryset = mp_mtr.objects.raw(query)
         
         
