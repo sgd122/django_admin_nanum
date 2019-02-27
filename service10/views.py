@@ -61,27 +61,27 @@ def post_login(request):
 		query_result = mentor_cursor.execute(mentor_query)  
 
 		query = " insert into service20_com_evt     /* 이벤트로그 */ ";
-        query += "      ( evt_gb     /* 이벤트구분 */ ";
-        query += "     , evt_userid /* 이벤트사용자id */ ";
-        query += "     , evt_ip     /* 이벤트발생 ip */ ";
-        query += "     , evt_dat    /* 이벤트일시 */ ";
-        query += "     , evt_desc   /* 이벤트 내용 */ ";
-        query += "     , ins_id     /* 입력자id */ ";
-        query += "     , ins_ip     /* 입력자ip */ ";
-        query += "     , ins_dt     /* 입력일시 */ ";
-        query += "     , ins_pgm    /* 입력프로그램id */ ";
-        query += ") ";
-        query += " select 'EVT001'  AS evt_gb     /* 이벤트구분 - 로그인 */ ";
-        query += "     , '"+ida+"' AS evt_userid /* 이벤트사용자id */ ";
-        query += "     , '0.0.0.1' AS evt_ip     /* 이벤트발생 ip */ ";
-        query += "     , DATE_FORMAT(NOW(),'%%Y%%m%%d%%h%%i%%S')        AS evt_dat    /* 이벤트일시 */ ";
-        query += "     , CONCAT('','로그인') evt_desc   /* 이벤트 내용 */ ";
-        query += "     , '"+ida+"' AS ins_id     /* 입력자id */ ";
-        query += "     , '0.0.0.1' AS ins_ip     /* 입력자ip */ ";
-        query += "     , NOW()     AS ins_dt     /* 입력일시 */ ";
-        query += "     , 'LOGIN'   AS ins_pgm    /* 입력프로그램id */ ";
-        cursor_log = connection.cursor()
-        query_result = cursor_log.execute(query)  
+		query += "      ( evt_gb     /* 이벤트구분 */ ";
+		query += "     , evt_userid /* 이벤트사용자id */ ";
+		query += "     , evt_ip     /* 이벤트발생 ip */ ";
+		query += "     , evt_dat    /* 이벤트일시 */ ";
+		query += "     , evt_desc   /* 이벤트 내용 */ ";
+		query += "     , ins_id     /* 입력자id */ ";
+		query += "     , ins_ip     /* 입력자ip */ ";
+		query += "     , ins_dt     /* 입력일시 */ ";
+		query += "     , ins_pgm    /* 입력프로그램id */ ";
+		query += ") ";
+		query += " select 'EVT001'  AS evt_gb     /* 이벤트구분 - 로그인 */ ";
+		query += "     , '"+ida+"' AS evt_userid /* 이벤트사용자id */ ";
+		query += "     , '0.0.0.1' AS evt_ip     /* 이벤트발생 ip */ ";
+		query += "     , DATE_FORMAT(NOW(),'%%Y%%m%%d%%h%%i%%S')        AS evt_dat    /* 이벤트일시 */ ";
+		query += "     , CONCAT('','로그인') evt_desc   /* 이벤트 내용 */ ";
+		query += "     , '"+ida+"' AS ins_id     /* 입력자id */ ";
+		query += "     , '0.0.0.1' AS ins_ip     /* 입력자ip */ ";
+		query += "     , NOW()     AS ins_dt     /* 입력일시 */ ";
+		query += "     , 'LOGIN'   AS ins_pgm    /* 입력프로그램id */ ";
+		cursor_log = connection.cursor()
+		query_result = cursor_log.execute(query)  
 
 
 		if query_result == 0:
