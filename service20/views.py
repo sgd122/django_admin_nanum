@@ -1058,6 +1058,10 @@ def MS0101M_save(request):
             tel_no=rows.tel_no.replace('-', ''),
             tel_no_g=rows.tel_no_g.replace('-', ''),
             h_addr=rows.h_addr,
+            email_addr=rows.email_addr,
+            bank_acct=rows.bank_acct,
+            bank_cd=rows.bank_cd,
+            bank_nm=rows.bank_nm,
             score1=rows.score01,
             score2=rows.score02,
             score3=rows.score03,
@@ -1288,7 +1292,8 @@ class MS0101M_adm_list_fe(generics.ListAPIView):
         query += "        frexm_cd,  "
         query += "        frexm_nm,  "
         query += "        score,  "
-        query += "        grade  "
+        query += "        grade,  "
+        query += "   fn_mp_mtr_fe_select_01('"+str(ms_ida)+"','"+str(ida)+"') as fn_score "
         query += " FROM   service20_ms_apl_fe  "
         query += " WHERE  ms_id = '"+str(ms_ida)+"'  "
         query += "        AND apl_id = '"+str(ida)+"' "
@@ -1322,7 +1327,8 @@ class MS0101M_adm_list_sa(generics.ListAPIView):
         ms_ida = request.GET.get('ms_id', None)
         l_yr = request.GET.get('yr', None)
         
-        query = " select *  "
+        query = " select a.* , "
+        query += "   fn_mp_mtr_sa_select_01('"+str(ms_ida)+"','"+str(ida)+"') as fn_score "
         query += " FROM   service20_ms_apl_sa  "
         query += " WHERE  ms_id = '"+str(ms_ida)+"'  "
         query += "        AND apl_id = '"+str(ida)+"' "
