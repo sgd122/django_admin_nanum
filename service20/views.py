@@ -933,7 +933,7 @@ class MS0101M_list(generics.ListAPIView):
         query += "        LEFT JOIN service20_ms_apl B  "
         query += "               ON ( A.ms_id = B.ms_id  "
         # query += "                    AND A.yr = B.yr  "
-        query += "                    AND B.apl_id = '"+str(ida)+"' )  "
+        query += "                    AND B.apl_id = '"+str(l_user_id)+"' )  "
         query += "        LEFT JOIN service20_com_cdd c1 ON (c1.std_grp_code  = 'MP0004' AND c1.std_detl_code = A.sup_org) "
         query += " WHERE  A.yr = '"+str(l_yr)+"'  "
         query += "        AND A.apl_term = '"+str(l_apl_term)+"'  "
