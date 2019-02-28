@@ -1881,7 +1881,7 @@ class MP0101M_list_chk_1(generics.ListAPIView):
         mp_id = request.GET.get('mp_id', "")
 
 
-        # 체크
+        # 학년체크
         query = " select t1.id,t1.sch_yr, IFNULL(t4.en_cnt,0) as en_cnt, fn_mp_sub_desc_select_01('"+mp_id+"','MS0010') as mp_select01"
         query += "     , CASE WHEN IFNULL(t4.en_cnt,0) > 0 THEN '신청' ELSE CONCAT('신청불가:', fn_mp_sub_desc_select_01('"+mp_id+"','MS0010'), '만 신청가능') END  as mp_select02 "
         query += "  FROM service20_vw_nanum_stdt t1     /* 부산대학교 학생 정보 */ "
@@ -1898,7 +1898,7 @@ class MP0101M_list_chk_1(generics.ListAPIView):
         query += "            ) t4 ON (t4.apl_id = t1.apl_id) "
         query += " WHERE t1.apl_id = '"+apl_id+"' "
 
-
+        print(query)
         queryset = vw_nanum_stdt.objects.raw(query)
         
 
