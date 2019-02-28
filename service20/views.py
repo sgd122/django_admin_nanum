@@ -1859,15 +1859,18 @@ class MP0101M_list_chk_1_Serializer(serializers.ModelSerializer):
 
     en_cnt = serializers.SerializerMethodField()
     mp_select01 = serializers.SerializerMethodField()
-    mp_select02 = serializers.SerializerMethodField()
+    name = serializers.SerializerMethodField()
+    code = serializers.SerializerMethodField()
     class Meta:
         model = vw_nanum_stdt
-        fields = ('sch_yr','en_cnt','mp_select01','mp_select02')
+        fields = ('sch_yr','en_cnt','mp_select01','name','code')
 
     def get_mp_select01(self, obj):
         return obj.mp_select01
-    def get_mp_select02(self, obj):
-        return obj.mp_select02    
+    def get_name(self, obj):
+        return obj.name    
+    def get_code(self, obj):
+        return obj.code
     def get_en_cnt(self, obj):
         return obj.en_cnt        
 
@@ -1883,7 +1886,8 @@ class MP0101M_list_chk_1(generics.ListAPIView):
 
         # 학년체크
         query = " select t1.id,t1.sch_yr, IFNULL(t4.en_cnt,0) as en_cnt, fn_mp_sub_desc_select_01('"+mp_id+"','MS0010') as mp_select01"
-        query += "     , CASE WHEN IFNULL(t4.en_cnt,0) > 0 THEN '신청' ELSE CONCAT('신청불가:', fn_mp_sub_desc_select_01('"+mp_id+"','MS0010'), '만 신청가능') END  as mp_select02 "
+        query += "     , CASE WHEN IFNULL(t4.en_cnt,0) > 0 THEN '신청' ELSE CONCAT('신청불가:', fn_mp_sub_desc_select_01('"+mp_id+"','MS0010'), '만 신청가능') END  as name "
+        query += "     , CASE WHEN IFNULL(t4.en_cnt,0) > 0 THEN 'Y' ELSE 'N' END  as code "
         query += "  FROM service20_vw_nanum_stdt t1     /* 부산대학교 학생 정보 */ "
         query += " LEFT JOIN (SELECT t2.apl_id, COUNT(*) en_cnt "
         query += "              FROM service20_vw_nanum_stdt t2     /* 부산대학교 학생 정보 */ "
