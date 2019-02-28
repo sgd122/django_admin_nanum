@@ -1879,15 +1879,15 @@ class MS0101M_report_list_Serializer(serializers.ModelSerializer):
     statusNm = serializers.SerializerMethodField()
     statusCode = serializers.SerializerMethodField()
     pr_term_cnt = serializers.SerializerMethodField()
-    mnt_term_nm = serializers.SerializerMethodField()
-    mnt_term = serializers.SerializerMethodField()
+    trn_term_nm = serializers.SerializerMethodField()
+    trn_term = serializers.SerializerMethodField()
 
 
     # acpt_dt = serializers.DateTimeField(format='%Y-%m-%d')
 
     class Meta:
         model = ms_apl
-        fields = ('ms_id','apl_no','mntr_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','fnl_rslt','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','ms_name','pr_yr','pr_sch_yr','pr_term_div','statusNm','statusCode','pr_term_cnt','mnt_term_nm','mnt_term')
+        fields = ('ms_id','apl_no','mntr_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','fnl_rslt','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','ms_name','pr_yr','pr_sch_yr','pr_term_div','statusNm','statusCode','pr_term_cnt','trn_term_nm','trn_term')
     def get_ms_name(self,obj):
         return obj.ms_name
 
@@ -1902,10 +1902,10 @@ class MS0101M_report_list_Serializer(serializers.ModelSerializer):
 
     def get_pr_term_cnt(self,obj):
         return obj.pr_term_cnt
-    def get_mnt_term_nm(self,obj):
-        return obj.mnt_term_nm
-    def get_mnt_term(self,obj):
-        return obj.mnt_term
+    def get_trn_term_nm(self,obj):
+        return obj.trn_term_nm
+    def get_trn_term(self,obj):
+        return obj.trn_term
 
     def get_statusNm(self,obj):
         now = datetime.datetime.today()
@@ -1956,13 +1956,13 @@ class MS0101M_report_list(generics.ListAPIView):
         query = "select C.ms_name,B.pr_yr,B.pr_sch_yr,B.pr_term_div,A.* from service20_ms_apl A,service20_vw_nanum_stdt B,service20_msch C where A.apl_id=B.apl_id and A.ms_id = C.ms_id and A.yr='"+str(l_yr)+"' and A.ms_id = '"+str(ms_ida)+"' and A.apl_id='"+str(ida)+"'"
         
         query = "select c.yr AS mpgm_yr,  "
-        query += "       c.mnt_term,  "
+        query += "       c.trn_term,  "
         query += "       c.ms_name,  "
         query += "       b.pr_yr,  "
         query += "       b.pr_sch_yr,  "
         query += "       b.pr_term_div, "
         query += "       cast( ((b.pr_sch_yr-1)*2)+(substr(b.pr_term_div,1,1)*1) as UNSIGNED) pr_term_cnt, "
-        query += "       d.std_detl_code_nm AS mnt_term_nm,  "
+        query += "       d.std_detl_code_nm AS trn_term_nm,  "
         query += "       a.*  "
         query += "FROM   service20_ms_apl a,  " 
         query += "       service20_vw_nanum_stdt b, "
@@ -1973,7 +1973,7 @@ class MS0101M_report_list(generics.ListAPIView):
         query += "   AND a.ms_id = '"+str(ms_ida)+"'  "
         query += "   AND a.apl_id = '"+str(ida)+"' "
         query += "   AND d.std_grp_code  = 'MS0022' "
-        query += "   AND d.std_detl_code = c.mnt_term "
+        query += "   AND d.std_detl_code = c.trn_term "
         queryset = ms_apl.objects.raw(query)
         
 
