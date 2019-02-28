@@ -1662,7 +1662,7 @@ class MS0101M_adm_list_sa(generics.ListAPIView):
         
         query = " select a.* , "
         query += "   fn_mp_mtr_sa_select_01('"+str(ms_ida)+"','"+str(ida)+"') as fn_score "
-        query += " FROM   service20_ms_apl_sa  "
+        query += " FROM   service20_ms_apl_sa a  "
         query += " WHERE  ms_id = '"+str(ms_ida)+"'  "
         query += "        AND apl_id = '"+str(ida)+"' "
 
