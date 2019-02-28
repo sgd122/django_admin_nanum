@@ -1915,6 +1915,57 @@ class MP0101M_list_chk_1(generics.ListAPIView):
 
         return Response(serializer.data)
 
+class MP0101M_list_chk_2_Serializer(serializers.ModelSerializer):
+
+    
+    name = serializers.SerializerMethodField()
+    code = serializers.SerializerMethodField()
+    class Meta:
+        model = vw_nanum_stdt
+        fields = ('name','code')
+
+    def get_name(self, obj):
+        return obj.name    
+    def get_code(self, obj):
+        return obj.code
+
+class MP0101M_list_chk_2(generics.ListAPIView):
+    queryset = mpgm.objects.all()
+    serializer_class = MP0101M_list_chk_2_Serializer
+
+    def list(self, request):
+        
+        apl_id = request.GET.get('apl_id', "")
+        mp_id = request.GET.get('mp_id', "")
+
+
+        # -- 직전학기 학점 제한
+        query = " select t2.id,CASE WHEN t2.score03 >= t3.att_val THEN '신청' ELSE CONCAT('신청불가 : 학점', t3.att_val, '미만') END as name "
+        query += "      , CASE WHEN t2.score03 >= t3.att_val THEN 'Y' ELSE 'N' END as code "
+        query += "   FROM service20_vw_nanum_stdt t2     /* 부산대학교 학생 정보 */ "
+        query += "      , (  /* 학점 제한 */ "
+        query += "         select cast(att_val as unsigned) att_val "
+        query += "           FROM service20_mp_sub t3 "
+        query += "          WHERE t3.mp_id   = '"+mp_id+"' "
+        query += "            AND t3.att_id  = 'MP0071' "
+        query += "            AND t3.att_cdh = 'MP0071' "
+        query += "            AND t3.att_cdd = '10' "
+        query += "       ) t3 "
+        query += "   WHERE t2.apl_id = '"+apl_id+"' "
+
+        print(query)
+        queryset = vw_nanum_stdt.objects.raw(query)
+        
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, context={'request': request}, many=True)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
 class MP0101M_list_Serializer(serializers.ModelSerializer):
 
     applyFlag = serializers.SerializerMethodField()
