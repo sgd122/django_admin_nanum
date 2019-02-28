@@ -1948,8 +1948,7 @@ class MP0101M_list(generics.ListAPIView):
 
         query += " E.score03, D.att_val,"
 
-        query += " CASE WHEN E.score03 < D.att_val THEN '신청' ELSE CONCAT('신청불가 : 학점', D.att_val, '미만') END code_nm,CASE WHEN E.score03 < D.att_val THEN 'Y' ELSE 'N' END code, "
-
+        query += " CASE WHEN E.score03 >= D.att_val THEN '신청' ELSE CONCAT('신청불가 : 학점', D.att_val, '미만') END code_nm,CASE WHEN E.score03 >= D.att_val THEN 'Y' ELSE 'N' END code, "
 
         query += " CASE  "
         query += "      WHEN Ifnull(B.status, 'N') = 'N' THEN '미지원' "
@@ -1969,12 +1968,25 @@ class MP0101M_list(generics.ListAPIView):
         
 
         query += "        LEFT JOIN        (  /* 학점 제한 */ "
-        query += "               select att_val,mp_id "
+        query += "               select cast(att_val as unsigned) att_val,mp_id "
         query += "                 FROM service20_mp_sub t3 "
         query += "                WHERE t3.att_id  = 'MP0071' "
         query += "                  AND t3.att_cdh = 'MP0071' "
         query += "                  AND t3.att_cdd = '10' "
         query += "               ) D ON (A.mp_id = D.mp_id) "
+
+        # query += "       LEFT JOIN (SELECT t2.apl_id, COUNT(*) en_cnt "
+        # query += "             FROM service20_vw_nanum_stdt t2     /* 부산대학교 학생 정보 */ "
+        # query += "            WHERE t2.sch_yr IN  "
+        # query += "                  (SELECT t3.att_cdd "
+        # query += "                     FROM service20_mp_sub t3 "
+        # query += "                    WHERE t3.mp_id   = 'P182014' "
+        # query += "                      AND t3.att_id  = 'MS0010' "
+        # query += "                      AND t3.att_cdh = 'MS0010' "
+        # query += "                  ) "
+        # query += "            GROUP BY t2.apl_id "
+        # query += "           ) t4 ON (t4.apl_id = t1.apl_id) "
+
         query += " , service20_vw_nanum_stdt E "
 
         query += " WHERE  A.yr = '"+str(l_yr)+"'  "
