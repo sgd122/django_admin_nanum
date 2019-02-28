@@ -111,6 +111,8 @@ urlpatterns = [
     #
     ########################################################################################
     # 멘토링 프로그램 리스트 조회
+    path('MP0101M/list/chk/1/', MP0101M_list_chk_1.as_view(), name='MP0101M_list_chk_1'),
+    # 멘토링 프로그램 리스트 조회
     path('MP0101M/list/', MP0101M_list.as_view(), name='MP0101M_list'),
     # 멘토링 프로그램 신청내역
     path('MP0101M/list/all/', MP0101M_list_all.as_view(), name='MP0101M_list_all'),
