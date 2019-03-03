@@ -1824,7 +1824,7 @@ def MS0101M_adm_update(request):
         update_text = " update service20_ms_ans a "
         update_text += " SET a.ans_t2 = '"+str(ans_t2)+"' "
         update_text += " WHERE 1=1 "
-        update_text += " AND a.mp_id = '"+str(ms_id)+"' "
+        update_text += " AND a.ms_id = '"+str(ms_id)+"' "
         update_text += " AND a.apl_no = '"+str(apl_no)+"' "
         update_text += " AND a.ques_no = '"+str(ques_no)+"' "
         
