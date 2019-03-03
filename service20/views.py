@@ -5059,7 +5059,7 @@ class TT0107M_list(generics.ListAPIView):
 
         queryset = self.get_queryset()
 
-        query = " select t1.id "
+                query = " select t1.id "
         query += " , t1.mp_id     /* 멘토링 프로그램id */ "
         query += " , t3.yr"
         query += " , t3.apl_term"
@@ -5093,6 +5093,8 @@ class TT0107M_list(generics.ListAPIView):
         query += " left join service20_mp_mtr t2 on (t2.mp_id   = t1.mp_id "
         query += " and t2.apl_no = t1.apl_no)       /* 지원 멘토 */ "
         query += " left join service20_mpgm t3 on (t3.mp_id   = t1.mp_id)  /*지원 멘토*/  "
+        query += "  left join service20_mp_mte t4 on (t4.mp_id     = t2.mp_id"
+        query += "                                   and t4.apl_no = t2.apl_no )    "        
         query += " left join service20_com_cdd c1 on (c1.std_grp_code  = 'MP0070'  /* 상태(mp0070) */ "
         query += " and c1.std_detl_code = t1.status) "
         query += " left join service20_com_cdd c2 on (c2.std_grp_code  = 'MP0062'  /* 보고서 구분(mp0062) */ "
@@ -5104,6 +5106,10 @@ class TT0107M_list(generics.ListAPIView):
         query += " and t1.status like Ifnull(Nullif('"+str(l_status)+"', ''), '%%')  "
         query += " and t1.rep_div   = '"+l_rep_div+"'"
         query += " and t1.mp_id     = '"+l_mp_id+"'"
+        query += " and ( t4.tchr_id = '"+l_user_id+"'"
+        query += "    or t4.grd_id  = '"+l_user_id+"'"
+        query += "    or t4.mnte_id = '"+l_user_id+"'"
+        query += "    or t2.apl_id  = '"+l_user_id+"')"
 
         queryset = mp_rep.objects.raw(query)
 
