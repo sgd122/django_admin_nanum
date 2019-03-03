@@ -753,7 +753,7 @@ class com_combo_program2_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = mpgm
-        fields = ('mp_id','mp_name','status','yr','apl_term')
+        fields = ('mp_id','status','mp_name','yr','mnt_term')
 
 
 class com_combo_program2(generics.ListAPIView):
@@ -762,21 +762,32 @@ class com_combo_program2(generics.ListAPIView):
 
     def list(self, request):
         yr = request.GET.get('yr', "")
-        apl_term = request.GET.get('apl_term', "")
+        mnt_term = request.GET.get('apl_term', "")
+        user_id = request.GET.get('user_id', "")
         status = request.GET.get('status', "")
 
         queryset = self.get_queryset()
         
         
-        query = "select mp_id";
-        query += ", mp_name";
-        query += ", status";
-        query += ", yr";
-        query += ", apl_term";
-        query += " from service20_mpgm";
-        query += " where yr = '"+yr+"'";
-        query += " and apl_term = '"+apl_term+"'";
-        query += " order by mp_id "
+        query = "select distinct";
+        query += "       t1.mp_id         /* 멘토링 프로그램id */";
+        query += "     , t1.status        /* 상태(mp0001) */";
+        query += "     , t1.mp_name       /* 멘토링 프로그램 명 */";
+        query += "     , t1.yr            /* 연도 */";
+        query += "     , t1.mnt_term      /* 활동시기 */";
+        query += "  from service20_mpgm t1";
+        query += "  left join service20_mp_mtr    t3 on (t3.mp_id     = t1.mp_id)";
+        query += "  left join service20_mp_mte    t4 on (t4.mp_id     = t3.mp_id";
+        query += "                                   and t4.apl_no    = t3.apl_no )";
+        query += " where t1.yr       = '"+str(yr)+"'";
+        query += "   and t1.mnt_term = '"+str(mnt_term)+"'";
+        query += "   and t1.status like Ifnull(Nullif('"+str(status)+"', ''), '%%')  "
+        query += "   and ( t4.tchr_id = '"+str(user_id)+"'";
+        query += "       or t4.grd_id  = '"+str(user_id)+"'";
+        query += "       or t4.mnte_id = '"+str(user_id)+"'";
+        query += "       or t3.apl_id = '"+str(user_id)+"' )";
+
+        print(query)
 
         queryset = mpgm.objects.raw(query)
 
