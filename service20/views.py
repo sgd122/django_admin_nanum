@@ -4981,6 +4981,134 @@ class TE0201_detail(generics.ListAPIView):
 # TE0201 - END
 #####################################################################################
 
+#####################################################################################
+# TT0107M - START
+#####################################################################################
+
+# 보고서 관리 리스트 ###################################################
+class TT0107M_list_Serializer(serializers.ModelSerializer):
+
+    # testField = serializers.SerializerMethodField()
+    yr = serializers.SerializerMethodField()
+    apl_term = serializers.SerializerMethodField()
+    unv_nm = serializers.SerializerMethodField()
+    cllg_nm = serializers.SerializerMethodField()
+    dept_nm = serializers.SerializerMethodField()
+    apl_id = serializers.SerializerMethodField()
+    apl_nm = serializers.SerializerMethodField()
+    rep_div_nm = serializers.SerializerMethodField()
+    status_nm = serializers.SerializerMethodField()
+    req_dt = serializers.SerializerMethodField()
+    appr_dt = serializers.SerializerMethodField()
+    mgr_dt = serializers.SerializerMethodField()
+    
+
+    class Meta:
+        model = mp_rep
+        fields = ('id','mp_id','yr','apl_term','unv_nm','cllg_nm','dept_nm','apl_id','apl_nm','rep_div','rep_div_nm','status','status_nm','rep_ttl','apl_no','rep_no','rep_div','mtr_obj','rep_dt','req_dt','mtr_desc','coatching','spcl_note','mtr_revw','appr_id','appr_nm','appr_dt','mgr_id','mgr_dt','rep_ym')
+
+    def get_yr(self,obj):
+        return obj.yr
+    def get_apl_term(self,obj):        
+        return obj.apl_term
+    def get_unv_nm(self,obj):        
+        return obj.unv_nm
+    def get_cllg_nm(self,obj):        
+        return obj.cllg_nm
+    def get_dept_nm(self,obj):        
+        return obj.dept_nm
+    def get_apl_id(self,obj):        
+        return obj.apl_id
+    def get_apl_nm(self,obj):        
+        return obj.apl_nm
+    def get_rep_div_nm(self,obj):        
+        return obj.rep_div_nm
+    def get_status_nm(self,obj):        
+        return obj.status_nm
+    def get_req_dt(self,obj):        
+        return obj.req_dt
+    def get_appr_dt(self,obj):        
+        return obj.appr_dt
+    def get_mgr_dt(self,obj):        
+        return obj.mgr_dt
+
+
+class TT0107M_list(generics.ListAPIView):
+    queryset = mp_rep.objects.all()
+    serializer_class = TT0107M_list_Serializer
+
+
+    def list(self, request):
+        l_yr = request.GET.get('yr', "")
+        l_apl_term = request.GET.get('apl_term', "")
+        l_status = request.GET.get('status', "")
+        l_rep_div = request.GET.get('rep_div', "")
+        l_mp_id = request.GET.get('mp_id', "")
+
+
+        queryset = self.get_queryset()
+
+        query = " select t1.id "
+        query += " , t1.mp_id     /* 멘토링 프로그램id */ "
+        query += " , t3.yr"
+        query += " , t3.apl_term"
+        query += " , t2.unv_nm          /* 지원자 대학교 명 */ "
+        query += " , t2.cllg_nm         /* 지원자 대학 명 */ "
+        query += " , t2.dept_nm         /* 지원자 학부/학과 명 */ "
+        query += " , t2.apl_id          /* 지원자(멘토,학생) 학번 */ "
+        query += " , t2.apl_nm          /* 지원자(멘토,학생) 명 */ "
+        query += " , t1.rep_div         /* 보고서 구분(mp0062) */ "
+        query += " , c2.std_detl_code_nm   as rep_div_nm "
+        query += " , t1.status          /* 상태(mp0070) */ "
+        query += " , c1.std_detl_code_nm   as status_nm "
+        query += " , t1.rep_ttl   /* 보고서 제목 : 내용 */ "
+        query += " , t1.apl_no    /* 멘토 지원 no */ "
+        query += " , t1.rep_no    /* 보고서 no */ "
+        query += " , t1.rep_div   /* 보고서 구분(mp0062) */ "
+        query += " , t1.mtr_obj   /* 학습목표 */ "
+        query += " , t1.rep_dt    /* 보고서작성일 */ "
+        query += " , substring(t1.req_dt,  1, 10) req_dt    /* 승인요청일 */ "
+        query += " , t1.mtr_desc  /* 학습내용 */ "
+        query += " , t1.coatching /* 학습외 지도(상담) */ "
+        query += " , t1.spcl_note /* 특이사항 */ "
+        query += " , t1.mtr_revw  /* 소감문 */ "
+        query += " , t1.appr_id   /* 승인자id */ "
+        query += " , t1.appr_nm   /* 승인자명 */ "
+        query += " , substring(t1.appr_dt, 1, 10) appr_dt   /* 보호자 승인일시 */ "
+        query += " , t1.mgr_id    /* 관리자id */ "
+        query += " , substring(t1.mgr_dt,  1, 10) mgr_dt   /* 관리자 승인일시 */ "
+        query += " , t1.rep_ym     "
+        query += " from service20_mp_rep t1     /* 프로그램 보고서 */ "
+        query += " left join service20_mp_mtr t2 on (t2.mp_id   = t1.mp_id "
+        query += " and t2.apl_no = t1.apl_no)       /* 지원 멘토 */ "
+        query += " left join service20_mpgm t3 on (t3.mp_id   = t1.mp_id)  /*지원 멘토*/  "
+        query += " left join service20_com_cdd c1 on (c1.std_grp_code  = 'MP0070'  /* 상태(mp0070) */ "
+        query += " and c1.std_detl_code = t1.status) "
+        query += " left join service20_com_cdd c2 on (c2.std_grp_code  = 'MP0062'  /* 보고서 구분(mp0062) */ "
+        query += " and c2.std_detl_code = t1.rep_div) "
+        query += " where 1=1 "
+        query += " and t3.yr        = '"+l_yr+"'"
+        query += " and t3.apl_term  = '"+l_apl_term+"'"
+        #query += " and t1.status    = '"+l_status+"'"
+        query += " and t1.status like Ifnull(Nullif('"+str(l_status)+"', ''), '%%')  "
+        query += " and t1.rep_div   = '"+l_rep_div+"'"
+        query += " and t1.mp_id     = '"+l_mp_id+"'"
+
+        queryset = mp_rep.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)      
+
+#####################################################################################
+# TT0107M - END
+#####################################################################################
 
 @csrf_exempt
 def post_user_info(request):
