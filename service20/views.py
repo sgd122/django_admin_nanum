@@ -1355,7 +1355,7 @@ def MS0101M_save(request):
         apl_no = ms_apl_max['vlMax']
         apl_no = apl_no + 1
         
-    query = "select ifnull(max(apl_no),1) as apl_no from service20_ms_apl where apl_id = '"+apl_id+"' and ms_id = '"+ms_id+"'"  
+    query = "select ifnull(max(apl_no),0) as apl_no from service20_ms_apl where ms_id = '"+ms_id+"'"  
     cursor = connection.cursor()
     cursor.execute(query)    
     results = namedtuplefetchall(cursor)    
@@ -2459,7 +2459,7 @@ def MP0101M_save(request):
         apl_no = apl_no + 1
 
     
-    query = "select ifnull(max(apl_no),1) as apl_no from service20_mp_mtr where apl_id = '"+apl_id+"' and mp_id = '"+mp_id+"'"  
+    query = "select ifnull(max(apl_no),0) as apl_no from service20_mp_mtr where mp_id = '"+mp_id+"'"  
     cursor = connection.cursor()
     cursor.execute(query)    
     results = namedtuplefetchall(cursor)    
