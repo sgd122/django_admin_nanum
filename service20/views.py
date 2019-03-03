@@ -2464,7 +2464,7 @@ def MP0101M_save(request):
     cursor.execute(query)    
     results = namedtuplefetchall(cursor)    
     apl_no = results[0].apl_no
-
+    apl_no = apl_no+1
 
     print("::apl_no::")
     print(apl_no)
