@@ -5059,7 +5059,7 @@ class TT0107M_list(generics.ListAPIView):
 
         queryset = self.get_queryset()
 
-                query = " select t1.id "
+        query = " select t1.id "
         query += " , t1.mp_id     /* 멘토링 프로그램id */ "
         query += " , t3.yr"
         query += " , t3.apl_term"
