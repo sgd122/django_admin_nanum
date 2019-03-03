@@ -5160,6 +5160,7 @@ class TE0203_detail(generics.ListAPIView):
     def list(self, request):
         l_ansr_id = request.GET.get('ansr_id', "")
         l_pgm_id = request.GET.get('pgm_id', "")
+        l_surv_seq = request.GET.get('surv_seq', "")
 
         queryset = self.get_queryset()
 
@@ -5186,6 +5187,7 @@ class TE0203_detail(generics.ListAPIView):
         query += " where 1=1"
         query += "   and t3.ansr_id = '" + l_ansr_id + "'"
         query += "   and t3.pgm_id = '" + l_pgm_id + "'"
+        query += "   and t3.surv_seq = '" + l_surv_seq + "'"
 
         print(query)
         queryset = cm_surv_a.objects.raw(query)
