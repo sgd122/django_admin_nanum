@@ -4993,6 +4993,314 @@ class TE0201_detail(generics.ListAPIView):
 #####################################################################################
 
 #####################################################################################
+# TE0203 - START
+#####################################################################################
+
+# 멘토의 프로그램 만족도조사 리스트 ###################################################
+class TE0203_list_v1_Serializer(serializers.ModelSerializer):
+    # testField = serializers.SerializerMethodField()
+    apl_no = serializers.SerializerMethodField()
+    apl_id = serializers.SerializerMethodField()
+    apl_nm = serializers.SerializerMethodField()
+    unv_nm = serializers.SerializerMethodField()
+    cllg_nm = serializers.SerializerMethodField()
+    dept_nm = serializers.SerializerMethodField()
+    mp_id = serializers.SerializerMethodField()
+    mnte_no = serializers.SerializerMethodField()
+    mnte_id = serializers.SerializerMethodField()
+    mnte_nm = serializers.SerializerMethodField()
+    sch_cd = serializers.SerializerMethodField()
+    sch_nm = serializers.SerializerMethodField()
+    sch_yr = serializers.SerializerMethodField()
+    surv_seq = serializers.SerializerMethodField()
+    spc_no = serializers.SerializerMethodField()
+    surv_tp = serializers.SerializerMethodField()
+    surv_ttl = serializers.SerializerMethodField()
+    h_status = serializers.SerializerMethodField()
+    p_status = serializers.SerializerMethodField()
+
+    class Meta:
+        model = cm_surv_h
+        fields = ('pgm_id','surv_seq','ansr_id','apl_no','apl_id','apl_nm','unv_nm','cllg_nm','dept_nm','mp_id','mnte_no','mnte_id','mnte_nm','sch_cd','sch_nm','sch_yr','surv_id','ansr_div','avg_ans_t1','surv_dt','h_status','spc_no','surv_tp','surv_ttl','p_status')
+
+    def get_apl_no(self,obj):
+        return obj.apl_no
+    def get_apl_id(self,obj):
+        return obj.apl_id
+    def get_apl_nm(self,obj):
+        return obj.apl_nm
+    def get_unv_nm(self,obj):
+        return obj.unv_nm
+    def get_cllg_nm(self,obj):
+        return obj.cllg_nm
+    def get_dept_nm(self,obj):
+        return obj.dept_nm
+    def get_mp_id(self,obj):
+        return obj.mp_id
+    def get_mnte_no(self,obj):
+        return obj.mnte_no
+    def get_mnte_id(self,obj):
+        return obj.mnte_id
+    def get_mnte_nm(self,obj):
+        return obj.mnte_nm
+    def get_sch_cd(self,obj):
+        return obj.sch_cd
+    def get_sch_nm(self,obj):
+        return obj.sch_nm
+    def get_sch_yr(self,obj):
+        return obj.sch_yr
+    def get_surv_seq(self,obj):
+        return obj.surv_seq
+    def get_spc_no(self,obj):
+        return obj.spc_no
+    def get_surv_tp(self,obj):
+        return obj.surv_tp
+    def get_surv_ttl(self,obj):
+        return obj.surv_ttl
+    def get_h_status(self,obj):
+        return obj.h_status
+    def get_p_status(self,obj):
+        return obj.p_status
+
+class TE0203_list_v1(generics.ListAPIView):
+    queryset = cm_surv_h.objects.all()
+    serializer_class = TE0203_list_v1_Serializer
+    
+    def list(self, request):
+        l_yr = request.GET.get('yr', "")
+        l_mp_id = request.GET.get('mp_id', "")
+        l_term_div = request.GET.get('trn_term', "")
+        l_status = request.GET.get('status', "")
+        l_apl_id = request.GET.get('apl_id', "")
+
+        queryset = self.get_queryset()
+
+        # /* 만족도 조사 */
+        # /* 유저가 멘토일 때 만족도 조사 대상 리스트 */
+        # /* 만족도 조사는 멘토, 멘티, 멘티의 교사, 관리자에 따라 select가 다 다릅니다. 따라서 각 케이스에 따른 url을 따로 만들어야합니다. */
+        # /* TE0203/list/v1 */
+        query = " select t1.id as id /* id */"
+        query += "     , t1.pgm_id as pgm_id   /* 만족도 조사 대상(멘토스쿨, 프로그램, 학습외) */"
+        query += "     , t1.surv_seq as surv_seq /* 만족도 seq */"
+        query += "     , t1.ansr_id as ansr_id  /* 응답자 id */"
+        query += "     , t3.apl_no as apl_no         /* 지원 no */"
+        query += "     , t3.apl_id as apl_id         /* 지원자(멘토,학생) 학번 */"
+        query += "     , t3.apl_nm as apl_nm         /* 지원자(멘토,학생) 명 */"
+        query += "     , t3.unv_nm as unv_nm         /* 지원자 대학교 명 */"
+        query += "     , t3.cllg_nm as cllg_nm        /* 지원자 대학 명 */"
+        query += "     , t3.dept_nm as dept_nm        /* 지원자 학부/학과 명 */"
+        query += "     , t4.mp_id as mp_id      /* 멘토링 프로그램id */"
+        query += "     , t4.mnte_no as mnte_no    /* 지원 no */"
+        query += "     , t4.mnte_id as mnte_id    /* 멘티id */"
+        query += "     , t4.mnte_nm as mnte_nm    /* 멘티 명 */"
+        query += "     , t4.sch_cd as sch_cd     /* 학교 */"
+        query += "     , t4.sch_nm as sch_nm     /* 학교명 */"
+        query += "     , t4.sch_yr as sch_yr     /* 학년 */"
+        query += "     , t1.surv_id as surv_id   /* 문항세트 id */"
+        query += "     , t1.ansr_div as ansr_div  /* 응답자 구분(cm0001) */"
+        query += "     , t1.avg_ans_t1 as avg_ans_t1 /* 오지선다형 평균 */"
+        query += "     , t1.surv_dt as surv_dt   /* 만족도 조사일 */"
+        query += "     , t1.status as h_status    /* 상태(cm0006) */"
+        query += "     , t2.spc_no as spc_no    /* 학습외 프로그램no */"
+        query += "     , t2.surv_tp as surv_tp   /* 대상 내 유형 */"
+        query += "     , t2.surv_ttl as surv_ttl  /* 만족도 조사 제목 */"
+        query += "     , t2.status as p_status    /* 상태(cm0008) */"
+        query += "  from service20_cm_surv_h t1"
+        query += "  left join service20_cm_surv_p t2 on (t2.pgm_id    = t1.pgm_id     "
+        query += "                                   and t2.surv_seq  = t1.surv_seq)"
+        query += "  left join service20_mp_mtr    t3 on (t3.mp_id     = t1.pgm_id"
+        query += "                                   and t3.apl_id    = t1.ansr_id )"
+        query += "  left join service20_mp_mte    t4 on (t4.mp_id     = t3.mp_id"
+        query += "                                   and t4.apl_no    = t3.apl_no )"
+        # query += " where t3.yr = '" + l_yr + "'"
+        # query += "  and t3.term_div = '" + l_term_div + "'"
+        # query += "  and t3.status like Ifnull(Nullif('" + str(l_status) + "', ''), '%%')  "
+        query += "  where t3.mp_id = '" + l_mp_id + "'"
+        query += "    and ( t3.apl_id = '" + l_apl_id + "'"
+        query += "        or t4.tchr_id = '" + l_apl_id + "'"
+        query += "        or t4.grd_id = '" + l_apl_id + "'"
+        query += "        or t4.mnte_id = '" + l_apl_id + "' ) "
+
+        queryset = cm_surv_h.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+
+# 유저에 따른 만족도 조사 질문 리스트 ###################################################
+class TE0203_detail_Serializer(serializers.ModelSerializer):
+    # testField = serializers.SerializerMethodField()
+    sort_seq = serializers.SerializerMethodField()
+    ques_desc = serializers.SerializerMethodField()
+    ques_div = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = cm_surv_a
+        fields = ('pgm_id','surv_seq','ansr_id','ques_no','ansr_div','sort_seq','ques_desc','ans_t1','ans_t2','ans_t3','ques_dt','ques_div')
+
+    def get_sort_seq(self,obj):
+        return obj.sort_seq
+    def get_ques_desc(self,obj):
+        return obj.ques_desc
+    def get_ques_div(self,obj):
+        return obj.ques_div 
+
+class TE0203_detail(generics.ListAPIView):
+    queryset = cm_surv_a.objects.all()
+    serializer_class = TE0203_detail_Serializer
+
+
+    def list(self, request):
+        l_ansr_id = request.GET.get('ansr_id', "")
+        l_pgm_id = request.GET.get('pgm_id', "")
+
+        queryset = self.get_queryset()
+
+        # /* 만족도 조사 */
+        # /* 유저에 따른 만족도 조사 질문 */
+        # /* TE0203/list/detail/ */
+        query = " select t3.id as id /* id */"
+        query += "     , t3.pgm_id as pgm_id  /* 만족도 조사 대상(멘토스쿨, 프로그램, 학습외) */"
+        query += "     , t3.surv_seq as surv_seq/* 만족도 seq */"
+        query += "     , t3.ansr_id as ansr_id /* 응답자 id */"
+        query += "     , t3.ques_no as ques_no /* 만족도 조사 항목 id */"
+        query += "     , t3.ansr_div as ansr_div /* 응답자 구분(cm0001) */"
+        query += "     , t1.sort_seq as sort_seq /* 정렬 순서 */"
+        query += "     , t2.ques_desc as ques_desc/* 질문지    */"
+        query += "     , t3.ans_t1 as ans_t1  /* 선다형 답 */"
+        query += "     , t3.ans_t2 as ans_t2  /* 수필형 답 */"
+        query += "     , t3.ans_t3 as ans_t3  /* 선택 답 */"
+        query += "     , t3.ques_dt as ques_dt /* 설문조사일자 */"
+        query += "     , t2.ques_div as ques_div"
+        query += "  from service20_cm_surv_a t3     /* 만족도 조사 답변 상세 */"
+        query += "  left join service20_cm_surv t2   on (t2.ques_no = t3.ques_no)    /* 만족도 조사 문항 */"
+        query += "  left join service20_cm_surv_q t1 on (t1.ques_no = t3.ques_no"
+        query += "                                   and t1.surv_id = t3.surv_id)    /* 만족도 조사 출제 문항 */"
+        query += " where 1=1"
+        query += "   and t3.ansr_id = '" + l_ansr_id + "'"
+        query += "   and t3.pgm_id = '" + l_pgm_id + "'"
+
+        print(query)
+        queryset = cm_surv_a.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+# 프로그램 만족도 조사 Insert
+@csrf_exempt
+def TE0203_Insert(request):
+    mp_id = request.POST.get('mp_id', "")
+    surv_seq = request.POST.get('surv_seq', "")
+    ansr_id = request.POST.get('ansr_id', "")
+    ques_no = request.POST.get('ques_no', 0)
+    ansr_div = request.POST.get('ansr_div', "")
+    surv_id = request.POST.get('surv_id', "")
+    avg = request.POST.get('avg', 0)
+
+    ins_id = request.POST.get('ins_id', "")
+    ins_ip = request.POST.get('ins_ip', "")
+    ins_dt = request.POST.get('ins_dt', "")
+    ins_pgm = request.POST.get('ins_pgm', "")
+    upd_id = request.POST.get('upd_id', "")
+    upd_ip = request.POST.get('upd_ip', "")
+    upd_dt = request.POST.get('upd_dt', "")
+    upd_pgm = request.POST.get('upd_pgm', "")
+
+    quesRow = request.POST.get('ques_row', 0)
+    row_max = int(quesRow)
+
+    # service20_cm_surv_h update
+    query = " update service20_cm_surv_h"
+    query += " set status = '90'"
+    query += "  , surv_dt = now()"
+    query += "  , avg_ans_t1 = '" + avg + "'"
+    query += "  , upd_id = '" + upd_id + "'"
+    query += "  , upd_ip = '" + upd_ip + "'"
+    query += "  , upd_dt = now()"
+    query += "  , upd_pgm = '" + upd_pgm + "'"
+    query += " where pgm_id = '" + mp_id + "'"
+    query += "  and surv_seq = '" + surv_seq + "'"
+    query += "  and ansr_id = '" + ansr_id + "'"
+
+    print(query)
+    cursor = connection.cursor()
+    query_result = cursor.execute(query)   
+
+    # service20_cm_surv_a Insert
+    for i in range(0,row_max):
+        ques_no = request.POST.get('ques_no'+str(i+1), "0")
+        ans_t1 = request.POST.get('ans_t1'+str(i+1), "")
+        ans_t2 = request.POST.get('ans_t2'+str(i+1), "")
+        ans_t3 = request.POST.get('ans_t3'+str(i+1), "")
+
+        query = " insert into service20_cm_surv_a ("
+        query += "      pgm_id"
+        query += "    , surv_seq"
+        query += "    , ansr_id"
+        query += "    , ques_no"
+        query += "    , ansr_div"
+        query += "    , ans_t1"
+        query += "    , ans_t2"
+        query += "    , ans_t3"
+        query += "    , ques_dt"
+        query += "    , surv_id"
+        query += "    , ins_id"
+        query += "    , ins_ip"
+        query += "    , ins_dt"
+        query += "    , ins_pgm"
+        query += "    , upd_id"
+        query += "    , upd_ip"
+        query += "    , upd_dt"
+        query += "    , upd_pgm"
+        query += ")"
+        query += " values ("
+        query += "      '" + str(mp_id) + "'"
+        query += "    , '" + str(surv_seq) + "'"
+        query += "    , '" + str(ansr_id) + "'"
+        query += "    , '" + str(ques_no) + "'"
+        query += "    , '" + str(ansr_div) + "'"
+        query += "    , case when '" + str(ans_t2) + "' = '' and '" + str(ans_t3) + "' = '' then '" + str(ans_t1) +"' else null end "
+        query += "    , case when '" + str(ans_t1) + "' = '' and '" + str(ans_t3) + "' = '' then '" + str(ans_t2) +"' else null end "
+        query += "    , case when '" + str(ans_t1) + "' = '' and '" + str(ans_t2) + "' = '' then '" + str(ans_t3) +"' else null end "
+        query += "    , REPLACE(REPLACE(REPLACE(SUBSTRING(NOW(),1, 10), '-',''),':',''),' ', '')"
+        query += "    , '" + str(surv_id) + "'"
+        query += "    , '" + str(ins_id) + "'"
+        query += "    , '" + str(ins_ip) + "'"
+        query += "    , now()"
+        query += "    , '" + str(ins_pgm) + "'"
+        query += "    , '" + str(upd_id) + "'"
+        query += "    , '" + str(upd_ip) + "'"
+        query += "    , now()"
+        query += "    , '" + str(upd_pgm) + "'"
+        query += " )"
+
+        print("ins_1")
+        print(query)
+        cursor = connection.cursor()
+        query_result = cursor.execute(query)    
+
+    context = {'message': 'Ok'}
+
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+#####################################################################################
+# TE0203 - END
+#####################################################################################'
+
+#####################################################################################
 # TT0107M - START
 #####################################################################################
 
