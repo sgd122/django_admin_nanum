@@ -1355,7 +1355,7 @@ def MS0101M_save(request):
         apl_no = ms_apl_max['vlMax']
         apl_no = apl_no + 1
         
-    query = "select ifnull(max(apl_no),1) as apl_no from service20_ms_apl where apl_id = '"+apl_id+"' and ms_id = '"+ms_id+"'"  
+    query = "select ifnull(max(apl_no),0) as apl_no from service20_ms_apl where ms_id = '"+ms_id+"'"  
     cursor = connection.cursor()
     cursor.execute(query)    
     results = namedtuplefetchall(cursor)    
@@ -1824,7 +1824,7 @@ def MS0101M_adm_update(request):
         update_text = " update service20_ms_ans a "
         update_text += " SET a.ans_t2 = '"+str(ans_t2)+"' "
         update_text += " WHERE 1=1 "
-        update_text += " AND a.mp_id = '"+str(ms_id)+"' "
+        update_text += " AND a.ms_id = '"+str(ms_id)+"' "
         update_text += " AND a.apl_no = '"+str(apl_no)+"' "
         update_text += " AND a.ques_no = '"+str(ques_no)+"' "
         
@@ -2459,12 +2459,12 @@ def MP0101M_save(request):
         apl_no = apl_no + 1
 
     
-    query = "select ifnull(max(apl_no),1) as apl_no from service20_mp_mtr where apl_id = '"+apl_id+"' and mp_id = '"+mp_id+"'"  
+    query = "select ifnull(max(apl_no),0) as apl_no from service20_mp_mtr where mp_id = '"+mp_id+"'"  
     cursor = connection.cursor()
     cursor.execute(query)    
     results = namedtuplefetchall(cursor)    
     apl_no = results[0].apl_no
-
+    apl_no = apl_no+1
 
     print("::apl_no::")
     print(apl_no)
