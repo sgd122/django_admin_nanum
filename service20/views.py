@@ -1827,7 +1827,7 @@ def MS0101M_adm_update(request):
         update_text += " AND a.ms_id = '"+str(ms_id)+"' " 
         update_text += " AND a.apl_no = '"+str(apl_no)+"' "
         update_text += " AND a.ques_no = '"+str(ques_no)+"' "
-        
+        print(update_text)
         cursor = connection.cursor()
         query_result = cursor.execute(update_text)
 
@@ -2045,7 +2045,7 @@ class MP0101M_list_chk_1(generics.ListAPIView):
         query += "            ) t4 ON (t4.apl_id = t1.apl_id) "
         query += " WHERE t1.apl_id = '"+apl_id+"' "
 
-        print(query)
+        
         queryset = vw_nanum_stdt.objects.raw(query)
         
 
@@ -2096,7 +2096,7 @@ class MP0101M_list_chk_2(generics.ListAPIView):
         query += "       ) t3 "
         query += "   WHERE t2.apl_id = '"+apl_id+"' "
 
-        print(query)
+        
         queryset = vw_nanum_stdt.objects.raw(query)
         
 
@@ -2261,7 +2261,7 @@ class MP0101M_list(generics.ListAPIView):
         query += "           A.apl_to_dt DESC  "
 
 
-        print(query)
+        
         queryset = mpgm.objects.raw(query)
         
 
@@ -2360,7 +2360,7 @@ class MP0101M_list_all(generics.ListAPIView):
         query += "           A.apl_to_dt DESC  "
 
 
-        print(query)
+        
         queryset = mpgm.objects.raw(query)
         
 
