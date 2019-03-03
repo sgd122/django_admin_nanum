@@ -1360,6 +1360,7 @@ def MS0101M_save(request):
     cursor.execute(query)    
     results = namedtuplefetchall(cursor)    
     apl_no = results[0].apl_no
+    apl_no = apl_no+1
 
     query = " select t2.ms_id,t2.yr FROM service20_msch t2  WHERE 1=1 "
     query += " AND t2.ms_id          = '"+ms_id+"'"
