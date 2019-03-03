@@ -1392,9 +1392,9 @@ def MS0101M_save(request):
             tel_no_g=rows.tel_no_g.replace('-', ''),
             h_addr=rows.h_addr,
             email_addr=rows.email_addr,
-            bank_acct=rows.bank_acct,
-            bank_cd=rows.bank_cd,
-            bank_nm=rows.bank_nm,
+            # bank_acct=rows.bank_acct,
+            # bank_cd=rows.bank_cd,
+            # bank_nm=rows.bank_nm,
             score1=rows.score01,
             score2=rows.score02,
             score3=rows.score03,
@@ -1881,13 +1881,14 @@ class MS0101M_report_list_Serializer(serializers.ModelSerializer):
     pr_term_cnt = serializers.SerializerMethodField()
     trn_term_nm = serializers.SerializerMethodField()
     trn_term = serializers.SerializerMethodField()
+    mpgm_yr = serializers.SerializerMethodField()
 
 
     # acpt_dt = serializers.DateTimeField(format='%Y-%m-%d')
 
     class Meta:
         model = ms_apl
-        fields = ('ms_id','apl_no','mntr_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','fnl_rslt','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','ms_name','pr_yr','pr_sch_yr','pr_term_div','statusNm','statusCode','pr_term_cnt','trn_term_nm','trn_term')
+        fields = ('ms_id','apl_no','mntr_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','fnl_rslt','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','ms_name','pr_yr','pr_sch_yr','pr_term_div','statusNm','statusCode','pr_term_cnt','trn_term_nm','trn_term','mpgm_yr')
     def get_ms_name(self,obj):
         return obj.ms_name
 
@@ -1906,6 +1907,8 @@ class MS0101M_report_list_Serializer(serializers.ModelSerializer):
         return obj.trn_term_nm
     def get_trn_term(self,obj):
         return obj.trn_term
+    def get_mpgm_yr(self,obj):
+        return obj.mpgm_yr
 
     def get_statusNm(self,obj):
         now = datetime.datetime.today()
