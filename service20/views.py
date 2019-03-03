@@ -40,26 +40,26 @@ def login_login(request):
         # HTTP GET Request: requests대신 s 객체를 사용한다.
         client_ip = request.META['REMOTE_ADDR']
 
-        query = " insert into service20_com_evt     /* 이벤트로그 */ ";
-        query += "      ( evt_gb     /* 이벤트구분 */ ";
-        query += "     , evt_userid /* 이벤트사용자id */ ";
-        query += "     , evt_ip     /* 이벤트발생 ip */ ";
-        query += "     , evt_dat    /* 이벤트일시 */ ";
-        query += "     , evt_desc   /* 이벤트 내용 */ ";
-        query += "     , ins_id     /* 입력자id */ ";
-        query += "     , ins_ip     /* 입력자ip */ ";
-        query += "     , ins_dt     /* 입력일시 */ ";
-        query += "     , ins_pgm    /* 입력프로그램id */ ";
-        query += ") ";
-        query += " select 'EVT001'  AS evt_gb     /* 이벤트구분 - 로그인 */ ";
-        query += "     , '"+id+"' AS evt_userid /* 이벤트사용자id */ ";
-        query += "     , '"+str(client_ip)+"' AS evt_ip     /* 이벤트발생 ip */ ";
-        query += "     , REPLACE(REPLACE(REPLACE(SUBSTRING(NOW(),1, 19), '-',''),':',''),' ', '')        AS evt_dat    /* 이벤트일시 */ ";
-        query += "     , CONCAT('','로그인') evt_desc   /* 이벤트 내용 */ ";
-        query += "     , '"+str(id)+"' AS ins_id     /* 입력자id */ ";
-        query += "     , '"+str(client_ip)+"' AS ins_ip     /* 입력자ip */ ";
-        query += "     , NOW()     AS ins_dt     /* 입력일시 */ ";
-        query += "     , 'LOGIN'   AS ins_pgm    /* 입력프로그램id */ ";
+        query = " insert into service20_com_evt     /* 이벤트로그 */ "
+        query += "      ( evt_gb     /* 이벤트구분 */ "
+        query += "     , evt_userid /* 이벤트사용자id */ "
+        query += "     , evt_ip     /* 이벤트발생 ip */ "
+        query += "     , evt_dat    /* 이벤트일시 */ "
+        query += "     , evt_desc   /* 이벤트 내용 */ "
+        query += "     , ins_id     /* 입력자id */ "
+        query += "     , ins_ip     /* 입력자ip */ "
+        query += "     , ins_dt     /* 입력일시 */ "
+        query += "     , ins_pgm    /* 입력프로그램id */ "
+        query += ") "
+        query += " select 'EVT001'  AS evt_gb     /* 이벤트구분 - 로그인 */ "
+        query += "     , '"+id+"' AS evt_userid /* 이벤트사용자id */ "
+        query += "     , '"+str(client_ip)+"' AS evt_ip     /* 이벤트발생 ip */ "
+        query += "     , REPLACE(REPLACE(REPLACE(SUBSTRING(NOW(),1, 19), '-',''),':',''),' ', '')        AS evt_dat    /* 이벤트일시 */ "
+        query += "     , CONCAT('','로그인') evt_desc   /* 이벤트 내용 */ "
+        query += "     , '"+str(id)+"' AS ins_id     /* 입력자id */ "
+        query += "     , '"+str(client_ip)+"' AS ins_ip     /* 입력자ip */ "
+        query += "     , NOW()     AS ins_dt     /* 입력일시 */ "
+        query += "     , 'LOGIN'   AS ins_pgm    /* 입력프로그램id */ "
         cursor_log = connection.cursor()
         query_result = cursor_log.execute(query)    
 
@@ -68,26 +68,26 @@ def login_login(request):
             html = first_page.text
             if first_page.status_code != 200:
                 message = "login_fail"           
-                query = " insert into service20_com_evt     /* 이벤트로그 */ ";
-                query += "      ( evt_gb     /* 이벤트구분 */ ";
-                query += "     , evt_userid /* 이벤트사용자id */ ";
-                query += "     , evt_ip     /* 이벤트발생 ip */ ";
-                query += "     , evt_dat    /* 이벤트일시 */ ";
-                query += "     , evt_desc   /* 이벤트 내용 */ ";
-                query += "     , ins_id     /* 입력자id */ ";
-                query += "     , ins_ip     /* 입력자ip */ ";
-                query += "     , ins_dt     /* 입력일시 */ ";
-                query += "     , ins_pgm    /* 입력프로그램id */ ";
-                query += ") ";
-                query += " select 'EVT001'  AS evt_gb     /* 이벤트구분 - 로그인 */ ";
-                query += "     , '"+id+"' AS evt_userid /* 이벤트사용자id */ ";
-                query += "     , '"+str(client_ip)+"' AS evt_ip     /* 이벤트발생 ip */ ";
-                query += "     , REPLACE(REPLACE(REPLACE(SUBSTRING(NOW(),1, 19), '-',''),':',''),' ', '')        AS evt_dat    /* 이벤트일시 */ ";
-                query += "     , CONCAT('','200Error') evt_desc   /* 이벤트 내용 */ ";
-                query += "     , '"+id+"' AS ins_id     /* 입력자id */ ";
-                query += "     , '"+str(client_ip)+"' AS ins_ip     /* 입력자ip */ ";
-                query += "     , NOW()     AS ins_dt     /* 입력일시 */ ";
-                query += "     , 'LOGIN'   AS ins_pgm    /* 입력프로그램id */ ";
+                query = " insert into service20_com_evt     /* 이벤트로그 */ "
+                query += "      ( evt_gb     /* 이벤트구분 */ "
+                query += "     , evt_userid /* 이벤트사용자id */ "
+                query += "     , evt_ip     /* 이벤트발생 ip */ "
+                query += "     , evt_dat    /* 이벤트일시 */ "
+                query += "     , evt_desc   /* 이벤트 내용 */ "
+                query += "     , ins_id     /* 입력자id */ "
+                query += "     , ins_ip     /* 입력자ip */ "
+                query += "     , ins_dt     /* 입력일시 */ "
+                query += "     , ins_pgm    /* 입력프로그램id */ "
+                query += ") "
+                query += " select 'EVT001'  AS evt_gb     /* 이벤트구분 - 로그인 */ "
+                query += "     , '"+id+"' AS evt_userid /* 이벤트사용자id */ "
+                query += "     , '"+str(client_ip)+"' AS evt_ip     /* 이벤트발생 ip */ "
+                query += "     , REPLACE(REPLACE(REPLACE(SUBSTRING(NOW(),1, 19), '-',''),':',''),' ', '')        AS evt_dat    /* 이벤트일시 */ "
+                query += "     , CONCAT('','200Error') evt_desc   /* 이벤트 내용 */ "
+                query += "     , '"+id+"' AS ins_id     /* 입력자id */ "
+                query += "     , '"+str(client_ip)+"' AS ins_ip     /* 입력자ip */ "
+                query += "     , NOW()     AS ins_dt     /* 입력일시 */ "
+                query += "     , 'LOGIN'   AS ins_pgm    /* 입력프로그램id */ "
                 cursor_log = connection.cursor()
                 query_result = cursor_log.execute(query)           
                 print("login_200_error => " + str(id))
@@ -100,51 +100,51 @@ def login_login(request):
                     message = "login_fail"
                     context = {'login': 'fail',}
 
-                    query = " insert into service20_com_evt     /* 이벤트로그 */ ";
-                    query += "      ( evt_gb     /* 이벤트구분 */ ";
-                    query += "     , evt_userid /* 이벤트사용자id */ ";
-                    query += "     , evt_ip     /* 이벤트발생 ip */ ";
-                    query += "     , evt_dat    /* 이벤트일시 */ ";
-                    query += "     , evt_desc   /* 이벤트 내용 */ ";
-                    query += "     , ins_id     /* 입력자id */ ";
-                    query += "     , ins_ip     /* 입력자ip */ ";
-                    query += "     , ins_dt     /* 입력일시 */ ";
-                    query += "     , ins_pgm    /* 입력프로그램id */ ";
-                    query += ") ";
-                    query += " select 'EVT001'  AS evt_gb     /* 이벤트구분 - 로그인 */ ";
-                    query += "     , '"+id+"' AS evt_userid /* 이벤트사용자id */ ";
-                    query += "     , '"+str(client_ip)+"' AS evt_ip     /* 이벤트발생 ip */ ";
-                    query += "     , REPLACE(REPLACE(REPLACE(SUBSTRING(NOW(),1, 19), '-',''),':',''),' ', '')        AS evt_dat    /* 이벤트일시 */ ";
-                    query += "     , CONCAT('','notPass') evt_desc   /* 이벤트 내용 */ ";
-                    query += "     , '"+id+"' AS ins_id     /* 입력자id */ ";
-                    query += "     , '"+str(client_ip)+"' AS ins_ip     /* 입력자ip */ ";
-                    query += "     , NOW()     AS ins_dt     /* 입력일시 */ ";
-                    query += "     , 'LOGIN'   AS ins_pgm    /* 입력프로그램id */ ";
+                    query = " insert into service20_com_evt     /* 이벤트로그 */ "
+                    query += "      ( evt_gb     /* 이벤트구분 */ "
+                    query += "     , evt_userid /* 이벤트사용자id */ "
+                    query += "     , evt_ip     /* 이벤트발생 ip */ "
+                    query += "     , evt_dat    /* 이벤트일시 */ "
+                    query += "     , evt_desc   /* 이벤트 내용 */ "
+                    query += "     , ins_id     /* 입력자id */ "
+                    query += "     , ins_ip     /* 입력자ip */ "
+                    query += "     , ins_dt     /* 입력일시 */ "
+                    query += "     , ins_pgm    /* 입력프로그램id */ "
+                    query += ") "
+                    query += " select 'EVT001'  AS evt_gb     /* 이벤트구분 - 로그인 */ "
+                    query += "     , '"+id+"' AS evt_userid /* 이벤트사용자id */ "
+                    query += "     , '"+str(client_ip)+"' AS evt_ip     /* 이벤트발생 ip */ "
+                    query += "     , REPLACE(REPLACE(REPLACE(SUBSTRING(NOW(),1, 19), '-',''),':',''),' ', '')        AS evt_dat    /* 이벤트일시 */ "
+                    query += "     , CONCAT('','notPass') evt_desc   /* 이벤트 내용 */ "
+                    query += "     , '"+id+"' AS ins_id     /* 입력자id */ "
+                    query += "     , '"+str(client_ip)+"' AS ins_ip     /* 입력자ip */ "
+                    query += "     , NOW()     AS ins_dt     /* 입력일시 */ "
+                    query += "     , 'LOGIN'   AS ins_pgm    /* 입력프로그램id */ "
                     cursor_log = connection.cursor()
                     query_result = cursor_log.execute(query)    
                 elif gbn['value'] == 'True':
                     print("login_true => " + str(id))
 
-                    query = " insert into service20_com_evt     /* 이벤트로그 */ ";
-                    query += "      ( evt_gb     /* 이벤트구분 */ ";
-                    query += "     , evt_userid /* 이벤트사용자id */ ";
-                    query += "     , evt_ip     /* 이벤트발생 ip */ ";
-                    query += "     , evt_dat    /* 이벤트일시 */ ";
-                    query += "     , evt_desc   /* 이벤트 내용 */ ";
-                    query += "     , ins_id     /* 입력자id */ ";
-                    query += "     , ins_ip     /* 입력자ip */ ";
-                    query += "     , ins_dt     /* 입력일시 */ ";
-                    query += "     , ins_pgm    /* 입력프로그램id */ ";
-                    query += ") ";
-                    query += " select 'EVT001'  AS evt_gb     /* 이벤트구분 - 로그인 */ ";
-                    query += "     , '"+id+"' AS evt_userid /* 이벤트사용자id */ ";
-                    query += "     , '"+str(client_ip)+"' AS evt_ip     /* 이벤트발생 ip */ ";
-                    query += "     , REPLACE(REPLACE(REPLACE(SUBSTRING(NOW(),1, 19), '-',''),':',''),' ', '')        AS evt_dat    /* 이벤트일시 */ ";
-                    query += "     , CONCAT('','success') evt_desc   /* 이벤트 내용 */ ";
-                    query += "     , '"+id+"' AS ins_id     /* 입력자id */ ";
-                    query += "     , '"+str(client_ip)+"' AS ins_ip     /* 입력자ip */ ";
-                    query += "     , NOW()     AS ins_dt     /* 입력일시 */ ";
-                    query += "     , 'LOGIN'   AS ins_pgm    /* 입력프로그램id */ ";
+                    query = " insert into service20_com_evt     /* 이벤트로그 */ "
+                    query += "      ( evt_gb     /* 이벤트구분 */ "
+                    query += "     , evt_userid /* 이벤트사용자id */ "
+                    query += "     , evt_ip     /* 이벤트발생 ip */ "
+                    query += "     , evt_dat    /* 이벤트일시 */ "
+                    query += "     , evt_desc   /* 이벤트 내용 */ "
+                    query += "     , ins_id     /* 입력자id */ "
+                    query += "     , ins_ip     /* 입력자ip */ "
+                    query += "     , ins_dt     /* 입력일시 */ "
+                    query += "     , ins_pgm    /* 입력프로그램id */ "
+                    query += ") "
+                    query += " select 'EVT001'  AS evt_gb     /* 이벤트구분 - 로그인 */ "
+                    query += "     , '"+id+"' AS evt_userid /* 이벤트사용자id */ "
+                    query += "     , '"+str(client_ip)+"' AS evt_ip     /* 이벤트발생 ip */ "
+                    query += "     , REPLACE(REPLACE(REPLACE(SUBSTRING(NOW(),1, 19), '-',''),':',''),' ', '')        AS evt_dat    /* 이벤트일시 */ "
+                    query += "     , CONCAT('','success') evt_desc   /* 이벤트 내용 */ "
+                    query += "     , '"+id+"' AS ins_id     /* 입력자id */ "
+                    query += "     , '"+str(client_ip)+"' AS ins_ip     /* 입력자ip */ "
+                    query += "     , NOW()     AS ins_dt     /* 입력일시 */ "
+                    query += "     , 'LOGIN'   AS ins_pgm    /* 입력프로그램id */ "
                     cursor_log = connection.cursor()
                     query_result = cursor_log.execute(query)  
 
@@ -696,10 +696,10 @@ class com_combo_repdiv(generics.ListAPIView):
         queryset = self.get_queryset()
         
         
-        query = "select id,std_detl_code";
-        query += "     , std_detl_code_nm,sort_seq_no ";
-        query += "  from service20_com_cdd";
-        query += " where std_grp_code = 'mp0062'";
+        query = "select id,std_detl_code"
+        query += "     , std_detl_code_nm,sort_seq_no "
+        query += "  from service20_com_cdd"
+        query += " where std_grp_code = 'mp0062'"
         query += " order by sort_seq_no "
 
         queryset = com_cdd.objects.raw(query)
@@ -731,10 +731,10 @@ class com_combo_com_cdd(generics.ListAPIView):
         queryset = self.get_queryset()
         
         
-        query = "select id,std_detl_code";
-        query += "     , std_detl_code_nm, sort_seq_no";
-        query += "  from service20_com_cdd";
-        query += " where std_grp_code = '"+str(l_code)+"'";
+        query = "select id,std_detl_code"
+        query += "     , std_detl_code_nm, sort_seq_no"
+        query += "  from service20_com_cdd"
+        query += " where std_grp_code = '"+str(l_code)+"'"
         query += " order by sort_seq_no "
 
         queryset = com_cdd.objects.raw(query)
@@ -769,23 +769,23 @@ class com_combo_program2(generics.ListAPIView):
         queryset = self.get_queryset()
         
         
-        query = "select distinct";
-        query += "       t1.mp_id         /* 멘토링 프로그램id */";
-        query += "     , t1.status        /* 상태(mp0001) */";
-        query += "     , t1.mp_name       /* 멘토링 프로그램 명 */";
-        query += "     , t1.yr            /* 연도 */";
-        query += "     , t1.mnt_term      /* 활동시기 */";
-        query += "  from service20_mpgm t1";
-        query += "  left join service20_mp_mtr    t3 on (t3.mp_id     = t1.mp_id)";
-        query += "  left join service20_mp_mte    t4 on (t4.mp_id     = t3.mp_id";
-        query += "                                   and t4.apl_no    = t3.apl_no )";
-        query += " where t1.yr       = '"+str(yr)+"'";
-        query += "   and t1.mnt_term = '"+str(mnt_term)+"'";
+        query = "select distinct"
+        query += "       t1.mp_id         /* 멘토링 프로그램id */"
+        query += "     , t1.status        /* 상태(mp0001) */"
+        query += "     , t1.mp_name       /* 멘토링 프로그램 명 */"
+        query += "     , t1.yr            /* 연도 */"
+        query += "     , t1.mnt_term      /* 활동시기 */"
+        query += "  from service20_mpgm t1"
+        query += "  left join service20_mp_mtr    t3 on (t3.mp_id     = t1.mp_id)"
+        query += "  left join service20_mp_mte    t4 on (t4.mp_id     = t3.mp_id"
+        query += "                                   and t4.apl_no    = t3.apl_no )"
+        query += " where t1.yr       = '"+str(yr)+"'"
+        query += "   and t1.mnt_term = '"+str(mnt_term)+"'"
         query += "   and t1.status like Ifnull(Nullif('"+str(status)+"', ''), '%%')  "
-        query += "   and ( t4.tchr_id = '"+str(user_id)+"'";
-        query += "       or t4.grd_id  = '"+str(user_id)+"'";
-        query += "       or t4.mnte_id = '"+str(user_id)+"'";
-        query += "       or t3.apl_id = '"+str(user_id)+"' )";
+        query += "   and ( t4.tchr_id = '"+str(user_id)+"'"
+        query += "       or t4.grd_id  = '"+str(user_id)+"'"
+        query += "       or t4.mnte_id = '"+str(user_id)+"'"
+        query += "       or t3.apl_id = '"+str(user_id)+"' )"
 
         print(query)
 
@@ -2578,50 +2578,50 @@ def MP0101M_save(request):
 
         # -- 생성_어학(mp_mtr_fe)_FROM_vw_nanum_foreign_exam
 
-        update_text = " insert into service20_mp_mtr_fe     /* 프로그램 지원자(멘토) 어학 리스트 */ ";
-        update_text += "      ( mp_id          /* 멘토링 프로그램id */ ";
-        update_text += "      , apl_no         /* 지원 no */ ";
-        update_text += "      , fe_no          /* 어학점수 no */ ";
-        update_text += "      , apl_id         /* 학번 */ ";
-        update_text += "      , apl_nm         /* 성명 */ ";
-        update_text += "      , lang_kind_cd   /* 어학종류코드 */ ";
-        update_text += "      , lang_kind_nm   /* 어학종류명 */ ";
-        update_text += "      , lang_cd        /* 어학상위코드 */ ";
-        update_text += "      , lang_nm        /* 어학상위코드명 */ ";
-        update_text += "      , lang_detail_cd /* 어학하위코드 */ ";
-        update_text += "      , lang_detail_nm /* 어학하위코드명 */ ";
-        update_text += "      , frexm_cd       /* 외국어시험 코드 */ ";
-        update_text += "      , frexm_nm       /* 외국어시험명 */ ";
-        update_text += "      , score          /* 시험점수 */ ";
-        update_text += "      , grade          /* 시험등급 */ ";
-        update_text += "      , ins_id         /* 입력자id */ ";
-        update_text += "      , ins_ip         /* 입력자ip */ ";
-        update_text += "      , ins_dt         /* 입력일시 */ ";
-        update_text += "      , ins_pgm        /* 입력프로그램id */ ";
-        update_text += " ) ";
-        update_text += " select '"+str(mp_id)+"' AS mp_id ";
-        update_text += "      , '"+str(apl_no)+"' apl_no         /* 지원 no */ ";
-        update_text += "      , @curRank := @curRank +1 AS fe_no  ";
-        update_text += "      , t1.apl_id         /* 학번 */ ";
-        update_text += "      , t1.apl_nm         /* 성명 */ ";
-        update_text += "      , t1.lang_kind_cd   /* 어학종류코드 */ ";
-        update_text += "      , t1.lang_kind_nm   /* 어학종류명 */ ";
-        update_text += "      , t1.lang_cd        /* 어학상위코드 */ ";
-        update_text += "      , t1.lang_nm        /* 어학상위코드명 */ ";
-        update_text += "      , t1.lang_detail_cd /* 어학하위코드 */ ";
-        update_text += "      , t1.lang_detail_nm /* 어학하위코드명 */ ";
-        update_text += "      , '0' frexm_cd       /* 외국어시험 코드 */ ";
-        update_text += "      , t1.frexm_nm       /* 외국어시험명 */ ";
-        update_text += "      , t1.score          /* 시험점수 */ ";
-        update_text += "      , t1.grade          /* 시험등급 */ ";
-        update_text += "      , '"+apl_id+"' ins_id         /* 입력자id */ ";
-        update_text += "      , '"+str(client_ip)+"' ins_ip         /* 입력자ip */ ";
-        update_text += "      , NOW() ins_dt         /* 입력일시 */ ";
-        update_text += "      , 'c' ins_pgm        /* 입력프로그램id */ ";
-        update_text += "   FROM service20_vw_nanum_foreign_exam t1     /* 유효한 외국어 성적 리스트 view(임시) */ ";
-        update_text += "      , (SELECT @curRank := 0) r ";
-        update_text += "  WHERE 1=1 ";
-        update_text += "    AND t1.apl_id = '"+apl_id+"' ";
+        update_text = " insert into service20_mp_mtr_fe     /* 프로그램 지원자(멘토) 어학 리스트 */ "
+        update_text += "      ( mp_id          /* 멘토링 프로그램id */ "
+        update_text += "      , apl_no         /* 지원 no */ "
+        update_text += "      , fe_no          /* 어학점수 no */ "
+        update_text += "      , apl_id         /* 학번 */ "
+        update_text += "      , apl_nm         /* 성명 */ "
+        update_text += "      , lang_kind_cd   /* 어학종류코드 */ "
+        update_text += "      , lang_kind_nm   /* 어학종류명 */ "
+        update_text += "      , lang_cd        /* 어학상위코드 */ "
+        update_text += "      , lang_nm        /* 어학상위코드명 */ "
+        update_text += "      , lang_detail_cd /* 어학하위코드 */ "
+        update_text += "      , lang_detail_nm /* 어학하위코드명 */ "
+        update_text += "      , frexm_cd       /* 외국어시험 코드 */ "
+        update_text += "      , frexm_nm       /* 외국어시험명 */ "
+        update_text += "      , score          /* 시험점수 */ "
+        update_text += "      , grade          /* 시험등급 */ "
+        update_text += "      , ins_id         /* 입력자id */ "
+        update_text += "      , ins_ip         /* 입력자ip */ "
+        update_text += "      , ins_dt         /* 입력일시 */ "
+        update_text += "      , ins_pgm        /* 입력프로그램id */ "
+        update_text += " ) "
+        update_text += " select '"+str(mp_id)+"' AS mp_id "
+        update_text += "      , '"+str(apl_no)+"' apl_no         /* 지원 no */ "
+        update_text += "      , @curRank := @curRank +1 AS fe_no  "
+        update_text += "      , t1.apl_id         /* 학번 */ "
+        update_text += "      , t1.apl_nm         /* 성명 */ "
+        update_text += "      , t1.lang_kind_cd   /* 어학종류코드 */ "
+        update_text += "      , t1.lang_kind_nm   /* 어학종류명 */ "
+        update_text += "      , t1.lang_cd        /* 어학상위코드 */ "
+        update_text += "      , t1.lang_nm        /* 어학상위코드명 */ "
+        update_text += "      , t1.lang_detail_cd /* 어학하위코드 */ "
+        update_text += "      , t1.lang_detail_nm /* 어학하위코드명 */ "
+        update_text += "      , '0' frexm_cd       /* 외국어시험 코드 */ "
+        update_text += "      , t1.frexm_nm       /* 외국어시험명 */ "
+        update_text += "      , t1.score          /* 시험점수 */ "
+        update_text += "      , t1.grade          /* 시험등급 */ "
+        update_text += "      , '"+apl_id+"' ins_id         /* 입력자id */ "
+        update_text += "      , '"+str(client_ip)+"' ins_ip         /* 입력자ip */ "
+        update_text += "      , NOW() ins_dt         /* 입력일시 */ "
+        update_text += "      , 'c' ins_pgm        /* 입력프로그램id */ "
+        update_text += "   FROM service20_vw_nanum_foreign_exam t1     /* 유효한 외국어 성적 리스트 view(임시) */ "
+        update_text += "      , (SELECT @curRank := 0) r "
+        update_text += "  WHERE 1=1 "
+        update_text += "    AND t1.apl_id = '"+apl_id+"' "
         print("::_FROM_vw_nanum_foreign_exam::")
         print(update_text) 
         cursor = connection.cursor()
@@ -2630,52 +2630,52 @@ def MP0101M_save(request):
 
         # -- 생성_봉사(mp_mtr_sa)_FROM_vw_nanum_foreign_exam
 
-        update_text = "insert into service20_mp_mtr_sa     /* 프로그램 지원자(멘토) 봉사 리스트 */ ";
-        update_text += "     ( mp_id           /* 멘토링 프로그램id */ ";
-        update_text += "     , apl_no          /* 지원 no */ ";
-        update_text += "     , sa_no           /* 어학점수 no */ ";
-        update_text += "     , apl_id          /* 학번 */ ";
-        update_text += "     , apl_nm          /* 성명 */ ";
-        update_text += "     , nation_inout_cd /* 국내외구분코드 */ ";
-        update_text += "     , nation_inout_nm /* 국내외구분명 */ ";
-        update_text += "     , sch_inout_cd    /* 교내외구분코드 */ ";
-        update_text += "     , sch_inout_nm    /* 교내외구분명 */ ";
-        update_text += "     , activity_nm     /* 봉사명 */ ";
-        update_text += "     , manage_org_nm   /* 주관기관명 */ ";
-        update_text += "     , start_date      /* 시작일자 */ ";
-        update_text += "     , start_time      /* 시작시간 */ ";
-        update_text += "     , end_date        /* 종료일자 */ ";
-        update_text += "     , end_time        /* 종료시간 */ ";
-        update_text += "     , tot_time        /* 총시간 */ ";
-        update_text += "     , ins_id          /* 입력자id */ ";
-        update_text += "     , ins_ip          /* 입력자ip */ ";
-        update_text += "     , ins_dt          /* 입력일시 */ ";
-        update_text += "     , ins_pgm         /* 입력프로그램id */ ";
-        update_text += ") ";
-        update_text += "select '"+str(mp_id)+"' AS mp_id ";
-        update_text += "     , '"+str(apl_no)+"' apl_no         /* 지원 no */ ";
-        update_text += "     , @curRank := @curRank +1 AS sa_no ";
-        update_text += "     , t1.apl_id          /* 학번 */ ";
-        update_text += "     , t1.apl_nm          /* 성명 */ ";
-        update_text += "     , t1.nation_inout_cd /* 국내외구분코드 */ ";
-        update_text += "     , t1.nation_inout_nm /* 국내외구분명 */ ";
-        update_text += "     , t1.sch_inout_cd    /* 교내외구분코드 */ ";
-        update_text += "     , t1.sch_inout_nm    /* 교내외구분명 */ ";
-        update_text += "     , t1.activity_nm     /* 봉사명 */ ";
-        update_text += "     , t1.manage_org_nm   /* 주관기관명 */ ";
-        update_text += "     , t1.start_date      /* 시작일자 */ ";
-        update_text += "     , t1.start_time      /* 시작시간 */ ";
-        update_text += "     , t1.end_date        /* 종료일자 */ ";
-        update_text += "     , t1.end_time        /* 종료시간 */ ";
-        update_text += "     , t1.tot_time        /* 총시간 */ ";
-        update_text += "     , '"+apl_id+"' ins_id         /* 입력자id */ ";
-        update_text += "     , '"+str(client_ip)+"' ins_ip         /* 입력자ip */ ";
-        update_text += "     , NOW() ins_dt         /* 입력일시 */ ";
-        update_text += "     , 'c' ins_pgm        /* 입력프로그램id */ ";
-        update_text += "  FROM service20_vw_nanum_service_activ t1     /* 학생 봉사 시간 view(임시) */ ";
-        update_text += "     , (SELECT @curRank := 0) r ";
-        update_text += " WHERE 1=1 ";
-        update_text += "   AND t1.apl_id = '"+apl_id+"' ";
+        update_text = "insert into service20_mp_mtr_sa     /* 프로그램 지원자(멘토) 봉사 리스트 */ "
+        update_text += "     ( mp_id           /* 멘토링 프로그램id */ "
+        update_text += "     , apl_no          /* 지원 no */ "
+        update_text += "     , sa_no           /* 어학점수 no */ "
+        update_text += "     , apl_id          /* 학번 */ "
+        update_text += "     , apl_nm          /* 성명 */ "
+        update_text += "     , nation_inout_cd /* 국내외구분코드 */ "
+        update_text += "     , nation_inout_nm /* 국내외구분명 */ "
+        update_text += "     , sch_inout_cd    /* 교내외구분코드 */ "
+        update_text += "     , sch_inout_nm    /* 교내외구분명 */ "
+        update_text += "     , activity_nm     /* 봉사명 */ "
+        update_text += "     , manage_org_nm   /* 주관기관명 */ "
+        update_text += "     , start_date      /* 시작일자 */ "
+        update_text += "     , start_time      /* 시작시간 */ "
+        update_text += "     , end_date        /* 종료일자 */ "
+        update_text += "     , end_time        /* 종료시간 */ "
+        update_text += "     , tot_time        /* 총시간 */ "
+        update_text += "     , ins_id          /* 입력자id */ "
+        update_text += "     , ins_ip          /* 입력자ip */ "
+        update_text += "     , ins_dt          /* 입력일시 */ "
+        update_text += "     , ins_pgm         /* 입력프로그램id */ "
+        update_text += ") "
+        update_text += "select '"+str(mp_id)+"' AS mp_id "
+        update_text += "     , '"+str(apl_no)+"' apl_no         /* 지원 no */ "
+        update_text += "     , @curRank := @curRank +1 AS sa_no "
+        update_text += "     , t1.apl_id          /* 학번 */ "
+        update_text += "     , t1.apl_nm          /* 성명 */ "
+        update_text += "     , t1.nation_inout_cd /* 국내외구분코드 */ "
+        update_text += "     , t1.nation_inout_nm /* 국내외구분명 */ "
+        update_text += "     , t1.sch_inout_cd    /* 교내외구분코드 */ "
+        update_text += "     , t1.sch_inout_nm    /* 교내외구분명 */ "
+        update_text += "     , t1.activity_nm     /* 봉사명 */ "
+        update_text += "     , t1.manage_org_nm   /* 주관기관명 */ "
+        update_text += "     , t1.start_date      /* 시작일자 */ "
+        update_text += "     , t1.start_time      /* 시작시간 */ "
+        update_text += "     , t1.end_date        /* 종료일자 */ "
+        update_text += "     , t1.end_time        /* 종료시간 */ "
+        update_text += "     , t1.tot_time        /* 총시간 */ "
+        update_text += "     , '"+apl_id+"' ins_id         /* 입력자id */ "
+        update_text += "     , '"+str(client_ip)+"' ins_ip         /* 입력자ip */ "
+        update_text += "     , NOW() ins_dt         /* 입력일시 */ "
+        update_text += "     , 'c' ins_pgm        /* 입력프로그램id */ "
+        update_text += "  FROM service20_vw_nanum_service_activ t1     /* 학생 봉사 시간 view(임시) */ "
+        update_text += "     , (SELECT @curRank := 0) r "
+        update_text += " WHERE 1=1 "
+        update_text += "   AND t1.apl_id = '"+apl_id+"' "
         print("::_FROM_vw_nanum_foreign_exam::")
         print(update_text) 
         cursor = connection.cursor()
@@ -4604,7 +4604,7 @@ class MP0105M_detail_2(generics.ListAPIView):
         query += "     , t2.status "
         query += "     , c1.std_detl_code_nm as status_nm     "
         query += "     , t2.mtr_obj "
-        query += "     , fn_mp_att_select_01(t1.mp_id, t1.apl_id, t2.rep_ym ) as mtr_desc ";
+        query += "     , fn_mp_att_select_01(t1.mp_id, t1.apl_id, t2.rep_ym ) as mtr_desc "
         query += "     , '' as coatching "
         query += "     , '' as spcl_note "
         query += "     , '' as mtr_revw    "
@@ -4613,8 +4613,8 @@ class MP0105M_detail_2(generics.ListAPIView):
         query += "     , t1.apl_id "
         query += "     , t2.rep_no "
         query += "     , t2.rep_ym "
-        query += "     , t3.grd_id    /*주보호자id*/";
-        query += "     , t3.grd_nm    /*보호자명*/";
+        query += "     , t3.grd_id    /*주보호자id*/"
+        query += "     , t3.grd_nm    /*보호자명*/"
         query += "  from service20_mp_mtr t1 "
         query += "   left join service20_mp_rep t2 "
         query += "       on ("
@@ -4752,8 +4752,8 @@ def MP0105M_update(request,pk):
         update_text += " , appr_nm     = '" +str(appr_nm)+"'       "
         update_text += " , mgr_id      = '" +str(mgr_id)+"'        "
 
-        update_text += " , grd_id      = '" +str(grd_id)+"'      /*주보호자id*/";
-        update_text += " , grd_nm      = '" +str(grd_nm)+"'      /*보호자명*/";
+        update_text += " , grd_id      = '" +str(grd_id)+"'      /*주보호자id*/"
+        update_text += " , grd_nm      = '" +str(grd_nm)+"'      /*보호자명*/"
 
         update_text += " , rep_dt      = now()    /*보고서작성일*/     "    
         update_text += " , upd_id      = '"+str(upd_id)   +"'    /*수정자id*/         "    
@@ -4788,8 +4788,8 @@ def MP0105M_update(request,pk):
         update_text += " , appr_nm     = '" +str(appr_nm)+"'       "
         update_text += " , mgr_id      = '" +str(mgr_id)+"'        "
 
-        update_text += " , grd_id      = '" +str(grd_id)+"'      /*주보호자id*/";
-        update_text += " , grd_nm      = '" +str(grd_nm)+"'      /*보호자명*/";
+        update_text += " , grd_id      = '" +str(grd_id)+"'      /*주보호자id*/"
+        update_text += " , grd_nm      = '" +str(grd_nm)+"'      /*보호자명*/"
 
         update_text += " , req_dt      = now()    /*승인요청일*/       "
         update_text += " , upd_id      = '"+str(upd_id)   +"'    /*수정자id*/         "    
@@ -4855,7 +4855,7 @@ class MP0106M_list(generics.ListAPIView):
         query += " , t1.bank_cd                            /*은행 코드        */ "
         query += " , t1.bank_nm                            /*은행 명           */ "
         query += " , t1.bank_dpsr                          /*예금주           */ "
-        query += ", concat(left(t1.bank_acct,2),repeat('*',length(t1.bank_acct)-4),right(t1.bank_acct,2))  as bank_acct_mask ";
+        query += ", concat(left(t1.bank_acct,2),repeat('*',length(t1.bank_acct)-4),right(t1.bank_acct,2))  as bank_acct_mask "
         query += " from service20_mp_exp t1                   /*프로그램 출석부(멘토)     */ "
         query += " left join service20_mp_mtr t3 on (t3.mp_id    = t1.mp_id "
         query += " and t3.apl_no   = t1.apl_no) "
