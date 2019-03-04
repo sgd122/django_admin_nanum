@@ -612,8 +612,9 @@ def login_login_admin(request):
             cursor_log = connection.cursor()
             query_result = cursor_log.execute(query)  
 
-            userid = soup.find('input', {'name': 'userid'})
-            v_userid = userid['value']              
+            # userid = soup.find('input', {'name': 'userid'})
+            # v_userid = userid['value']              
+            v_userid = str(id)
             # MSSQL 접속
 
 
