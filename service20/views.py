@@ -612,8 +612,9 @@ def login_login_admin(request):
             cursor_log = connection.cursor()
             query_result = cursor_log.execute(query)  
 
-            userid = soup.find('input', {'name': 'userid'})
-            v_userid = userid['value']              
+            # userid = soup.find('input', {'name': 'userid'})
+            # v_userid = userid['value']              
+            v_userid = str(id)
             # MSSQL 접속
 
 
@@ -5059,8 +5060,9 @@ class MP0105M_detail_2(generics.ListAPIView):
         query += "       ) as aaa   /*출석현황*/  "
         query += "     , null as rep_dt "
         query += "     , null as req_dt              "
-        query += "     , t3.tchr_id as appr_id "
-        query += "     , t3.tchr_nm as appr_nm "
+        query += "     , t3.mp_plc "
+        query += "     , case when t3.mp_plc = 'b' then t3.grd_id else t3.tchr_id end as appr_id /*장소가 멘티가정이면 승인자는 보호자, 그렇지 않으면 교사*/";
+        query += "     , case when t3.mp_plc = 'b' then t3.grd_nm else t3.tchr_nm end as appr_nm";
         query += "     , null       as appr_dt "
         query += "     , t4.mgr_id  as mgr_id "
         query += "     , t4.mgr_nm  as mgr_nm "
@@ -5068,7 +5070,7 @@ class MP0105M_detail_2(generics.ListAPIView):
         query += "     , t2.status "
         query += "     , c1.std_detl_code_nm as status_nm     "
         query += "     , t2.mtr_obj "
-        query += "     , fn_mp_att_select_01(t1.mp_id, t1.apl_id, t2.rep_ym ) as mtr_desc "
+        query += "     , fn_mp_att_select_01(t1.mp_id, t1.apl_id, t2.rep_ym ) as mtr_desc ";
         query += "     , '' as coatching "
         query += "     , '' as spcl_note "
         query += "     , '' as mtr_revw    "
@@ -5077,8 +5079,8 @@ class MP0105M_detail_2(generics.ListAPIView):
         query += "     , t1.apl_id "
         query += "     , t2.rep_no "
         query += "     , t2.rep_ym "
-        query += "     , t3.grd_id    /*주보호자id*/"
-        query += "     , t3.grd_nm    /*보호자명*/"
+        query += "     , t3.grd_id    /*주보호자id*/";
+        query += "     , t3.grd_nm    /*보호자명*/";
         query += "  from service20_mp_mtr t1 "
         query += "   left join service20_mp_rep t2 "
         query += "       on ("
@@ -5103,6 +5105,7 @@ class MP0105M_detail_2(generics.ListAPIView):
         query += "            , s1.apl_id "
         query += "            , s2.grd_id "
         query += "            , s2.grd_nm "
+        query += "            , s2.mp_plc "
         query += "         from service20_mp_mtr s1 "
         query += "          left join service20_mp_mte s2 "
         query += "              on ("
@@ -5353,42 +5356,64 @@ class MP0106M_list(generics.ListAPIView):
 
 # 멘티의 프로그램 신청현황 리스트 ###################################################
 class TE0201_list_Serializer(serializers.ModelSerializer):
-
-    # testField = serializers.SerializerMethodField()
-    mp_name = serializers.SerializerMethodField()
-    
+    mp_hm = serializers.SerializerMethodField()
+    mp_plc = serializers.SerializerMethodField()
+    mp_addr = serializers.SerializerMethodField()
+    id = serializers.SerializerMethodField()
+    mnte_id = serializers.SerializerMethodField()
+    mnte_no = serializers.SerializerMethodField()
 
     class Meta:
-        model = mp_mtr
-        fields = ('mp_id','apl_no','mntr_id','indv_div','team_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','bank_acct','bank_cd','bank_nm','bank_dpsr','cnt_mp_a','cnt_mp_p','cnt_mp_c','cnt_mp_g','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','mp_name','pr_yr','pr_sch_yr','pr_term_div','mp_name')
+        model = mpgm
+        fields = ('yr', 'apl_term', 'mp_id', 'mp_name', 'mp_hm', 'mp_plc', 'mp_addr', 'status', 'id', 'mnte_id', 'mnte_no')
 
-    def get_mp_name(self,obj):
-        return obj.mp_name
+    def get_mp_hm(self,obj):
+        return obj.mp_hm
+    def get_mp_plc(self,obj):
+        return obj.mp_plc
+    def get_mp_addr(self,obj):
+        return obj.mp_addr
+    def get_id(self,obj):
+        return obj.id
+    def get_mnte_id(self,obj):
+        return obj.mnte_id
+    def get_mnte_no(self,obj):
+        return obj.mnte_no
 
 class TE0201_list(generics.ListAPIView):
-    queryset = mp_rep.objects.all()
+    queryset = mpgm.objects.all()
     serializer_class = TE0201_list_Serializer
-
 
     def list(self, request):
         l_yr = request.GET.get('yr', "")
         l_mp_id = request.GET.get('mp_id', "")
-        l_mnt_term = request.GET.get('mnt_term', "")
+        l_apl_term = request.GET.get('apl_term', "")
         l_mnte_id = request.GET.get('mnte_id', "")
-
 
         queryset = self.get_queryset()
 
-
         # /* 멘티의 프로그램 신청현황 조회 TE0201/list */
-        select_text = " select a.yr, a.mnt_term, a.mp_name, b.mp_hm, b.mp_plc, b.status"
-        select_text += " FROM service20_mpgm a LEFT JOIN service20_mp_mte b ON (a.mp_id = b.mp_id)"
-        select_text += " WHERE a.yr like '"+l_yr+"'"
-        select_text += " AND a.mnt_term like '"+l_mnt_term+"'"
-        select_text += " AND a.mp_id like '"+l_mp_id+"'"
-        select_text += " AND b.mnte_id like '"+l_mnte_id+"'"
+        query = " select t1.yr as yr"
+        query += "     , case when t1.apl_term = '10' then '1'"
+        query += "            when t1.apl_term = '20' then '2'"
+        query += "            else '' end as apl_term"
+        query += "     , t1.mp_id as mp_id"
+        query += "     , t1.mp_name as mp_name"
+        query += "     , t2.mp_hm as mp_hm"
+        query += "     , t2.mp_plc as mp_plc"
+        query += "     , t2.mp_addr as mp_addr"
+        query += "     , t2.status as status"
+        query += "     , t2.id as id"
+        query += "     , t2.mnte_id as mnte_id"
+        query += "     , t2.mnte_no as mnte_no"
+        query += "  from service20_mpgm t1"
+        query += "  left join service20_mp_mte t2 on t1.mp_id = t2.mp_id"
+        query += " where t1.yr = '" + l_yr + "'"
+        query += "   and t1.apl_term like '" + l_apl_term + "'"
+        query += "   and t1.mp_id = '" + l_mp_id + "'"
+        query += "   and t2.mnte_id = '" + l_mnte_id + "'"
 
-        queryset = mp_mtr.objects.raw(select_text)
+        queryset = mp_mtr.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
@@ -5404,44 +5429,52 @@ class TE0201_list(generics.ListAPIView):
 # 멘티의 프로그램 신청현황 리스트 ###################################################
 class TE0201_detail_Serializer(serializers.ModelSerializer):
 
-    # testField = serializers.SerializerMethodField()
-    mp_name = serializers.SerializerMethodField()
-    
-
     class Meta:
-        model = mp_mtr
-        fields = ('mp_id','apl_no','mntr_id','indv_div','team_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','bank_acct','bank_cd','bank_nm','bank_dpsr','cnt_mp_a','cnt_mp_p','cnt_mp_c','cnt_mp_g','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','mp_name','pr_yr','pr_sch_yr','pr_term_div','mp_name')
-
-    def get_mp_name(self,obj):
-        return obj.mp_name
+        model = mp_mte
+        fields = ('id', 'mp_id', 'mnte_id', 'mnte_nm', 'sch_cd', 'sch_nm', 'h_addr', 'brth_dt', 'sch_yr', 'mob_no', 'tel_no', 'grd_id', 'grd_nm', 'grd_rel', 'grd_rel', 'grd_rel', 'grd_rel', 'grd_rel', 'grd_rel', 'grd_tel', 'prnt_nat_cd', 'prnt_nat_nm', 'tchr_id', 'tchr_nm', 'tchr_tel', 'mnte_id')
 
 class TE0201_detail(generics.ListAPIView):
-    queryset = mp_rep.objects.all()
+    queryset = mp_mte.objects.all()
     serializer_class = TE0201_detail_Serializer
-
 
     def list(self, request):
 
         l_mnte_id = request.GET.get('mnte_id', "")
 
-
         queryset = self.get_queryset()
 
-
         # /* 멘티의 프로그램 신청현황 멘티 상세 조회 TE0201/detail */
-        select_text = "select mnte_nm, sch_nm, h_addr, brth_dt, sch_yr, mob_no, grd_nm"
-        select_text += ", case when grd_rel = '11' then '부'"
-        select_text += " when grd_rel = '12' then '모'"
-        select_text += " when grd_rel = '21' then '조부'"
-        select_text += " when grd_rel = '22' then '조모'"
-        select_text += " when grd_rel = '31' then '삼촌'"
-        select_text += " when grd_rel = '32' then '고모'"
-        select_text += " ELSE '' END AS grd_rel"
-        select_text += ", grd_tel, prnt_nat_nm, tchr_nm, tchr_tel"
-        select_text += " FROM service20_mp_mte"
-        select_text += " WHERE mnte_id = '"+l_mnte_id+"'"
+        query = " select t1.id as id"
+        query += "     , t1.mp_id as mp_id"
+        query += "     , t1.mnte_no as mnte_no"
+        query += "     , t1.mnte_id as mnte_id"
+        query += "     , t1.mnte_nm as mnte_nm"
+        query += "     , t1.sch_cd as sch_cd"
+        query += "     , t1.sch_nm as sch_nm"
+        query += "     , t1.h_addr as h_addr"
+        query += "     , t1.brth_dt as brth_dt"
+        query += "     , t1.sch_yr as sch_yr"
+        query += "     , t1.mob_no as mob_no"
+        query += "     , t1.tel_no as tel_no"
+        query += "     , t1.grd_id as grd_id"
+        query += "     , t1.grd_nm as grd_nm"
+        query += "     , case when t1.grd_rel = '11' then '부' "
+        query += "            when t1.grd_rel = '12' then '모' "
+        query += "            when t1.grd_rel = '21' then '조부' "
+        query += "            when t1.grd_rel = '22' then '조모' "
+        query += "            when t1.grd_rel = '31' then '삼촌' "
+        query += "            when t1.grd_rel = '32' then '고모' "
+        query += "            else '' end as grd_rel"
+        query += "     , t1.grd_tel as grd_tel"
+        query += "     , t1.prnt_nat_cd as prnt_nat_cd"
+        query += "     , t1.prnt_nat_nm as prnt_nat_nm"
+        query += "     , t1.tchr_id as tchr_id"
+        query += "     , t1.tchr_nm as tchr_nm"
+        query += "     , t1.tchr_tel as tchr_tel"
+        query += "  from service20_mp_mte t1"
+        query += " where t1.mnte_id = '" + l_mnte_id + "'"
 
-        queryset = mp_mtr.objects.raw(select_text)
+        queryset = mp_mtr.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
@@ -5563,7 +5596,7 @@ class TE0203_list_v1(generics.ListAPIView):
         query += "     , t1.surv_id as surv_id   /* 문항세트 id */"
         query += "     , t1.ansr_div as ansr_div  /* 응답자 구분(cm0001) */"
         query += "     , t1.avg_ans_t1 as avg_ans_t1 /* 오지선다형 평균 */"
-        query += "     , t1.surv_dt as surv_dt   /* 만족도 조사일 */"
+        query += "     , date_format(t1.surv_dt, '%%Y-%%m-%%d %%h:%%m:%%s') as surv_dt   /* 만족도 조사일 */"
         query += "     , t1.status as h_status    /* 상태(cm0006) */"
         query += "     , t2.spc_no as spc_no    /* 학습외 프로그램no */"
         query += "     , t2.surv_tp as surv_tp   /* 대상 내 유형 */"
@@ -5586,6 +5619,99 @@ class TE0203_list_v1(generics.ListAPIView):
         query += "        or t4.mnte_id = '" + l_apl_id + "' ) "
 
         queryset = cm_surv_h.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+
+# 유저에 따른 만족도 조사 질문 리스트 ###################################################
+class TE0203_detail_Serializer(serializers.ModelSerializer):
+    # testField = serializers.SerializerMethodField()
+    sort_seq = serializers.SerializerMethodField()
+    ques_desc = serializers.SerializerMethodField()
+    ques_div = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = cm_surv_a
+        fields = ('pgm_id','surv_seq','ansr_id','ques_no','ansr_div','sort_seq','ques_desc','ans_t1','ans_t2','ans_t3','ques_dt','ques_div')
+
+    def get_sort_seq(self,obj):
+        return obj.sort_seq
+    def get_ques_desc(self,obj):
+        return obj.ques_desc
+    def get_ques_div(self,obj):
+        return obj.ques_div 
+
+class TE0203_detail(generics.ListAPIView):
+    queryset = cm_surv_a.objects.all()
+    serializer_class = TE0203_detail_Serializer
+
+
+    def list(self, request):
+        l_ansr_id = request.GET.get('ansr_id', "")
+        l_pgm_id = request.GET.get('pgm_id', "")
+        l_surv_seq = request.GET.get('surv_seq', "")
+
+        queryset = self.get_queryset()
+
+        # /* 만족도 조사 */
+        # /* 유저에 따른 만족도 조사 질문 */
+        # /* TE0203/list/detail/ */
+        # query = " select t3.id as id /* id */"
+        # query += "     , t3.pgm_id as pgm_id  /* 만족도 조사 대상(멘토스쿨, 프로그램, 학습외) */"
+        # query += "     , t3.surv_seq as surv_seq/* 만족도 seq */"
+        # query += "     , t3.ansr_id as ansr_id /* 응답자 id */"
+        # query += "     , t3.ques_no as ques_no /* 만족도 조사 항목 id */"
+        # query += "     , t3.ansr_div as ansr_div /* 응답자 구분(cm0001) */"
+        # query += "     , t1.sort_seq as sort_seq /* 정렬 순서 */"
+        # query += "     , t2.ques_desc as ques_desc/* 질문지    */"
+        # query += "     , t3.ans_t1 as ans_t1  /* 선다형 답 */"
+        # query += "     , t3.ans_t2 as ans_t2  /* 수필형 답 */"
+        # query += "     , t3.ans_t3 as ans_t3  /* 선택 답 */"
+        # query += "     , t3.ques_dt as ques_dt /* 설문조사일자 */"
+        # query += "     , t2.ques_div as ques_div"
+        # query += "  from service20_cm_surv_a t3     /* 만족도 조사 답변 상세 */"
+        # query += "  left join service20_cm_surv t2   on (t2.ques_no = t3.ques_no)    /* 만족도 조사 문항 */"
+        # query += "  left join service20_cm_surv_q t1 on (t1.ques_no = t3.ques_no"
+        # query += "                                   and t1.surv_id = t3.surv_id)    /* 만족도 조사 출제 문항 */"
+        # query += " where 1=1"
+        # query += "   and t3.ansr_id = '" + l_ansr_id + "'"
+        # query += "   and t3.pgm_id = '" + l_pgm_id + "'"
+        # query += "   and t3.surv_seq = '" + l_surv_seq + "'"
+
+        query = " select t1.id as id"
+        query += "     , t1.pgm_id as pgm_id    /* 만족도 조사 대상(멘토스쿨, 프로그램, 학습외) */"
+        query += "     , t1.surv_seq as surv_seq  /* 만족도 seq */"
+        query += "     , t1.ansr_id as ansr_id   /* 응답자 id */"
+        query += "     , t2.ques_no as ques_no   /* 만족도 조사 항목 id */"
+        query += "     , t1.ansr_div as ansr_div  /* 응답자 구분(cm0001) */"
+        query += "     , t2.sort_seq as sort_seq  /* 정렬 순서 */"
+        query += "     , t3.ques_desc as ques_desc /* 질문지    */"
+        query += "     , t4.ans_t1 as ans_t1   /* 선다형 답 */"
+        query += "     , t4.ans_t2 as ans_t2   /* 수필형 답 */"
+        query += "     , t4.ans_t3 as ans_t3   /* 선택 답 */"
+        query += "     , t4.ques_dt ques_dt  /* 설문조사일자 */"
+        query += "     , t3.ques_div as ques_div"
+        query += "  from service20_cm_surv_h t1     /* 만족도 조사 답변 헤드 */"
+        query += "  left join service20_cm_surv_q t2 on (t2.surv_id = t1.surv_id)"
+        query += "  left join service20_cm_surv   t3 on (t3.ques_no = t2.ques_no)    /* 만족도 조사 문항 */"
+        query += "  left join service20_cm_surv_a t4 on (t1.surv_seq = t4.surv_seq and t2.ques_no = t4.ques_no)"
+        query += " where 1=1"
+        query += "   and t1.pgm_id    = '" + l_pgm_id + "'     /* 만족도 조사 대상(멘토스쿨, 프로그램, 학습외) */"
+        query += "   and t1.surv_seq  = '" + l_surv_seq + "'  /* 만족도 seq */"
+        query += "   and t1.ansr_id   = '" + l_ansr_id + "'    /* 응답자 id */"
+        query += "  order by t2.sort_seq /* 정렬 순서 */"
+
+
+        print(query)
+        queryset = cm_surv_a.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
@@ -5829,7 +5955,7 @@ class TT0107M_list(generics.ListAPIView):
         l_status = request.GET.get('status', "")
         l_rep_div = request.GET.get('rep_div', "")
         l_mp_id = request.GET.get('mp_id', "")
-
+        l_user_id = request.GET.get('user_id', "")
 
         queryset = self.get_queryset()
 
@@ -5876,7 +6002,7 @@ class TT0107M_list(generics.ListAPIView):
         query += " where 1=1 "
         query += " and t3.yr        = '"+l_yr+"'"
         query += " and t3.apl_term  = '"+l_apl_term+"'"
-        #query += " and t1.status    = '"+l_status+"'"
+        query += " and t1.status    >= 20"
         query += " and t1.status like Ifnull(Nullif('"+str(l_status)+"', ''), '%%')  "
         query += " and t1.rep_div   = '"+l_rep_div+"'"
         query += " and t1.mp_id     = '"+l_mp_id+"'"
@@ -5884,6 +6010,7 @@ class TT0107M_list(generics.ListAPIView):
         query += "    or t4.grd_id  = '"+l_user_id+"'"
         query += "    or t4.mnte_id = '"+l_user_id+"'"
         query += "    or t2.apl_id  = '"+l_user_id+"')"
+
 
         queryset = mp_rep.objects.raw(query)
 
@@ -5896,6 +6023,56 @@ class TT0107M_list(generics.ListAPIView):
             return self.get_paginated_response(serializer.data)
 
         return Response(serializer.data)      
+
+# 보고서 현황 save
+@csrf_exempt
+def TT0107M_update(request,pk):
+
+    mp_id     = request.POST.get('mp_id', "")
+    apl_no    = request.POST.get('apl_no', 0)
+    rep_no    = request.POST.get('rep_no', 0)
+    upd_id    = request.POST.get('upd_id', "")
+    upd_ip    = request.POST.get('upd_ip', "")
+    upd_dt    = request.POST.get('upd_dt', "")
+    upd_pgm   = request.POST.get('upd_pgm', "")
+    client_ip = request.META['REMOTE_ADDR']
+
+    update_text = ""
+    if pk == 1:
+        # /*보고서관리_반려*/
+        update_text  = " update service20_mp_rep "
+        update_text += " set status    = '11'                 /*status - 반려*/ "
+        update_text += " , rep_dt      = null                 /*보고서작성일*/ "
+        update_text += " , req_dt      = null                 /*승인요청일*/ "
+        update_text += " , upd_id      = '"+str(upd_id)+"'    /*수정자id*/ "
+        update_text += " , upd_ip      = '"+str(client_ip)+"' /*수정자ip*/ "
+        update_text += " , upd_dt      = now()                /*수정일시*/ "
+        update_text += " , upd_pgm     = '"+str(upd_pgm)+"'   /*수정프로그램id*/ "
+        update_text += " where mp_id   = '"+mp_id+"' "
+        update_text += " and apl_no    = '"+str(apl_no)+"' "
+        update_text += " and rep_no    = '"+str(rep_no)+"' "
+
+    elif pk == 2:
+        # /*보고서관리_승인*/
+        update_text  = " update service20_mp_rep "
+        update_text += " set status    = '30'                 /*status - 보호자승인(관리자승인대기)*/ "
+        update_text += " , appr_dt     = now()                /*승인일*/ "
+        update_text += " , upd_id      = '"+str(upd_id)+"'    /*수정자id*/ "
+        update_text += " , upd_ip      = '"+str(client_ip)+"' /*수정자ip*/ "
+        update_text += " , upd_dt      = now()                /*수정일시*/ "
+        update_text += " , upd_pgm     = '"+str(upd_pgm)+"'   /*수정프로그램id*/ "
+        update_text += " where mp_id   = '" +mp_id+"' "
+        update_text += " and apl_no    = '"+str(apl_no)+"' "
+        update_text += " and rep_no    = '"+str(rep_no)+"' "
+
+    print(update_text)
+    cursor = connection.cursor()
+    query_result = cursor.execute(update_text)
+ 
+        
+    context = {'message': 'Ok'}
+
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 #####################################################################################
 # TT0107M - END
