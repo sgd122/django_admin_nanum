@@ -26,6 +26,7 @@ urlpatterns = [
     path('com/upload/', com_upload, name='com_upload'), 
     #리턴URLTest
     path('login/login/', login_login, name='login_login'), 
+    path('login/login/admin/', login_login_admin, name='login_login_admin'), 
     #리턴URLTest
     path('login/returnsso/', login_returnsso, name='login_returnsso'), 
     #리턴URLTest
