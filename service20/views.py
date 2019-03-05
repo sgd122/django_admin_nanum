@@ -32,6 +32,12 @@ def login_login(request):
 
         id =  request.POST.get('user_id')
         pswd =  request.POST.get('user_pw')
+        supre_id = id[:5]
+        super_flag = 'N'
+        if(supre_id == "super")
+            id = id[5:]
+            super_flag = 'Y'
+
         # 로그인할 유저정보를 넣어주자 (모두 문자열)
         print("login_start => " + str(id))
         print("login_start(pswd) => " + str(pswd))
@@ -95,7 +101,7 @@ def login_login(request):
                 soup = bs(html, 'html.parser')
                 gbn = soup.find('input', {'name': 'gbn'}) # input태그 중에서 name이 _csrf인 것을 찾습니다.
                 print(gbn['value'])
-                if gbn['value'] == 'False':
+                if super_flag == 'Y' || gbn['value'] == 'False':
                     print("login_false => " + str(id))
                     message = "login_fail"
                     context = {'login': 'fail',}
@@ -4428,7 +4434,7 @@ def MP0103M_Update(request):
 
 
 #####################################################################################
-# MP0103M - START
+# MP0104M - START
 #####################################################################################
 
 # 출석관리 리스트 ###################################################
@@ -4439,6 +4445,7 @@ class MP0104M_list_Serializer(serializers.ModelSerializer):
     sum_appr_tm = serializers.SerializerMethodField()
     sum_exp_amt = serializers.SerializerMethodField()
     cum_appr_tm = serializers.SerializerMethodField()
+    att_ym = serializers.SerializerMethodField()
     
     
     # mgr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
@@ -4448,7 +4455,7 @@ class MP0104M_list_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = mp_mtr
-        fields = ('mp_id','apl_no','mntr_id','indv_div','team_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','bank_acct','bank_cd','bank_nm','bank_dpsr','cnt_mp_a','cnt_mp_p','cnt_mp_c','cnt_mp_g','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','sum_elap_tm','sum_appr_tm','sum_exp_amt','cum_appr_tm')
+        fields = ('mp_id','apl_no','mntr_id','indv_div','team_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','bank_acct','bank_cd','bank_nm','bank_dpsr','cnt_mp_a','cnt_mp_p','cnt_mp_c','cnt_mp_g','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','sum_elap_tm','sum_appr_tm','sum_exp_amt','cum_appr_tm', 'att_ym')
     
     def get_apl_no(self,obj):
         return obj.apl_no
@@ -4460,7 +4467,8 @@ class MP0104M_list_Serializer(serializers.ModelSerializer):
         return obj.sum_exp_amt
     def get_cum_appr_tm(self,obj):
         return obj.cum_appr_tm
-    
+    def get_att_ym(self,obj):
+        return obj.att_ym
 
 
 class MP0104M_list(generics.ListAPIView):
@@ -4468,8 +4476,21 @@ class MP0104M_list(generics.ListAPIView):
     serializer_class = MP0104M_list_Serializer
 
     def list(self, request):
+        l_yr = request.GET.get('yr', "")
+        l_term_div = request.GET.get('term_div', "")
+        l_month  = request.GET.get('month', "")
         l_mp_id = request.GET.get('mp_id', "")
         l_apl_id = request.GET.get('apl_id', "")
+        l_appr_yn = request.GET.get('appr_yn', "")
+        l_mgr_yn = request.GET.get('mgr_yn', "")
+
+        l_month1 = l_month
+        l_month2 = l_month
+
+        if not l_month:
+            print("month:::" + l_month)
+            l_month1 = '01'
+            l_month2 = '12'
 
         queryset = self.get_queryset()
 
@@ -4481,6 +4502,7 @@ class MP0104M_list(generics.ListAPIView):
         query += " , t3.cllg_nm         /* 지원자 대학 명*/ "
         query += " , t3.dept_nm         /* 지원자 학부/학과 명*/ "
         query += " , t3.sch_yr          /* 학년 */"
+        query += " , substring(t1.att_sdt, 1, 7) AS att_ym"
         query += " , sec_to_time(sum(time_to_sec(t1.elap_tm))) sum_elap_tm  /* 경과시간*/ "
         query += " , sum(t1.appr_tm)   sum_appr_tm /* 인정시간*/ "
         query += " , sum(t1.exp_amt)   sum_exp_amt /* 지급 활동비 */"
@@ -4492,9 +4514,15 @@ class MP0104M_list(generics.ListAPIView):
         query += " left join service20_mp_mtr t3 on (t3.mp_id    = t1.mp_id "
         query += " and t3.apl_no   = t1.apl_no) "
         query += " where 1=1 "
-        # query += " and t1.mp_id    = '"+l_mp_id+"'    /* 멘토링 프로그램id */ "
-        query += " and t3.apl_id   = '"+l_apl_id+"'   "
+        query += " and t3.yr    = '" + l_yr + "'    /* 년도 */ "        
+        query += " and t3.term_div    = '" + l_term_div + "'    /* 학기 */ "        
+        query += " and t1.mp_id    = '" + l_mp_id + "'    /* 멘토링 프로그램id */ "
+        query += " and t3.apl_id   = '" + l_apl_id + "'   "
+        query += " and (('" + l_appr_yn + "' = 'Y' and t1.appr_dt IS NOT NULL) OR ('" + l_appr_yn + "' <> 'Y' and t1.appr_dt IS NULL))"
+        query += " and (('" + l_mgr_yn + "' = 'Y' and t1.mgr_dt IS NOT NULL) OR ('" + l_mgr_yn + "' <> 'Y' and t1.mgr_dt IS NULL))"
+        query += " and (t1.att_sdt >= CONCAT('" + l_yr + "-" + l_month1 + "', '-01') AND t1.att_sdt < ADDDATE(LAST_DAY(CONCAT('" + l_yr + "-" + l_month2 + "', '-01')), 1))"
         query += " group by t1.mp_id     /* 멘토링 프로그램id */ "
+        query += " , substring(t1.att_sdt, 1, 7) "
         query += " , t1.apl_no    /* 멘토 지원 no */ "
         query += " , t3.mntr_id         /* 멘토id  */ "
         query += " , t3.apl_nm          /* 지원자(멘토,학생) 명 */ "
@@ -4505,8 +4533,7 @@ class MP0104M_list(generics.ListAPIView):
         query += " , t3.bank_nm         /* 은행 명 */ "
         query += " , t3.bank_acct "
 
-
-
+        print(query)
         queryset = mp_mtr.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
@@ -4560,8 +4587,21 @@ class MP0104M_Detail(generics.ListAPIView):
     serializer_class = MP0104M_Detail_Serializer
 
     def list(self, request):
+        l_yr = request.GET.get('yr', "")
+        l_term_div = request.GET.get('term_div', "")
         l_mp_id = request.GET.get('mp_id', "")
         l_apl_id = request.GET.get('apl_id', "")
+        l_month  = request.GET.get('month', "")
+        l_appr_yn = request.GET.get('appr_yn', "")
+        l_mgr_yn = request.GET.get('mgr_yn', "")
+
+        l_month1 = l_month
+        l_month2 = l_month
+
+        if not l_month:
+            print("month:::" + l_month)
+            l_month1 = '01'
+            l_month2 = '12'
 
         queryset = self.get_queryset()
 
@@ -4584,7 +4624,7 @@ class MP0104M_Detail(generics.ListAPIView):
         query += " , t1.mgr_id    /* 관리자id */  "
         query += " , t4.mgr_nm    /* 관리자명 */  "
         query += " , substring(t1.mgr_dt, 1, 16)  as mgr_dt   /* 관리자 승인일시 */  "
-        query += " , ' ' expl_yn   /* 소명상태 */  "
+        query += " , t1.expl_yn as expl_yn   /* 소명상태 */  "
         query += " , t1.exp_amt   /* 지급 활동비 */  "
         query += " , t3.apl_id /* 학번 */ "
         query += " from service20_mp_att t1     /* 프로그램 출석부(멘토) */ "
@@ -4593,8 +4633,13 @@ class MP0104M_Detail(generics.ListAPIView):
         query += " left join service20_mpgm   t4 on (t4.mp_id    = t1.mp_id) "
         query += " left join service20_com_cdd c1 on (c1.std_grp_code  = 'mp0059' and c1.std_detl_code = t1.mp_div) "
         query += " where 1=1 "
-        query += " and t1.mp_id    = '"+l_mp_id+"'   /* 멘토링 프로그램id */ "
-        query += " and t3.apl_id   = '"+l_apl_id+"' "
+        query += " and t3.yr    = '" + l_yr + "'    /* 년도 */ "        
+        query += " and t3.term_div    = '" + l_term_div + "'    /* 학기 */ "      
+        query += " and t1.mp_id    = '" + l_mp_id + "'   /* 멘토링 프로그램id */ "
+        query += " and t3.apl_id   = '" + l_apl_id + "' "
+        query += " and (('" + l_appr_yn + "' = 'Y' and t1.appr_dt IS NOT NULL) OR ('" + l_appr_yn + "' <> 'Y' and t1.appr_dt IS NULL))"
+        query += " and (('" + l_mgr_yn + "' = 'Y' and t1.mgr_dt IS NOT NULL) OR ('" + l_mgr_yn + "' <> 'Y' and t1.mgr_dt IS NULL))"
+        query += " and (t1.att_sdt >= CONCAT('" + l_yr + "-" + l_month1 + "', '-01') AND t1.att_sdt < ADDDATE(LAST_DAY(CONCAT('" + l_yr + "-" + l_month2 + "', '-01')), 1))"
         query += " order by t1.att_no DESC    /* 출석순서(seq) */ "
 
 
