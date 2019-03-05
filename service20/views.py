@@ -3534,11 +3534,24 @@ def MP0101M_adm_update(request):
     apl_max = int(maxRow)
     
 
-    update_text = " update service20_mp_mtr a "
+    # update_text = " update service20_mp_mtr a "
+    # update_text += " SET a.status = '10' "
+    # update_text += " WHERE 1=1 "
+    # update_text += " AND a.mp_id = '"+str(mp_id)+"' "
+    # update_text += " AND a.apl_id = '"+str(apl_id)+"' "
+    # cursor = connection.cursor()
+    # query_result = cursor.execute(update_text)
+
+    update_text = " update service20_mp_mtr a,service20_vw_nanum_stdt b "
     update_text += " SET a.status = '10' "
+    update_text += " , a.score1 = b.score01 "
+    update_text += " , a.score2 = b.score02 "
+    update_text += " , a.score3 = b.score03 "
+    update_text += " , a.score4 = b.score04 "
     update_text += " WHERE 1=1 "
     update_text += " AND a.mp_id = '"+str(mp_id)+"' "
     update_text += " AND a.apl_id = '"+str(apl_id)+"' "
+    update_text += " AND a.apl_id = b.apl_id "
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)
 
@@ -3669,6 +3682,16 @@ def MP0101M_adm_update(request):
     print(update_text) 
     cursor = connection.cursor()
     query_result = cursor.execute(update_text) 
+
+    # update_text = " update service20_mp_mtr a,service20_vw_nanum_foreign_exam b    /* 프로그램 지원자(멘토) 어학 리스트 */ set "
+    # update_text += "      a.score1 = '"++"' "
+    # update_text += "  WHERE a.apl_id = b.apl_id "
+    # update_text += "    AND a.apl_id = '"+str(apl_id)+"' "
+    # update_text += "    AND a.mp_id = '"+mp_id+"' "
+    # print("::_FROM_vw_nanum_foreign_exam::")
+    # print(update_text) 
+    # cursor = connection.cursor()
+    # query_result = cursor.execute(update_text)    
 
 
 
