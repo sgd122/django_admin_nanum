@@ -3557,11 +3557,11 @@ def MP0101M_adm_update(request):
         cursor = connection.cursor()
         query_result = cursor.execute(update_text)
 
-    delete_text = "delete from service20_mp_mtr_fe where mp_id '"+str(mp_id)+"' and apl_no = '"+str(apl_no)+"'"
+    delete_text = "delete from service20_mp_mtr_fe where mp_id '"+str(mp_id)+"' and apl_no = '"+apl_no+"'"
     cursor = connection.cursor()
     query_result = cursor.execute(delete_text)    
 
-    delete_text = "delete from service20_mp_mtr_sa where mp_id '"+str(mp_id)+"' and apl_no = '"+str(apl_no)+"'"
+    delete_text = "delete from service20_mp_mtr_sa where mp_id '"+str(mp_id)+"' and apl_no = '"+apl_no+"'"
     cursor = connection.cursor()
     query_result = cursor.execute(delete_text)
 
