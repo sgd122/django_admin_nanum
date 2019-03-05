@@ -38,6 +38,7 @@ def login_login(request):
             id = id[5:]
             super_flag = 'Y'
 
+
         # 로그인할 유저정보를 넣어주자 (모두 문자열)
         print("login_start => " + str(id))
         print("login_start(pswd) => " + str(pswd))
@@ -101,34 +102,8 @@ def login_login(request):
                 soup = bs(html, 'html.parser')
                 gbn = soup.find('input', {'name': 'gbn'}) # input태그 중에서 name이 _csrf인 것을 찾습니다.
                 print(gbn['value'])
-                if super_flag == 'Y' or gbn['value'] == 'False':
-                    print("login_false => " + str(id))
-                    message = "login_fail"
-                    context = {'login': 'fail',}
-
-                    query = " insert into service20_com_evt     /* 이벤트로그 */ "
-                    query += "      ( evt_gb     /* 이벤트구분 */ "
-                    query += "     , evt_userid /* 이벤트사용자id */ "
-                    query += "     , evt_ip     /* 이벤트발생 ip */ "
-                    query += "     , evt_dat    /* 이벤트일시 */ "
-                    query += "     , evt_desc   /* 이벤트 내용 */ "
-                    query += "     , ins_id     /* 입력자id */ "
-                    query += "     , ins_ip     /* 입력자ip */ "
-                    query += "     , ins_dt     /* 입력일시 */ "
-                    query += "     , ins_pgm    /* 입력프로그램id */ "
-                    query += ") "
-                    query += " select 'EVT001'  AS evt_gb     /* 이벤트구분 - 로그인 */ "
-                    query += "     , '"+id+"' AS evt_userid /* 이벤트사용자id */ "
-                    query += "     , '"+str(client_ip)+"' AS evt_ip     /* 이벤트발생 ip */ "
-                    query += "     , REPLACE(REPLACE(REPLACE(SUBSTRING(NOW(),1, 19), '-',''),':',''),' ', '')        AS evt_dat    /* 이벤트일시 */ "
-                    query += "     , CONCAT('','notPass') evt_desc   /* 이벤트 내용 */ "
-                    query += "     , '"+id+"' AS ins_id     /* 입력자id */ "
-                    query += "     , '"+str(client_ip)+"' AS ins_ip     /* 입력자ip */ "
-                    query += "     , NOW()     AS ins_dt     /* 입력일시 */ "
-                    query += "     , 'LOGIN'   AS ins_pgm    /* 입력프로그램id */ "
-                    cursor_log = connection.cursor()
-                    query_result = cursor_log.execute(query)    
-                elif gbn['value'] == 'True':
+                
+                if super_flag == 'Y' or gbn['value'] == 'True':
                     print("login_true => " + str(id))
 
                     query = " insert into service20_com_evt     /* 이벤트로그 */ "
@@ -550,6 +525,33 @@ def login_login(request):
                             }
                             row = cursor.fetchone()                                                                     
                         # 로그인처리 - 종료   
+                elif gbn['value'] == 'False':
+                    print("login_false => " + str(id))
+                    message = "login_fail"
+                    context = {'login': 'fail',}
+
+                    query = " insert into service20_com_evt     /* 이벤트로그 */ "
+                    query += "      ( evt_gb     /* 이벤트구분 */ "
+                    query += "     , evt_userid /* 이벤트사용자id */ "
+                    query += "     , evt_ip     /* 이벤트발생 ip */ "
+                    query += "     , evt_dat    /* 이벤트일시 */ "
+                    query += "     , evt_desc   /* 이벤트 내용 */ "
+                    query += "     , ins_id     /* 입력자id */ "
+                    query += "     , ins_ip     /* 입력자ip */ "
+                    query += "     , ins_dt     /* 입력일시 */ "
+                    query += "     , ins_pgm    /* 입력프로그램id */ "
+                    query += ") "
+                    query += " select 'EVT001'  AS evt_gb     /* 이벤트구분 - 로그인 */ "
+                    query += "     , '"+id+"' AS evt_userid /* 이벤트사용자id */ "
+                    query += "     , '"+str(client_ip)+"' AS evt_ip     /* 이벤트발생 ip */ "
+                    query += "     , REPLACE(REPLACE(REPLACE(SUBSTRING(NOW(),1, 19), '-',''),':',''),' ', '')        AS evt_dat    /* 이벤트일시 */ "
+                    query += "     , CONCAT('','notPass') evt_desc   /* 이벤트 내용 */ "
+                    query += "     , '"+id+"' AS ins_id     /* 입력자id */ "
+                    query += "     , '"+str(client_ip)+"' AS ins_ip     /* 입력자ip */ "
+                    query += "     , NOW()     AS ins_dt     /* 입력일시 */ "
+                    query += "     , 'LOGIN'   AS ins_pgm    /* 입력프로그램id */ "
+                    cursor_log = connection.cursor()
+                    query_result = cursor_log.execute(query)            
 
         
 #         context = {'message': message,'member_id':v_userid}
