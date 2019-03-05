@@ -3876,6 +3876,7 @@ class MP0103M_list_Serializer(serializers.ModelSerializer):
     mtr_sub = serializers.SerializerMethodField()
     pln_sedt = serializers.SerializerMethodField()
     apl_no = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
     
     mgr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     pln_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
@@ -3884,7 +3885,7 @@ class MP0103M_list_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = mpgm
-        fields = ('mp_id','mp_name','apl_term','yr_seq','mnte_nm','sch_nm','sch_yr','pln_dt','appr_nm','appr_dt','mgr_id','mgr_dt','apl_id','apl_nm','tchr_nm','pln_dt','mtr_sub','pln_sedt','apl_no')
+        fields = ('mp_id','mp_name','apl_term','yr_seq','mnte_nm','sch_nm','sch_yr','pln_dt','appr_nm','appr_dt','mgr_id','mgr_dt','apl_id','apl_nm','tchr_nm','pln_dt','mtr_sub','pln_sedt','apl_no', 'status')
     
     def get_mnte_nm(self,obj):
         return obj.mnte_nm  
@@ -3916,6 +3917,8 @@ class MP0103M_list_Serializer(serializers.ModelSerializer):
         return obj.pln_sedt
     def get_apl_no(self,obj):
         return obj.apl_no    
+    def get_status(self,obj):
+        return obj.status  
     
 
 
@@ -3949,6 +3952,7 @@ class MP0103M_list(generics.ListAPIView):
         query += " , c.tchr_nm    AS tchr_nm "
         query += " , a.mtr_sub     AS mtr_sub "
         query += " , d.apl_no     AS apl_no "
+        query += " , a.status     AS status "
         query += " , (SELECT concat(pln_sdt, CONCAT('~', pln_edt)) FROM service20_mp_plnd WHERE mp_id = a.mp_id AND apl_no = a.apl_no LIMIT 1) AS pln_sedt "
         query += " from service20_mp_plnh a "
         query += " , service20_mpgm b "
@@ -4187,6 +4191,8 @@ def MP0103M_Insert(request):
     update_text += " WHERE apl_id = '"+apl_id+"' "
     update_text += " AND apl_no = '"+apl_no+"') d "
     update_text += " SET a.pln_dt = NOW() "
+    update_text += "   , a.req_dt = NOW() "
+    update_text += "   , a.status = '10' "
     update_text += " WHERE a.mp_id = b.mp_id "
     update_text += " AND a.mp_id = c.mp_id "
     update_text += " AND a.mp_id = d.mp_id "
@@ -4380,6 +4386,7 @@ def MP0103M_Update(request):
     update_text += " SET mtr_sub = '"+str(mtr_sub)+"' "
     # update_text += " , pln_sdt = ifnull(trim(NULLIF('"+str(mtr_pln_sdt)+"','')),DATE_FORMAT(now(),'%Y-%m-%d')) "
     # update_text += " , pln_edt = ifnull(trim(NULLIF('"+str(mtr_pln_edt)+"','')),DATE_FORMAT(now(),'%Y-%m-%d')) "
+    update_text += " , pln_dt = now() "
     update_text += " , upd_id = '"+str(apl_id)+"' "
     update_text += " , upd_ip = '"+str(client_ip)+"' "
     update_text += " , upd_dt = now() "
@@ -4409,7 +4416,7 @@ def MP0103M_Update(request):
         update_text = " update service20_mp_plnd "
         update_text += " SET mtr_desc = '"+str(mtr_desc)+"' "
         # update_text += " , pln_sdt = ifnull(trim(NULLIF('"+str(mtr_pln_sdt)+"','')),DATE_FORMAT(now(),'%Y-%m-%d')) "
-        # update_text += " , pln_edt = ifnull(trim(NULLIF('"+str(mtr_pln_edt)+"','')),DATE_FORMAT(now(),'%Y-%m-%d')) "
+        # update_text += " , pln_edt = ifnull(trim(NULLIF('"+str(mtr_pln_edt)+"','')),DATE_FORMAT(now(),'%Y-%m-%d')) "        
         update_text += " , upd_id = '"+str(apl_id)+"' "
         update_text += " , upd_ip = '"+str(client_ip)+"' "
         update_text += " , upd_dt = now() "
