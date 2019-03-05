@@ -3548,6 +3548,7 @@ def MP0101M_adm_update(request):
     update_text += " , a.score2 = b.score02 "
     update_text += " , a.score3 = b.score03 "
     update_text += " , a.score4 = b.score04 "
+    update_text += " , a.score5 = b.score05 "
     update_text += " WHERE 1=1 "
     update_text += " AND a.mp_id = '"+str(mp_id)+"' "
     update_text += " AND a.apl_id = '"+str(apl_id)+"' "
