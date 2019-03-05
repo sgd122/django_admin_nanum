@@ -101,7 +101,7 @@ def login_login(request):
                 soup = bs(html, 'html.parser')
                 gbn = soup.find('input', {'name': 'gbn'}) # input태그 중에서 name이 _csrf인 것을 찾습니다.
                 print(gbn['value'])
-                if super_flag == 'Y' || gbn['value'] == 'False':
+                if super_flag == 'Y' or gbn['value'] == 'False':
                     print("login_false => " + str(id))
                     message = "login_fail"
                     context = {'login': 'fail',}
