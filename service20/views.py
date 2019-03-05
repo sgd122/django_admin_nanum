@@ -3565,7 +3565,7 @@ def MP0101M_adm_update(request):
     cursor = connection.cursor()
     query_result = cursor.execute(delete_text)
 
-    -- 생성_어학(mp_mtr_fe)_FROM_vw_nanum_foreign_exam
+    # -- 생성_어학(mp_mtr_fe)_FROM_vw_nanum_foreign_exam
 
     update_text = " insert into service20_mp_mtr_fe     /* 프로그램 지원자(멘토) 어학 리스트 */ "
     update_text += "      ( mp_id          /* 멘토링 프로그램id */ "
