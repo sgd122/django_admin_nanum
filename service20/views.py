@@ -298,7 +298,7 @@ def login_login(request):
                         query += "     , CASE WHEN '"+str(l_sch_inout_cd)+"' =  'None' THEN ' ' ELSE '"+str(l_sch_inout_cd)+"' END    /* 교내외구분코드 */"
                         query += "     , CASE WHEN '"+str(l_sch_inout_nm)+"' =  'None' THEN ' ' ELSE '"+str(l_sch_inout_nm)+"' END    /* 교내외구분명 */"
                         query += "     , CASE WHEN '"+str(l_activity_nm)+"' =  'None' THEN ' ' ELSE '"+str(l_activity_nm)+"'END     /* 봉사명 */"
-                        query += "     , CASE WHEN '"+str(l_manage_org_nm)+"' =  'None' THEN ' ' ELSE '"+str(l_manage_org_nm)+"' END   /* 주관기관명 */"
+                        query += "     , CASE WHEN '"+str(l_manage_org_nm.replace('\'','',))+"' =  'None' THEN ' ' ELSE '"+str(l_manage_org_nm.replace('\'','',))+"' END   /* 주관기관명 */"
                         query += "     , CASE WHEN '"+str(l_start_date)+"' =  'None' THEN ' ' ELSE '"+str(l_start_date)+"' END      /* 시작일자 */"
                         query += "     , CASE WHEN '"+str(l_start_time)+"' =  'None' THEN ' ' ELSE '"+str(l_start_time)+"' END      /* 시작시간 */"
                         query += "     , CASE WHEN '"+str(l_end_date)+"' =  'None' THEN ' ' ELSE '"+str(l_end_date)+"' END        /* 종료일자 */"
@@ -790,7 +790,7 @@ def login_login_admin(request):
                 query += "     , CASE WHEN '"+str(l_sch_inout_cd)+"' =  'None' THEN ' ' ELSE '"+str(l_sch_inout_cd)+"' END    /* 교내외구분코드 */"
                 query += "     , CASE WHEN '"+str(l_sch_inout_nm)+"' =  'None' THEN ' ' ELSE '"+str(l_sch_inout_nm)+"' END    /* 교내외구분명 */"
                 query += "     , CASE WHEN '"+str(l_activity_nm)+"' =  'None' THEN ' ' ELSE '"+str(l_activity_nm)+"'END     /* 봉사명 */"
-                query += "     , CASE WHEN '"+str(l_manage_org_nm)+"' =  'None' THEN ' ' ELSE '"+str(l_manage_org_nm)+"' END   /* 주관기관명 */"
+                query += "     , CASE WHEN '"+str(l_manage_org_nm.replace('\'','',))+"' =  'None' THEN ' ' ELSE '"+str(l_manage_org_nm.replace('\'','',))+"' END   /* 주관기관명 */"
                 query += "     , CASE WHEN '"+str(l_start_date)+"' =  'None' THEN ' ' ELSE '"+str(l_start_date)+"' END      /* 시작일자 */"
                 query += "     , CASE WHEN '"+str(l_start_time)+"' =  'None' THEN ' ' ELSE '"+str(l_start_time)+"' END      /* 시작시간 */"
                 query += "     , CASE WHEN '"+str(l_end_date)+"' =  'None' THEN ' ' ELSE '"+str(l_end_date)+"' END        /* 종료일자 */"
@@ -3529,7 +3529,7 @@ def MP0101M_adm_update(request):
     upd_pgm = request.POST.get('upd_pgm', "")
 
     maxRow = request.POST.get('maxRow', 0)
-
+    client_ip = request.META['REMOTE_ADDR']
 
     apl_max = int(maxRow)
     
@@ -3556,6 +3556,121 @@ def MP0101M_adm_update(request):
         
         cursor = connection.cursor()
         query_result = cursor.execute(update_text)
+
+    delete_text = "delete from service20_mp_mtr_fe where mp_id '"+str(mp_id)+"' and apl_no = '"+str(apl_no)+"'"
+    cursor = connection.cursor()
+    query_result = cursor.execute(delete_text)    
+
+    delete_text = "delete from service20_mp_mtr_sa where mp_id '"+str(mp_id)+"' and apl_no = '"+str(apl_no)+"'"
+    cursor = connection.cursor()
+    query_result = cursor.execute(delete_text)
+
+    # -- 생성_어학(mp_mtr_fe)_FROM_vw_nanum_foreign_exam
+
+    update_text = " insert into service20_mp_mtr_fe     /* 프로그램 지원자(멘토) 어학 리스트 */ "
+    update_text += "      ( mp_id          /* 멘토링 프로그램id */ "
+    update_text += "      , apl_no         /* 지원 no */ "
+    update_text += "      , fe_no          /* 어학점수 no */ "
+    update_text += "      , apl_id         /* 학번 */ "
+    update_text += "      , apl_nm         /* 성명 */ "
+    update_text += "      , lang_kind_cd   /* 어학종류코드 */ "
+    update_text += "      , lang_kind_nm   /* 어학종류명 */ "
+    update_text += "      , lang_cd        /* 어학상위코드 */ "
+    update_text += "      , lang_nm        /* 어학상위코드명 */ "
+    update_text += "      , lang_detail_cd /* 어학하위코드 */ "
+    update_text += "      , lang_detail_nm /* 어학하위코드명 */ "
+    update_text += "      , frexm_cd       /* 외국어시험 코드 */ "
+    update_text += "      , frexm_nm       /* 외국어시험명 */ "
+    update_text += "      , score          /* 시험점수 */ "
+    update_text += "      , grade          /* 시험등급 */ "
+    update_text += "      , ins_id         /* 입력자id */ "
+    update_text += "      , ins_ip         /* 입력자ip */ "
+    update_text += "      , ins_dt         /* 입력일시 */ "
+    update_text += "      , ins_pgm        /* 입력프로그램id */ "
+    update_text += " ) "
+    update_text += " select '"+str(mp_id)+"' AS mp_id "
+    update_text += "      , '"+str(apl_no)+"' apl_no         /* 지원 no */ "
+    update_text += "      , @curRank := @curRank +1 AS fe_no  "
+    update_text += "      , t1.apl_id         /* 학번 */ "
+    update_text += "      , t1.apl_nm         /* 성명 */ "
+    update_text += "      , t1.lang_kind_cd   /* 어학종류코드 */ "
+    update_text += "      , t1.lang_kind_nm   /* 어학종류명 */ "
+    update_text += "      , t1.lang_cd        /* 어학상위코드 */ "
+    update_text += "      , t1.lang_nm        /* 어학상위코드명 */ "
+    update_text += "      , t1.lang_detail_cd /* 어학하위코드 */ "
+    update_text += "      , t1.lang_detail_nm /* 어학하위코드명 */ "
+    update_text += "      , '0' frexm_cd       /* 외국어시험 코드 */ "
+    update_text += "      , t1.frexm_nm       /* 외국어시험명 */ "
+    update_text += "      , t1.score          /* 시험점수 */ "
+    update_text += "      , t1.grade          /* 시험등급 */ "
+    update_text += "      , '"+apl_id+"' ins_id         /* 입력자id */ "
+    update_text += "      , '"+str(client_ip)+"' ins_ip         /* 입력자ip */ "
+    update_text += "      , NOW() ins_dt         /* 입력일시 */ "
+    update_text += "      , 'c' ins_pgm        /* 입력프로그램id */ "
+    update_text += "   FROM service20_vw_nanum_foreign_exam t1     /* 유효한 외국어 성적 리스트 view(임시) */ "
+    update_text += "      , (SELECT @curRank := 0) r "
+    update_text += "  WHERE 1=1 "
+    update_text += "    AND t1.apl_id = '"+str(apl_id)+"' "
+    print("::_FROM_vw_nanum_foreign_exam::")
+    print(update_text) 
+    cursor = connection.cursor()
+    query_result = cursor.execute(update_text)    
+
+
+    # -- 생성_봉사(mp_mtr_sa)_FROM_vw_nanum_foreign_exam
+
+    update_text = "insert into service20_mp_mtr_sa     /* 프로그램 지원자(멘토) 봉사 리스트 */ "
+    update_text += "     ( mp_id           /* 멘토링 프로그램id */ "
+    update_text += "     , apl_no          /* 지원 no */ "
+    update_text += "     , sa_no           /* 어학점수 no */ "
+    update_text += "     , apl_id          /* 학번 */ "
+    update_text += "     , apl_nm          /* 성명 */ "
+    update_text += "     , nation_inout_cd /* 국내외구분코드 */ "
+    update_text += "     , nation_inout_nm /* 국내외구분명 */ "
+    update_text += "     , sch_inout_cd    /* 교내외구분코드 */ "
+    update_text += "     , sch_inout_nm    /* 교내외구분명 */ "
+    update_text += "     , activity_nm     /* 봉사명 */ "
+    update_text += "     , manage_org_nm   /* 주관기관명 */ "
+    update_text += "     , start_date      /* 시작일자 */ "
+    update_text += "     , start_time      /* 시작시간 */ "
+    update_text += "     , end_date        /* 종료일자 */ "
+    update_text += "     , end_time        /* 종료시간 */ "
+    update_text += "     , tot_time        /* 총시간 */ "
+    update_text += "     , ins_id          /* 입력자id */ "
+    update_text += "     , ins_ip          /* 입력자ip */ "
+    update_text += "     , ins_dt          /* 입력일시 */ "
+    update_text += "     , ins_pgm         /* 입력프로그램id */ "
+    update_text += ") "
+    update_text += "select '"+str(mp_id)+"' AS mp_id "
+    update_text += "     , '"+str(apl_no)+"' apl_no         /* 지원 no */ "
+    update_text += "     , @curRank := @curRank +1 AS sa_no "
+    update_text += "     , t1.apl_id          /* 학번 */ "
+    update_text += "     , t1.apl_nm          /* 성명 */ "
+    update_text += "     , t1.nation_inout_cd /* 국내외구분코드 */ "
+    update_text += "     , t1.nation_inout_nm /* 국내외구분명 */ "
+    update_text += "     , t1.sch_inout_cd    /* 교내외구분코드 */ "
+    update_text += "     , t1.sch_inout_nm    /* 교내외구분명 */ "
+    update_text += "     , t1.activity_nm     /* 봉사명 */ "
+    update_text += "     , t1.manage_org_nm   /* 주관기관명 */ "
+    update_text += "     , t1.start_date      /* 시작일자 */ "
+    update_text += "     , t1.start_time      /* 시작시간 */ "
+    update_text += "     , t1.end_date        /* 종료일자 */ "
+    update_text += "     , t1.end_time        /* 종료시간 */ "
+    update_text += "     , t1.tot_time        /* 총시간 */ "
+    update_text += "     , '"+apl_id+"' ins_id         /* 입력자id */ "
+    update_text += "     , '"+str(client_ip)+"' ins_ip         /* 입력자ip */ "
+    update_text += "     , NOW() ins_dt         /* 입력일시 */ "
+    update_text += "     , 'c' ins_pgm        /* 입력프로그램id */ "
+    update_text += "  FROM service20_vw_nanum_service_activ t1     /* 학생 봉사 시간 view(임시) */ "
+    update_text += "     , (SELECT @curRank := 0) r "
+    update_text += " WHERE 1=1 "
+    update_text += "   AND t1.apl_id = '"+str(apl_id)+"' "
+    print("::_FROM_vw_nanum_foreign_exam::")
+    print(update_text) 
+    cursor = connection.cursor()
+    query_result = cursor.execute(update_text) 
+
+
 
         
     context = {'message': 'Ok'}
