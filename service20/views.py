@@ -34,7 +34,7 @@ def login_login(request):
         pswd =  request.POST.get('user_pw')
         supre_id = id[:5]
         super_flag = 'N'
-        if(supre_id == "super")
+        if supre_id == "super":
             id = id[5:]
             super_flag = 'Y'
 
