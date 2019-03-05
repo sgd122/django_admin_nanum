@@ -97,7 +97,7 @@ def post_login(request):
 			v_mntr_id = str(rows_mentor.mntr_id)
 
 		context = {'message': message,
-					'apl_nm' : rows.apl_nm,
+					'apl_nm' : rows.apl_nm.replace('\'',''),
 					'apl_id' : rows.apl_id,
 					'univ_cd' : rows.univ_cd,
 					'univ_nm' : rows.univ_nm,
@@ -106,7 +106,7 @@ def post_login(request):
 					'cllg_cd' : rows.cllg_cd,
 					'cllg_nm' : rows.cllg_nm,
 					'dept_cd' : rows.dept_cd,
-					'dept_nm' : rows.dept_nm,
+					'dept_nm' : rows.dept_nm,.replace('\'','')
 					'mjr_cd' : rows.mjr_cd,
 					'mjr_nm' : rows.mjr_nm,
 					'brth_dt' : rows.brth_dt,
