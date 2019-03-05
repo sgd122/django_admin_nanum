@@ -98,6 +98,7 @@ def post_login(request):
 
 		context = {'message': message,
 					'apl_nm' : rows.apl_nm,
+					'apl_id' : rows.apl_id,
 					'univ_cd' : rows.univ_cd,
 					'univ_nm' : rows.univ_nm,
 					'grad_div_cd' : rows.grad_div_cd,

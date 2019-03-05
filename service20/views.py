@@ -5660,19 +5660,25 @@ class TE0203_list_v1(generics.ListAPIView):
         query += "  from service20_cm_surv_h t1"
         query += "  left join service20_cm_surv_p t2 on (t2.pgm_id    = t1.pgm_id     "
         query += "                                   and t2.surv_seq  = t1.surv_seq)"
-        query += "  left join service20_mp_mtr    t3 on (t3.mp_id     = t1.pgm_id"
-        query += "                                   and t3.apl_id    = t1.ansr_id )"
+        query += "  left join service20_mp_mtr    t3 on (t3.mp_id     = t1.pgm_id)"
+        # query += "                                   and t3.apl_id    = t1.ansr_id )"
         query += "  left join service20_mp_mte    t4 on (t4.mp_id     = t3.mp_id"
         query += "                                   and t4.apl_no    = t3.apl_no )"
+        query += "  where t3.mp_id = '" + l_mp_id + "'"
+        query += "    and ( (t3.apl_id = '" + l_apl_id + "' and t1.ansr_id = t3.apl_id) "
+        query += "        or (t4.tchr_id = '" + l_apl_id + "' and t1.ansr_id = t4.tchr_id) "
+        query += "        or (t4.grd_id = '" + l_apl_id + "' and t1.ansr_id = t4.grd_id)"
+        query += "        or (t4.mnte_id = '" + l_apl_id + "' and t1.ansr_id = t4.mnte_id) ) "
         # query += " where t3.yr = '" + l_yr + "'"
         # query += "  and t3.term_div = '" + l_term_div + "'"
         # query += "  and t3.status like Ifnull(Nullif('" + str(l_status) + "', ''), '%%')  "
-        query += "  where t3.mp_id = '" + l_mp_id + "'"
-        query += "    and ( t3.apl_id = '" + l_apl_id + "'"
-        query += "        or t4.tchr_id = '" + l_apl_id + "'"
-        query += "        or t4.grd_id = '" + l_apl_id + "'"
-        query += "        or t4.mnte_id = '" + l_apl_id + "' ) "
+        # query += "  where t3.mp_id = '" + l_mp_id + "'"
+        # query += "    and ( t3.apl_id = '" + l_apl_id + "'"
+        # query += "        or t4.tchr_id = '" + l_apl_id + "'"
+        # query += "        or t4.grd_id = '" + l_apl_id + "'"
+        # query += "        or t4.mnte_id = '" + l_apl_id + "' ) "
 
+        print(query)
         queryset = cm_surv_h.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
