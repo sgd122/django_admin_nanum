@@ -106,7 +106,7 @@ def post_login(request):
 					'cllg_cd' : rows.cllg_cd,
 					'cllg_nm' : rows.cllg_nm,
 					'dept_cd' : rows.dept_cd,
-					'dept_nm' : rows.dept_nm,.replace('\'','')
+					'dept_nm' : rows.dept_nm.replace('\'',''),
 					'mjr_cd' : rows.mjr_cd,
 					'mjr_nm' : rows.mjr_nm,
 					'brth_dt' : rows.brth_dt,
