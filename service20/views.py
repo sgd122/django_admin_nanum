@@ -3548,7 +3548,7 @@ def MP0101M_adm_update(request):
         ans_t2 = request.POST.get('ans_t2_'+str(i+1), None)
 
         update_text = " update service20_mp_ans a "
-        update_text += " SET a.ans_t2 = '"+str(ans_t2)+"' "
+        update_text += " SET a.ans_t2 = "'+str(ans_t2)+'"" 
         update_text += " WHERE 1=1 "
         update_text += " AND a.mp_id = '"+str(mp_id)+"' "
         update_text += " AND a.apl_no = '"+str(apl_no)+"' "
