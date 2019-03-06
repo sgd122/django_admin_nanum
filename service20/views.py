@@ -1966,7 +1966,7 @@ def MS0101M_save(request):
         # 해당 cnt값을 mpgm/msch -> cnt_apl
 
         update_text = " update service20_msch a "
-        update_text += " SET a.cnt_apl = (select count(*) from service20_ms_apl where ms_id = '"+ms_id+"') "
+        update_text += " SET a.cnt_apl = (select count(*) from service20_ms_apl where ms_id = '"+ms_id+"' and status='10') "
         update_text += " WHERE 1=1 "
         update_text += " AND a.ms_id = '"+ms_id+"' "
         
@@ -2359,15 +2359,17 @@ def MS0101M_adm_update(request):
         ques_no = request.POST.get('ques_no'+str(i+1), None)
         ans_t2 = request.POST.get('ans_t2_'+str(i+1), None)
 
-        update_text = " update service20_ms_ans a "
-        update_text += " SET a.ans_t2 = '"+str(ans_t2)+"' "
-        update_text += " WHERE 1=1 "
-        update_text += " AND a.ms_id = '"+str(ms_id)+"' " 
-        update_text += " AND a.apl_no = '"+str(apl_no)+"' "
-        update_text += " AND a.ques_no = '"+str(ques_no)+"' "
-        print(update_text)
-        cursor = connection.cursor()
-        query_result = cursor.execute(update_text)
+        # update_text = " update service20_ms_ans a "
+        # update_text += " SET a.ans_t2 = '"+str(ans_t2)+"' "
+        # update_text += " WHERE 1=1 "
+        # update_text += " AND a.ms_id = '"+str(ms_id)+"' " 
+        # update_text += " AND a.apl_no = '"+str(apl_no)+"' "
+        # update_text += " AND a.ques_no = '"+str(ques_no)+"' "
+        # print(update_text)
+        # cursor = connection.cursor()
+        # query_result = cursor.execute(update_text)
+
+        ms_ans.objects.filter(ms_id=str(ms_id),apl_no=str(apl_no),ques_no=str(ques_no)).update(ans_t2=str(ans_t2))
 
         
     context = {'message': 'Ok'}
@@ -2397,6 +2399,12 @@ def MS0101M_adm_cancle(request):
     update_text += " WHERE 1=1 "
     update_text += " AND a.ms_id = '"+ms_id+"' "
     update_text += " AND a.apl_no = '"+apl_no+"' "
+
+
+    update_text = " update service20_msch a "
+    update_text += " SET a.cnt_apl = (select count(*) from service20_ms_apl where ms_id = '"+ms_id+"' and status='10') "
+    update_text += " WHERE 1=1 "
+    update_text += " AND a.ms_id = '"+ms_id+"' "
     
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)
