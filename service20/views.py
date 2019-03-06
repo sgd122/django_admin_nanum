@@ -1915,7 +1915,7 @@ def MS0101M_save(request):
             score4=rows.score04,
             score5=rows.score05,
             score6=rows.score06,
-            cmp_term=rows.com_term,
+            cmp_term=rows.cmp_term,
             pr_yr=rows.pr_yr,
             pr_sch_yr=rows.pr_sch_yr,
             pr_term_div=rows.pr_term_div,
@@ -3125,7 +3125,24 @@ def MP0101M_save(request):
     if rowsChk == True:
         context = {'message': 'duplicate'}
     else:
-    
+        print("::rows.tel_no::")
+        print(rows.tel_no)
+        if len(rows.tel_no) > 1:
+            v_tel_no = rows.tel_no.replace('-', ''),
+        else:
+            v_tel_no = rows.tel_no
+
+
+        if len(rows.mob_no) > 1:
+            v_mob_no = rows.mob_no.replace('-', ''),
+        else:
+            v_mob_no = rows.mob_no
+
+        if len(rows.tel_no_g) > 1:
+            v_tel_no_g = rows.tel_no_g.replace('-', ''),
+        else:
+            v_tel_no_g = rows.tel_no_g    
+
         model_instance = mp_mtr(
             mp_id=mp_id, 
             apl_no=apl_no, 
@@ -3143,9 +3160,9 @@ def MP0101M_save(request):
             yr=queryset.yr,
             term_div=rows.term_div,
             sch_yr=rows.sch_yr,
-            mob_no=rows.mob_no.replace('-', ''),
-            tel_no=rows.tel_no.replace('-', ''),
-            tel_no_g=rows.tel_no_g.replace('-', ''),
+            mob_no=v_mob_no,
+            tel_no=v_tel_no,
+            tel_no_g=v_tel_no_g,
             h_addr=rows.h_addr,
             email_addr=rows.email_addr,
             bank_acct=rows.bank_acct,
@@ -3157,7 +3174,7 @@ def MP0101M_save(request):
             score4=rows.score04,
             score5=rows.score05,
             score6=rows.score06,
-            cmp_term=rows.com_term,
+            cmp_term=rows.cmp_term,
             pr_yr=rows.pr_yr,
             pr_sch_yr=rows.pr_sch_yr,
             pr_term_div=rows.pr_term_div,
