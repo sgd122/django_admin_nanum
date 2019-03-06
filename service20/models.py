@@ -240,6 +240,7 @@ class ms_apl(models.Model):
   pr_yr = models.CharField(max_length=4, null=True, blank=True, verbose_name='직전 학년도' )
   pr_sch_yr = models.CharField(max_length=1, null=True, blank=True, verbose_name='직전 학년' )
   pr_term_div = models.CharField(max_length=2, null=True, blank=True, verbose_name='직전학기코드' )
+  cmp_term = models.PositiveIntegerField(null=True, blank=True, verbose_name='현재기준 이수학기' )
 
   class Meta:
     verbose_name = '멘토스쿨 지원자'
@@ -248,6 +249,7 @@ class ms_apl(models.Model):
 
     index_together = ["apl_id"]
     index_together = ["apl_nm"]
+
 
 
 
@@ -598,7 +600,7 @@ class mp_mtr(models.Model):
   score3 = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True, verbose_name='직전학기 학점' )
   score4 = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True, verbose_name='봉사점수합계' )
   score5 = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True, verbose_name='자격증 개수' )
-  score6 = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True, verbose_name='원점수6' )
+  score6 = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True, verbose_name='직전학기 학점' )
   cscore1 = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True, verbose_name='변환점수1' )
   cscore2 = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True, verbose_name='변환점수2' )
   cscore3 = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True, verbose_name='변환점수3' )
@@ -645,17 +647,13 @@ class mp_mtr(models.Model):
   pr_yr = models.CharField(max_length=4, null=True, blank=True, verbose_name='직전 학년도' )
   pr_sch_yr = models.CharField(max_length=1, null=True, blank=True, verbose_name='직전 학년' )
   pr_term_div = models.CharField(max_length=2, null=True, blank=True, verbose_name='직전학기코드' )
+  cmp_term = models.PositiveIntegerField(null=True, blank=True, verbose_name='현재기준 이수학기' )
 
   class Meta:
     verbose_name = '프로그램 지원자(멘토)'
     verbose_name_plural =  verbose_name
     unique_together=("mp_id", "apl_no")
-
     index_together = ["mntr_id"]
-
-
-
-
 
 
 class mp_mtr_log(models.Model):
