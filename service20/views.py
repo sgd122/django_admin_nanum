@@ -3887,6 +3887,14 @@ def MP0101M_adm_update(request):
     # cursor = connection.cursor()
     # query_result = cursor.execute(update_text)    
 
+    update_text = " update service20_mpgm a "
+    update_text += " SET a.cnt_apl = (select count(*) from service20_mp_mtr where mp_id = '"+mp_id+"' and status = '10') "
+    update_text += " WHERE 1=1 "
+    update_text += " AND a.mp_id = '"+mp_id+"' "
+    
+    cursor = connection.cursor()
+    query_result = cursor.execute(update_text) 
+
 
 
         
@@ -3912,15 +3920,6 @@ def MP0101M_adm_cancle(request):
     upd_pgm = request.POST.get('upd_pgm', "")
 
 
-    update_text = " update service20_mpgm a "
-    update_text += " SET a.cnt_apl = (select count(*) from service20_mp_mtr where mp_id = '"+mp_id+"' and status = '10') "
-    update_text += " WHERE 1=1 "
-    update_text += " AND a.mp_id = '"+mp_id+"' "
-    
-    cursor = connection.cursor()
-    query_result = cursor.execute(update_text) 
-
-        
     update_text = " update service20_mp_mtr a "
     update_text += " SET status = '19' "
     update_text += " , doc_cncl_dt = now() "
@@ -3930,6 +3929,15 @@ def MP0101M_adm_cancle(request):
     
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)
+
+
+    update_text = " update service20_mpgm a "
+    update_text += " SET a.cnt_apl = (select count(*) from service20_mp_mtr where mp_id = '"+mp_id+"' and status = '10') "
+    update_text += " WHERE 1=1 "
+    update_text += " AND a.mp_id = '"+mp_id+"' "
+    
+    cursor = connection.cursor()
+    query_result = cursor.execute(update_text) 
 
 
     context = {'message': 'Ok'}
