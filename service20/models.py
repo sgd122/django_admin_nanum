@@ -180,8 +180,8 @@ class ms_apl(models.Model):
   term_div = models.CharField(max_length=2, null=False, verbose_name='학기' )
   sch_yr = models.CharField(max_length=1, null=False, verbose_name='학년' )
   mob_no = models.CharField(max_length=20, null=False, verbose_name='휴대전화' )
-  tel_no = models.CharField(max_length=12, null=True, blank=True, verbose_name='집전화' )
-  tel_no_g = models.CharField(max_length=12, null=True, blank=True, verbose_name='보호자 연락처' )
+  tel_no = models.CharField(max_length=20, null=True, blank=True, verbose_name='집전화' )
+  tel_no_g = models.CharField(max_length=20, null=True, blank=True, verbose_name='보호자 연락처' )
   h_addr = models.CharField(max_length=200, null=False, verbose_name='집주소' )
   post_no = models.CharField(max_length=6, null=True, blank=True, verbose_name='우편번호' )
   email_addr = models.CharField(max_length=50, null=True, blank=True, verbose_name='이메일 주소' )
@@ -556,6 +556,7 @@ class mp_sub(models.Model):
     unique_together=("mp_id", "att_id", "att_seq")
 
 
+
 class mp_mtr(models.Model):
   mp_id = models.CharField(max_length=10, null=False, verbose_name='멘토링 프로그램ID' )
   apl_no = models.PositiveIntegerField(null=False, verbose_name='지원 NO' )
@@ -578,7 +579,7 @@ class mp_mtr(models.Model):
   sch_yr = models.CharField(max_length=1, null=False, verbose_name='학년' )
   mob_no = models.CharField(max_length=20, null=True, blank=True, verbose_name='휴대전화' )
   tel_no = models.CharField(max_length=20, null=True, blank=True, verbose_name='집전화' )
-  tel_no_g = models.CharField(max_length=12, null=True, blank=True, verbose_name='보호자 연락처' )
+  tel_no_g = models.CharField(max_length=20, null=True, blank=True, verbose_name='보호자 연락처' )
   h_addr = models.CharField(max_length=200, null=True, blank=True, verbose_name='집주소' )
   post_no = models.CharField(max_length=6, null=True, blank=True, verbose_name='우편번호' )
   email_addr = models.CharField(max_length=50, null=True, blank=True, verbose_name='이메일 주소' )
@@ -653,7 +654,13 @@ class mp_mtr(models.Model):
     verbose_name = '프로그램 지원자(멘토)'
     verbose_name_plural =  verbose_name
     unique_together=("mp_id", "apl_no")
+
     index_together = ["mntr_id"]
+
+
+
+
+
 
 
 class mp_mtr_log(models.Model):
@@ -784,7 +791,6 @@ class mp_spc(models.Model):
     verbose_name = '학습외 프로그램'
     verbose_name_plural =  verbose_name
     unique_together=("mp_id", "spc_no")
-
 
 
 class mp_spc_sub(models.Model):
