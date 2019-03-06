@@ -105,8 +105,8 @@ def post_login(request):
 		if query_result == 0:
 			v_login_gubun = ''
 		else:
-			v_login_gubun_code = query_result[0].user_div
-			v_login_gubun = query_result[0].std_detl_code_nm
+			v_login_gubun_code = str(query_result[0].user_div)
+			v_login_gubun = str(query_result[0].std_detl_code_nm)
 
 
 		context = {'message': message,
