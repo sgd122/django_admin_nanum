@@ -6422,39 +6422,40 @@ def TE0204_update(request,pk):
     rvwr_id   = request.POST.get('rvwr_id', "")
     client_ip = request.META['REMOTE_ADDR']
 
+
     update_text = ""
     if pk == 1:
         # /*프로그램 최종소감문_저장*/
-        update_text  = " update service20_mp_rvw t1 left join service20_mpgm t2 on (t2.mp_id = t1.mp_id) "
+        update_text  = " update service20_mp_rvw t1 "
         update_text += " set t1.rvw_dt = now() /* 작성일 */ "
-        update_text += " , t1.mtr_revw = '"+str(mtr_revw)+"' /* 소감문 */ "
         update_text += " , t1.status = '10' /* 상태(20제출, 10작성중) */ "
         update_text += " , t1.upd_id = '"+str(upd_id)+"' "
         update_text += " , t1.upd_ip = '"+str(client_ip)+"' "
         update_text += " , t1.upd_dt = now() "
         update_text += " , t1.upd_pgm = '"+str(upd_pgm)+"' "
         update_text += " where 1=1 "
-        update_text += " and t2.yr = '"+str(yr)+"' "
-        update_text += " and t2.mnt_term = '"+str(mnt_term)+"' "
         update_text += " and t1.mp_id    = '"+str(mp_id)+"' "
         update_text += " and t1.rvwr_id = '"+str(rvwr_id)+"' "
 
+        # 소감문 (따옴표 처리)
+        mp_rvw.objects.filter(mp_id=str(mp_id),rvwr_id=str(rvwr_id)).update(mtr_revw=str(mtr_revw))
+
     elif pk == 2:
         # /*프로그램 최종소감문_제출*/
-        update_text  = " update service20_mp_rvw t1 left join service20_mpgm t2 on (t2.mp_id = t1.mp_id) "
+        update_text  = " update service20_mp_rvw t1 "
         update_text += " set t1.rvw_dt = now() /* 작성일 */ "
         update_text += " , t1.cmp_dt = now() /* 제출일 */ "
-        update_text += " , t1.mtr_revw = '"+str(mtr_revw)+"' /* 소감문 */ "
         update_text += " , t1.status = '20' /* 상태(20제출, 10작성중) */ "
         update_text += " , t1.upd_id = '"+str(upd_id)+"' "
         update_text += " , t1.upd_ip = '"+str(client_ip)+"' "
         update_text += " , t1.upd_dt = now() "
         update_text += " , t1.upd_pgm = '"+str(upd_pgm)+"' "
         update_text += " where 1=1 "
-        update_text += " and t2.yr = '"+str(yr)+"' "
-        update_text += " and t2.mnt_term = '"+str(mnt_term)+"' "
         update_text += " and t1.mp_id    = '"+str(mp_id)+"' "
         update_text += " and t1.rvwr_id = '"+str(rvwr_id)+"' "
+
+        # 소감문 (따옴표 처리)
+        mp_rvw.objects.filter(mp_id=str(mp_id),rvwr_id=str(rvwr_id)).update(mtr_revw=str(mtr_revw))
 
     print(update_text)
     cursor = connection.cursor()
