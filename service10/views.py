@@ -97,10 +97,10 @@ def post_login(request):
 			v_mntr_id = str(rows_mentor.mntr_id)
 
 
-		query = " select A.user_id,A.user_div,B.std_detl_code_nm from vw_nanum_login as A left join service20_com_cdd as B on (B.std_grp_code = 'CM0001' and A.user_div = B.std_detl_code) "
-        query += " where user_id = '"+str(ida)+"'"
-        cursor = connection.cursor()
-        query_result = cursor.execute(query)  
+		query = " select distinct A.user_id,A.user_div,B.std_detl_code_nm from vw_nanum_login as A left join service20_com_cdd as B on (B.std_grp_code = 'CM0001' and A.user_div = B.std_detl_code) "
+		query += " where user_id = '"+str(ida)+"'"
+		cursor = connection.cursor()
+		query_result = cursor.execute(query)  
 
         if query_result == 0:
             v_login_gubun = ''
