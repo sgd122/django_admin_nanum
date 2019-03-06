@@ -4338,6 +4338,319 @@ class MP0102M_detail(generics.ListAPIView):
 #####################################################################################
 
 
+#####################################################################################
+# MP0103M - START
+#####################################################################################
+
+# 프로그램 수행계획서 리스트 ###################################################
+class MP0103M_v1_Serializer(serializers.ModelSerializer):
+
+    mnt_fr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+    mnt_to_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+    
+    class Meta:
+        model = mpgm
+        fields = ('mp_id','mnt_fr_dt','mnt_to_dt')
+      
+
+
+class MP0103M_v1(generics.ListAPIView):
+    queryset = mpgm.objects.all()
+    serializer_class = MP0103M_v1_Serializer
+
+    def list(self, request):
+        mp_id = request.GET.get('mp_id', "")
+
+        queryset = self.get_queryset()
+
+        query = " select t1.mp_id,t1.mnt_fr_dt"
+        query += "      , t1.mnt_to_dt"
+        query += "   from service20_mpgm t1"
+        query += "  where t1.mp_id  = '" + mp_id +"'"
+
+        
+
+        queryset = mpgm.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+
+# 프로그램 수행계획서 리스트 ###################################################
+class MP0103M_list_Serializer(serializers.ModelSerializer):
+
+    mnte_nm = serializers.SerializerMethodField()
+    sch_nm = serializers.SerializerMethodField()
+    sch_yr = serializers.SerializerMethodField()
+    pln_dt = serializers.SerializerMethodField()
+    appr_nm = serializers.SerializerMethodField()
+    appr_dt = serializers.SerializerMethodField()
+    mgr_id = serializers.SerializerMethodField()
+    mgr_dt = serializers.SerializerMethodField()
+    apl_id = serializers.SerializerMethodField()
+    apl_nm = serializers.SerializerMethodField()
+    tchr_nm = serializers.SerializerMethodField()
+    pln_dt = serializers.SerializerMethodField()
+    mtr_sub = serializers.SerializerMethodField()
+    pln_sedt = serializers.SerializerMethodField()
+    apl_no = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
+    
+    mgr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+    pln_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+    appr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+    pln_sedt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+
+    class Meta:
+        model = mpgm
+        fields = ('mp_id','mp_name','apl_term','yr_seq','mnte_nm','sch_nm','sch_yr','pln_dt','appr_nm','appr_dt','mgr_id','mgr_dt','apl_id','apl_nm','tchr_nm','pln_dt','mtr_sub','pln_sedt','apl_no', 'status')
+    
+    def get_mnte_nm(self,obj):
+        return obj.mnte_nm  
+    def get_sch_nm(self,obj):
+        return obj.sch_nm
+    def get_sch_yr(self,obj):
+        return obj.sch_yr
+    def get_pln_dt(self,obj):
+        return obj.pln_dt
+    def get_appr_nm(self,obj):
+        return obj.appr_nm
+    def get_appr_dt(self,obj):
+        return obj.appr_dt
+    def get_mgr_id(self,obj):
+        return obj.mgr_id
+    def get_mgr_dt(self,obj):
+        return obj.mgr_dt
+    def get_apl_id(self,obj):
+        return obj.apl_id
+    def get_apl_nm(self,obj):
+        return obj.apl_nm
+    def get_tchr_nm(self,obj):
+        return obj.tchr_nm
+    def get_pln_dt(self,obj):
+        return obj.pln_dt
+    def get_mtr_sub(self,obj):
+        return obj.mtr_sub
+    def get_pln_sedt(self,obj):
+        return obj.pln_sedt
+    def get_apl_no(self,obj):
+        return obj.apl_no    
+    def get_status(self,obj):
+        return obj.status  
+    
+
+
+class MP0103M_list(generics.ListAPIView):
+    queryset = mpgm.objects.all()
+    serializer_class = MP0103M_list_Serializer
+
+    # mp_mtr - 프로그램 지원자(멘토) => mp_id(멘토링ID), apl_id
+    # mp_mte - 프로그램 지원자(멘티) => mp_id(멘토링ID)
+
+
+    def list(self, request):
+        l_user_id = request.GET.get('user_id', "")
+
+        queryset = self.get_queryset()
+
+        query = " select b.mp_id      AS mp_id "
+        query += " , b.mp_name    AS mp_name "
+        query += " , b.apl_term   AS apl_term "
+        query += " , b.yr_seq     AS yr_seq "
+        query += " , c.mnte_nm    AS mnte_nm "
+        query += " , c.sch_nm     AS sch_nm "
+        query += " , c.sch_yr     AS sch_yr "
+        query += " , a.pln_dt     AS pln_dt "
+        query += " , a.appr_nm    AS appr_nm "
+        query += " , a.appr_dt    AS appr_dt "
+        query += " , a.mgr_id     AS mgr_id "
+        query += " , a.mgr_dt     AS mgr_dt "
+        query += " , d.apl_id     AS apl_id "
+        query += " , d.apl_nm     AS apl_nm "
+        query += " , c.tchr_nm    AS tchr_nm "
+        query += " , a.mtr_sub     AS mtr_sub "
+        query += " , d.apl_no     AS apl_no "
+        query += " , a.status     AS status "
+        query += " , (SELECT concat(pln_sdt, CONCAT('~', pln_edt)) FROM service20_mp_plnd WHERE mp_id = a.mp_id AND apl_no = a.apl_no LIMIT 1) AS pln_sedt "
+        query += " from service20_mp_plnh a "
+        query += " , service20_mpgm b "
+        query += " , service20_mp_mte c "
+        query += " , (SELECT mp_id "
+        query += " , apl_no "
+        query += " , apl_id "
+        query += " , apl_nm "
+        query += " FROM service20_mp_mtr "
+        query += " WHERE mntr_id = '"+l_user_id+"' or apl_id = '"+l_user_id+"') d "
+        query += " WHERE a.mp_id = b.mp_id "
+        query += " AND a.mp_id = c.mp_id "
+        query += " AND a.mp_id = d.mp_id "
+        query += " AND a.apl_no = d.apl_no "
+        query += " AND d.apl_no = c.apl_no "
+
+        
+
+        queryset = mpgm.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+
+# 프로그램 수행계획서 상세 ###################################################
+class MP0103M_Detail_Serializer(serializers.ModelSerializer):
+
+    testField = serializers.SerializerMethodField()
+    class Meta:
+        model = mp_plnd
+        fields = ('mp_id','apl_no','pln_no','pln_sdt','pln_edt','mtr_desc','testField')
+
+    def get_testField(self, obj):
+        return 'test'     
+
+
+class MP0103M_Detail(generics.ListAPIView):
+    queryset = mpgm.objects.all()
+    serializer_class = MP0103M_Detail_Serializer
+
+    # mp_mtr - 프로그램 지원자(멘토) => mp_id(멘토링ID), apl_id
+    # mp_mte - 프로그램 지원자(멘티) => mp_id(멘토링ID)
+
+
+    def list(self, request):
+        l_yr = request.GET.get('yr', "")
+        l_apl_term = request.GET.get('apl_term', "")
+        l_mp_id = request.GET.get('mp_id', "")
+        l_user_id = request.GET.get('user_id', "")
+        
+
+        queryset = self.get_queryset()
+        
+
+        query = " select b.*"
+        query += " from service20_mp_plnh a"
+        query += " , service20_mp_plnd b"
+        query += " , (SELECT mp_id"
+        query += " , apl_no"
+        query += " FROM service20_mp_mtr"
+        query += " WHERE mp_id = '"+l_mp_id+"'"
+        query += " AND ( apl_id = '"+l_user_id+"') ) c"
+        query += " WHERE a.mp_id = b.mp_id"
+        query += "    AND a.mp_id = c.mp_id"
+        query += "    AND a.apl_no = b.apl_no"
+        query += "    AND a.apl_no = c.apl_no"
+
+        queryset = mp_plnd.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+# 프로그램 수행계획서 작성 폼 데이터 ###################################################
+class MP0103M_Detail_v2_Serializer(serializers.ModelSerializer):
+
+    tchr_nm = serializers.SerializerMethodField()
+    sch_nm = serializers.SerializerMethodField()
+    mtr_sub = serializers.SerializerMethodField()
+    pln_time  = serializers.SerializerMethodField()
+    appr_nm  = serializers.SerializerMethodField()
+    appr_dt  = serializers.SerializerMethodField()
+    mgr_nm  = serializers.SerializerMethodField()
+    mgr_dt  = serializers.SerializerMethodField()
+    status  = serializers.SerializerMethodField()
+
+    class Meta:
+        model = mp_mtr
+        fields = ('apl_nm','apl_id','tchr_nm','sch_nm','mtr_sub','pln_time', 'appr_nm', 'appr_dt', 'mgr_nm', 'mgr_dt', 'status')
+      
+    def get_tchr_nm(self, obj):
+        return obj.tchr_nm
+    def get_sch_nm(self, obj):
+        return obj.sch_nm
+    def get_mtr_sub(self, obj):
+        return obj.mtr_sub
+    def get_pln_time(self, obj):
+        return obj.pln_time
+    def get_appr_nm(self, obj):
+        return obj.appr_nm
+    def get_appr_dt(self, obj):
+        return obj.appr_dt
+    def get_mgr_nm(self, obj):
+        return obj.mgr_nm
+    def get_mgr_dt(self, obj):
+        return obj.mgr_dt
+    def get_status(self, obj):
+        return obj.status
+
+class MP0103M_Detail_v2(generics.ListAPIView):
+    queryset = mpgm.objects.all()
+    serializer_class = MP0103M_Detail_v2_Serializer
+
+    def list(self, request):
+        l_mp_id = request.GET.get('mp_id', "")
+        apl_id = request.GET.get('apl_id', "")
+        apl_no = request.GET.get('apl_no', "")
+        
+
+        queryset = self.get_queryset()
+        
+
+        # /* 프로그램 수행계획서 작성 폼 데이터 */
+        select_text = "select d.id "
+        select_text += ", d.apl_id AS apl_id, d.apl_nm AS apl_nm, c.tchr_nm AS tchr_nm, c.sch_nm AS sch_nm, a.mtr_sub AS mtr_sub, '60' AS pln_time"
+        select_text += ", a.appr_nm AS appr_nm, date_format(a.appr_dt, '%%Y-%%m-%%d %%h:%%m:%%s') AS appr_dt, b.mgr_nm AS mgr_nm, date_format(a.mgr_dt, '%%Y-%%m-%%d %%h:%%m:%%s') AS mgr_dt "
+        select_text += ", a.status AS status "
+        select_text += " from service20_mp_plnh a, service20_mpgm b, service20_mp_mte c"
+        select_text += ", (SELECT id,mp_id, apl_no, apl_id, apl_nm"
+        select_text += " FROM service20_mp_mtr"
+        select_text += " WHERE apl_id = '"+apl_id+"' AND apl_no = '"+apl_no+"') d"
+        select_text += " WHERE a.mp_id = b.mp_id"
+        select_text += " AND a.mp_id = c.mp_id"
+        select_text += " AND a.mp_id = d.mp_id"
+        select_text += " AND a.apl_no = d.apl_no"
+        select_text += " AND d.apl_no = c.apl_no"
+        select_text += " AND a.mp_id = '"+l_mp_id+"'"
+
+        print(select_text)
+
+        queryset = mp_mtr.objects.raw(select_text)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+# 계획서 최초 작성 시 주차 수를 셋팅
+class MP0103M_list_v1_Serializer(serializers.ModelSerializer):
+
+    
+    class Meta:
+        model = mp_sub
+        fields = ('id','mp_id','att_id','att_seq','att_cdh','att_cdd','att_val','use_yn','sort_seq')
+    
 
 class MP0103M_list_v1(generics.ListAPIView):
     queryset = mpgm.objects.all()
