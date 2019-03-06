@@ -6853,8 +6853,7 @@ class TT0107M_list(generics.ListAPIView):
         query += " and t1.mp_id     = '"+l_mp_id+"'"
         query += " and ( t4.tchr_id = '"+l_user_id+"'"
         query += "    or t4.grd_id  = '"+l_user_id+"'"
-        query += "    or t4.mnte_id = '"+l_user_id+"'"
-        query += "    or t2.apl_id  = '"+l_user_id+"')"
+        query += "    or t4.mnte_id = '"+l_user_id+"')"
 
 
         queryset = mp_rep.objects.raw(query)
