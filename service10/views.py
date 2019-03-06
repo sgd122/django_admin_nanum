@@ -96,6 +96,19 @@ def post_login(request):
 			rows_mentor = mentor.objects.filter(apl_id=str(ida))[0]
 			v_mntr_id = str(rows_mentor.mntr_id)
 
+
+		query = " select A.user_id,A.user_div,B.std_detl_code_nm from vw_nanum_login as A left join service20_com_cdd as B on (B.std_grp_code = 'CM0001' and A.user_div = B.std_detl_code) "
+        query = " where user_id = '"+str(ida)+"'"
+        cursor = connection.cursor()
+        query_result = cursor.execute(query)  
+
+        if query_result == 0:
+            v_login_gubun = ''
+        else:
+            v_login_gubun_code = query_result[0].user_div
+            v_login_gubun = query_result[0].std_detl_code_nm
+
+
 		context = {'message': message,
 					'apl_nm' : rows.apl_nm.replace('\'',''),
 					'apl_id' : rows.apl_id,
@@ -137,7 +150,9 @@ def post_login(request):
 					'score04' : rows.score04,
 					'score04_tp' : rows.score04_tp,
 					'score05' : rows.score05,
-					'mntr_id' : v_mntr_id
+					'mntr_id' : v_mntr_id,
+                    'login_gubun_code' : v_login_gubun_code,
+                    'login_gubun' : v_login_gubun
 					}
 	
 		print(context)
