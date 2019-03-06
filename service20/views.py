@@ -362,6 +362,8 @@ def login_login(request):
                     query += "     , t3.score03     /* 직전학기 학점 */ "
                     query += "     , t3.score04     /* 봉사점수합계 */ "
                     query += "     , t3.score05     /* 자격증 개수 */ "
+                    query += "     , t3.score06     /* 직전학기 이수학점 */ "
+                    query += "     , t3.cmp_term     /* 전체 이수학기 */ "
                     query += " from vw_nanum_stdt t3     /* 부산대학교 학생 정보 */ "              
                     query += " where t3.apl_id='"+v_userid+"'" 
                     # query += " where t3.apl_id='201866148'"                 
@@ -423,6 +425,8 @@ def login_login(request):
                             insert_query += " , score03     /* 직전학기 학점 */ "
                             insert_query += " , score04     /* 봉사점수합계 */ "
                             insert_query += " , score05     /* 자격증 개수 */ "
+                            insert_query += " , score06     /* 직전학기 이수학점 */ "
+                            insert_query += " , cmp_term     /* 전체 이수학기 */ "
                             insert_query += " ) values ("
         #                   insert_query += " (select ifnull(max(id)+1,1) from service20_vw_nanum_stdt)  "
                             insert_query += " CASE WHEN '"+str(row[0])+"' =  'None' THEN NULL ELSE '"+str(row[0])+"' END"
@@ -465,6 +469,8 @@ def login_login(request):
                             insert_query += " , CASE WHEN '"+str(row[37])+"' =  'None' THEN NULL ELSE '"+str(row[37])+"' END"
                             insert_query += " , CASE WHEN '"+str(row[38])+"' =  'None' THEN NULL ELSE '"+str(row[38])+"' END"
                             insert_query += " , CASE WHEN '"+str(row[39])+"' =  'None' THEN NULL ELSE '"+str(row[39])+"' END"
+                            insert_query += " , CASE WHEN '"+str(row[40])+"' =  'None' THEN NULL ELSE '"+str(row[40])+"' END"
+                            insert_query += " , CASE WHEN '"+str(row[41])+"' =  'None' THEN NULL ELSE '"+str(row[41])+"' END"
                             insert_query += " )"                    
                             cursor2 = connection.cursor()
                             query_result = cursor2.execute(insert_query)    
@@ -522,6 +528,8 @@ def login_login(request):
                             'score03' : str(row[37]),
                             'score04' : str(row[38]),
                             'score05' : str(row[39]),
+                            'score06' : str(row[40]),
+                            'cmp_term' : str(row[41]),
                             'mntr_id' : v_mntr_id
                             }
                             row = cursor.fetchone()                                                                     
@@ -854,6 +862,8 @@ def login_login_admin(request):
             query += "     , t3.score03     /* 직전학기 학점 */ "
             query += "     , t3.score04     /* 봉사점수합계 */ "
             query += "     , t3.score05     /* 자격증 개수 */ "
+            query += "     , t3.score06     /* 직전학기 이수학점 */ "
+            query += "     , t3.cmp_term     /* 전체 이수학기  */ "
             query += " from vw_nanum_stdt t3     /* 부산대학교 학생 정보 */ "              
             query += " where t3.apl_id='"+v_userid+"'" 
             # query += " where t3.apl_id='201866148'"                 
@@ -3554,7 +3564,7 @@ def MP0101M_adm_update(request):
     update_text += " AND a.apl_id = '"+str(apl_id)+"' "
     update_text += " AND a.apl_id = b.apl_id "
     cursor = connection.cursor()
-    query_result = cursor.execute(update_text)
+    query_result = cursor.execute(upd ate_text)
 
     for i in range(0,apl_max):
         anst2 = request.POST.get('que'+str(i+1), None)
