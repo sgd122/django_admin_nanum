@@ -4393,6 +4393,7 @@ class MP0103M_list_Serializer(serializers.ModelSerializer):
     appr_nm = serializers.SerializerMethodField()
     appr_dt = serializers.SerializerMethodField()
     mgr_id = serializers.SerializerMethodField()
+    mgr_nm = serializers.SerializerMethodField()
     mgr_dt = serializers.SerializerMethodField()
     apl_id = serializers.SerializerMethodField()
     apl_nm = serializers.SerializerMethodField()
@@ -4410,7 +4411,7 @@ class MP0103M_list_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = mpgm
-        fields = ('mp_id','mp_name','apl_term','yr_seq','mnte_nm','sch_nm','sch_yr','pln_dt','appr_nm','appr_dt','mgr_id','mgr_dt','apl_id','apl_nm','tchr_nm','pln_dt','mtr_sub','pln_sedt','apl_no', 'status')
+        fields = '__all__'
     
     def get_mnte_nm(self,obj):
         return obj.mnte_nm  
@@ -4426,6 +4427,8 @@ class MP0103M_list_Serializer(serializers.ModelSerializer):
         return obj.appr_dt
     def get_mgr_id(self,obj):
         return obj.mgr_id
+    def get_mgr_nm(self,obj):
+        return obj.mgr_nm
     def get_mgr_dt(self,obj):
         return obj.mgr_dt
     def get_apl_id(self,obj):
@@ -4471,6 +4474,7 @@ class MP0103M_list(generics.ListAPIView):
         query += " , a.appr_nm    AS appr_nm "
         query += " , a.appr_dt    AS appr_dt "
         query += " , a.mgr_id     AS mgr_id "
+        query += " , b.mgr_nm     AS mgr_nm "
         query += " , a.mgr_dt     AS mgr_dt "
         query += " , d.apl_id     AS apl_id "
         query += " , d.apl_nm     AS apl_nm "
@@ -5555,11 +5559,8 @@ class MP0105M_detail(generics.ListAPIView):
         query += " left join service20_com_cdd c2 on (c2.std_grp_code  = 'MP0062'  and c2.std_detl_code = t1.rep_div)  "
         query += " where 1=1 "
         query += " and t1.mp_id     = '"+l_mp_id+"'     "
-        query += " and t1.rep_ym    = '"+l_rep_ym+"' "
-        query += "   and ( t4.tchr_id = '"+str(user_id)+"'"
-        query += "       or t4.grd_id  = '"+str(user_id)+"'"
-        query += "       or t4.mnte_id = '"+str(user_id)+"'"
-        query += "       or t3.apl_id = '"+str(user_id)+"' )"        
+        query += " and t2.apl_id    =  '"+l_apl_id+"' "
+        query += " and t1.rep_ym    = '"+l_rep_ym+"' "       
 
         queryset = mp_rep.objects.raw(query)
 
