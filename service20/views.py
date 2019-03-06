@@ -1887,21 +1887,22 @@ def MS0101M_save(request):
         print("::rows.tel_no::")
         print(rows.tel_no)
 
-        if len(rows.tel_no) > 1:
-            v_tel_no = rows.tel_no.replace('-', ''),
+        if rows.tel_no == None:
+            v_tel_no = ''
         else:
-            v_tel_no = rows.tel_no
+            v_tel_no = rows.tel_no.replace('-', '')
 
 
-        if len(rows.mob_no) > 1:
-            v_mob_no = rows.mob_no.replace('-', ''),
+        if rows.mob_no == None:
+            v_mob_no = ''
         else:
-            v_mob_no = rows.mob_no
-
-        if len(rows.tel_no_g) > 1:
-            v_tel_no_g = rows.tel_no_g.replace('-', ''),
+            v_mob_no = rows.mob_no.replace('-', '')
+            
+        if rows.tel_no_g == None:
+            v_tel_no_g = ''
         else:
-            v_tel_no_g = rows.tel_no_g
+            v_tel_no_g = rows.tel_no_g.replace('-', '')
+            
 
         model_instance = ms_apl(
             ms_id=ms_id, 
@@ -3143,21 +3144,21 @@ def MP0101M_save(request):
     else:
         print("::rows.tel_no::")
         print(rows.tel_no)
-        if len(rows.tel_no) > 1:
-            v_tel_no = rows.tel_no.replace('-', ''),
+        if rows.tel_no == None:
+            v_tel_no = ''
         else:
-            v_tel_no = rows.tel_no
+            v_tel_no = rows.tel_no.replace('-', '')
 
 
-        if len(rows.mob_no) > 1:
-            v_mob_no = rows.mob_no.replace('-', ''),
+        if rows.mob_no == None:
+            v_mob_no = ''
         else:
-            v_mob_no = rows.mob_no
-
-        if len(rows.tel_no_g) > 1:
-            v_tel_no_g = rows.tel_no_g.replace('-', ''),
+            v_mob_no = rows.mob_no.replace('-', '')
+            
+        if rows.tel_no_g == None:
+            v_tel_no_g = ''
         else:
-            v_tel_no_g = rows.tel_no_g    
+            v_tel_no_g = rows.tel_no_g.replace('-', '')   
 
         model_instance = mp_mtr(
             mp_id=mp_id, 
@@ -3750,12 +3751,15 @@ def MP0101M_adm_update(request):
         ques_no = request.POST.get('ques_no'+str(i+1), None)
         ans_t2 = request.POST.get('ans_t2_'+str(i+1), None)
 
-        update_text = " update service20_mp_ans a "
-        update_text += ' SET a.ans_t2 = " '+str(ans_t2)+' " ' 
-        update_text += " WHERE 1=1 "
-        update_text += " AND a.mp_id = '"+str(mp_id)+"' "
-        update_text += " AND a.apl_no = '"+str(apl_no)+"' "
-        update_text += " AND a.ques_no = '"+str(ques_no)+"' "
+        # update_text = " update service20_mp_ans a "
+        # update_text += ' SET a.ans_t2 = " '+str(ans_t2)+' " ' 
+        # update_text += " WHERE 1=1 "
+        # update_text += " AND a.mp_id = '"+str(mp_id)+"' "
+        # update_text += " AND a.apl_no = '"+str(apl_no)+"' "
+        # update_text += " AND a.ques_no = '"+str(ques_no)+"' "
+
+        mp_ans.objects.filter(mp_id=str(mp_id),apl_no=str(apl_no),ques_no=str(ques_no)).update(ans_t2=str(ans_t2))
+
         
         cursor = connection.cursor()
         query_result = cursor.execute(update_text)
