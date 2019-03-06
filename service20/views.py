@@ -2615,7 +2615,8 @@ class MP0101M_list_chk_3_Serializer(serializers.ModelSerializer):
     chk = serializers.SerializerMethodField()
     class Meta:
         model = com_cdd
-        fields = ('chk')
+        # fields = ('chk')
+        fields = '__all__'
 
     def get_chk(self, obj):
         return obj.chk
