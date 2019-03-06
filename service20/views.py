@@ -1884,6 +1884,9 @@ def MS0101M_save(request):
     if rowsChk == True:
         context = {'message': 'duplicate'}
     else:
+        print("::rows.tel_no::")
+        print(rows.tel_no)
+
         model_instance = ms_apl(
             ms_id=ms_id, 
             apl_no=apl_no, 
