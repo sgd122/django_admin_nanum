@@ -3230,7 +3230,7 @@ def MP0101M_save(request):
         # 해당 cnt값을 mpgm/msch -> cnt_apl
 
         update_text = " update service20_mpgm a "
-        update_text += " SET a.cnt_apl = (select count(*) from service20_mp_mtr where mp_id = '"+mp_id+"') "
+        update_text += " SET a.cnt_apl = (select count(*) from service20_mp_mtr where mp_id = '"+mp_id+"' and status = '10') "
         update_text += " WHERE 1=1 "
         update_text += " AND a.mp_id = '"+mp_id+"' "
         
