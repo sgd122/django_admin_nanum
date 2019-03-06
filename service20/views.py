@@ -5512,7 +5512,7 @@ class MP0105M_detail(generics.ListAPIView):
 
         queryset = self.get_queryset()
 
-        # /*보고서 상세*/
+                # /*보고서 상세*/
         query = " select t1.id,t1.mp_id                                         /* 멘토링 프로그램id   */ "
         query += " , t1.rep_div                                       /* 보고서 구분(mp0062) */ "
         query += " , t1.rep_ttl                                       /* 보고서 제목 : 내용  */ "
@@ -5555,8 +5555,11 @@ class MP0105M_detail(generics.ListAPIView):
         query += " left join service20_com_cdd c2 on (c2.std_grp_code  = 'MP0062'  and c2.std_detl_code = t1.rep_div)  "
         query += " where 1=1 "
         query += " and t1.mp_id     = '"+l_mp_id+"'     "
-        query += " and t2.apl_id    =  '"+l_apl_id+"' "
         query += " and t1.rep_ym    = '"+l_rep_ym+"' "
+        query += "   and ( t4.tchr_id = '"+str(user_id)+"'"
+        query += "       or t4.grd_id  = '"+str(user_id)+"'"
+        query += "       or t4.mnte_id = '"+str(user_id)+"'"
+        query += "       or t3.apl_id = '"+str(user_id)+"' )"        
 
         queryset = mp_rep.objects.raw(query)
 
