@@ -39,6 +39,8 @@ urlpatterns = [
     path('com/combo/ms/status/', com_combo_ms_status.as_view(), name='com_combo_ms_status'),
     # 모집상태 콤보박스
     path('com/combo/mp/status/', com_combo_mp_status.as_view(), name='com_combo_mp_status'),
+    # 월단위 콤보박스
+    path('com/combo/month/', com_combo_month.as_view(), name='com_combo_month'),
     # 취소사유 콤보박스
     path('com/combo/cnclRsn/', com_combo_cnclRsn.as_view(), name='com_combo_cnclRsn'),
     path('com/combo/repdiv/', com_combo_repdiv.as_view(), name='com_combo_repdiv'), 
@@ -53,6 +55,7 @@ urlpatterns = [
     path('com/user/fe/', com_user_fe.as_view(), name='com_user_fe'),
     # 봉사점수
     path('com/user/sa/', com_user_sa.as_view(), name='com_user_sa'),
+
     ########################################################################################
     # 공통(com)
     #
@@ -78,6 +81,8 @@ urlpatterns = [
     ########################################################################################
     path('MS0101M/list/chk/1/', MS0101M_list_chk_1.as_view(), name='MS0101M_list_chk_1'),
     path('MS0101M/list/chk/2/', MS0101M_list_chk_2.as_view(), name='MS0101M_list_chk_2'),
+    path('MS0101M/list/chk/3/', MS0101M_list_chk_3.as_view(), name='MS0101M_list_chk_3'),
+    path('MS0101M/list/chk/4/', MS0101M_list_chk_4.as_view(), name='MS0101M_list_chk_4'),
     # 멘토스쿨 리스트 조회
     path('MS0101M/list/', MS0101M_list.as_view(), name='MS0101M_list'),
     # 멘토스쿨 질문유형 가져오기
@@ -181,6 +186,8 @@ urlpatterns = [
     path('MP0103M/insert/', MP0103M_Insert, name='MP0103M_Insert'),
     # 프로그램 수행계획서 Update
     path('MP0103M/update/', MP0103M_Update, name='MP0103M_Update'),
+    # 프로그램 수행계획서 승인요청
+    path('MP0103M/approval/', MP0103M_Approval, name='MP0103M_Approval'),
     ########################################################################################
     # 프로그램 수행계획서(MP0103M - END )
     #

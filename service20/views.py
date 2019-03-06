@@ -1144,6 +1144,61 @@ class com_combo_termdiv(generics.ListAPIView):
 
         return Response(serializer.data)
 
+# 월단위 콤보박스 ###################################################
+class com_combo_month_Serializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = com_cdd
+        fields = ('std_detl_code','std_detl_code_nm')
+
+
+class com_combo_month(generics.ListAPIView):
+    queryset = com_cdd.objects.all()
+    serializer_class = com_combo_month_Serializer
+
+    def list(self, request):
+
+        queryset = self.get_queryset()
+        
+        query = " select '' as id, '' as std_detl_code, '전체' as std_detl_code_nm"
+        query += " union"
+        query += " select '01' as id, '01' as std_detl_code, '01' as std_detl_code_nm"
+        query += " union"
+        query += " select '02' as id, '02' as std_detl_code, '02' as std_detl_code_nm"
+        query += " union"
+        query += " select '03' as id, '03' as std_detl_code, '03' as std_detl_code_nm"
+        query += " union"
+        query += " select '04' as id, '04' as std_detl_code, '04' as std_detl_code_nm"
+        query += " union"
+        query += " select '05' as id, '05' as std_detl_code, '05' as std_detl_code_nm"
+        query += " union"
+        query += " select '06' as id, '06' as std_detl_code, '06' as std_detl_code_nm"
+        query += " union"
+        query += " select '07' as id, '07' as std_detl_code, '07' as std_detl_code_nm"
+        query += " union"
+        query += " select '08' as id, '08' as std_detl_code, '08' as std_detl_code_nm"
+        query += " union"
+        query += " select '09' as id, '09' as std_detl_code, '09' as std_detl_code_nm"
+        query += " union"
+        query += " select '10' as id, '10' as std_detl_code, '10' as std_detl_code_nm"
+        query += " union"
+        query += " select '11' as id, '11' as std_detl_code, '11' as std_detl_code_nm"
+        query += " union"
+        query += " select '12' as id, '12' as std_detl_code, '12' as std_detl_code_nm"
+
+        print(query)
+        queryset = com_cdd.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
 # 취소사유 콤보박스
 class com_combo_cnclRsn_Serializer(serializers.ModelSerializer):
 
@@ -1680,6 +1735,119 @@ class MS0101M_list_chk_2(generics.ListAPIView):
 
         return Response(serializer.data)
 
+class MS0101M_list_chk_3_Serializer(serializers.ModelSerializer):
+
+    
+    chk = serializers.SerializerMethodField()
+    class Meta:
+        model = com_cdd
+        fields = '__all__'
+
+    def get_chk(self, obj):
+        return obj.chk
+
+class MS0101M_list_chk_3(generics.ListAPIView):
+    queryset = mpgm.objects.all()
+    serializer_class = MS0101M_list_chk_3_Serializer
+
+    def list(self, request):
+        
+        apl_id = request.GET.get('apl_id', "")
+        ms_id = request.GET.get('ms_id', "")
+
+
+        # -- 신청가능한 대학/학과체크
+
+        query = " select '1' as id,COUNT(*) as chk "
+        query += "   FROM ( "
+        query += "          select att_val "
+        query += "            FROM service20_ms_sub t3 "
+        query += "           WHERE t3.ms_id   = '"+ms_id+"' "
+        query += "             AND t3.att_id  = 'MP0010' "
+        query += "             AND t3.att_cdh = 'MP0010' "
+        query += "             AND t3.att_cdd = '20' /* 대학 */ "
+        query += "           UNION ALL "
+        query += "          select att_val "
+        query += "            FROM service20_ms_sub t3 "
+        query += "           WHERE t3.ms_id   = '"+ms_id+"' "
+        query += "             AND t3.att_id  = 'MP0010' "
+        query += "             AND t3.att_cdh = 'MP0010' "
+        query += "             AND t3.att_cdd = '30'  /* 학과 */ "
+        query += "       ) T1 "
+
+        
+        queryset = com_cdd.objects.raw(query)
+        
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, context={'request': request}, many=True)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+class MS0101M_list_chk_4_Serializer(serializers.ModelSerializer):
+
+    
+    chk = serializers.SerializerMethodField()
+    class Meta:
+        model = com_cdd
+        fields = '__all__'
+
+    def get_chk(self, obj):
+        return obj.chk
+
+class MS0101M_list_chk_4(generics.ListAPIView):
+    queryset = mpgm.objects.all()
+    serializer_class = MS0101M_list_chk_4_Serializer
+
+    def list(self, request):
+        
+        apl_id = request.GET.get('apl_id', "")
+        ms_id = request.GET.get('ms_id', "")
+
+
+        # -- 신청가능한 대학/학과체크
+
+        query = " select '1' as id,COUNT(*) as chk "
+        query += "   FROM ( "
+        query += "          select apl_id "
+        query += "            FROM service20_vw_nanum_stdt b "
+        query += "           WHERE cllg_nm IN ( SELECT att_val "
+        query += "                                FROM service20_ms_sub t3 "
+        query += "                               WHERE t3.ms_id   = '"+ms_id+"' "
+        query += "                                 AND t3.att_id  = 'MP0010' "
+        query += "                                 AND t3.att_cdh = 'MP0010' "
+        query += "                                 AND t3.att_cdd = '20' /* 대학 */ "
+        query += "                             ) "
+        query += "            AND APL_ID = '"+apl_id+"' "
+        query += "         UNION ALL "
+        query += "          select apl_id "
+        query += "            FROM service20_vw_nanum_stdt b "
+        query += "           WHERE dept_nm IN ( SELECT att_val "
+        query += "                                FROM service20_ms_sub t3 "
+        query += "                               WHERE t3.ms_id   = '"+ms_id+"' "
+        query += "                                 AND t3.att_id  = 'MP0010' "
+        query += "                                 AND t3.att_cdh = 'MP0010' "
+        query += "                                 AND t3.att_cdd = '30'  /* 학과 */ "
+        query += "                             ) "
+        query += "            AND apl_id = '"+apl_id+"' "
+        query += "        ) T1 "
+
+        queryset = com_cdd.objects.raw(query)
+        
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, context={'request': request}, many=True)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)      
+
 class MS0101M_list_Serializer(serializers.ModelSerializer):
 
     applyFlag = serializers.SerializerMethodField()
@@ -1966,7 +2134,7 @@ def MS0101M_save(request):
         # 해당 cnt값을 mpgm/msch -> cnt_apl
 
         update_text = " update service20_msch a "
-        update_text += " SET a.cnt_apl = (select count(*) from service20_ms_apl where ms_id = '"+ms_id+"') "
+        update_text += " SET a.cnt_apl = (select count(*) from service20_ms_apl where ms_id = '"+ms_id+"' and status='10') "
         update_text += " WHERE 1=1 "
         update_text += " AND a.ms_id = '"+ms_id+"' "
         
@@ -2359,15 +2527,17 @@ def MS0101M_adm_update(request):
         ques_no = request.POST.get('ques_no'+str(i+1), None)
         ans_t2 = request.POST.get('ans_t2_'+str(i+1), None)
 
-        update_text = " update service20_ms_ans a "
-        update_text += " SET a.ans_t2 = '"+str(ans_t2)+"' "
-        update_text += " WHERE 1=1 "
-        update_text += " AND a.ms_id = '"+str(ms_id)+"' " 
-        update_text += " AND a.apl_no = '"+str(apl_no)+"' "
-        update_text += " AND a.ques_no = '"+str(ques_no)+"' "
-        print(update_text)
-        cursor = connection.cursor()
-        query_result = cursor.execute(update_text)
+        # update_text = " update service20_ms_ans a "
+        # update_text += " SET a.ans_t2 = '"+str(ans_t2)+"' "
+        # update_text += " WHERE 1=1 "
+        # update_text += " AND a.ms_id = '"+str(ms_id)+"' " 
+        # update_text += " AND a.apl_no = '"+str(apl_no)+"' "
+        # update_text += " AND a.ques_no = '"+str(ques_no)+"' "
+        # print(update_text)
+        # cursor = connection.cursor()
+        # query_result = cursor.execute(update_text)
+
+        ms_ans.objects.filter(ms_id=str(ms_id),apl_no=str(apl_no),ques_no=str(ques_no)).update(ans_t2=str(ans_t2))
 
         
     context = {'message': 'Ok'}
@@ -2397,6 +2567,12 @@ def MS0101M_adm_cancle(request):
     update_text += " WHERE 1=1 "
     update_text += " AND a.ms_id = '"+ms_id+"' "
     update_text += " AND a.apl_no = '"+apl_no+"' "
+
+
+    update_text = " update service20_msch a "
+    update_text += " SET a.cnt_apl = (select count(*) from service20_ms_apl where ms_id = '"+ms_id+"' and status='10') "
+    update_text += " WHERE 1=1 "
+    update_text += " AND a.ms_id = '"+ms_id+"' "
     
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)
@@ -4163,305 +4339,6 @@ class MP0102M_detail(generics.ListAPIView):
 
 
 
-#####################################################################################
-# MP0103M - START
-#####################################################################################
-
-# 프로그램 수행계획서 리스트 ###################################################
-class MP0103M_v1_Serializer(serializers.ModelSerializer):
-
-    mnt_fr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
-    mnt_to_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
-    
-    class Meta:
-        model = mpgm
-        fields = ('mp_id','mnt_fr_dt','mnt_to_dt')
-      
-
-
-class MP0103M_v1(generics.ListAPIView):
-    queryset = mpgm.objects.all()
-    serializer_class = MP0103M_v1_Serializer
-
-    def list(self, request):
-        mp_id = request.GET.get('mp_id', "")
-
-        queryset = self.get_queryset()
-
-        query = " select t1.mp_id,t1.mnt_fr_dt"
-        query += "      , t1.mnt_to_dt"
-        query += "   from service20_mpgm t1"
-        query += "  where t1.mp_id  = '" + mp_id +"'"
-
-        
-
-        queryset = mpgm.objects.raw(query)
-
-        serializer_class = self.get_serializer_class()
-        serializer = serializer_class(queryset, many=True)
-
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        return Response(serializer.data)
-
-
-# 프로그램 수행계획서 리스트 ###################################################
-class MP0103M_list_Serializer(serializers.ModelSerializer):
-
-    mnte_nm = serializers.SerializerMethodField()
-    sch_nm = serializers.SerializerMethodField()
-    sch_yr = serializers.SerializerMethodField()
-    pln_dt = serializers.SerializerMethodField()
-    appr_nm = serializers.SerializerMethodField()
-    appr_dt = serializers.SerializerMethodField()
-    mgr_id = serializers.SerializerMethodField()
-    mgr_dt = serializers.SerializerMethodField()
-    apl_id = serializers.SerializerMethodField()
-    apl_nm = serializers.SerializerMethodField()
-    tchr_nm = serializers.SerializerMethodField()
-    pln_dt = serializers.SerializerMethodField()
-    mtr_sub = serializers.SerializerMethodField()
-    pln_sedt = serializers.SerializerMethodField()
-    apl_no = serializers.SerializerMethodField()
-    status = serializers.SerializerMethodField()
-    
-    mgr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
-    pln_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
-    appr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
-    pln_sedt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
-
-    class Meta:
-        model = mpgm
-        fields = ('mp_id','mp_name','apl_term','yr_seq','mnte_nm','sch_nm','sch_yr','pln_dt','appr_nm','appr_dt','mgr_id','mgr_dt','apl_id','apl_nm','tchr_nm','pln_dt','mtr_sub','pln_sedt','apl_no', 'status')
-    
-    def get_mnte_nm(self,obj):
-        return obj.mnte_nm  
-    def get_sch_nm(self,obj):
-        return obj.sch_nm
-    def get_sch_yr(self,obj):
-        return obj.sch_yr
-    def get_pln_dt(self,obj):
-        return obj.pln_dt
-    def get_appr_nm(self,obj):
-        return obj.appr_nm
-    def get_appr_dt(self,obj):
-        return obj.appr_dt
-    def get_mgr_id(self,obj):
-        return obj.mgr_id
-    def get_mgr_dt(self,obj):
-        return obj.mgr_dt
-    def get_apl_id(self,obj):
-        return obj.apl_id
-    def get_apl_nm(self,obj):
-        return obj.apl_nm
-    def get_tchr_nm(self,obj):
-        return obj.tchr_nm
-    def get_pln_dt(self,obj):
-        return obj.pln_dt
-    def get_mtr_sub(self,obj):
-        return obj.mtr_sub
-    def get_pln_sedt(self,obj):
-        return obj.pln_sedt
-    def get_apl_no(self,obj):
-        return obj.apl_no    
-    def get_status(self,obj):
-        return obj.status  
-    
-
-
-class MP0103M_list(generics.ListAPIView):
-    queryset = mpgm.objects.all()
-    serializer_class = MP0103M_list_Serializer
-
-    # mp_mtr - 프로그램 지원자(멘토) => mp_id(멘토링ID), apl_id
-    # mp_mte - 프로그램 지원자(멘티) => mp_id(멘토링ID)
-
-
-    def list(self, request):
-        l_user_id = request.GET.get('user_id', "")
-
-        queryset = self.get_queryset()
-
-        query = " select b.mp_id      AS mp_id "
-        query += " , b.mp_name    AS mp_name "
-        query += " , b.apl_term   AS apl_term "
-        query += " , b.yr_seq     AS yr_seq "
-        query += " , c.mnte_nm    AS mnte_nm "
-        query += " , c.sch_nm     AS sch_nm "
-        query += " , c.sch_yr     AS sch_yr "
-        query += " , a.pln_dt     AS pln_dt "
-        query += " , a.appr_nm    AS appr_nm "
-        query += " , a.appr_dt    AS appr_dt "
-        query += " , a.mgr_id     AS mgr_id "
-        query += " , a.mgr_dt     AS mgr_dt "
-        query += " , d.apl_id     AS apl_id "
-        query += " , d.apl_nm     AS apl_nm "
-        query += " , c.tchr_nm    AS tchr_nm "
-        query += " , a.mtr_sub     AS mtr_sub "
-        query += " , d.apl_no     AS apl_no "
-        query += " , a.status     AS status "
-        query += " , (SELECT concat(pln_sdt, CONCAT('~', pln_edt)) FROM service20_mp_plnd WHERE mp_id = a.mp_id AND apl_no = a.apl_no LIMIT 1) AS pln_sedt "
-        query += " from service20_mp_plnh a "
-        query += " , service20_mpgm b "
-        query += " , service20_mp_mte c "
-        query += " , (SELECT mp_id "
-        query += " , apl_no "
-        query += " , apl_id "
-        query += " , apl_nm "
-        query += " FROM service20_mp_mtr "
-        query += " WHERE mntr_id = '"+l_user_id+"' or apl_id = '"+l_user_id+"') d "
-        query += " WHERE a.mp_id = b.mp_id "
-        query += " AND a.mp_id = c.mp_id "
-        query += " AND a.mp_id = d.mp_id "
-        query += " AND a.apl_no = d.apl_no "
-        query += " AND d.apl_no = c.apl_no "
-
-        
-
-        queryset = mpgm.objects.raw(query)
-
-        serializer_class = self.get_serializer_class()
-        serializer = serializer_class(queryset, many=True)
-
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        return Response(serializer.data)
-
-
-# 프로그램 수행계획서 상세 ###################################################
-class MP0103M_Detail_Serializer(serializers.ModelSerializer):
-
-    testField = serializers.SerializerMethodField()
-    class Meta:
-        model = mp_plnd
-        fields = ('mp_id','apl_no','pln_no','pln_sdt','pln_edt','mtr_desc','testField')
-
-    def get_testField(self, obj):
-        return 'test'     
-
-
-class MP0103M_Detail(generics.ListAPIView):
-    queryset = mpgm.objects.all()
-    serializer_class = MP0103M_Detail_Serializer
-
-    # mp_mtr - 프로그램 지원자(멘토) => mp_id(멘토링ID), apl_id
-    # mp_mte - 프로그램 지원자(멘티) => mp_id(멘토링ID)
-
-
-    def list(self, request):
-        l_yr = request.GET.get('yr', "")
-        l_apl_term = request.GET.get('apl_term', "")
-        l_mp_id = request.GET.get('mp_id', "")
-        l_user_id = request.GET.get('user_id', "")
-        
-
-        queryset = self.get_queryset()
-        
-
-        query = " select b.*"
-        query += " from service20_mp_plnh a"
-        query += " , service20_mp_plnd b"
-        query += " , (SELECT mp_id"
-        query += " , apl_no"
-        query += " FROM service20_mp_mtr"
-        query += " WHERE mp_id = '"+l_mp_id+"'"
-        query += " AND ( apl_id = '"+l_user_id+"') ) c"
-        query += " WHERE a.mp_id = b.mp_id"
-        query += "    AND a.mp_id = c.mp_id"
-        query += "    AND a.apl_no = b.apl_no"
-        query += "    AND a.apl_no = c.apl_no"
-
-        queryset = mp_plnd.objects.raw(query)
-
-        serializer_class = self.get_serializer_class()
-        serializer = serializer_class(queryset, many=True)
-
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        return Response(serializer.data)
-
-# 프로그램 수행계획서 작성 폼 데이터 ###################################################
-class MP0103M_Detail_v2_Serializer(serializers.ModelSerializer):
-
-    prn_fg = serializers.SerializerMethodField()
-    tchr_nm = serializers.SerializerMethodField()
-    sch_nm = serializers.SerializerMethodField()
-    mtr_sub = serializers.SerializerMethodField()
-    pln_time  = serializers.SerializerMethodField()
-    class Meta:
-        model = mp_mtr
-        fields = ('apl_nm','apl_id','prn_fg','tchr_nm','sch_nm','mtr_sub','pln_time')
-      
-    def get_prn_fg(self, obj):
-        return obj.prn_fg
-    def get_tchr_nm(self, obj):
-        return obj.tchr_nm
-    def get_sch_nm(self, obj):
-        return obj.sch_nm
-    def get_mtr_sub(self, obj):
-        return obj.mtr_sub
-    def get_pln_time(self, obj):
-        return obj.pln_time
-
-class MP0103M_Detail_v2(generics.ListAPIView):
-    queryset = mpgm.objects.all()
-    serializer_class = MP0103M_Detail_v2_Serializer
-
-    def list(self, request):
-        l_mp_id = request.GET.get('mp_id', "")
-        apl_id = request.GET.get('apl_id', "")
-        apl_no = request.GET.get('apl_no', "")
-        
-
-        queryset = self.get_queryset()
-        
-
-        # /* 프로그램 수행계획서 작성 폼 데이터 */
-        select_text = "select d.id,case when a.pln_dt is not NULL then 'true' ELSE 'false' END AS prn_fg"
-        select_text += ", d.apl_id AS apl_id, d.apl_nm AS apl_nm, c.tchr_nm AS tchr_nm, c.sch_nm AS sch_nm, a.mtr_sub AS mtr_sub, '60' AS pln_time"
-        select_text += " from service20_mp_plnh a, service20_mpgm b, service20_mp_mte c"
-        select_text += ", (SELECT id,mp_id, apl_no, apl_id, apl_nm"
-        select_text += " FROM service20_mp_mtr"
-        select_text += " WHERE apl_id = '"+apl_id+"' AND apl_no = '"+apl_no+"') d"
-        select_text += " WHERE a.mp_id = b.mp_id"
-        select_text += " AND a.mp_id = c.mp_id"
-        select_text += " AND a.mp_id = d.mp_id"
-        select_text += " AND a.apl_no = d.apl_no"
-        select_text += " AND d.apl_no = c.apl_no"
-        select_text += " AND a.mp_id = '"+l_mp_id+"'"
-
-        
-
-        queryset = mp_mtr.objects.raw(select_text)
-
-        serializer_class = self.get_serializer_class()
-        serializer = serializer_class(queryset, many=True)
-
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        return Response(serializer.data)
-
-# 계획서 최초 작성 시 주차 수를 셋팅
-class MP0103M_list_v1_Serializer(serializers.ModelSerializer):
-
-    
-    class Meta:
-        model = mp_sub
-        fields = ('id','mp_id','att_id','att_seq','att_cdh','att_cdd','att_val','use_yn','sort_seq')
-    
-
 class MP0103M_list_v1(generics.ListAPIView):
     queryset = mpgm.objects.all()
     serializer_class = MP0103M_list_v1_Serializer
@@ -4525,9 +4402,6 @@ def MP0103M_Insert(request):
 
     maxRow = request.POST.get('maxRow', 0)              # 1번 insert
     
-    mnt_dt_cnt = request.POST.get('mnt_dt_cnt', 0)      # 2번 insert
-    rep_ym = request.POST.get('rep_ym', "")
-    
     client_ip = request.META['REMOTE_ADDR']
 
     update_text = " update service20_mp_plnh a "
@@ -4541,8 +4415,11 @@ def MP0103M_Insert(request):
     update_text += " WHERE apl_id = '"+apl_id+"' "
     update_text += " AND apl_no = '"+apl_no+"') d "
     update_text += " SET a.pln_dt = NOW() "
-    update_text += "   , a.req_dt = NOW() "
     update_text += "   , a.status = '10' "
+    update_text += "   , a.upd_id = '" + upd_id + "' "
+    update_text += "   , a.upd_ip = '" + client_ip + "' "
+    update_text += "   , a.upd_pgm = '" + upd_pgm + "' "
+    update_text += "   , a.upd_dt = now() "
     update_text += " WHERE a.mp_id = b.mp_id "
     update_text += " AND a.mp_id = c.mp_id "
     update_text += " AND a.mp_id = d.mp_id "
@@ -4611,90 +4488,6 @@ def MP0103M_Insert(request):
         print(insert_text)
         cursor = connection.cursor()
         query_result = cursor.execute(insert_text)    
-    
-    row_mnt_dt_cnt = int(mnt_dt_cnt)
-    for i in range(1,row_mnt_dt_cnt):
-        
-        # /* 계획서 최초 작성 시 보고서 insert */
-        # /* 화면으로부터 넘겨받은 mnt_dt_cnt로 for(i = 1 i < mnt_dt_cnt i++) */
-        # /* MP0103M/insert 시 같이 수행되게 해주세요 */
-        query = "insert into service20_mp_rep ("
-        query += "  mp_id"
-        query += ", apl_no"
-        query += ", rep_no"
-        query += ", rep_div"
-        query += ", rep_ym"
-        query += ", mnte_id"
-        query += ", mnte_nm"
-        query += ", tchr_id"
-        query += ", tchr_nm"
-        query += ", sch_nm"
-        query += ", mtr_sub"
-        query += ", att_desc"
-        query += ", rep_ttl"
-        query += ", mtr_obj"
-        query += ", rep_dt"
-        query += ", req_dt"
-        query += ", mtr_desc"
-        query += ", coatching"
-        query += ", spcl_note"
-        query += ", mtr_revw"
-        query += ", appr_id"
-        query += ", appr_nm"
-        query += ", appr_dt"
-        query += ", mgr_id"
-        query += ", mgr_dt"
-        query += ", status"
-        query += ", ins_id"
-        query += ", ins_ip"
-        query += ", ins_dt"
-        query += ", ins_pgm"
-        query += ", upd_id"
-        query += ", upd_ip"
-        query += ", upd_dt"
-        query += ", upd_pgm"
-        query += ")"
-        query += "select t1.mp_id  as mp_id"
-        query += "     , t1.apl_no as apl_no"
-        query += "     , '" + str(i) + "'        as rep_no /* {!i} */"
-        query += "     , 'M'       as rep_div /*m - 교육 */"
-        query += "     , '" + str(rep_ym) + "'  as rep_ym /* {!rep_ym} */"
-        query += "     , null      as mnte_id"
-        query += "     , null      as mnte_nm"
-        query += "     , null      as tchr_id"
-        query += "     , null      as tchr_nm"
-        query += "     , null      as sch_nm"
-        query += "     , null      as mtr_sub"
-        query += "     , null      as att_desc"
-        query += "     , concat(date_format(date( STR_TO_DATE('"+str(mnt_fr_dt)+"','%%Y-%%m-%%d %%H:%%i:%%S') + interval "+str(i)+"-1 month), '%%y'), '년 ', date_format(date( STR_TO_DATE('"+str(mnt_fr_dt)+"','%%Y-%%m-%%d %%H:%%i:%%S') + interval "+str(i)+"-1 month), '%%m'), '월 보고서') as rep_ttl"
-        query += "     , null      as mtr_obj"
-        query += "     , null      as rep_dt"
-        query += "     , null      as req_dt"
-        query += "     , null      as mtr_desc"
-        query += "     , null      as coatching"
-        query += "     , null      as spcl_note"
-        query += "     , null      as mtr_revw"
-        query += "     , null      as appr_id"
-        query += "     , null      as appr_nm"
-        query += "     , null      as appr_dt"
-        query += "     , null      as mgr_id"
-        query += "     , null      as mgr_dt"
-        query += "     , '00'      as status"
-        query += "     , '" + str(apl_id) + "' as ins_id   /* {!login_id} */"
-        query += "     , '" + str(client_ip) + "' as ins_ip   /* {!ins_ip} */"
-        query += "     , now()     as ins_dt"
-        query += "     , '" + str(ins_pgm) + "'   as ins_pgm  /* {!ins_pgm} */"
-        query += "     , '" + str(apl_id) + "' as upd_id"
-        query += "     , '" + str(client_ip) + "' as upd_ip"
-        query += "     , now() as upd_dt"
-        query += "     , '" + str(upd_pgm) + "' as upd_pgm"
-        query += "  from service20_mp_mtr t1"
-        query += " where t1.mp_id  = '" + str(mp_id) + "'"
-        query += "   and t1.apl_id = '" + str(apl_id) + "' /* {!apl_id} */"
-        print("query_"+str(i))
-        print(query)
-        cursor = connection.cursor()
-        query_result = cursor.execute(insert_text) 
 
     context = {'message': 'Ok'}
 
@@ -4708,8 +4501,7 @@ def MP0103M_Update(request):
     apl_id = request.POST.get('apl_id', "")
     apl_no = request.POST.get('apl_no', "")
     pln_no = request.POST.get('pln_no', 0)
-    mtr_pln_sdt = request.POST.get('mtr_pln_sdt', "")
-    mtr_pln_edt = request.POST.get('mtr_pln_edt', "")
+
     mtr_desc = request.POST.get('mtr_desc', "")
     mtr_sub = request.POST.get('mtr_sub', "")
 
@@ -4787,6 +4579,150 @@ def MP0103M_Update(request):
 
     return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 ######################################################################
+
+# 프로그램 수행계획서 승인요청
+@csrf_exempt
+def MP0103M_Approval(request):
+    mp_id = request.POST.get('mp_id', "")
+    apl_id = request.POST.get('apl_id', "")
+    apl_no = request.POST.get('apl_no', "")
+    status = request.POST.get('status', "")
+    mtr_sub = request.POST.get('mtr_sub', "")
+
+    mnt_dt_cnt = request.POST.get('mnt_dt_cnt', 0)      # 보고서 최초 생성
+    rep_ym = request.POST.get('rep_ym', "")
+    mnt_fr_dt = request.POST.get('mnt_fr_dt', "")
+    mnt_to_dt = request.POST.get('mnt_to_dt', "")
+
+    ins_id = request.POST.get('ins_id', "")
+    ins_ip = request.POST.get('ins_ip', "")
+    ins_dt = request.POST.get('ins_dt', "")
+    ins_pgm = request.POST.get('ins_pgm', "")
+    upd_id = request.POST.get('upd_id', "")
+    upd_ip = request.POST.get('upd_ip', "")
+    upd_dt = request.POST.get('upd_dt', "")
+    upd_pgm = request.POST.get('upd_pgm', "")
+    
+    client_ip = request.META['REMOTE_ADDR']
+
+    update_text = " update service20_mp_plnh a "
+    update_text += " , service20_mpgm b "
+    update_text += " , service20_mp_mte c "
+    update_text += " , (SELECT mp_id "
+    update_text += " , apl_no "
+    update_text += " , apl_id "
+    update_text += " , apl_nm "
+    update_text += " FROM service20_mp_mtr "
+    update_text += " WHERE apl_id = '"+apl_id+"' "
+    update_text += " AND apl_no = '"+apl_no+"') d "
+    update_text += " SET a.pln_dt = NOW() "
+    update_text += "   , a.req_dt = NOW() "
+    update_text += "   , a.status = '20' "
+    update_text += "   , a.mtr_sub = '" + str(mtr_sub) + "' "
+    update_text += "   , a.upd_id = '" + upd_id + "' "
+    update_text += "   , a.upd_ip = '" + client_ip + "' "
+    update_text += "   , a.upd_pgm = '" + upd_pgm + "' "
+    update_text += "   , a.upd_dt = now() "
+    update_text += " WHERE a.mp_id = b.mp_id "
+    update_text += " AND a.mp_id = c.mp_id "
+    update_text += " AND a.mp_id = d.mp_id "
+    update_text += " AND a.apl_no = d.apl_no "
+    update_text += " AND d.apl_no = c.apl_no "
+    
+    cursor = connection.cursor()
+    query_result = cursor.execute(update_text)
+
+    row_mnt_dt_cnt = int(mnt_dt_cnt)
+    for i in range(1,row_mnt_dt_cnt):
+        # /* 계획서 최초 작성 시 보고서 insert */
+        # /* 화면으로부터 넘겨받은 mnt_dt_cnt로 for(i = 1 i < mnt_dt_cnt i++) */
+        # /* MP0103M/approval 시 같이 수행되게 해주세요 */
+        query = " insert into service20_mp_rep ("
+        query += "  mp_id"
+        query += ", apl_no"
+        query += ", rep_no"
+        query += ", rep_div"
+        query += ", rep_ym"
+        query += ", mnte_id"
+        query += ", mnte_nm"
+        query += ", tchr_id"
+        query += ", tchr_nm"
+        query += ", grd_id"
+        query += ", grd_nm"
+        query += ", sch_nm"
+        query += ", mtr_sub"
+        query += ", att_desc"
+        query += ", rep_ttl"
+        query += ", mtr_obj"
+        query += ", rep_dt"
+        query += ", req_dt"
+        query += ", mtr_desc"
+        query += ", coatching"
+        query += ", spcl_note"
+        query += ", mtr_revw"
+        query += ", appr_id"
+        query += ", appr_nm"
+        query += ", appr_dt"
+        query += ", mgr_id"
+        query += ", mgr_dt"
+        query += ", status"
+        query += ", ins_id"
+        query += ", ins_ip"
+        query += ", ins_dt"
+        query += ", ins_pgm"
+        query += ", upd_id"
+        query += ", upd_ip"
+        query += ", upd_dt"
+        query += ", upd_pgm"
+        query += ")"
+        query += "select t1.mp_id  as mp_id"
+        query += "     , t1.apl_no as apl_no"
+        query += "     , '" + str(i) + "'        as rep_no /* {!i} */"
+        query += "     , 'M'       as rep_div /*m - 교육 */"
+        query += "     , '" + str(rep_ym) + "'  as rep_ym /* {!rep_ym} */"
+        query += "     , null      as mnte_id"
+        query += "     , null      as mnte_nm"
+        query += "     , null      as tchr_id"
+        query += "     , null      as tchr_nm"
+        query += "     , ' '      as grd_id"
+        query += "     , null      as grd_nm"
+        query += "     , null      as sch_nm"
+        query += "     , null      as mtr_sub"
+        query += "     , null      as att_desc"
+        query += "     , concat(date_format(date( '" + str(mnt_fr_dt) + "' + interval " + str(i) + "-1 month), '%Y'), '년 ', date_format(date( '" + str(mnt_fr_dt) + "' + interval " + str(i) + "-1 month), '%m'), '월 보고서') as rep_ttl"
+        query += "     , null      as mtr_obj"
+        query += "     , null      as rep_dt"
+        query += "     , null      as req_dt"
+        query += "     , null      as mtr_desc"
+        query += "     , null      as coatching"
+        query += "     , null      as spcl_note"
+        query += "     , null      as mtr_revw"
+        query += "     , null      as appr_id"
+        query += "     , null      as appr_nm"
+        query += "     , null      as appr_dt"
+        query += "     , null      as mgr_id"
+        query += "     , null      as mgr_dt"
+        query += "     , '00'      as status"
+        query += "     , '" + str(apl_id) + "' as ins_id   /* {!login_id} */"
+        query += "     , '" + str(client_ip) + "' as ins_ip   /* {!ins_ip} */"
+        query += "     , now()     as ins_dt"
+        query += "     , '" + str(ins_pgm) + "'   as ins_pgm  /* {!ins_pgm} */"
+        query += "     , '" + str(apl_id) + "' as upd_id"
+        query += "     , '" + str(client_ip) + "' as upd_ip"
+        query += "     , now() as upd_dt"
+        query += "     , '" + str(upd_pgm) + "' as upd_pgm"
+        query += "  from service20_mp_mtr t1"
+        query += " where t1.mp_id  = '" + str(mp_id) + "'"
+        query += "   and t1.apl_id = '" + str(apl_id) + "' /* {!apl_id} */"
+        print("query_"+str(i))
+        print(query)
+        cursor = connection.cursor()
+        query_result = cursor.execute(query) 
+
+    context = {'message': 'Ok'}
+
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+
 
 #####################################################################################
 # MP0103M - END 
