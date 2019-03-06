@@ -3757,12 +3757,11 @@ def MP0101M_adm_update(request):
         # update_text += " AND a.mp_id = '"+str(mp_id)+"' "
         # update_text += " AND a.apl_no = '"+str(apl_no)+"' "
         # update_text += " AND a.ques_no = '"+str(ques_no)+"' "
+        
+        # cursor = connection.cursor()
+        # query_result = cursor.execute(update_text)
 
         mp_ans.objects.filter(mp_id=str(mp_id),apl_no=str(apl_no),ques_no=str(ques_no)).update(ans_t2=str(ans_t2))
-
-        
-        cursor = connection.cursor()
-        query_result = cursor.execute(update_text)
 
 
     delete_text = "delete from service20_mp_mtr_fe where mp_id = '"+str(mp_id)+"' and apl_no = '"+str(apl_no)+"'"
