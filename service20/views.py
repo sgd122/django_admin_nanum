@@ -1887,6 +1887,22 @@ def MS0101M_save(request):
         print("::rows.tel_no::")
         print(rows.tel_no)
 
+        if len(rows.tel_no) > 1:
+            v_tel_no = rows.tel_no.replace('-', ''),
+        else:
+            v_tel_no = rows.tel_no
+
+
+        if len(rows.mob_no) > 1:
+            v_mob_no = rows.mob_no.replace('-', ''),
+        else:
+            v_mob_no = rows.mob_no
+
+        if len(rows.tel_no_g) > 1:
+            v_tel_no_g = rows.tel_no_g.replace('-', ''),
+        else:
+            v_tel_no_g = rows.tel_no_g
+
         model_instance = ms_apl(
             ms_id=ms_id, 
             apl_no=apl_no, 
@@ -1904,9 +1920,9 @@ def MS0101M_save(request):
             yr=queryset.yr,
             term_div=rows.term_div,
             sch_yr=rows.sch_yr,
-            mob_no=rows.mob_no.replace('-', ''),
-            tel_no=rows.tel_no.replace('-', ''),
-            tel_no_g=rows.tel_no_g.replace('-', ''),
+            mob_no=v_mob_no,
+            tel_no=v_tel_no,
+            tel_no_g=v_tel_no_g,
             h_addr=rows.h_addr,
             email_addr=rows.email_addr,
             score1=rows.score01,
