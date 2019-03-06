@@ -1441,7 +1441,7 @@ class com_combo_program(generics.ListAPIView):
         query += " WHERE apl_id = '"+str(apl_id)+"' "
         query += " AND mntr_id IS NOT null "
         query += " AND A.mp_id = B.mp_id "
-        query += " AND B.status >= "+status+" "
+        query += " AND B.status >= "+status
 
         queryset = mpgm.objects.raw(query)
 
