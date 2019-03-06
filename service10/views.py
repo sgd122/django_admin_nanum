@@ -102,11 +102,11 @@ def post_login(request):
 		cursor = connection.cursor()
 		query_result = cursor.execute(query)  
 
-        if query_result == 0:
-            v_login_gubun = ''
-        else:
-            v_login_gubun_code = query_result[0].user_div
-            v_login_gubun = query_result[0].std_detl_code_nm
+		if query_result == 0:
+			v_login_gubun = ''
+		else:
+			v_login_gubun_code = query_result[0].user_div
+			v_login_gubun = query_result[0].std_detl_code_nm
 
 
 		context = {'message': message,
