@@ -1893,6 +1893,11 @@ def MS0101M_save(request):
             score3=rows.score03,
             score4=rows.score04,
             score5=rows.score05,
+            score6=rows.score06,
+            cmp_term=rows.com_term,
+            pr_yr=rows.pr_yr,
+            pr_sch_yr=rows.pr_sch_yr,
+            pr_term_div=rows.pr_term_div,
             status='10', # 지원
             ins_id=apl_id,
             ins_ip=str(client_ip),
@@ -2604,6 +2609,119 @@ class MP0101M_list_chk_2(generics.ListAPIView):
 
         return Response(serializer.data)
 
+class MP0101M_list_chk_3_Serializer(serializers.ModelSerializer):
+
+    
+    chk = serializers.SerializerMethodField()
+    class Meta:
+        model = com_cdd
+        fields = ('chk')
+
+    def get_chk(self, obj):
+        return obj.chk
+
+class MP0101M_list_chk_3(generics.ListAPIView):
+    queryset = mpgm.objects.all()
+    serializer_class = MP0101M_list_chk_3_Serializer
+
+    def list(self, request):
+        
+        apl_id = request.GET.get('apl_id', "")
+        mp_id = request.GET.get('mp_id', "")
+
+
+        # -- 신청가능한 대학/학과체크
+
+        query = " select '1' as id,COUNT(*) as chk "
+        query += "   FROM ( "
+        query += "          select att_val "
+        query += "            FROM service20_mp_sub t3 "
+        query += "           WHERE t3.mp_id   = '"+mp_id+"' "
+        query += "             AND t3.att_id  = 'MP0010' "
+        query += "             AND t3.att_cdh = 'MP0010' "
+        query += "             AND t3.att_cdd = '20' /* 대학 */ "
+        query += "           UNION ALL "
+        query += "          select att_val "
+        query += "            FROM service20_mp_sub t3 "
+        query += "           WHERE t3.mp_id   = '"+mp_id+"' "
+        query += "             AND t3.att_id  = 'MP0010' "
+        query += "             AND t3.att_cdh = 'MP0010' "
+        query += "             AND t3.att_cdd = '30'  /* 학과 */ "
+        query += "       ) T1 "
+
+        
+        queryset = com_cdd.objects.raw(query)
+        
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, context={'request': request}, many=True)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+class MP0101M_list_chk_4_Serializer(serializers.ModelSerializer):
+
+    
+    chk = serializers.SerializerMethodField()
+    class Meta:
+        model = com_cdd
+        fields = ('chk')
+
+    def get_chk(self, obj):
+        return obj.chk
+
+class MP0101M_list_chk_4(generics.ListAPIView):
+    queryset = mpgm.objects.all()
+    serializer_class = MP0101M_list_chk_4_Serializer
+
+    def list(self, request):
+        
+        apl_id = request.GET.get('apl_id', "")
+        mp_id = request.GET.get('mp_id', "")
+
+
+        # -- 신청가능한 대학/학과체크
+
+        query = " select '1' as id,COUNT(*) as chk "
+        query += "   FROM ( "
+        query += "          select apl_id "
+        query += "            FROM service20_vw_nanum_stdt b "
+        query += "           WHERE cllg_nm IN ( SELECT att_val "
+        query += "                                FROM service20_mp_sub t3 "
+        query += "                               WHERE t3.mp_id   = '"+mp_id+"' "
+        query += "                                 AND t3.att_id  = 'MP0010' "
+        query += "                                 AND t3.att_cdh = 'MP0010' "
+        query += "                                 AND t3.att_cdd = '20' /* 대학 */ "
+        query += "                             ) "
+        query += "            AND APL_ID = '"+apl_id+"' "
+        query += "         UNION ALL "
+        query += "          select apl_id "
+        query += "            FROM service20_vw_nanum_stdt b "
+        query += "           WHERE dept_nm IN ( SELECT att_val "
+        query += "                                FROM service20_mp_sub t3 "
+        query += "                               WHERE t3.mp_id   = '"+mp_id+"' "
+        query += "                                 AND t3.att_id  = 'MP0010' "
+        query += "                                 AND t3.att_cdh = 'MP0010' "
+        query += "                                 AND t3.att_cdd = '30'  /* 학과 */ "
+        query += "                             ) "
+        query += "            AND apl_id = '"+apl_id+"' "
+        query += "        ) T1 "
+
+        queryset = com_cdd.objects.raw(query)
+        
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, context={'request': request}, many=True)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)        
+
 class MP0101M_list_Serializer(serializers.ModelSerializer):
 
     applyFlag = serializers.SerializerMethodField()
@@ -3017,6 +3135,11 @@ def MP0101M_save(request):
             score3=rows.score03,
             score4=rows.score04,
             score5=rows.score05,
+            score6=rows.score06,
+            cmp_term=rows.com_term,
+            pr_yr=rows.pr_yr,
+            pr_sch_yr=rows.pr_sch_yr,
+            pr_term_div=rows.pr_term_div,
             inv_agr_div = 'Y',
             inv_agr_dt = datetime.datetime.today(),
             status='10', # 지원
@@ -3559,6 +3682,8 @@ def MP0101M_adm_update(request):
     update_text += " , a.score3 = b.score03 "
     update_text += " , a.score4 = b.score04 "
     update_text += " , a.score5 = b.score05 "
+    update_text += " , a.score6 = b.score06 "
+    update_text += " , a.cmp_term = b.cmp_term "
     update_text += " WHERE 1=1 "
     update_text += " AND a.mp_id = '"+str(mp_id)+"' "
     update_text += " AND a.apl_id = '"+str(apl_id)+"' "
@@ -3580,6 +3705,7 @@ def MP0101M_adm_update(request):
         
         cursor = connection.cursor()
         query_result = cursor.execute(update_text)
+
 
     delete_text = "delete from service20_mp_mtr_fe where mp_id = '"+str(mp_id)+"' and apl_no = '"+str(apl_no)+"'"
     cursor = connection.cursor()
