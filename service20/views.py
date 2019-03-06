@@ -1373,6 +1373,7 @@ class com_combo_program(generics.ListAPIView):
     def list(self, request):
         
         apl_id = request.GET.get('apl_id', "")
+        status = request.GET.get('status', 0)
         
 
         queryset = self.get_queryset()
@@ -1385,6 +1386,7 @@ class com_combo_program(generics.ListAPIView):
         query += " WHERE apl_id = '"+str(apl_id)+"' "
         query += " AND mntr_id IS NOT null "
         query += " AND A.mp_id = B.mp_id "
+        query += " AND B.status >= "+status+" "
 
         queryset = mpgm.objects.raw(query)
 
@@ -6245,6 +6247,190 @@ def TE0203_Insert(request):
 #####################################################################################'
 
 #####################################################################################
+# TE0204 - START
+#####################################################################################
+
+# 프로그램 소감문 작성 리스트 ###################################################
+class TE0204_list_Serializer(serializers.ModelSerializer):
+
+    # testField = serializers.SerializerMethodField()
+    yr = serializers.SerializerMethodField()
+    mnt_term = serializers.SerializerMethodField()
+    mp_id = serializers.SerializerMethodField()
+    mp_name = serializers.SerializerMethodField()
+    mnt_fr_dt = serializers.SerializerMethodField()
+    mnt_to_dt = serializers.SerializerMethodField()
+    mnt_frto_dt = serializers.SerializerMethodField()
+    sch_yr = serializers.SerializerMethodField()
+    grd_rel = serializers.SerializerMethodField()  
+    grd_rel_nm = serializers.SerializerMethodField()
+    status_nm = serializers.SerializerMethodField()
+    write_dt = serializers.SerializerMethodField()
+
+    class Meta:
+        model = mp_rvw
+        fields = ('yr', 'mnt_term', 'mp_id', 'mp_name', 'mnt_fr_dt', 'mnt_to_dt', 'mnt_frto_dt', 'mnte_id', 'mnte_nm', 'sch_nm', 'sch_yr', 'grd_id', 'grd_nm', 'grd_rel', 'grd_rel_nm', 'tchr_id', 'tchr_nm', 'apl_id', 'apl_nm', 'status', 'status_nm', 'rvw_dt', 'cmp_dt', 'write_dt', 'mtr_revw', 'rvwr_id', 'rep_no', 'rep_div', 'rvwr_div')
+
+
+    def get_yr(self,obj):
+        return obj.yr
+    def get_mnt_term(self,obj):        
+        return obj.mnt_term
+    def get_mp_id(self,obj):        
+        return obj.mp_id
+    def get_mp_name(self,obj):        
+        return obj.mp_name
+    def get_mnt_fr_dt(self,obj):        
+        return obj.mnt_fr_dt
+    def get_mnt_to_dt(self,obj):        
+        return obj.mnt_to_dt
+    def get_mnt_frto_dt(self,obj):        
+        return obj.mnt_frto_dt        
+    def get_sch_yr(self,obj):        
+        return obj.sch_yr
+    def get_grd_rel(self,obj):        
+        return obj.grd_rel
+    def get_grd_rel_nm(self,obj):        
+        return obj.grd_rel_nm
+    def get_status_nm(self,obj):        
+        return obj.status_nm  
+    def get_write_dt(self,obj):        
+        return obj.write_dt          
+
+class TE0204_list(generics.ListAPIView):
+    queryset = mp_rvw.objects.all()
+    serializer_class = TE0204_list_Serializer
+
+
+    def list(self, request):
+        l_yr = request.GET.get('yr', "")
+        l_apl_term = request.GET.get('apl_term', "")
+        l_mp_id = request.GET.get('mp_id', "")
+        l_user_id = request.GET.get('user_id', "")
+
+        queryset = self.get_queryset()
+
+        query  = " select t1.id "
+        query += " , t2.yr       /* 연도 */ "
+        query += " , t2.mnt_term /* 활동시기 */ "
+        query += " , t1.mp_id    /* 멘토링 프로그램id */ "
+        query += " , t2.mp_name  /* 멘토링 프로그램 명 */ "
+        query += " , substring(t2.mnt_fr_dt, 1, 10) as mnt_fr_dt     /* 활동기간-시작 */ "
+        query += " , substring(t2.mnt_to_dt, 1, 10) as mnt_to_dt     /* 활동기간-시작 */ "
+        query += " , concat(substring(t2.mnt_fr_dt, 1, 10),' ~ ',substring(t2.mnt_to_dt, 1, 10)) as mnt_frto_dt    /* 활동기간*/ "
+        query += " , t1.mnte_id  /* 담당멘티id */ "
+        query += " , t1.mnte_nm  /* 담당멘티명 */ "
+        query += " , t1.sch_nm   /* 학교명 */ "
+        query += " , t3.sch_yr   /* 학년 */ "
+        query += " , t1.grd_id   /* 주 보호자 id */"
+        query += " , t1.grd_nm   /* 보호자명 */ "
+        query += " , t3.grd_rel  /* 보호자 관계(mp0047) */ "
+        query += " , c2.std_detl_code_nm AS grd_rel_nm "
+        query += " , t1.tchr_id  /* 담당교사id */ "
+        query += " , t1.tchr_nm  /* 담당교사명 */ "
+        query += " , t1.apl_id   /* 멘토 학번 */ "
+        query += " , t1.apl_nm   /* 멘토 이름 */ "
+        query += " , t1.status   /* 상태(mp0070) */ "
+        query += " , c1.std_detl_code_nm AS status_nm "
+        query += " , t1.rvw_dt   /* 작성일 */ "
+        query += " , t1.cmp_dt   /* 제출일 */ "
+        query += " , case when t1.cmp_dt is not null then substring(t1.cmp_dt, 1, 10) else substring(t1.rvw_dt, 1, 10) end as write_dt"
+        query += " , t1.mtr_revw /* 소감문 */ "
+        query += " , t1.rvwr_id  /* 소감문 작성자id */ "
+        query += " , t1.rep_no   /* 보고서 no */ "
+        query += " , t1.rep_div  /* 소감문 구분 */ "
+        query += " , t1.rvwr_div /* 소감문 작성자 구분 */ "
+        query += " from service20_mp_rvw t1 "
+        query += " left join service20_mpgm t2 on (t2.mp_id   = t1.mp_id) "
+        query += " left join service20_mp_mte t3 on (t3.mp_id   = t1.mp_id "
+        query += " and t3.mnte_id  = t1.mnte_id)  "
+        query += " left join service20_com_cdd c1 on (c1.std_grp_code  = 'mp0070'  /* 상태(mp0070) */ "
+        query += " and c1.std_detl_code = t1.status) "
+        query += " left join service20_com_cdd c2 on (c2.std_grp_code  = 'mp0047'  /* 보호자 관계(mp0047) */"
+        query += " and c2.std_detl_code = t3.grd_rel) "
+        query += " where 1=1 "
+        query += " and t2.yr = '"+l_yr+"'"
+        query += " and t2.mnt_term = '"+l_apl_term+"'"
+        query += " and t1.mp_id     = '"+l_mp_id+"'"
+        query += " and t1.rvwr_id   = '"+l_user_id+"'"
+
+
+        queryset = mp_rvw.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)      
+
+# 보고서 현황 save
+@csrf_exempt
+def TE0204_update(request,pk):
+
+    mtr_revw  = request.POST.get('mtr_revw', "")
+    upd_id    = request.POST.get('upd_id', "")
+    upd_ip    = request.POST.get('upd_ip', "")
+    upd_dt    = request.POST.get('upd_dt', "")
+    upd_pgm   = request.POST.get('upd_pgm', "")
+
+    yr        = request.POST.get('yr', "")
+    mnt_term  = request.POST.get('mnt_term', "")
+    mp_id     = request.POST.get('mp_id', "")
+    rvwr_id   = request.POST.get('rvwr_id', "")
+    client_ip = request.META['REMOTE_ADDR']
+
+    update_text = ""
+    if pk == 1:
+        # /*프로그램 최종소감문_저장*/
+        update_text  = " update service20_mp_rvw t1 left join service20_mpgm t2 on (t2.mp_id = t1.mp_id) "
+        update_text += " set t1.rvw_dt = now() /* 작성일 */ "
+        update_text += " , t1.mtr_revw = '"+str(mtr_revw)+"' /* 소감문 */ "
+        update_text += " , t1.status = '10' /* 상태(20제출, 10작성중) */ "
+        update_text += " , t1.upd_id = '"+str(upd_id)+"' "
+        update_text += " , t1.upd_ip = '"+str(client_ip)+"' "
+        update_text += " , t1.upd_dt = now() "
+        update_text += " , t1.upd_pgm = '"+str(upd_pgm)+"' "
+        update_text += " where 1=1 "
+        update_text += " and t2.yr = '"+str(yr)+"' "
+        update_text += " and t2.mnt_term = '"+str(mnt_term)+"' "
+        update_text += " and t1.mp_id    = '"+str(mp_id)+"' "
+        update_text += " and t1.rvwr_id = '"+str(rvwr_id)+"' "
+
+    elif pk == 2:
+        # /*프로그램 최종소감문_제출*/
+        update_text  = " update service20_mp_rvw t1 left join service20_mpgm t2 on (t2.mp_id = t1.mp_id) "
+        update_text += " set t1.rvw_dt = now() /* 작성일 */ "
+        update_text += " , t1.cmp_dt = now() /* 제출일 */ "
+        update_text += " , t1.mtr_revw = '"+str(mtr_revw)+"' /* 소감문 */ "
+        update_text += " , t1.status = '20' /* 상태(20제출, 10작성중) */ "
+        update_text += " , t1.upd_id = '"+str(upd_id)+"' "
+        update_text += " , t1.upd_ip = '"+str(client_ip)+"' "
+        update_text += " , t1.upd_dt = now() "
+        update_text += " , t1.upd_pgm = '"+str(upd_pgm)+"' "
+        update_text += " where 1=1 "
+        update_text += " and t2.yr = '"+str(yr)+"' "
+        update_text += " and t2.mnt_term = '"+str(mnt_term)+"' "
+        update_text += " and t1.mp_id    = '"+str(mp_id)+"' "
+        update_text += " and t1.rvwr_id = '"+str(rvwr_id)+"' "
+
+    print(update_text)
+    cursor = connection.cursor()
+    query_result = cursor.execute(update_text)
+ 
+        
+    context = {'message': 'Ok'}
+
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+
+#####################################################################################
+# TE0204 - END
+#####################################################################################
+
+#####################################################################################
 # TT0107M - START
 #####################################################################################
 
@@ -6429,6 +6615,7 @@ def TT0107M_update(request,pk):
 #####################################################################################
 # TT0107M - END
 #####################################################################################
+
 
 @csrf_exempt
 def post_user_info(request):
