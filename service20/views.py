@@ -3564,7 +3564,7 @@ def MP0101M_adm_update(request):
     update_text += " AND a.apl_id = '"+str(apl_id)+"' "
     update_text += " AND a.apl_id = b.apl_id "
     cursor = connection.cursor()
-    query_result = cursor.execute(upd ate_text)
+    query_result = cursor.execute(update_text)
 
     for i in range(0,apl_max):
         anst2 = request.POST.get('que'+str(i+1), None)
