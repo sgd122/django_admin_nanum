@@ -492,12 +492,13 @@ def login_login(request):
                             query += " where user_id = '"+str(row[0])+"'"
                             cursor = connection.cursor()
                             query_result = cursor.execute(query)  
+                            results = namedtuplefetchall(cursor) 
 
                             if query_result == 0:
                                 v_login_gubun = ''
                             else:
-                                v_login_gubun_code = str(query_result[0].user_div)
-                                v_login_gubun = str(query_result[0].std_detl_code_nm)
+                                v_login_gubun_code = str(results[0].user_div)
+                                v_login_gubun = str(results[0].std_detl_code_nm)
 
 
                                                 
