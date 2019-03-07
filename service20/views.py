@@ -7117,6 +7117,7 @@ class TE0204_list(generics.ListAPIView):
         query += " , case when t1.cmp_dt is not null then substring(t1.cmp_dt, 1, 10) else substring(t1.rvw_dt, 1, 10) end as write_dt"
         query += " , t1.mtr_revw /* 소감문 */ "
         query += " , t1.rvwr_id  /* 소감문 작성자id */ "
+        query += " , t1.rvwr_nm  /* 소감문 작성자명 */ "
         query += " , t1.rep_no   /* 보고서 no */ "
         query += " , t1.rep_div  /* 소감문 구분 */ "
         query += " , t1.rvwr_div /* 소감문 작성자 구분 */ "
