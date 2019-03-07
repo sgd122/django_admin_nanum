@@ -7237,7 +7237,7 @@ def com_upload_ms(request):
     DIR = os.getcwd()
     UPLOAD_DIR = str(DIR) + '/media/ms_apl/'
     UPLOAD_DIR = '/NANUM/www/img/ms_apl/'
-    UPLOAD_DIR = '/home/'
+    # UPLOAD_DIR = '/home/'
     if request.method == 'POST':
         l_user_id = request.POST.get("user_id")
         l_ms_id = request.POST.get("ms_id")
