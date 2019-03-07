@@ -22,6 +22,8 @@ urlpatterns = [
     #
     ########################################################################################    
 
+    #파일업로드(멘토스쿨용)
+    path('com/upload/ms/', com_upload_ms, name='com_upload_ms'), 
     #파일업로드
     path('com/upload/', com_upload, name='com_upload'), 
     #리턴URLTest

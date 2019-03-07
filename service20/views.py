@@ -7228,6 +7228,44 @@ class main_list_mento_count(generics.ListAPIView):
 
         # return Response(serializer.data)        
 
+
+#파일업로드 멘토스쿨
+@csrf_exempt
+def com_upload_ms(request):
+
+    req = request
+    DIR = os.getcwd()
+    UPLOAD_DIR = str(DIR) + '/media/ms_apl/'
+    UPLOAD_DIR = '/NANUM/www/img/ms_apl/'
+    if request.method == 'POST':
+        l_user_id = request.POST.get("user_id")
+        l_ms_id = request.POST.get("ms_id")
+
+        print(l_user_id)
+        print(l_ms_id)
+        file = request.FILES['file']
+        filename = file._name
+        n_filename = str(l_user_id) + '_' + str(l_ms_id) + '' + os.path.splitext(filename)[1]
+        print(n_filename)
+        print (UPLOAD_DIR)
+        
+        fp = open('%s/%s' % (UPLOAD_DIR, n_filename) , 'wb')
+
+        for chunk in file.chunks():
+            fp.write(chunk)
+        fp.close()
+
+        cursor = connection.cursor()
+        fullFile = str(UPLOAD_DIR) + str(n_filename)
+        fullFile = "/img/ms_apl/"+ str(n_filename)
+        insert_sql = "update service20_ms_apl set  id_pic = '" + str(fullFile) + "' where ms_id = '"+ str(l_ms_id) + "' and apl_id = '" +  str(l_user_id) +"' "
+        print(insert_sql)
+        cursor.execute(insert_sql)
+
+        return HttpResponse('File Uploaded')
+
+    return HttpResponse('Failed to Upload File')
+
 #파일업로드 테스트
 @csrf_exempt
 def com_upload(request):
