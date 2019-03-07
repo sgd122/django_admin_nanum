@@ -463,17 +463,20 @@ class mpgm(models.Model):
   cursor = connection.cursor()
   query = "select std_detl_code, std_detl_code_nm from service20_com_cdd where std_grp_code = 'MP0001'"
   cursor.execute(query)
-  results = namedtuplefetchall(cursor)  
-  CODE_MP00001 = (('10','개설'))
+  MP0001_CHOICES = tuple((c[0], c[1]) for c in cursor.fetchall())
+
+  cursor.execute("select * from service20_com_cdd where std_grp_code = 'MP0002'")
+  MP0002_CHOICES = tuple((c[2], c[4]) for c in cursor.fetchall())
+
 
 
   mp_id = models.CharField(max_length=10, primary_key=True, verbose_name='멘토링 프로그램ID' )
-  status = models.CharField(max_length=3, null=True,  blank=True,verbose_name='상태(MP0001)' )
+  status = models.CharField(max_length=3, null=True, blank=True, choices=MP0001_CHOICES, verbose_name='상태(MP0001)' )
   mp_name = models.CharField(max_length=100, null=True, blank=True, verbose_name='멘토링 프로그램 명' )
   mp_sname = models.CharField(max_length=20, null=True, blank=True, verbose_name='멘토링 프로그램 단명' )
   base_div = models.PositiveIntegerField(null=True, blank=True, verbose_name='기준 프로그램 여부' )
   mp_intro = models.CharField(max_length=1000, null=True, blank=True, verbose_name='프로그램 소개, CMS ID' )
-  mng_area = models.CharField(max_length=2, null=True, blank=True, verbose_name='프로그램 관리자 영역(MP0002)' )
+  mng_area = models.CharField(max_length=2, null=True, blank=True,choices=MP0002_CHOICES , verbose_name='프로그램 관리자 영역(MP0002)' )
   mgr_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='프로그램 관리자 ID' )
   mgr_nm = models.CharField(max_length=20, null=True, blank=True, verbose_name='프로그램 관리자 명' )
   mng_org = models.CharField(max_length=10, null=True, blank=True, verbose_name='관리기관(MP0003)' )
@@ -517,8 +520,6 @@ class mpgm(models.Model):
   upd_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정자IP' )
   upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
   upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
-
-
 
 
   class Meta:
@@ -1835,11 +1836,11 @@ class agree_cont1(models.Model):
   content3 = models.CharField(max_length=255, null=True, blank=True, verbose_name='기타3' )
 
 
-
 class mp_rvw(models.Model):
   mp_id = models.CharField(max_length=10, null=False, verbose_name='멘토링 프로그램ID' )
   rvwr_id = models.CharField(max_length=10, null=False, verbose_name='소감문 작성자ID' )
   rep_no = models.PositiveIntegerField(null=False, verbose_name='보고서 NO' )
+  rvwr_nm = models.CharField(max_length=20, null=False, verbose_name='작성자 명' )
   rep_div = models.CharField(max_length=1, null=False, verbose_name='소감문 구분' )
   rvwr_div = models.CharField(max_length=1, null=True, blank=True, verbose_name='속감문 작성자 구분' )
   apl_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='멘토 학번' )
@@ -1866,10 +1867,12 @@ class mp_rvw(models.Model):
   upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
   upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
 
+
   class Meta:
     verbose_name = '프로그램 소감문'
     verbose_name_plural =  verbose_name
     unique_together=("mp_id", "rvwr_id", "rep_no")
+
 
 
 
