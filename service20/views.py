@@ -4880,23 +4880,22 @@ class MP0103M_list(generics.ListAPIView):
 
 # 프로그램 수행계획서 상세 ###################################################
 class MP0103M_Detail_Serializer(serializers.ModelSerializer):
+    status = serializers.SerializerMethodField()
 
-    testField = serializers.SerializerMethodField()
     class Meta:
         model = mp_plnd
-        fields = ('mp_id','apl_no','pln_no','pln_sdt','pln_edt','mtr_desc','testField')
+        fields = '__all__'
 
-    def get_testField(self, obj):
-        return 'test'     
+    def get_status(self, obj):
+        return obj.status
 
 
 class MP0103M_Detail(generics.ListAPIView):
-    queryset = mpgm.objects.all()
+    queryset = mp_plnd.objects.all()
     serializer_class = MP0103M_Detail_Serializer
 
     # mp_mtr - 프로그램 지원자(멘토) => mp_id(멘토링ID), apl_id
     # mp_mte - 프로그램 지원자(멘티) => mp_id(멘토링ID)
-
 
     def list(self, request):
         l_yr = request.GET.get('yr', "")
@@ -4908,7 +4907,10 @@ class MP0103M_Detail(generics.ListAPIView):
         queryset = self.get_queryset()
         
 
-        query = " select b.*"
+        query = " select b.id as id"
+        query += "     , b.pln_no     AS pln_no"
+        query += "     , b.mtr_desc   AS mtr_desc"
+        query += "     , a.status AS status"
         query += " from service20_mp_plnh a"
         query += " , service20_mp_plnd b"
         query += " , (SELECT mp_id"
