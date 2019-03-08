@@ -102,7 +102,8 @@ def post_login(request):
 		cursor = connection.cursor()
 		query_result = cursor.execute(query)  
 		results = namedtuplefetchall(cursor)  
-
+		v_login_gubun_code = ''
+		
 		if query_result == 0:
 			v_login_gubun = ''
 		else:
