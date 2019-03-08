@@ -3336,7 +3336,7 @@ class MP0101M_list(generics.ListAPIView):
         query += "               AND Now() > A.apl_to_dt, 'xx', A.status) LIKE  "
         query += "            Ifnull(Nullif('"+str(l_status)+"', ''), '%%')  "
         query += "            || '%%'  "
-        query += " ORDER  BY A.apl_fr_dt DESC,  "
+        query += " ORDER  BY A.mp_id desc, A.apl_fr_dt DESC,  "
         query += "           A.apl_to_dt DESC  "
 
 
