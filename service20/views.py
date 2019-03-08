@@ -1197,7 +1197,9 @@ class com_combo_pln_status(generics.ListAPIView):
 
         queryset = self.get_queryset()
         
-        query = " select id as id "
+        query = " select '0' as id, '' as std_detl_code, '전체' as std_detl_code_nm "
+        query += " union  "
+        query += " select id as id "
         query += "     , std_detl_code as std_detl_code"
         query += "     , std_detl_code_nm as std_detl_code_nm"
         query += "  from service20_com_cdd"
