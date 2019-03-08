@@ -1112,6 +1112,110 @@ class com_combo_yr(generics.ListAPIView):
 
         return Response(serializer.data)
 
+# 보호자승인 콤보박스 ###################################################
+class com_combo_appr_Serializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = com_cdd
+        fields = ('std_detl_code','std_detl_code_nm')
+
+
+class com_combo_appr(generics.ListAPIView):
+    queryset = com_cdd.objects.all()
+    serializer_class = com_combo_appr_Serializer
+
+    def list(self, request):
+
+        queryset = self.get_queryset()
+        
+        query = " select id as id "
+        query += "     , std_detl_code as std_detl_code"
+        query += "     , std_detl_code_nm as std_detl_code_nm"
+        query += "  from service20_com_cdd"
+        query += " where std_grp_code = 'MP0068'    /* 보호자승인여부 */"
+
+        queryset = com_cdd.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+# 관리자승인 콤보박스 ###################################################
+class com_combo_mgr_Serializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = com_cdd
+        fields = ('std_detl_code','std_detl_code_nm')
+
+
+class com_combo_mgr(generics.ListAPIView):
+    queryset = com_cdd.objects.all()
+    serializer_class = com_combo_mgr_Serializer
+
+    def list(self, request):
+
+        queryset = self.get_queryset()
+        
+        query = " select id as id "
+        query += "     , std_detl_code as std_detl_code"
+        query += "     , std_detl_code_nm as std_detl_code_nm"
+        query += "  from service20_com_cdd"
+        query += " where std_grp_code = 'MP0069'    /* 관리자승인여부 */"
+
+        print(query)
+        queryset = com_cdd.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+# 계획서상태 콤보박스 ###################################################
+class com_combo_pln_status_Serializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = com_cdd
+        fields = ('std_detl_code','std_detl_code_nm')
+
+
+class com_combo_pln_status(generics.ListAPIView):
+    queryset = com_cdd.objects.all()
+    serializer_class = com_combo_pln_status_Serializer
+
+    def list(self, request):
+
+        queryset = self.get_queryset()
+        
+        query = " select id as id "
+        query += "     , std_detl_code as std_detl_code"
+        query += "     , std_detl_code_nm as std_detl_code_nm"
+        query += "  from service20_com_cdd"
+        query += " where std_grp_code = 'MP0070'    /* 계획서작성부 */"
+
+        print(query)
+        queryset = com_cdd.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+        
 # 학기 콤보박스 ###################################################
 class com_combo_termdiv_Serializer(serializers.ModelSerializer):
 
