@@ -1217,7 +1217,7 @@ class com_combo_pln_status(generics.ListAPIView):
             return self.get_paginated_response(serializer.data)
 
         return Response(serializer.data)
-        
+
 # 학기 콤보박스 ###################################################
 class com_combo_termdiv_Serializer(serializers.ModelSerializer):
 
@@ -7316,6 +7316,180 @@ def TE0204_update(request,pk):
 
 #####################################################################################
 # TE0204 - END
+#####################################################################################
+
+#####################################################################################
+# TT0105 - START
+#####################################################################################
+
+# 계획서 승인 리스트 ###################################################
+class TT0105_list_Serializer(serializers.ModelSerializer):
+    mntr_id = serializers.SerializerMethodField()
+    apl_nm = serializers.SerializerMethodField()
+    unv_nm = serializers.SerializerMethodField()
+    dept_nm = serializers.SerializerMethodField()
+    mnte_nm = serializers.SerializerMethodField()
+    sch_nm = serializers.SerializerMethodField()
+    sch_yr = serializers.SerializerMethodField()
+    mgr_nm = serializers.SerializerMethodField()
+
+    class Meta:
+        model = mp_plnh
+        fields = '__all__'
+
+    def get_mntr_id(self,obj):
+        return obj.mntr_id  
+    def get_apl_nm(self,obj):
+        return obj.apl_nm
+    def get_unv_nm(self,obj):
+        return obj.unv_nm
+    def get_dept_nm(self,obj):
+        return obj.dept_nm
+    def get_mnte_nm(self,obj):
+        return obj.mnte_nm
+    def get_sch_nm(self,obj):
+        return obj.sch_nm
+    def get_sch_yr(self,obj):
+        return obj.sch_yr
+    def get_mgr_nm(self,obj):
+        return obj.mgr_nm
+
+class TT0105_list(generics.ListAPIView):
+    queryset = mp_plnh.objects.all()
+    serializer_class = TT0105_list_Serializer
+
+    def list(self, request):
+        l_mp_id = request.GET.get('mp_id', "")
+        l_user_id = request.GET.get('user_id', "")
+        l_status = request.GET.get('status', "")
+
+        queryset = self.get_queryset()
+
+        # /* 계획서승인 리스트 조회 TT0105/list */
+        query = " select t4.id as id"
+        query += "     , t4.mp_id as mp_id"
+        query += "     , t4.apl_no as apl_no"
+        query += "     , t1.mntr_id as mntr_id"
+        query += "     , t1.apl_nm as apl_nm"
+        query += "     , t1.unv_nm as unv_nm"
+        query += "     , t1.dept_nm as dept_nm"
+        query += "     , t2.mnte_nm as mnte_nm"
+        query += "     , t2.sch_nm as sch_nm"
+        query += "     , t2.sch_yr as sch_yr"
+        query += "     , substring(t4.pln_dt, 1, 16) as pln_dt"
+        query += "     , t4.appr_nm as appr_nm"
+        query += "     , substring(t4.appr_dt, 1, 16) as appr_dt"
+        query += "     , t3.mgr_nm as mgr_nm"
+        query += "     , substring(t4.mgr_dt, 1, 16) as mgr_dt"
+        query += "     , t4.status as status"
+        query += "  from service20_mp_mtr t1"
+        query += "  left join service20_mp_mte t2 on (t2.mp_id = t1.mp_id"
+        query += "                                  and t2.apl_no = t1.apl_no)"
+        query += "  left join service20_mpgm t3 on t3.mp_id = t1.mp_id"
+        query += "  left join service20_mp_plnh t4 on (t4.mp_id = t1.mp_id"
+        query += "                                  and t4.apl_no = t1.apl_no)"
+        query += " where t1.mp_id = '" + l_mp_id + "'"
+        query += "   and ( t1.apl_id = '" + l_user_id + "'"
+        query += "    or t2.tchr_id = '" + l_user_id + "'"
+        query += "    or t2.grd_id = '" + l_user_id + "'"
+        query += "    or t4.mgr_id = '" + l_user_id + "' )"
+        query += "   and t4.status like Ifnull(Nullif('"+str(l_status)+"', ''), '%%')  "
+        query += " order by t1.mntr_id"
+        query += "     , t1.apl_nm"
+        query += "     , t1.unv_nm"
+        query += "     , t1.dept_nm"
+        query += "     , t2.mnte_nm"
+        query += "     , t2.sch_nm"
+        query += "     , t2.sch_yr"
+
+        queryset = mp_plnh.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+
+# 계획서 승인 ###################################################
+@csrf_exempt
+def TT0105_Approval(request):
+    l_mp_id = request.POST.get('upd_mp_id', "")
+    l_apl_no = request.POST.get('upd_apl_no', "")
+    l_user_id = request.POST.get('upd_user_id', "")
+
+    ins_id = request.POST.get('ins_id', "")
+    ins_ip = request.POST.get('ins_ip', "")
+    ins_dt = request.POST.get('ins_dt', "")
+    ins_pgm = request.POST.get('ins_pgm', "")
+    upd_id = request.POST.get('upd_id', "")
+    upd_ip = request.POST.get('upd_ip', "")
+    upd_dt = request.POST.get('upd_dt', "")
+    upd_pgm = request.POST.get('upd_pgm', "")
+    
+    client_ip = request.META['REMOTE_ADDR']
+
+    query = " update service20_mp_plnh"
+    query += "   set appr_id = '" + l_user_id + "'"
+    query += "     , appr_nm = (select tchr_nm from service20_teacher where tchr_id = '" + l_user_id + "')"
+    query += "     , appr_dt = now()"
+    query += "     , status = '30'"
+    query += "     , upd_id = '" + upd_id + "'"
+    query += "     , upd_ip = '" + client_ip + "'"
+    query += "     , upd_dt = now()"
+    query += "     , upd_pgm = '" + upd_pgm + "'"
+    query += " where mp_id = '" + l_mp_id + "'"
+    query += "   and apl_no = '" + l_apl_no + "'"
+
+    cursor = connection.cursor()
+    query_result = cursor.execute(query)
+
+    context = {'message': 'Ok'}
+
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+
+# 계획서 승인 ###################################################
+@csrf_exempt
+def TT0105_Back(request):
+    l_mp_id = request.POST.get('upd_mp_id', "")
+    l_apl_no = request.POST.get('upd_apl_no', "")
+    l_user_id = request.POST.get('upd_user_id', "")
+
+    ins_id = request.POST.get('ins_id', "")
+    ins_ip = request.POST.get('ins_ip', "")
+    ins_dt = request.POST.get('ins_dt', "")
+    ins_pgm = request.POST.get('ins_pgm', "")
+    upd_id = request.POST.get('upd_id', "")
+    upd_ip = request.POST.get('upd_ip', "")
+    upd_dt = request.POST.get('upd_dt', "")
+    upd_pgm = request.POST.get('upd_pgm', "")
+    
+    client_ip = request.META['REMOTE_ADDR']
+
+    query = " update service20_mp_plnh"
+    query += "   set appr_id = '" + l_user_id + "'"
+    query += "     , appr_nm = (select tchr_nm from service20_teacher where tchr_id = '" + l_user_id + "')"
+    query += "     , appr_dt = now()"
+    query += "     , status = '11' /* 11:교사반려, 12:관리자반려 */"
+    query += "     , upd_id = '" + upd_id + "'"
+    query += "     , upd_ip = '" + client_ip + "'"
+    query += "     , upd_dt = now()"
+    query += "     , upd_pgm = '" + upd_pgm + "'"
+    query += " where mp_id = '" + l_mp_id + "'"
+    query += "   and apl_no = '" + l_apl_no + "'"
+
+    cursor = connection.cursor()
+    query_result = cursor.execute(query)
+
+    context = {'message': 'Ok'}
+
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+#####################################################################################
+# TT0105 - END
 #####################################################################################
 
 #####################################################################################
