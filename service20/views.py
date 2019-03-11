@@ -5603,7 +5603,7 @@ class MP0104M_Detail_Serializer(serializers.ModelSerializer):
     
     class Meta:
         model = mp_att
-        fields = ('mp_id','apl_no','att_no','mp_div','spc_no','att_div','att_sts','att_sdt','att_saddr','att_sdist','att_edt','att_eaddr','att_edist','elap_tm','appr_tm','mtr_desc','mtr_pic','appr_id','appr_nm','appr_dt','mgr_id','mgr_dt','expl_yn','rep_no','exp_div','exp_no','exp_dt','exp_amt','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','mp_div_nm','mnte_id','mnte_nm','mgr_nm','expl_yn','apl_id','att_etm','att_stm')
+        fields = '__all__'
     
     def get_mp_div_nm(self,obj):
         return obj.mp_div_nm
