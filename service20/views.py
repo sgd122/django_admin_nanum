@@ -3981,6 +3981,7 @@ class MP0101M_adm_list_Serializer(serializers.ModelSerializer):
     status_nm = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
     acpt_dt = serializers.DateTimeField(format='%Y-%m-%d')
+    intv_dt = serializers.DateTimeField(format='%Y-%m-%d')
 
     class Meta:
         model = mp_mtr
