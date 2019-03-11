@@ -5597,6 +5597,7 @@ class MP0104M_Detail_Serializer(serializers.ModelSerializer):
     apl_id = serializers.SerializerMethodField()
     att_etm = serializers.SerializerMethodField()
     att_stm = serializers.SerializerMethodField()
+    mnte_no = serializers.SerializerMethodField()
     
     # mgr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     
@@ -5620,6 +5621,8 @@ class MP0104M_Detail_Serializer(serializers.ModelSerializer):
         return obj.att_etm
     def get_att_stm(self,obj):
         return obj.att_stm  
+    def get_mnte_no(self,obj):
+        return obj.mnte_no  
 
 
 class MP0104M_Detail(generics.ListAPIView):
@@ -5651,6 +5654,7 @@ class MP0104M_Detail(generics.ListAPIView):
         query += " , t1.mp_div    /* 교육구분(mp0059) */  "
         query += " , c1.std_detl_code_nm   as mp_div_nm "
         query += " , t2.mnte_id     /* 멘티id */  "
+        query += " , t2.mnte_no     /* 멘티지원No */  "
         query += " , t2.mnte_nm     /* 멘티명 */  "
         query += " , substring(t1.att_sdt, 1, 10) as att_sdt   /* 출석일시(교육시작일시) */  "
         query += " , substring(t1.att_sdt, 12, 5) as att_stm   /* 출석일시(교육시작일시) */  "
