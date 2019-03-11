@@ -1725,6 +1725,65 @@ class com_user_sa(generics.ListAPIView):
 # 공통 - END
 #####################################################################################
 
+#####################################################################################
+# mypage - START
+#####################################################################################
+
+# 멘토 마이페이지 ###################################################
+class mentoMypage_list_Serializer(serializers.ModelSerializer):
+
+    gen_nm = serializers.SerializerMethodField()
+
+    class Meta:
+        model = mp_mtr
+        fields = ('id', 'apl_id', 'apl_nm', 'brth_dt', 'gen', 'gen_nm', 'cllg_nm', 'dept_nm', 'mob_no', 'email_addr')
+
+    def get_gen_nm(self,obj):
+        return obj.gen_nm
+
+class mentoMypage_list(generics.ListAPIView):
+    queryset = mp_mtr.objects.all()
+    serializer_class = mentoMypage_list_Serializer
+
+
+    def list(self, request):
+        l_user_id = request.GET.get('user_id', "")
+
+        queryset = self.get_queryset()
+
+        query  = " select t1.id "
+        query += " , t1.apl_id     /* 지원자(멘토,학생) 학번 */ "
+        query += " , t1.apl_nm          /* 지원자(멘토,학생) 명 */ "
+        query += " , t1.brth_dt         /* 생년월일 */ "
+        query += " , t1.gen             /* 성별 */ "
+        query += " , (select std_detl_code_nm from service20_com_cdd where std_detl_code = t1.gen and std_grp_code = 'ms0012') as gen_nm "
+        query += " , t1.cllg_nm         /* 지원자 대학 명 */ "
+        query += " , t1.dept_nm         /* 지원자 학부/학과 명 */ "
+        query += " , t1.mob_no          /* 휴대전화 */ "
+        query += " , t1.email_addr      /* 이메일 주소 */ "
+        query += " from service20_mp_mtr t1     /* 프로그램 지원자(멘토) */ "
+        query += " where 1=1 "
+        query += " and t1.mntr_id = '"+l_user_id+"'  "
+        query += " order by t1.yr desc "
+        query += " , t1.term_div desc "
+
+        queryset = mp_exp.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+
+#####################################################################################
+# mypage - END
+#####################################################################################
+
 
 #####################################################################################
 # MS0101M - START
