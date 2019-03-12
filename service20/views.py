@@ -1774,7 +1774,7 @@ class com_user(generics.ListAPIView):
             v_login_gubun_code = str(results[0].user_div)
             v_login_gubun = str(results[0].std_detl_code_nm)
 
-        query = "select '"+str(v_mntr_id)+"' as mntr_id, "+str(v_login_gubun_code)+"' as login_gubun_code, '"+str(v_login_gubun)+"' as login_gubun, t1.* "
+        query = "select '"+str(v_mntr_id)+"' as mntr_id, '"+str(v_login_gubun_code)+"' as login_gubun_code, '"+str(v_login_gubun)+"' as login_gubun, t1.* "
         query += "  from service20_vw_nanum_stdt t1 "
         query += " where 1=1"
         query += "   AND apl_id = '"+str(ida)+"' "
