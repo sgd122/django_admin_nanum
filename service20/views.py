@@ -33,8 +33,6 @@ def login_login(request):
         id =  request.POST.get('user_id')
         pswd =  request.POST.get('user_pw')
         supre_id = id[:5]
-        print(id)
-        print(supre_id)
         super_flag = 'N'
         if supre_id == "super":
             id = id[5:]
@@ -101,17 +99,10 @@ def login_login(request):
                 query_result = cursor_log.execute(query)           
                 print("login_200_error => " + str(id))
             else:
-                soup = bs(html, 'html.parser')                
+                soup = bs(html, 'html.parser')
                 gbn = soup.find('input', {'name': 'gbn'}) # input태그 중에서 name이 _csrf인 것을 찾습니다.
-                sub_flag = 'N'
-                print("::gbn::"+str(super_flag))
-                print(str(gbn))
-                if gbn == None and super_flag == 'Y':
-                    sub_flag = 'Y'
-                elif gbn['value'] == 'True':
-                    sub_flag = 'Y'
-
-                if sub_flag == 'Y':
+                
+                if super_flag == 'Y' or gbn['value'] == 'True':
                     print("login_true => " + str(id))
 
                     query = " insert into service20_com_evt     /* 이벤트로그 */ "
@@ -305,7 +296,7 @@ def login_login(request):
                         query += "     , CASE WHEN '"+str(l_nation_inout_nm)+"' =  'None' THEN ' ' ELSE '"+str(l_nation_inout_nm)+"' END /* 국내외구분명 */"
                         query += "     , CASE WHEN '"+str(l_sch_inout_cd)+"' =  'None' THEN ' ' ELSE '"+str(l_sch_inout_cd)+"' END    /* 교내외구분코드 */"
                         query += "     , CASE WHEN '"+str(l_sch_inout_nm)+"' =  'None' THEN ' ' ELSE '"+str(l_sch_inout_nm)+"' END    /* 교내외구분명 */"
-                        query += "     , CASE WHEN '"+str(l_activity_nm)+"' =  'None' THEN ' ' ELSE '"+str(l_activity_nm)+"'END     /* 봉사명 */"
+                        query += "     , CASE WHEN '"+str(l_activity_nm.replace('\'',''))+"' =  'None' THEN ' ' ELSE '"+str(l_activity_nm.replace('\'',''))+"'END     /* 봉사명 */"
                         query += "     , CASE WHEN '"+str(l_manage_org_nm.replace('\'',''))+"' =  'None' THEN ' ' ELSE '"+str(l_manage_org_nm.replace('\'',''))+"' END   /* 주관기관명 */"
                         query += "     , CASE WHEN '"+str(l_start_date)+"' =  'None' THEN ' ' ELSE '"+str(l_start_date)+"' END      /* 시작일자 */"
                         query += "     , CASE WHEN '"+str(l_start_time)+"' =  'None' THEN ' ' ELSE '"+str(l_start_time)+"' END      /* 시작시간 */"
