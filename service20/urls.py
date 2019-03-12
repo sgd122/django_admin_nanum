@@ -88,6 +88,12 @@ urlpatterns = [
     ########################################################################################
     # 멘토 마이페이지
     path('myapge/mentoList/', mentoMypage_list.as_view(), name='mentoMypage_list'),
+    # 멘티 마이페이지
+    path('myapge/menteList/', menteMypage_list.as_view(), name='menteMypage_list'),    
+    # 교사 마이페이지
+    path('myapge/tchrList/', tchrMypage_list.as_view(), name='tchrMypage_list'), 
+    # 학부모 마이페이지
+    path('myapge/grdList/', grdMypage_list.as_view(), name='grdMypage_list'),          
     ########################################################################################
     # myPage
     #
