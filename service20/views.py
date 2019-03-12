@@ -1780,7 +1780,6 @@ class com_user(generics.ListAPIView):
         query += "   AND apl_id = '"+str(ida)+"' "
 
         queryset = vw_nanum_stdt.objects.raw(query)
-        print(query)
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
 
@@ -2135,7 +2134,6 @@ class MS0101M_list_chk_1(generics.ListAPIView):
         query += "            ) t4 ON (t4.apl_id = t1.apl_id) "
         query += " WHERE t1.apl_id = '"+apl_id+"' "
 
-        print(query)
         queryset = vw_nanum_stdt.objects.raw(query)
         
 
@@ -2186,7 +2184,6 @@ class MS0101M_list_chk_2(generics.ListAPIView):
         query += "       ) t3 "
         query += "   WHERE t2.apl_id = '"+apl_id+"' "
 
-        print(query)
         queryset = vw_nanum_stdt.objects.raw(query)
         
 
@@ -2340,7 +2337,6 @@ class MS0101M_list_Serializer(serializers.ModelSerializer):
         if obj.applyFlag == 'N':
             return '지원'
         else:
-            # print(obj.applyFlag)
             # rows = com_cdd.objects.filter(std_grp_code='MP0053',std_detl_code=obj.applyFlag)
             # return str(rows[0].std_detl_code_nm)
             return '미지원'
@@ -2516,8 +2512,6 @@ def MS0101M_save(request):
     if rowsChk == True:
         context = {'message': 'duplicate'}
     else:
-        print("::rows.tel_no::")
-        print(rows.tel_no)
 
         if rows.tel_no == None:
             v_tel_no = ''
@@ -4058,8 +4052,8 @@ def MP0101M_save(request):
             mntr_id=ida,
             apl_id=apl_id,
             apl_nm=rows.apl_nm,
-            unv_cd=v_unv_cd,
-            unv_nm=v_unv_nm,
+            unv_cd=str(v_unv_cd),
+            unv_nm=str(v_unv_nm),
             cllg_cd=rows.cllg_cd,
             cllg_nm=rows.cllg_nm,
             dept_cd=rows.dept_cd,
