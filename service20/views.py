@@ -101,7 +101,6 @@ def login_login(request):
             else:
                 soup = bs(html, 'html.parser')
                 gbn = soup.find('input', {'name': 'gbn'}) # input태그 중에서 name이 _csrf인 것을 찾습니다.
-                print(gbn['value'])
                 
                 if super_flag == 'Y' or gbn['value'] == 'True':
                     print("login_true => " + str(id))
