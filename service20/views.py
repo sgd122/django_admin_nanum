@@ -33,6 +33,8 @@ def login_login(request):
         id =  request.POST.get('user_id')
         pswd =  request.POST.get('user_pw')
         supre_id = id[:5]
+        print(id)
+        print(supre_id)
         super_flag = 'N'
         if supre_id == "super":
             id = id[5:]
