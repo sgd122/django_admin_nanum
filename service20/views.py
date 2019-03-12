@@ -100,11 +100,14 @@ def login_login(request):
                 print("login_200_error => " + str(id))
             else:
                 soup = bs(html, 'html.parser')                
-                print(soup)
                 gbn = soup.find('input', {'name': 'gbn'}) # input태그 중에서 name이 _csrf인 것을 찾습니다.
-                print("::gbn::")
-                print(gbn)
-                if super_flag == 'Y' or gbn['value'] == 'True':
+                sub_flag = 'N'
+                if gbn == None and super_flag == 'Y':
+                    sub_flag = 'Y'
+                elif gbn['value'] == 'True':
+                    sub_flag = 'Y'
+
+                if sub_flag == 'Y':
                     print("login_true => " + str(id))
 
                     query = " insert into service20_com_evt     /* 이벤트로그 */ "
