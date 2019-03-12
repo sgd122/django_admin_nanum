@@ -63,6 +63,8 @@ urlpatterns = [
     path('com/user/fe/', com_user_fe.as_view(), name='com_user_fe'),
     # 봉사점수
     path('com/user/sa/', com_user_sa.as_view(), name='com_user_sa'),
+    # 사용자정보
+    path('com/user/', com_user.as_view(), name='com_user'),
 
     ########################################################################################
     # 공통(com)

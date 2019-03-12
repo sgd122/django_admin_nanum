@@ -1721,6 +1721,75 @@ class com_user_sa(generics.ListAPIView):
 
         return Response(serializer.data)
 
+# 사용자정보
+class com_user_Serializer(serializers.ModelSerializer):
+    
+    mntr_id = serializers.SerializerMethodField()
+    login_gubun_code = serializers.SerializerMethodField()
+    login_gubun = serializers.SerializerMethodField()
+ 
+    class Meta:
+        model = vw_nanum_stdt
+        fields = '__all__'
+
+    def get_mntr_id(self,obj):
+        return obj.mntr_id
+    def get_login_gubun_code(self,obj):
+        return obj.login_gubun_code
+    def get_login_gubun(self,obj):
+        return obj.login_gubun
+
+class com_user(generics.ListAPIView):
+    queryset = vw_nanum_stdt.objects.all()
+    serializer_class = com_user_Serializer
+    
+    def list(self, request):
+        ida = request.GET.get('user_id', None)
+        
+
+        #mentor_query
+        mentor_query = " select mntr_id from service20_mentor where apl_id = '"+str(ida)+"'"
+        mentor_cursor = connection.cursor()
+        query_result = mentor_cursor.execute(mentor_query)  
+
+
+        if query_result == 0:
+            v_mntr_id = ''
+        else:
+            #mentor_query
+            rows_mentor = mentor.objects.filter(apl_id=str(ida))[0]
+            v_mntr_id = str(rows_mentor.mntr_id)
+
+
+        query = " select distinct A.user_id,A.user_div,B.std_detl_code_nm from vw_nanum_login as A left join service20_com_cdd as B on (B.std_grp_code = 'CM0001' and A.user_div = B.std_detl_code) "
+        query += " where user_id = '"+str(ida)+"'"
+        cursor = connection.cursor()
+        query_result = cursor.execute(query)  
+        results = namedtuplefetchall(cursor)  
+        v_login_gubun_code = ''
+        
+        if query_result == 0:
+            v_login_gubun = ''
+        else:
+            v_login_gubun_code = str(results[0].user_div)
+            v_login_gubun = str(results[0].std_detl_code_nm)
+
+        query = "select '"+str(v_mntr_id)+"' as mntr_id, "+str(v_login_gubun_code)+"' as login_gubun_code, '"+str(v_login_gubun)+"' as login_gubun, t1.* "
+        query += "  from service20_vw_nanum_stdt t1 "
+        query += " where 1=1"
+        query += "   AND apl_id = '"+str(ida)+"' "
+
+        queryset = vw_nanum_stdt.objects.raw(query)
+        print(query)
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
 #####################################################################################
 # 공통 - END
 #####################################################################################
