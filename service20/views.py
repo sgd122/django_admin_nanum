@@ -106,7 +106,7 @@ def login_login(request):
                 sub_flag = 'N'
                 print("::gbn::"+str(super_flag))
                 print(str(gbn))
-                if str(gbn) == None and super_flag == 'Y':
+                if gbn == None and super_flag == 'Y':
                     sub_flag = 'Y'
                 elif gbn['value'] == 'True':
                     sub_flag = 'Y'
