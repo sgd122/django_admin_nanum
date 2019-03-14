@@ -4109,6 +4109,7 @@ def MP0101M_save(request):
                 apl_nm=rows.apl_nm,
                 sort_seq =i+1,
                 ans_t2=anst2,
+                ans_div='2',
                 ins_id=apl_id,
                 ins_ip=str(client_ip),
                 ins_dt=datetime.datetime.today()
