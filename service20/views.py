@@ -5334,7 +5334,7 @@ class MP0103M_Detail_v2(generics.ListAPIView):
 
     def list(self, request):
         l_mp_id = request.GET.get('mp_id', "")
-        apl_id = request.GET.get('apl_id', "")
+        # apl_id = request.GET.get('apl_id', "")
         apl_no = request.GET.get('apl_no', "")
         
 
@@ -5344,12 +5344,12 @@ class MP0103M_Detail_v2(generics.ListAPIView):
         # /* 프로그램 수행계획서 작성 폼 데이터 */
         select_text = "select d.id "
         select_text += ", d.apl_id AS apl_id, d.apl_nm AS apl_nm, c.tchr_nm AS tchr_nm, c.sch_nm AS sch_nm, a.mtr_sub AS mtr_sub, '60' AS pln_time"
-        select_text += ", a.appr_nm AS appr_nm, date_format(a.appr_dt, '%%Y-%%m-%%d %%h:%%m:%%s') AS appr_dt, b.mgr_nm AS mgr_nm, date_format(a.mgr_dt, '%%Y-%%m-%%d %%h:%%m:%%s') AS mgr_dt "
+        select_text += ", a.appr_nm AS appr_nm, date_format(a.appr_dt, '%%Y-%%m-%%d %%H:%%i:%%s') AS appr_dt, b.mgr_nm AS mgr_nm, date_format(a.mgr_dt, '%%Y-%%m-%%d %%H:%%i:%%s') AS mgr_dt "
         select_text += ", a.status AS status "
         select_text += " from service20_mp_plnh a, service20_mpgm b, service20_mp_mte c"
         select_text += ", (SELECT id,mp_id, apl_no, apl_id, apl_nm"
         select_text += " FROM service20_mp_mtr"
-        select_text += " WHERE apl_id = '"+apl_id+"' AND apl_no = '"+apl_no+"') d"
+        select_text += " WHERE apl_no = '"+apl_no+"') d"
         select_text += " WHERE a.mp_id = b.mp_id"
         select_text += " AND a.mp_id = c.mp_id"
         select_text += " AND a.mp_id = d.mp_id"
@@ -7193,7 +7193,7 @@ class TE0203_list_v1(generics.ListAPIView):
         query += "     , t1.surv_id as surv_id   /* 문항세트 id */"
         query += "     , t1.ansr_div as ansr_div  /* 응답자 구분(cm0001) */"
         query += "     , t1.avg_ans_t1 as avg_ans_t1 /* 오지선다형 평균 */"
-        query += "     , date_format(t1.surv_dt, '%%Y-%%m-%%d %%h:%%m:%%s') as surv_dt   /* 만족도 조사일 */"
+        query += "     , date_format(t1.surv_dt, '%%Y-%%m-%%d %%H:%%i:%%s') as surv_dt   /* 만족도 조사일 */"
         query += "     , t1.status as h_status    /* 상태(cm0006) */"
         query += "     , t2.spc_no as spc_no    /* 학습외 프로그램no */"
         query += "     , t2.surv_tp as surv_tp   /* 대상 내 유형 */"
@@ -7220,7 +7220,6 @@ class TE0203_list_v1(generics.ListAPIView):
         # query += "        or t4.grd_id = '" + l_apl_id + "'"
         # query += "        or t4.mnte_id = '" + l_apl_id + "' ) "
 
-        print(query)
         queryset = cm_surv_h.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
