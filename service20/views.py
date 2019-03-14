@@ -4111,8 +4111,7 @@ def MP0101M_save(request):
                 ans_t2=anst2,
                 ans_div='2',
                 ins_id=apl_id,
-                ins_ip=str(client_ip),
-                ins_dt=datetime.datetime.today()
+                ins_ip=str(client_ip)
                 )
             model_instance2.save()
 
