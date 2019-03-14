@@ -3887,7 +3887,7 @@ class MP0101M_list_all(generics.ListAPIView):
         query += "                 AND std_detl_code = B.status)  "
         query += " end                                         AS applyFlagNm,  "
         query += " B.apl_no, "
-        
+
         query += " c1.std_detl_code_nm   AS sup_org_nm, "
         query += "        A.*  "
         query += " FROM   service20_mpgm A  "
@@ -4109,6 +4109,7 @@ def MP0101M_save(request):
                 apl_nm=rows.apl_nm,
                 sort_seq =i+1,
                 ans_t2=anst2,
+                ans_div='2',
                 ins_id=apl_id,
                 ins_ip=str(client_ip),
                 ins_dt=datetime.datetime.today()
@@ -4385,7 +4386,7 @@ class MP0101M_adm_list(generics.ListAPIView):
         query += " and use_indc = 'y'  "
         query += " and std_detl_code = C.status)) as status_nm,  "
 
-        query += " C.mp_name,B.pr_yr,B.pr_sch_yr,B.pr_term_div,A.* from service20_mp_mtr A,service20_vw_nanum_stdt B,service20_mpgm C where A.apl_id=B.apl_id and A.mp_id = C.mp_id and A.mp_id = '"+mp_ida+"' and A.apl_id='"+ida+"'"
+        query += " C.mp_name,B.pr_yr,B.pr_sch_yr,B.pr_term_div,A.* from service20_mp_mtr A left join service20_vw_nanum_stdt B on (A.apl_id = B.apl_id),service20_mpgm C where A.mp_id = C.mp_id and A.mp_id = '"+mp_ida+"' and A.apl_id='"+ida+"'"
         queryset = mp_mtr.objects.raw(query)
         print(query)
         serializer_class = self.get_serializer_class()
@@ -4939,12 +4940,11 @@ class MP0101M_report_list(generics.ListAPIView):
         query += "       cast( ((b.pr_sch_yr-1)*2)+(substr(b.pr_term_div,1,1)*1) as UNSIGNED) pr_term_cnt, "
         query += "       d.std_detl_code_nm AS mnt_term_nm,  "
         query += "       a.*  "
-        query += "FROM   service20_mp_mtr a,  " 
-        query += "       service20_vw_nanum_stdt b, "
+        query += "FROM   service20_mp_mtr a  " 
+        query += "    left join   service20_vw_nanum_stdt b(a.apl_id = b.apl_id), "
         query += "       service20_mpgm c,  "
         query += "       service20_com_cdd d "
         query += " WHERE a.mp_id = c.mp_id  "
-        query += "   AND a.apl_id = b.apl_id "
         query += "   AND a.mp_id = '"+str(mp_ida)+"'  "
         query += "   AND a.apl_id = '"+str(ida)+"' "
         query += "   AND d.std_grp_code  = 'MS0022' "
