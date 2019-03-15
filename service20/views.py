@@ -1512,6 +1512,126 @@ class com_list_my_mentee(generics.ListAPIView):
 
         return Response(serializer.data)        
 
+# 교육구분 콤보박스 ###################################################
+class com_combo_edu_Serializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = com_cdd
+        fields = ('std_detl_code','std_detl_code_nm')
+
+
+class com_combo_edu(generics.ListAPIView):
+    queryset = com_cdd.objects.all()
+    serializer_class = com_combo_edu_Serializer
+
+    def list(self, request):
+        l_flag = request.GET.get('flag', "")
+        queryset = self.get_queryset()
+        
+        query = ""
+        if l_flag == 'T':
+            query = " select '0' as id, '' as std_detl_code, '전체' as std_detl_code_nm from dual union"
+        elif l_flag == 'S':
+            query = " select '0' as id, '' as std_detl_code, '선택' as std_detl_code_nm from dual union"
+
+        query += " select id as id "
+        query += "     , std_detl_code as std_detl_code"
+        query += "     , std_detl_code_nm as std_detl_code_nm"
+        query += "  from service20_com_cdd"
+        query += " where std_grp_code = 'MP0059'    /* 교육구분 */"
+
+        queryset = com_cdd.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+# 출석구분 콤보박스 ###################################################
+class com_combo_att_div_Serializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = com_cdd
+        fields = ('std_detl_code','std_detl_code_nm')
+
+
+class com_combo_att_div(generics.ListAPIView):
+    queryset = com_cdd.objects.all()
+    serializer_class = com_combo_att_div_Serializer
+
+    def list(self, request):
+        l_flag = request.GET.get('flag', "")
+        queryset = self.get_queryset()
+        
+        query = ""
+        if l_flag == 'T':
+            query = " select '0' as id, '' as std_detl_code, '전체' as std_detl_code_nm from dual union"
+        elif l_flag == 'S':
+            query = " select '0' as id, '' as std_detl_code, '선택' as std_detl_code_nm from dual union"
+
+        query += " select id as id "
+        query += "     , std_detl_code as std_detl_code"
+        query += "     , std_detl_code_nm as std_detl_code_nm"
+        query += "  from service20_com_cdd"
+        query += " where std_grp_code = 'MP0063'    /* 출석구분 */"
+
+        queryset = com_cdd.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+# 출석상태 콤보박스 ###################################################
+class com_combo_att_status_Serializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = com_cdd
+        fields = ('std_detl_code','std_detl_code_nm')
+
+
+class com_combo_att_status(generics.ListAPIView):
+    queryset = com_cdd.objects.all()
+    serializer_class = com_combo_att_status_Serializer
+
+    def list(self, request):
+        l_flag = request.GET.get('flag', "")
+        queryset = self.get_queryset()
+        
+        query = ""
+        if l_flag == 'T':
+            query = " select '0' as id, '' as std_detl_code, '전체' as std_detl_code_nm from dual union"
+        elif l_flag == 'S':
+            query = " select '0' as id, '' as std_detl_code, '선택' as std_detl_code_nm from dual union"
+            
+        query += " select id as id "
+        query += "     , std_detl_code as std_detl_code"
+        query += "     , std_detl_code_nm as std_detl_code_nm"
+        query += "  from service20_com_cdd"
+        query += " where std_grp_code = 'MP0060'    /* 출석상태 */"
+
+        queryset = com_cdd.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
 # 취소사유 콤보박스
 class com_combo_program_Serializer(serializers.ModelSerializer):
 
@@ -4861,7 +4981,7 @@ class MP0101M_report_list_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = mp_mtr
-        fields = ('mp_id','apl_no','mntr_id','indv_div','team_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','bank_acct','bank_cd','bank_nm','bank_dpsr','cnt_mp_a','cnt_mp_p','cnt_mp_c','cnt_mp_g','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','fnl_rslt','acpt_dt','acpt_div','acpt_cncl_rsn','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','mp_name','statusNm','statusCode','id_pic','mpgm_yr','mnt_term','mnt_term_nm','pr_yr','pr_sch_yr','pr_term_div','pr_term_cnt','dept_appr_dt2')
+        fields = ('mp_id','apl_no','mntr_id','indv_div','team_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','bank_acct','bank_cd','bank_nm','bank_dpsr','cnt_mp_a','cnt_mp_p','cnt_mp_c','cnt_mp_g','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','fnl_rslt','acpt_dt','acpt_div','acpt_cncl_rsn','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','mp_name','statusNm','statusCode','id_pic','mpgm_yr','mnt_term','mnt_term_nm','pr_yr','pr_sch_yr','pr_term_div','pr_term_cnt','dept_appr_dt2','dept_chr_nm')
 
     def get_mp_name(self,obj):
         return obj.mp_name

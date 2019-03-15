@@ -66,6 +66,13 @@ urlpatterns = [
     # 사용자정보
     path('com/user/', com_user.as_view(), name='com_user'),
 
+    # 교육구분 콤보박스
+    path('com/combo/edu/', com_combo_edu.as_view(), name='com_combo_edu'),
+    # 출석구분 콤보박스
+    path('com/combo/att/div/', com_combo_att_div.as_view(), name='com_combo_att_div'),
+    # 출석상태 콤보박스
+    path('com/combo/att/status/', com_combo_att_status.as_view(), name='com_combo_att_status'),
+
     ########################################################################################
     # 공통(com)
     #
