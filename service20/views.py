@@ -4855,9 +4855,9 @@ class MP0101M_report_list_Serializer(serializers.ModelSerializer):
     pr_sch_yr = serializers.SerializerMethodField()
     pr_term_div = serializers.SerializerMethodField()
     pr_term_cnt = serializers.SerializerMethodField()
-
+    dept_appr_dt2  = serializers.SerializerMethodField()
     acpt_dt = serializers.DateTimeField(format='%Y-%m-%d')
-    dept_appr_dt = serializers.DateTimeField(format='%Y-%m-%d')
+
 
     class Meta:
         model = mp_mtr
@@ -4877,6 +4877,8 @@ class MP0101M_report_list_Serializer(serializers.ModelSerializer):
 
     def get_pr_term_cnt(self,obj):
         return obj.pr_term_cnt      
+    def get_dept_appr_dt2(self,obj):
+        return obj.dept_appr_dt2      
 
     def get_statusNm(self,obj):
         now = datetime.datetime.today()
@@ -4940,6 +4942,8 @@ class MP0101M_report_list(generics.ListAPIView):
         query += "       b.pr_term_div, "
         query += "       cast( ((b.pr_sch_yr-1)*2)+(substr(b.pr_term_div,1,1)*1) as UNSIGNED) pr_term_cnt, "
         query += "       d.std_detl_code_nm AS mnt_term_nm,  "
+        query += "       DATE_FORMAT(STR_TO_DATE(a.dept_appr_dt, '%%Y%%m%%d'),'%%Y-%%m-%%d') dept_appr_dt2,  "
+        # dept_appr_dt
         query += "       a.*  "
         query += "FROM   service20_mp_mtr a  " 
         query += "    left join   service20_vw_nanum_stdt b on (a.apl_id = b.apl_id), "
