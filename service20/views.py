@@ -4941,7 +4941,7 @@ class MP0101M_report_list(generics.ListAPIView):
         query += "       d.std_detl_code_nm AS mnt_term_nm,  "
         query += "       a.*  "
         query += "FROM   service20_mp_mtr a  " 
-        query += "    left join   service20_vw_nanum_stdt b(a.apl_id = b.apl_id), "
+        query += "    left join   service20_vw_nanum_stdt b on (a.apl_id = b.apl_id), "
         query += "       service20_mpgm c,  "
         query += "       service20_com_cdd d "
         query += " WHERE a.mp_id = c.mp_id  "
