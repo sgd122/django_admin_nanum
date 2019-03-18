@@ -118,17 +118,17 @@ def post_login(request):
 				rows = teacher.objects.filter(tchr_id=ida,pwd=passa)[0]
 				v_apl_id = rows.tchr_id
 				v_apl_nm = rows.tchr_nm.replace('\'','')
-		elif v_user_div == "R":
-			# 담당자
-			created_flag2 = manager.objects.filter(mgr_id=ida).exists()
+		elif v_user_div == "E":
+			# 멘티
+			created_flag2 = mentee.objects.filter(mnte_id=ida).exists()
 			if not created_flag2:
 				message = "Fail"
 				context = {'message': message}
 			else:
 				# select * from service20_manager;
-				rows = manager.objects.filter(mgr_id=ida)[0]
-				v_apl_id = rows.mgr_id
-				v_apl_nm = rows.mgr_nm.replace('\'','')		
+				rows = mentee.objects.filter(mnte_id=ida)[0]
+				v_apl_id = rows.mnte_id
+				v_apl_nm = rows.mnte_nm.replace('\'','')		
 
 		client_ip = request.META['REMOTE_ADDR']
 		query = " insert into service20_com_evt     /* 이벤트로그 */ ";
@@ -278,8 +278,8 @@ def post_login(request):
 	                    'login_gubun_code' : v_login_gubun_code,
 	                    'login_gubun' : v_login_gubun
 						}
-		elif v_user_div == "R":
-			# 담당자
+		elif v_user_div == "E":
+			# 멘티
 			created_flag2 = manager.objects.filter(mgr_id=ida).exists()
 			if not created_flag2:
 				message = "Fail"
@@ -288,15 +288,14 @@ def post_login(request):
 				context = {'message': message,
 						'apl_nm' : v_apl_nm,
 						'apl_id' : v_apl_id,
-						'mng_area' : rows.mng_area,
-						'mgr_div' : rows.mgr_div,
-						'dept_cd' : rows.dept_cd,
-						'dept_nm' : rows.dept_nm,
-						'ofc_lvl_cd' : rows.ofc_lvl_cd,
-						'ofc_lvl_nm' : rows.ofc_lvl_nm,
-						'func_cd' : rows.func_cd,
-						'func_nm' : rows.func_nm,
-						'status' : rows.status,
+						'brth_dt' : rows.brth_dt,
+						'sch_grd' : rows.sch_grd,
+						'sch_cd' : rows.sch_cd,
+						'sch_nm' : rows.sch_nm,
+						'gen' : rows.gen,
+						'yr' : rows.yr,
+						'term_div' : rows.term_div,
+						'sch_yr' : rows.sch_yr,						
 						'mob_no' : rows.mob_no,
 						'tel_no' : rows.tel_no,
 						'h_addr' : rows.h_addr,
