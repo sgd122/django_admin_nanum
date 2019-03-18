@@ -169,7 +169,9 @@ def post_login(request):
 			v_user_div =  str(results[0].user_div)
 
 
-		context = {'message': message,
+		if v_user_div == "M":
+			# 멘토/학생
+			context = {'message': message,
 					'apl_nm' : v_apl_nm,
 					'apl_id' : v_apl_id,
 					'univ_cd' : rows.univ_cd,
@@ -214,6 +216,112 @@ def post_login(request):
                     'login_gubun_code' : v_login_gubun_code,
                     'login_gubun' : v_login_gubun
 					}
+		elif v_user_div == "G":
+			# 학부모
+			context = {'message': message,
+					'apl_nm' : v_apl_nm,
+					'apl_id' : v_apl_id,
+					'rel_tp' : rows.rel_tp,
+					'brth_dt' : rows.brth_dt,
+					'mob_no' : rows.mob_no,
+					'tel_no' : rows.tel_no,
+					'moth_nat_cd' : rows.moth_nat_cd,
+					'moth_nat_nm' : rows.moth_nat_nm,
+					'tch_id' : rows.tch_id,
+					'h_addr' : rows.h_addr,
+					'post_no' : rows.h_post_no,
+					'email_addr' : rows.email_addr,
+                    'login_gubun_code' : v_login_gubun_code,
+                    'login_gubun' : v_login_gubun
+					}
+		elif v_user_div == "T":
+			# 교사
+			context = {'message': message,
+					'apl_nm' : v_apl_nm,
+					'apl_id' : v_apl_id,
+					'sch_grd' : rows.sch_grd,
+					'sch_cd' : rows.sch_cd,
+					'sch_nm' : rows.sch_nm,
+					'mob_no' : rows.mob_no,
+					'tel_no' : rows.tel_no,
+					'area_city' : rows.area_city,
+					'area_gu' : rows.area_gu,
+					'h_addr' : rows.h_addr,
+					'post_no' : rows.h_post_no,
+					's_addr' : rows.s_addr,
+					's_post_no' : rows.s_post_no,
+					'email_addr' : rows.email_addr,
+                    'login_gubun_code' : v_login_gubun_code,
+                    'login_gubun' : v_login_gubun
+					}
+		elif v_user_div == "R":
+			# 담당자
+			context = {'message': message,
+					'apl_nm' : v_apl_nm,
+					'apl_id' : v_apl_id,
+					'mng_area' : rows.mng_area,
+					'mgr_div' : rows.mgr_div,
+					'dept_cd' : rows.dept_cd,
+					'dept_nm' : rows.dept_nm,
+					'ofc_lvl_cd' : rows.ofc_lvl_cd,
+					'ofc_lvl_nm' : rows.ofc_lvl_nm,
+					'func_cd' : rows.func_cd,
+					'func_nm' : rows.func_nm,
+					'status' : rows.status,
+					'mob_no' : rows.mob_no,
+					'tel_no' : rows.tel_no,
+					'h_addr' : rows.h_addr,
+					'post_no' : rows.h_post_no,
+					'email_addr' : rows.email_addr,
+                    'login_gubun_code' : v_login_gubun_code,
+                    'login_gubun' : v_login_gubun
+					}
+
+		# context = {'message': message,
+		# 			'apl_nm' : v_apl_nm,
+		# 			'apl_id' : v_apl_id,
+		# 			'univ_cd' : rows.univ_cd,
+		# 			'univ_nm' : rows.univ_nm,
+		# 			'grad_div_cd' : rows.grad_div_cd,
+		# 			'grad_div_nm' : rows.grad_div_nm,
+		# 			'cllg_cd' : rows.cllg_cd,
+		# 			'cllg_nm' : rows.cllg_nm,
+		# 			'dept_cd' : rows.dept_cd,
+		# 			'dept_nm' : rows.dept_nm.replace('\'',''),
+		# 			'mjr_cd' : rows.mjr_cd,
+		# 			'mjr_nm' : rows.mjr_nm,
+		# 			'brth_dt' : rows.brth_dt,
+		# 			'gen_cd' : rows.gen_cd,
+		# 			'gen_nm' : rows.gen_nm,
+		# 			'yr' : rows.yr,
+		# 			'sch_yr' : rows.sch_yr,
+		# 			'term_div' : rows.term_div,
+		# 			'term_nm' : rows.term_nm,
+		# 			'stdt_div' : rows.stdt_div,
+		# 			'stdt_nm' : rows.stdt_nm,
+		# 			'mob_nm' : rows.mob_nm,
+		# 			'tel_no' : rows.tel_no,
+		# 			'tel_no_g' : rows.tel_no_g,
+		# 			'h_addr' : rows.h_addr,
+		# 			'post_no' : rows.post_no,
+		# 			'email_addr' : rows.email_addr,
+		# 			'bank_acct' : rows.bank_acct,
+		# 			'bank_cd' : rows.bank_cd,
+		# 			'bank_nm' : rows.bank_nm,
+		# 			'bank_dpsr' : rows.bank_dpsr,
+		# 			'pr_yr' : rows.pr_yr,
+		# 			'pr_sch_yr' : rows.pr_sch_yr,
+		# 			'pr_term_div' : rows.pr_term_div,
+		# 			'score01' : rows.score01,
+		# 			'score02' : rows.score02,
+		# 			'score03' : rows.score03,
+		# 			'score04' : rows.score04,
+		# 			'score04_tp' : rows.score04_tp,
+		# 			'score05' : rows.score05,
+		# 			'mntr_id' : v_mntr_id,
+  #                   'login_gubun_code' : v_login_gubun_code,
+  #                   'login_gubun' : v_login_gubun
+		# 			}
 	
 		print(context)
 	#return HttpResponse(json.dumps(context), content_type="application/json")
