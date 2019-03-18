@@ -161,7 +161,13 @@ def post_login(request):
 		results = namedtuplefetchall(cursor)  
 		v_login_gubun_code = ''
 		
-		
+		if query_result == 0:
+			v_login_gubun = ''
+		else:
+			v_login_gubun_code = str(results[0].user_div)
+			v_login_gubun = str(results[0].std_detl_code_nm)
+			v_user_div =  str(results[0].user_div)
+
 
 		context = {'message': message,
 					'apl_nm' : v_apl_nm,
