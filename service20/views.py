@@ -4607,7 +4607,7 @@ def MP0101M_detail(request):
             
 
             query = "select case when now() between DATE(A.apl_fr_dt) and DATE(A.apl_to_dt) then 'Y' else 'N' end dateAplYn "
-            query += " from service20_mpgm where mp_id = '"+ms_ida+"'"
+            query += " from service20_mpgm A where mp_id = '"+ms_ida+"'"
             cursor = connection.cursor()
             query_result = cursor.execute(query)  
             results = namedtuplefetchall(cursor) 
