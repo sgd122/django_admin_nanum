@@ -104,11 +104,23 @@ def post_login(request):
 		results = namedtuplefetchall(cursor)  
 		v_login_gubun_code = ''
 		
+		# /*********************
+		# * 메뉴리스트(user_div)
+		#     C   KO  공통
+		#     D   KO  조교
+		#     E   KO  멘티
+		#     G   KO  학부모
+		#     M   KO  멘토
+		#     R   KO  담당자
+		#     S   KO  학생
+		#     T   KO  교사
+		# *********************/
 		if query_result == 0:
 			v_login_gubun = ''
 		else:
 			v_login_gubun_code = str(results[0].user_div)
 			v_login_gubun = str(results[0].std_detl_code_nm)
+			v_user_div =  str(results[0].user_div)
 
 
 		context = {'message': message,

@@ -8292,6 +8292,7 @@ class TE0203_list_v1(generics.ListAPIView):
         query += "        or (t4.tchr_id = '" + l_apl_id + "' and t1.ansr_id = t4.tchr_id) "
         query += "        or (t4.grd_id = '" + l_apl_id + "' and t1.ansr_id = t4.grd_id)"
         query += "        or (t4.mnte_id = '" + l_apl_id + "' and t1.ansr_id = t4.mnte_id) ) "
+        # query += "    and t1.ansr_div = '""
         # query += " where t3.yr = '" + l_yr + "'"
         # query += "  and t3.term_div = '" + l_term_div + "'"
         # query += "  and t3.status like Ifnull(Nullif('" + str(l_status) + "', ''), '%%')  "
@@ -8341,6 +8342,7 @@ class TE0203_detail(generics.ListAPIView):
         l_ansr_id = request.GET.get('ansr_id', "")
         l_pgm_id = request.GET.get('pgm_id', "")
         l_surv_seq = request.GET.get('surv_seq', "")
+        l_ansr_div = request.GET.get('ansr_div', "")
 
         queryset = self.get_queryset()
 
@@ -8390,10 +8392,10 @@ class TE0203_detail(generics.ListAPIView):
         query += "   and t1.pgm_id    = '" + l_pgm_id + "'     /* 만족도 조사 대상(멘토스쿨, 프로그램, 학습외) */"
         query += "   and t1.surv_seq  = '" + l_surv_seq + "'  /* 만족도 seq */"
         query += "   and t1.ansr_id   = '" + l_ansr_id + "'    /* 응답자 id */"
+        query += "   and t1.ansr_div  = '" + l_ansr_div + "'    /* 응답자 구분 */"
         query += "  order by t2.sort_seq /* 정렬 순서 */"
 
 
-        print(query)
         queryset = cm_surv_a.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
