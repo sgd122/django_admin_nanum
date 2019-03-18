@@ -304,7 +304,9 @@ def post_login(request):
 	                    'login_gubun_code' : v_login_gubun_code,
 	                    'login_gubun' : v_login_gubun
 						}
-
+		else:
+			message = "Fail"
+			context = {'message': message}
 		# context = {'message': message,
 		# 			'apl_nm' : v_apl_nm,
 		# 			'apl_id' : v_apl_id,

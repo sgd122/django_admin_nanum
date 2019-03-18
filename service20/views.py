@@ -709,6 +709,9 @@ def login_login(request):
                         'login_gubun_code' : v_login_gubun_code,
                         'login_gubun' : v_login_gubun
                         }        
+        else:
+            message = "Fail"
+            context = {'message': message}    
 #         context = {'message': message,'member_id':v_userid}
 
         return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
