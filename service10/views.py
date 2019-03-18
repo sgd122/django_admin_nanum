@@ -126,22 +126,30 @@ def post_login(request):
 		if v_user_div == "M":
 			# 멘토/학생
 			rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
+			v_apl_id = rows.apl_id
+			v_apl_nm = rows.apl_nm.replace('\'','')
 		elif v_user_div == "G":
 			# 학부모
 			# select * from service20_guardian;
 			rows = guardian.objects.filter(apl_id=ida)[0]
+			v_apl_id = rows.grdn_id
+			v_apl_nm = rows.grdn_nm.replace('\'','')
 		elif v_user_div == "T":
 			# 교사
 			# select * from service20_teacher;
 			rows = teacher.objects.filter(apl_id=ida)[0]
+			v_apl_id = rows.tchr_id
+			v_apl_nm = rows.tchr_nm.replace('\'','')
 		elif v_user_div == "R":
 			# 담당자
 			# select * from service20_manager;
 			rows = manager.objects.filter(apl_id=ida)[0]
+			v_apl_id = rows.mgr_id
+			v_apl_nm = rows.mgr_nm.replace('\'','')
 
 		context = {'message': message,
-					'apl_nm' : rows.apl_nm.replace('\'',''),
-					'apl_id' : rows.apl_id,
+					'apl_nm' : v_apl_nm,
+					'apl_id' : v_apl_id,
 					'univ_cd' : rows.univ_cd,
 					'univ_nm' : rows.univ_nm,
 					'grad_div_cd' : rows.grad_div_cd,
