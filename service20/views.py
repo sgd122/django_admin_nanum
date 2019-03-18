@@ -3950,6 +3950,7 @@ class MP0101M_list_Serializer(serializers.ModelSerializer):
     code_nm = serializers.SerializerMethodField()
     score03 = serializers.SerializerMethodField()
     att_val = serializers.SerializerMethodField()
+    dateAplYn = serializers.SerializerMethodField()
 
     apl_fr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     apl_to_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
@@ -3958,7 +3959,7 @@ class MP0101M_list_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = mpgm
-        fields = ('mp_id','mp_name','status','statusCode','yr','yr_seq','sup_org','applyFlag','applyStatus','apl_fr_dt','apl_to_dt','mnt_fr_dt','mnt_to_dt','cnt_trn','status','status_nm','applyFlagNm','sup_org_nm','code','code_nm','score03','att_val')
+        fields = ('mp_id','mp_name','status','statusCode','yr','yr_seq','sup_org','applyFlag','applyStatus','apl_fr_dt','apl_to_dt','mnt_fr_dt','mnt_to_dt','cnt_trn','status','status_nm','applyFlagNm','sup_org_nm','code','code_nm','score03','att_val','dateAplYn')
 
     def get_applyFlag(self, obj):
         return obj.applyFlag    
@@ -3992,6 +3993,9 @@ class MP0101M_list_Serializer(serializers.ModelSerializer):
         return obj.score03
     def get_att_val(self,obj):
         return obj.att_val
+    def get_dateAplYn(self,obj):
+        return obj.dateAplYn
+    
 
 class MP0101M_list(generics.ListAPIView):
     queryset = mpgm.objects.all()
