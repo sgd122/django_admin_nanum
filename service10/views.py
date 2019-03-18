@@ -39,6 +39,7 @@ class Service10AuthListView(generics.ListAPIView):
 def post_login(request):
 	ida = request.POST.get('user_id', None)
 	passa = request.POST.get('user_pw', None)
+	chk_info = request.POST.get('chk_info', None)
 
 	#created,created_flag = vm_nanum_stdt.apl_id.get_or_create(user=request.user)
 
@@ -122,6 +123,21 @@ def post_login(request):
 			v_login_gubun = str(results[0].std_detl_code_nm)
 			v_user_div =  str(results[0].user_div)
 
+		if v_user_div == "M":
+			# 멘토/학생
+
+		elif v_user_div == "G":
+			# 학부모
+			# select * from service20_guardian;
+			rows = guardian.objects.filter(apl_id=ida)[0]
+		elif v_user_div == "T":
+			# 교사
+			# select * from service20_teacher;
+			rows = teacher.objects.filter(apl_id=ida)[0]
+		elif v_user_div == "R":
+			# 담당자
+			# select * from service20_manager;
+			rows = manager.objects.filter(apl_id=ida)[0]
 
 		context = {'message': message,
 					'apl_nm' : rows.apl_nm.replace('\'',''),
