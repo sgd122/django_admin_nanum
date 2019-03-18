@@ -4606,6 +4606,17 @@ def MP0101M_detail(request):
             rows3 = mpgm.objects.filter(mp_id=ms_ida)[0]
             
 
+            query = "select case when now() between DATE(A.apl_fr_dt) and DATE(A.apl_to_dt) then 'Y' else 'N' end dateAplYn "
+            query += " from service20_mpgm where mp_id = '"+ms_ida+"'"
+            cursor = connection.cursor()
+            query_result = cursor.execute(query)  
+            results = namedtuplefetchall(cursor) 
+
+            if query_result == 0:
+                v_dateAplYn = 'N'
+            else:
+                v_dateAplYn = str(results[0].dateAplYn)
+
 
             for val in rows2:
                 key1 = val.att_id
@@ -4654,6 +4665,7 @@ def MP0101M_detail(request):
                         'score05' : rows.score05,
                         'ms_id' : rows3.mp_id,
                         'ms_name' : rows3.mp_name,
+                        'dateAplYn' : v_dateAplYn,
                         }
         
 
