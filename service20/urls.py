@@ -267,6 +267,8 @@ urlpatterns = [
     path('MP01041M/insert/', MP01041M_Insert, name='MP01041M_Insert'),
     # 출석 소명
     path('MP01041M/req/', MP01041M_req, name='MP01041M_req'),
+    # insert 후 max att_no, req_no 가져오기
+    path('MP01041M/att/max/', MP01041M_att_max.as_view(), name='MP01041M_att_max'),
     # 출석 파일 업로드
     path('MP01041M/upload/', MP01041M_upload, name='MP01041M_upload'),
     ########################################################################################

@@ -6975,12 +6975,12 @@ def MP01041M_Insert(request):
     query += "    , '" + str(l_att_div) + "'"
     query += "    , 'B'"
     query += "    , concat('" + str(l_att_sdt) + "', ' " + str(l_att_stm_h) + "', ':', '" + str(l_att_stm_m) + "', ':00')"
-    query += "    , null"
+    query += "    , '" + l_att_saddr + "'"
     query += "    , null"
     query += "    , null"
     query += "    , null"
     query += "    , concat('" + str(l_att_edt) + "', ' " + str(l_att_etm_h) + "', ':', '" + str(l_att_etm_m) + "', ':00')"
-    query += "    , null"
+    query += "    , '" + l_att_eaddr + "'"
     query += "    , null"
     query += "    , null"
     query += "    , null"
@@ -6995,7 +6995,7 @@ def MP01041M_Insert(request):
     query += "    , null"
     query += "    , 'N'"
     query += "    , null"
-    query += "    , 'N'"
+    query += "    , 'Y'"
     query += "    , (select exp_no from service20_mp_exp where mp_id = '" + str(l_mp_id) + "' and apl_no = '" + str(l_apl_no) + "' and exp_mon = substring(replace('" + str(l_att_sdt) + "', '-', ''), 1, 6))"
     query += "    , null"
     query += "    , null"
@@ -7079,43 +7079,43 @@ def MP01041M_Insert(request):
     query += "     , att_no as att_no"
     query += "     , '" + str(l_mp_div) + "' as mp_div"
     query += "     , 0 as spc_no "
-    query += "     , att_div as f_att_div "
-    query += "     , att_sts as f_att_sts"
-    query += "     , att_sdt as f_att_sdt"
+    query += "     , '" + l_att_div + "' as f_att_div "
+    query += "     , 'B' as f_att_sts"
+    query += "     , concat('" + str(l_att_sdt) + "', ' " + str(l_att_stm_h) + "', ':', '" + str(l_att_stm_m) + "', ':00') as f_att_sdt"
     query += "     , att_saddr as f_att_saddr"
     query += "     , att_slat as f_att_slat"
     query += "     , att_slon as f_att_slon"
     query += "     , att_sdist as f_att_sdist"
-    query += "     , att_edt as f_att_edt"
+    query += "     , concat('" + str(l_att_edt) + "', ' " + str(l_att_etm_h) + "', ':', '" + str(l_att_etm_m) + "', ':00') as f_att_edt"
     query += "     , att_eaddr as f_att_eaddr"
     query += "     , att_elat as f_att_elat"
     query += "     , att_elon as f_att_elon"
     query += "     , att_edist as f_att_edist"
-    query += "     , elap_tm as f_elap_tm"
-    query += "     , appr_tm as f_appr_tm"
-    query += "     , mtr_desc as f_mtr_desc"
-    query += "     , mtr_pic as f_mtr_pic"
-    query += "     , appr_id as f_appr_id"
-    query += "     , appr_nm as f_appr_nm"
-    query += "     , appr_dt as f_appr_dt"
-    query += "     , mgr_id as f_mgr_id"
-    query += "     , mgr_dt as f_mgr_dt"
-    query += "     , null as t_req_desc"
-    query += "     , att_div as t_att_div "
-    query += "     , att_sts as t_att_sts"
-    query += "     , null as t_att_sdt"
-    query += "     , null as t_att_saddr"
-    query += "     , null as t_att_slat"
-    query += "     , null as t_att_slon"
-    query += "     , null as t_att_sdist"
-    query += "     , null as t_att_edt"
-    query += "     , null as t_att_eaddr"
-    query += "     , null as t_att_elat"
-    query += "     , null as t_att_elon"
-    query += "     , null as t_att_edist"
-    query += "     , null as t_elap_tm"
-    query += "     , null as t_appr_tm"
-    query += "     , null as t_mtr_desc"
+    query += "     , '" + l_elap_tm + "' as f_elap_tm"
+    query += "     , '" + l_appr_tm + "' as f_appr_tm"
+    query += "     , '" + l_mtr_desc + "' as f_mtr_desc"
+    query += "     , null as f_mtr_pic"
+    query += "     , null as f_appr_id"
+    query += "     , null as f_appr_nm"
+    query += "     , null as f_appr_dt"
+    query += "     , null as f_mgr_id"
+    query += "     , null as f_mgr_dt"
+    query += "     , '" + l_req_desc + "' as t_req_desc"
+    query += "     , '" + l_att_div + "' as t_att_div "
+    query += "     , 'B' as t_att_sts"
+    query += "     , concat('" + str(l_att_sdt) + "', ' " + str(l_att_stm_h) + "', ':', '" + str(l_att_stm_m) + "', ':00') as t_att_sdt"
+    query += "     , att_saddr as t_att_saddr"
+    query += "     , att_slat as t_att_slat"
+    query += "     , att_slon as t_att_slon"
+    query += "     , att_sdist as t_att_sdist"
+    query += "     , concat('" + str(l_att_edt) + "', ' " + str(l_att_etm_h) + "', ':', '" + str(l_att_etm_m) + "', ':00') as t_att_edt"
+    query += "     , att_eaddr as t_att_eaddr"
+    query += "     , att_elat as t_att_elat"
+    query += "     , att_elon as t_att_elon"
+    query += "     , att_edist as t_att_edist"
+    query += "     , '" + l_elap_tm + "' as t_elap_tm"
+    query += "     , '" + l_appr_tm + "' as t_appr_tm"
+    query += "     , '" + l_mtr_desc + "' as t_mtr_desc"
     query += "     , null as t_mtr_pic"
     query += "     , null as t_appr_id"
     query += "     , null as t_appr_nm"
@@ -7133,7 +7133,8 @@ def MP01041M_Insert(request):
     query += "  from service20_mp_att"
     query += " where mp_id = '" + str(l_mp_id) + "'"
     query += "   and apl_no = '" + str(l_apl_no) + "'"
-    query += "   and att_no in (select max(att_no) from service20_mp_att where mp_id = '" + str(l_mp_id) + "' and apl_no = '" + str(l_apl_no) + "')"
+    query += "   and att_no = (select max(att_no) from service20_mp_att where mp_id = '" + str(l_mp_id) + "' and apl_no = '" + str(l_apl_no) + "')"
+    # query += "   and att_no in (select max(att_no) from service20_mp_att where mp_id = '" + str(l_mp_id) + "' and apl_no = '" + str(l_apl_no) + "')"
 
     cursor = connection.cursor()
     query_result = cursor.execute(query)    
@@ -7197,7 +7198,6 @@ def MP01041M_req(request):
     query += "   and apl_no = '" + str(l_apl_no) + "'"
     query += "   and req_no = '" + str(l_req_no) + "'"
 
-    print(query)
     cursor = connection.cursor()
     query_result = cursor.execute(query)
 
@@ -7215,7 +7215,6 @@ def MP01041M_req(request):
     query += "   and apl_no = '" + str(l_apl_no) + "'"
     query += "   and att_no = '" + str(l_att_no) + "'"
 
-    print(query)
     cursor = connection.cursor()
     query_result = cursor.execute(query)
 
@@ -7223,20 +7222,69 @@ def MP01041M_req(request):
 
     return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
+# 출석 소명 insert 후 max att_no, req_no 가져오기 ###################################################
+class MP01041M_att_max_Serializer(serializers.ModelSerializer):
+    id = serializers.SerializerMethodField()
+    req_no = serializers.SerializerMethodField()
+
+    class Meta:
+        model = mp_att
+        fields = '__all__'
+
+    def get_req_no(self,obj):
+        return obj.req_no
+    def get_id(self,obj):
+        return obj.id
+
+class MP01041M_att_max(generics.ListAPIView):
+    queryset = mp_att.objects.all()
+    serializer_class = MP01041M_att_max_Serializer
+
+    def list(self, request):
+        l_mp_id = request.GET.get('mp_id', "")
+        l_apl_no = request.GET.get('apl_no', "")
+
+        queryset = self.get_queryset()
+
+        query = " select t1.id as id"
+        query += "     , t1.att_no as att_no"
+        query += "     , t2.req_no as req_no"
+        query += "  from (select id as id, max(att_no) as att_no from service20_mp_att where mp_id = '" + l_mp_id + "' and apl_no = '" + l_apl_no + "') t1"
+        query += "     , (select max(req_no) as req_no from service20_mp_att_req where mp_id = '" + l_mp_id + "' and apl_no = '" + l_apl_no + "') t2"
+
+        print(query)
+        queryset = mp_att.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
 # 멘토링 사진 업로드 ###################################################
 @csrf_exempt
 def MP01041M_upload(request):
     req = request
     DIR = os.getcwd()
     UPLOAD_DIR = str(DIR) + '/media/MP01041M/'
-    UPLOAD_DIR = '/NANUM/www/img/mp_attend/'
+    # UPLOAD_DIR = '/NANUM/www/img/mp_attend/'
+    UPLOAD_DIR = 'img'
     
     if request.method == 'POST':
         l_mp_id = request.POST.get("u_mp_id")
         l_apl_no = request.POST.get("u_apl_no")
         l_att_no = request.POST.get("u_att_no")
+        l_req_no = request.POST.get("u_req_no")
         l_user_id = request.POST.get("user_id")
         
+        l_req_no_yn = 'Y'
+        if not l_req_no:
+            l_req_no_yn = 'N'
+
         print(l_mp_id)
         print(l_apl_no)
         print(l_att_no)
@@ -7245,7 +7293,7 @@ def MP01041M_upload(request):
         file = request.FILES['mtr_pic']
         print(file)
         filename = file._name
-        n_filename = str(l_user_id) + '_' + str(l_mp_id) + '_' + str(l_apl_no) + '_' + l_att_no + '' + os.path.splitext(filename)[1]
+        n_filename = str(l_user_id) + '_' + str(l_mp_id) + '_' + str(l_apl_no) + '_' + l_att_no + '_' + l_req_no + os.path.splitext(filename)[1]
         print(n_filename)
         print (UPLOAD_DIR)
         
@@ -7257,11 +7305,35 @@ def MP01041M_upload(request):
 
         cursor = connection.cursor()
         fullFile = str(UPLOAD_DIR) + str(n_filename)
-        # fullFile = "/img/mp_mtr/"+ str(n_filename)
         fullFile = "/img/mp_attend/"+ str(n_filename)
-        query = "update service20_mp_att set mtr_pic = '" + str(fullFile) + "' where mp_id = '"+ str(l_mp_id) + "' and apl_no = '" +  str(l_apl_no) +"' and att_no = '" + str(l_att_no) + "'"
+
+        query = " update service20_mp_att"
+        query += "   set mtr_pic = '" + str(fullFile) + "'"
+        query += " where mp_id = '" + str(l_mp_id) + "'"
+        query += "   and apl_no = '" + str(l_apl_no) + "'"
+        query += "   and (('" + str(l_req_no_yn) + "' = 'N' and att_no in ( select * from (select max(att_no)"
+        query += "                                                                 from service20_mp_att"
+        query += "                                                                where mp_id = '" + str(l_mp_id) + "'"
+        query += "                                                                  and apl_no = '" + str(l_apl_no) + "') as att_no))"
+        query += "       or ('" + str(l_req_no_yn) + "' = 'Y' and att_no = '" + str(l_att_no) + "'))"
+
         print(query)
         cursor.execute(query)
+
+        query = " update service20_mp_att_req"
+        query += " set t_mtr_pic = '" + str(fullFile) + "'"
+        query += " where mp_id = '" + str(l_mp_id) + "'"
+        query += "  and apl_no = '" + str(l_apl_no) + "'"
+        query += "  and (('" + str(l_req_no_yn) + "' = 'N' and req_no in ( select * from (select max(req_no)"
+        query += "                                                    from service20_mp_att_req"
+        query += "                                                   where mp_id = '" + str(l_mp_id) + "'"
+        query += "                                                     and apl_no = '" + str(l_apl_no) + "') as req_no))"
+        query += "      or ('" + str(l_req_no_yn) + "' = 'Y' and req_no = '" + str(l_req_no) + "'))"
+
+        print(query)
+        cursor.execute(query)
+        
+        
 
         return HttpResponse('File Uploaded')
 
