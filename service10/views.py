@@ -89,7 +89,6 @@ def post_login(request):
 		message = "Fail"
 		context = {'message': message}
 	else:
-		
 		message = "Ok"
 		# rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
 		if v_user_div == "M" or v_user_div == "S":
@@ -99,23 +98,37 @@ def post_login(request):
 			v_apl_nm = rows.apl_nm.replace('\'','')
 		elif v_user_div == "G":
 			# 학부모
-			# select * from service20_guardian;
-			rows = guardian.objects.filter(grdn_id=ida)[0]
-			v_apl_id = rows.grdn_id
-			v_apl_nm = rows.grdn_nm.replace('\'','')
+			created_flag = guardian.objects.filter(grdn_id=ida,pwd=pswd).exists()
+            if not created_flag:
+                message = "Fail"
+                context = {'message': message}
+            else:
+				# select * from service20_guardian;
+				rows = guardian.objects.filter(grdn_id=ida,pwd=pswd)[0]
+				v_apl_id = rows.grdn_id
+				v_apl_nm = rows.grdn_nm.replace('\'','')
 		elif v_user_div == "T":
 			# 교사
-			# select * from service20_teacher;
-			rows = teacher.objects.filter(tchr_id=ida)[0]
-			v_apl_id = rows.tchr_id
-			v_apl_nm = rows.tchr_nm.replace('\'','')
+			created_flag = teacher.objects.filter(tchr_id=ida,pwd=pswd).exists()
+            if not created_flag:
+                message = "Fail"
+                context = {'message': message}
+            else:
+				# select * from service20_teacher;
+				rows = teacher.objects.filter(tchr_id=ida,pwd=pswd)[0]
+				v_apl_id = rows.tchr_id
+				v_apl_nm = rows.tchr_nm.replace('\'','')
 		elif v_user_div == "R":
 			# 담당자
-			# select * from service20_manager;
-			rows = manager.objects.filter(mgr_id=ida)[0]
-			v_apl_id = rows.mgr_id
-			v_apl_nm = rows.mgr_nm.replace('\'','')
-		
+			created_flag = manager.objects.filter(mgr_id=ida).exists()
+            if not created_flag:
+                message = "Fail"
+                context = {'message': message}
+            else:
+				# select * from service20_manager;
+				rows = manager.objects.filter(mgr_id=ida)[0]
+				v_apl_id = rows.mgr_id
+				v_apl_nm = rows.mgr_nm.replace('\'','')		
 
 		client_ip = request.META['REMOTE_ADDR']
 		query = " insert into service20_com_evt     /* 이벤트로그 */ ";
