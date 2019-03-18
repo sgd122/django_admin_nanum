@@ -1954,7 +1954,7 @@ class mentoMypage_list(generics.ListAPIView):
         query += " order by t1.yr desc "
         query += " , t1.term_div desc "
 
-        queryset = mp_exp.objects.raw(query)
+        queryset = mp_mtr.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
@@ -1964,7 +1964,7 @@ class mentoMypage_list(generics.ListAPIView):
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
 
-        return Response(serializer.data)
+        return Response(serializer.data) 
 
 # 멘티 마이페이지 ###################################################
 class menteMypage_list_Serializer(serializers.ModelSerializer):
@@ -2031,7 +2031,7 @@ class menteMypage_list(generics.ListAPIView):
         query += " , t1.term_div desc "
         query += " , t1.status "
 
-        queryset = mp_exp.objects.raw(query)
+        queryset = mp_mte.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
@@ -2046,27 +2046,9 @@ class menteMypage_list(generics.ListAPIView):
 # 교사 마이페이지 ###################################################
 class tchrMypage_list_Serializer(serializers.ModelSerializer):
 
-    term_div_nm = serializers.SerializerMethodField()
-    mp_plc_nm = serializers.SerializerMethodField()
-    status_nm = serializers.SerializerMethodField()
-    mp_name = serializers.SerializerMethodField()
-    apl_nm = serializers.SerializerMethodField()
-
     class Meta:
         model = mp_mte
-        fields = ('id', 'tchr_id', 'tchr_nm', 'mnte_nm', 'yr', 'term_div', 'term_div_nm', 'mp_id', 'mp_name', 'mnte_nm', 'apl_nm', 'mp_hm', 'mp_plc', 'mp_plc_nm', 'status', 'status_nm')
-
-
-    def get_term_div_nm(self,obj):
-        return obj.term_div_nm                                     
-    def get_mp_plc_nm(self,obj):
-        return obj.mp_plc_nm
-    def get_status_nm(self,obj):
-        return obj.status_nm   
-    def get_mp_name(self,obj):
-        return obj.mp_name   
-    def get_apl_nm(self,obj):
-        return obj.apl_nm         
+        fields = '__all__'    
 
 class tchrMypage_list(generics.ListAPIView):
     queryset = mp_mte.objects.all()
@@ -2074,39 +2056,18 @@ class tchrMypage_list(generics.ListAPIView):
 
     def list(self, request):
         l_user_id = request.GET.get('user_id', "")
+        l_mp_id = request.GET.get('mp_id', "")
 
         queryset = self.get_queryset()
 
-        query  = " select t1.id "
-        query += " , t1.tchr_id     /* 지도교사 id */ "
-        query += " , t1.tchr_nm     /* 지도교사 명 */ "
-        query += " , t1.yr          /* 학년도 */ "
-        query += " , t1.term_div    /* 학기 */ "
-        query += " , (select std_detl_code_nm from service20_com_cdd where std_detl_code = t1.term_div and std_grp_code = 'ms0022') as term_div_nm "
-        query += " , t1.mp_id       /* 멘토링 프로그램id */ "
-        query += " , t2.mp_name     /* 멘토링 프로그램명 */ "
-        query += " , t1.mnte_nm     /* 멘티 명 */ " 
-        query += " , t3.apl_nm      /* 멘토 명 */ "       
-        query += " , t1.mp_hm       /* 멘토링 가능 시간 */ "
-        query += " , t1.mp_plc      /* 멘토링 장소 구분(mp0052) */ "
-        query += " , (select std_detl_code_nm from service20_com_cdd where std_detl_code = t1.mp_plc and std_grp_code = 'mp0052') as mp_plc_nm "
-        query += " , t1.status      /* 상태(mp0054) */ "
-        query += " , (select std_detl_code_nm from service20_com_cdd where std_detl_code = t1.status and std_grp_code = 'mp0054') as status_nm "
-        query += " from service20_mp_mte t1     /* 프로그램 지원자(멘티) */ "
-        query += " , service20_mpgm t2 "
-        query += " , service20_mp_mtr t3 "
-        query += " where 1=1 "
-        query += " and t1.mp_id = t2.mp_id "
-        query += " and t1.mp_id = t3.mp_id "
-        query += " and t1.apl_no = t3.apl_no "                
-        query += " and t1.tchr_id      = '"+l_user_id+"' "
-        query += " order by t1.yr desc "
-        query += " , t1.term_div desc "
-        query += " , t1.status "
-        query += " , t1.mp_id "
-        query += " , t1.mnte_nm "
+        query  = " select t1.id  "
+        query += "     , t1.tchr_id     /* 지도교사 id */  "
+        query += "     , t1.tchr_nm     /* 지도교사 명 */  "        
+        query += " from service20_mp_mte t1     /* 프로그램 지원자(멘티) */  "
+        query += " where 1=1  "
+        query += " and t1.tchr_id = '"+l_user_id+"'  "
 
-        queryset = mp_exp.objects.raw(query)
+        queryset = mp_mte.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
@@ -2122,28 +2083,13 @@ class tchrMypage_list(generics.ListAPIView):
 class grdMypage_list_Serializer(serializers.ModelSerializer):
 
     grd_rel_nm = serializers.SerializerMethodField()
-    term_div_nm = serializers.SerializerMethodField()
-    mp_plc_nm = serializers.SerializerMethodField()
-    status_nm = serializers.SerializerMethodField()
-    mp_name = serializers.SerializerMethodField()
-    apl_nm = serializers.SerializerMethodField()
 
     class Meta:
         model = mp_mte
-        fields = ('id', 'grd_id', 'grd_nm', 'grd_tel', 'grd_rel', 'grd_rel_nm', 'yr', 'term_div', 'term_div_nm', 'mp_id', 'mp_name', 'mnte_nm', 'apl_nm', 'mp_hm', 'tchr_nm', 'mp_plc', 'mp_plc_nm', 'status', 'status_nm')
+        fields = '__all__'
 
     def get_grd_rel_nm(self,obj):
-        return obj.grd_rel_nm  
-    def get_term_div_nm(self,obj):
-        return obj.term_div_nm                                             
-    def get_mp_plc_nm(self,obj):
-        return obj.mp_plc_nm
-    def get_status_nm(self,obj):
-        return obj.status_nm   
-    def get_mp_name(self,obj):
-        return obj.mp_name   
-    def get_apl_nm(self,obj):
-        return obj.apl_nm         
+        return obj.grd_rel_nm          
 
 class grdMypage_list(generics.ListAPIView):
     queryset = mp_mte.objects.all()
@@ -2160,33 +2106,11 @@ class grdMypage_list(generics.ListAPIView):
         query += " , t1.grd_tel     /* 보호자 연락처 */ "
         query += " , t1.grd_rel     /* 보호자 관계(mp0047) */ "
         query += " , (select std_detl_code_nm from service20_com_cdd where std_detl_code = t1.grd_rel and std_grp_code = 'mp0047') as grd_rel_nm "
-        query += " , t1.yr          /* 학년도 */ "
-        query += " , t1.term_div    /* 학기 */ "
-        query += " , (select std_detl_code_nm from service20_com_cdd where std_detl_code = t1.term_div and std_grp_code = 'ms0022') as term_div_nm "
-        query += " , t1.mp_id       /* 멘토링 프로그램id */ "
-        query += " , t2.mp_name     /* 멘토링 프로그램명 */ "
-        query += " , t1.mnte_nm     /* 멘티 명 */ "
-        query += " , t3.apl_nm      /* 멘토명*/ "
-        query += " , t1.mp_hm       /* 멘토링 가능 시간 */ "
-        query += " , t1.tchr_nm     /* 지도교사 명 */     "
-        query += " , t1.mp_plc      /* 멘토링 장소 구분(mp0052) */ "
-        query += " , (select std_detl_code_nm from service20_com_cdd where std_detl_code = t1.mp_plc and std_grp_code = 'mp0052') as mp_plc_nm "
-        query += " , t1.status      /* 상태(mp0054) */ "
-        query += " , (select std_detl_code_nm from service20_com_cdd where std_detl_code = t1.status and std_grp_code = 'mp0054') as status_nm "
         query += " from service20_mp_mte t1     /* 프로그램 지원자(멘티) */ "
-        query += " , service20_mpgm t2 "
-        query += " , service20_mp_mtr t3 "
         query += " where 1=1 "
-        query += " and t1.mp_id = t2.mp_id "
-        query += " and t1.mp_id = t3.mp_id "
-        query += " and t1.apl_no = t3.apl_no "
         query += " and t1.grd_id      = '"+l_user_id+"' "
-        query += " order by t1.mnte_nm "
-        query += " , t1.yr desc "
-        query += " , t1.term_div desc "
-        query += " , t1.status "
 
-        queryset = mp_exp.objects.raw(query)
+        queryset = mp_mte.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
@@ -2196,7 +2120,255 @@ class grdMypage_list(generics.ListAPIView):
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
 
-        return Response(serializer.data)             
+        return Response(serializer.data)  
+
+# 기타사용자 마이페이지 ###################################################
+class ectUserListMypage_list_Serializer(serializers.ModelSerializer):
+
+    user_id = serializers.SerializerMethodField()
+    user_nm = serializers.SerializerMethodField()
+    user_div_nm = serializers.SerializerMethodField()
+    user_sch_nm2 = serializers.SerializerMethodField()
+
+    class Meta:
+        model = com_cdd
+        fields = '__all__'
+
+    def get_user_id(self,obj):
+        return obj.user_id          
+    def get_user_nm(self,obj):
+        return obj.user_nm          
+    def get_user_div_nm(self,obj):
+        return obj.user_div_nm          
+    def get_user_sch_nm2(self,obj):
+        return obj.user_sch_nm2                                  
+
+class ectUserListMypage_list(generics.ListAPIView):
+    queryset = com_cdd.objects.all()
+    serializer_class = ectUserListMypage_list_Serializer
+
+    def list(self, request):
+        l_user_id = request.GET.get('user_id', "")
+
+        queryset = self.get_queryset()
+
+        query = " select '1' id, t1.user_id "
+        query += "      , t1.user_nm "
+        query += "      , (select std_detl_code_nm from service20_com_cdd where std_detl_code = t1.user_div and std_grp_code = 'cm0001') as user_div_nm "
+        query += "      , t1.user_sch_nm2 "
+        query += "   from vw_nanum_login t1 "
+        query += "  where user_id = '"+l_user_id+"'  "
+
+        queryset = com_cdd.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data) 
+
+# 마이페이지 프로그램리스트 ###################################################
+class programMypage_list_Serializer(serializers.ModelSerializer):
+
+    tchr_id = serializers.SerializerMethodField()
+    tchr_nm = serializers.SerializerMethodField()
+    yr = serializers.SerializerMethodField()
+    term_div = serializers.SerializerMethodField()
+    term_div_nm = serializers.SerializerMethodField()
+    sup_org_nm = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
+    status_nm = serializers.SerializerMethodField()
+
+    class Meta:
+        model = mpgm
+        fields = '__all__'
+
+
+    def get_tchr_id(self,obj):
+        return obj.tchr_id  
+    def get_tchr_nm(self,obj):
+        return obj.tchr_nm  
+    def get_yr(self,obj):
+        return obj.yr  
+    def get_term_div(self,obj):
+        return obj.term_div  
+    def get_term_div_nm(self,obj):
+        return obj.term_div_nm  
+    def get_sup_org_nm(self,obj):
+        return obj.sup_org_nm  
+    def get_status(self,obj):
+        return obj.status  
+    def get_status_nm(self,obj):
+        return obj.status_nm                                                                                          
+
+class programMypage_list(generics.ListAPIView):
+    queryset = mpgm.objects.all()
+    serializer_class = programMypage_list_Serializer
+
+    def list(self, request):
+        l_user_id = request.GET.get('user_id', "")
+
+        queryset = self.get_queryset()
+
+        query  = "select distinct "
+        query += "       t1.mp_id as mp_id      /* 멘토링 프로그램id */     "
+        query += "     , t2.tchr_id     /* 지도교사 id */  "
+        query += "     , t2.tchr_nm     /* 지도교사 명 */  "
+        query += "     , t2.yr          /* 학년도 */  "
+        query += "     , t2.term_div    /* 학기 */  "
+        query += "     , (select std_detl_code_nm from service20_com_cdd where std_detl_code = t2.term_div and std_grp_code = 'ms0022') as term_div_nm  "
+        query += "     , t1.mp_name     /* 멘토링 프로그램명 */  "
+        query += "     , t1.sup_org     /* 주관기관(mp0004) */ "
+        query += "     , (select std_detl_code_nm from service20_com_cdd where std_detl_code = t1.sup_org and std_grp_code = 'mp0004') as sup_org_nm "
+        query += "     , substring(t1.apl_fr_dt,1,10) as apl_fr_dt   /* 모집기간-시작 */"
+        query += "     , substring(t1.apl_to_dt,1,10) as apl_to_dt   /* 모집기간-종료 */"
+        query += "     , substring(t1.mnt_fr_dt,1,10) as mnt_fr_dt   /* 활동기간-시작 */"
+        query += "     , substring(t1.mnt_to_dt,1,10) as mnt_to_dt   /* 활동기간-시작 */          "
+        query += "     , t2.status      /* 상태(mp0054) */  "
+        query += "     , (select std_detl_code_nm from service20_com_cdd where std_detl_code = t2.status and std_grp_code = 'mp0054') as status_nm       "
+        query += "  from service20_mpgm t1 "
+        query += "  left join service20_mp_mte t2 on (t2.mp_id     = t1.mp_id ) "
+        query += " where 1=1   "
+        query += "   and ( t2.tchr_id = '"+str(l_user_id)+"' "
+        query += "      or t2.grd_id  = '"+str(l_user_id)+"' "
+        query += "      or t2.mnte_id = '"+str(l_user_id)+"' )  "
+        query += " order by t2.yr desc  "
+        query += "     , t2.term_div desc  "
+        query += "     , t2.status  "
+        query += "     , t2.mp_id  "
+        query += "     , t2.mnte_nm    "
+
+        queryset = mpgm.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data) 
+
+# 멘토 프로그램별 멘티 리스트 ###################################################
+class mentoMenteMypage_list_Serializer(serializers.ModelSerializer):
+
+    mp_plc_nm = serializers.SerializerMethodField()
+
+    class Meta:
+        model = mp_mte
+        fields = '__all__'
+        # fields = ('id', 'mnte_nm', 'mp_hm', 'sch_nm', 'grd_nm', 'tchr_nm', 'mp_plc', 'mp_plc_nm', 'mp_id', 'mnte_no')
+
+    def get_mp_plc_nm(self,obj):
+        return obj.mp_plc_nm     
+
+class mentoMenteMypage_list(generics.ListAPIView):
+    queryset = mp_mte.objects.all()
+    serializer_class = mentoMenteMypage_list_Serializer
+
+
+    def list(self, request):
+        l_mp_id = request.GET.get('mp_id', "")
+        l_user_id = request.GET.get('user_id', "")
+
+        queryset = self.get_queryset()
+
+        query  = " select t1.id " 
+        query += " , t1.mnte_nm     /* 멘티 명 */ "
+        query += " , t1.mp_hm       /* 멘토링 가능 시간 */ "
+        query += " , t1.sch_nm      /* 학교명 */ " 
+        query += " , t1.grd_nm      /* 보호자명 */ "
+        query += " , t1.tchr_nm     /* 지도교사 명 */ "
+        query += " , t1.mp_plc      /* 멘토링 장소 구분(mp0052) */ "
+        query += " , (select std_detl_code_nm from service20_com_cdd where std_detl_code = t1.mp_plc and std_grp_code = 'mp0052') as mp_plc_nm "
+        query += " , t1.mp_id       /* 멘토링 프로그램id */ "
+        query += " , t1.mnte_no     /* 지원 no */ "
+        query += " from service20_mp_mte t1     /* 프로그램 지원자(멘티) */ "
+        query += " , service20_mp_mtr t2 "
+        query += " where 1=1 "
+        query += " and t1.mp_id  = t2.mp_id "
+        query += " and t1.apl_no = t2.apl_no "
+        query += " and t1.mp_id  = '"+l_mp_id+"'       /* 멘토링 프로그램id */ "
+        query += " and t2.apl_id = '"+l_user_id+"'     /* 지원 no */ "
+
+        queryset = mp_mte.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+# 교사,학부모별 프로그램별 멘티 리스트 ###################################################
+class pgmMenteMypage_list_Serializer(serializers.ModelSerializer):
+
+    apl_nm = serializers.SerializerMethodField()
+    mp_plc_nm = serializers.SerializerMethodField()
+
+    class Meta:
+        model = mp_mte
+        fields = '__all__'
+
+
+    def get_apl_nm(self,obj):
+        return obj.apl_nm                                     
+    def get_mp_plc_nm(self,obj):
+        return obj.mp_plc_nm       
+
+class pgmMenteMypage_list(generics.ListAPIView):
+    queryset = mp_mte.objects.all()
+    serializer_class = pgmMenteMypage_list_Serializer
+
+    def list(self, request):
+        l_user_id = request.GET.get('user_id', "")
+        l_mp_id = request.GET.get('mp_id', "")
+
+        queryset = self.get_queryset()
+
+        query  = " select t1.id  "
+        query += " , t1.mnte_nm     /* 멘티 명 */   "
+        query += " , t3.apl_nm      /* 멘토 명 */         "
+        query += " , t1.sch_nm      /* 멘토 학교명 */         "
+        query += " , t1.mp_hm       /* 멘토링 가능 시간 */  "
+        query += " , t1.mp_plc      /* 멘토링 장소 구분(mp0052) */  "
+        query += " , (select std_detl_code_nm from service20_com_cdd where std_detl_code = t1.mp_plc and std_grp_code = 'mp0052') as mp_plc_nm  "
+        query += " from service20_mp_mte t1     /* 프로그램 지원자(멘티) */  "
+        query += " , service20_mpgm t2  "
+        query += " , service20_mp_mtr t3  "
+        query += " where 1=1  "
+        query += " and t1.mp_id   = t2.mp_id  "
+        query += " and t1.mp_id   = t3.mp_id  "
+        query += " and t1.apl_no  = t3.apl_no "
+        query += " and ( t1.tchr_id = '"+str(l_user_id)+"' "
+        query += "    or t1.grd_id  = '"+str(l_user_id)+"' "
+        query += "    or t1.mnte_id = '"+str(l_user_id)+"' )  "
+        query += " and t1.mp_id   = '"+l_mp_id+"'  "
+        query += " order by t1.yr desc  "
+        query += " , t1.term_div desc  "
+        query += " , t1.status  "
+        query += " , t1.mp_id  "
+        query += " , t1.mnte_nm  "
+
+        queryset = mp_mte.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)                               
 #####################################################################################
 # mypage - END
 #####################################################################################
