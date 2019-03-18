@@ -609,12 +609,19 @@ def login_login(request):
 
         elif v_user_div == "G":
             # 학부모
-            created_flag2 = guardian.objects.filter(grdn_id=ida,pwd=pswd).exists()
+            if super_flag == "Y":
+                created_flag2 = guardian.objects.filter(grdn_id=ida).exists()
+            else:
+                created_flag2 = guardian.objects.filter(grdn_id=ida,pwd=pswd).exists()
+
             if not created_flag2:
                 message = "Fail"
                 context = {'message': message}
             else:
-                rows = guardian.objects.filter(grdn_id=ida,pwd=pswd)[0]
+                if super_flag == "Y":
+                    rows = guardian.objects.filter(grdn_id=ida,pwd=pswd)[0]
+                else:
+                    rows = guardian.objects.filter(grdn_id=ida)[0]
                 v_apl_id = rows.grdn_id
                 v_apl_nm = rows.grdn_nm.replace('\'','')
                 context = {'message': message,
@@ -635,12 +642,18 @@ def login_login(request):
                         }
         elif v_user_div == "T":
             # 교사
-            created_flag2 = teacher.objects.filter(tchr_id=ida,pwd=pswd).exists()
+            if super_flag == "Y":
+                created_flag2 = teacher.objects.filter(tchr_id=ida,pwd=pswd).exists()
+            else:
+                created_flag2 = teacher.objects.filter(tchr_id=ida).exists()
             if not created_flag2:
                 message = "Fail"
                 context = {'message': message}
             else:
-                rows = teacher.objects.filter(tchr_id=ida,pwd=pswd)[0]
+                if super_flag == "Y":
+                    rows = teacher.objects.filter(tchr_id=ida,pwd=pswd)[0]
+                else:
+                    rows = teacher.objects.filter(tchr_id=ida)[0]
                 v_apl_id = rows.tchr_id
                 v_apl_nm = rows.tchr_nm.replace('\'','')
                 context = {'message': message,
@@ -663,12 +676,18 @@ def login_login(request):
                         }
         elif v_user_div == "E":
             # 멘티
-            created_flag2 = mentee.objects.filter(mnte_id=ida,pwd=passa).exists()
+            if super_flag == "Y":
+                created_flag2 = mentee.objects.filter(mnte_id=ida).exists()
+            else:
+                created_flag2 = mentee.objects.filter(mnte_id=ida,pwd=passa).exists()
             if not created_flag2:
                 message = "Fail"
                 context = {'message': message}
             else:
-                rows = mentee.objects.filter(mnte_id=ida,pwd=passa)[0]
+                if super_flag == "Y":
+                    rows = mentee.objects.filter(mnte_id=ida)[0]
+                else:
+                    rows = mentee.objects.filter(mnte_id=ida,pwd=passa)[0]
                 v_apl_id = rows.mnte_id
                 v_apl_nm = rows.mnte_nm.replace('\'','')
                 context = {'message': message,
