@@ -98,8 +98,8 @@ def post_login(request):
 			v_apl_nm = rows.apl_nm.replace('\'','')
 		elif v_user_div == "G":
 			# 학부모
-			created_flag = guardian.objects.filter(grdn_id=ida,pwd=pswd).exists()
-            if not created_flag:
+			created_flag2 = guardian.objects.filter(grdn_id=ida,pwd=pswd).exists()
+            if not created_flag2:
                 message = "Fail"
                 context = {'message': message}
             else:
@@ -109,8 +109,8 @@ def post_login(request):
 				v_apl_nm = rows.grdn_nm.replace('\'','')
 		elif v_user_div == "T":
 			# 교사
-			created_flag = teacher.objects.filter(tchr_id=ida,pwd=pswd).exists()
-            if not created_flag:
+			created_flag2 = teacher.objects.filter(tchr_id=ida,pwd=pswd).exists()
+            if not created_flag2:
                 message = "Fail"
                 context = {'message': message}
             else:
@@ -120,8 +120,8 @@ def post_login(request):
 				v_apl_nm = rows.tchr_nm.replace('\'','')
 		elif v_user_div == "R":
 			# 담당자
-			created_flag = manager.objects.filter(mgr_id=ida).exists()
-            if not created_flag:
+			created_flag2 = manager.objects.filter(mgr_id=ida).exists()
+            if not created_flag2:
                 message = "Fail"
                 context = {'message': message}
             else:
