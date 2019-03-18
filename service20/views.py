@@ -609,73 +609,88 @@ def login_login(request):
 
         elif v_user_div == "G":
             # 학부모
-            rows = guardian.objects.filter(grdn_id=ida)[0]
-            v_apl_id = rows.grdn_id
-            v_apl_nm = rows.grdn_nm.replace('\'','')
-            context = {'message': message,
-                    'apl_nm' : v_apl_nm,
-                    'apl_id' : v_apl_id,
-                    'rel_tp' : rows.rel_tp,
-                    'brth_dt' : rows.brth_dt,
-                    'mob_no' : rows.mob_no,
-                    'tel_no' : rows.tel_no,
-                    'moth_nat_cd' : rows.moth_nat_cd,
-                    'moth_nat_nm' : rows.moth_nat_nm,
-                    'tch_id' : rows.tch_id,
-                    'h_addr' : rows.h_addr,
-                    'post_no' : rows.h_post_no,
-                    'email_addr' : rows.email_addr,
-                    'login_gubun_code' : v_login_gubun_code,
-                    'login_gubun' : v_login_gubun
-                    }
+            created_flag = guardian.objects.filter(grdn_id=ida,pwd=pswd).exists()
+            if not created_flag:
+                message = "Fail"
+                context = {'message': message}
+            else:
+                rows = guardian.objects.filter(grdn_id=ida,pwd=pswd)[0]
+                v_apl_id = rows.grdn_id
+                v_apl_nm = rows.grdn_nm.replace('\'','')
+                context = {'message': message,
+                        'apl_nm' : v_apl_nm,
+                        'apl_id' : v_apl_id,
+                        'rel_tp' : rows.rel_tp,
+                        'brth_dt' : rows.brth_dt,
+                        'mob_no' : rows.mob_no,
+                        'tel_no' : rows.tel_no,
+                        'moth_nat_cd' : rows.moth_nat_cd,
+                        'moth_nat_nm' : rows.moth_nat_nm,
+                        'tch_id' : rows.tch_id,
+                        'h_addr' : rows.h_addr,
+                        'post_no' : rows.h_post_no,
+                        'email_addr' : rows.email_addr,
+                        'login_gubun_code' : v_login_gubun_code,
+                        'login_gubun' : v_login_gubun
+                        }
         elif v_user_div == "T":
             # 교사
-            rows = teacher.objects.filter(tchr_id=ida)[0]
-            v_apl_id = rows.tchr_id
-            v_apl_nm = rows.tchr_nm.replace('\'','')
-            context = {'message': message,
-                    'apl_nm' : v_apl_nm,
-                    'apl_id' : v_apl_id,
-                    'sch_grd' : rows.sch_grd,
-                    'sch_cd' : rows.sch_cd,
-                    'sch_nm' : rows.sch_nm,
-                    'mob_no' : rows.mob_no,
-                    'tel_no' : rows.tel_no,
-                    'area_city' : rows.area_city,
-                    'area_gu' : rows.area_gu,
-                    'h_addr' : rows.h_addr,
-                    'post_no' : rows.h_post_no,
-                    's_addr' : rows.s_addr,
-                    's_post_no' : rows.s_post_no,
-                    'email_addr' : rows.email_addr,
-                    'login_gubun_code' : v_login_gubun_code,
-                    'login_gubun' : v_login_gubun
-                    }
+            created_flag = teacher.objects.filter(tchr_id=ida,pwd=pswd).exists()
+            if not created_flag:
+                message = "Fail"
+                context = {'message': message}
+            else:
+                rows = teacher.objects.filter(tchr_id=ida,pwd=pswd)[0]
+                v_apl_id = rows.tchr_id
+                v_apl_nm = rows.tchr_nm.replace('\'','')
+                context = {'message': message,
+                        'apl_nm' : v_apl_nm,
+                        'apl_id' : v_apl_id,
+                        'sch_grd' : rows.sch_grd,
+                        'sch_cd' : rows.sch_cd,
+                        'sch_nm' : rows.sch_nm,
+                        'mob_no' : rows.mob_no,
+                        'tel_no' : rows.tel_no,
+                        'area_city' : rows.area_city,
+                        'area_gu' : rows.area_gu,
+                        'h_addr' : rows.h_addr,
+                        'post_no' : rows.h_post_no,
+                        's_addr' : rows.s_addr,
+                        's_post_no' : rows.s_post_no,
+                        'email_addr' : rows.email_addr,
+                        'login_gubun_code' : v_login_gubun_code,
+                        'login_gubun' : v_login_gubun
+                        }
         elif v_user_div == "R":
             # 담당자
-            rows = manager.objects.filter(mgr_id=ida)[0]
-            v_apl_id = rows.mgr_id
-            v_apl_nm = rows.mgr_nm.replace('\'','')
-            context = {'message': message,
-                    'apl_nm' : v_apl_nm,
-                    'apl_id' : v_apl_id,
-                    'mng_area' : rows.mng_area,
-                    'mgr_div' : rows.mgr_div,
-                    'dept_cd' : rows.dept_cd,
-                    'dept_nm' : rows.dept_nm,
-                    'ofc_lvl_cd' : rows.ofc_lvl_cd,
-                    'ofc_lvl_nm' : rows.ofc_lvl_nm,
-                    'func_cd' : rows.func_cd,
-                    'func_nm' : rows.func_nm,
-                    'status' : rows.status,
-                    'mob_no' : rows.mob_no,
-                    'tel_no' : rows.tel_no,
-                    'h_addr' : rows.h_addr,
-                    'post_no' : rows.h_post_no,
-                    'email_addr' : rows.email_addr,
-                    'login_gubun_code' : v_login_gubun_code,
-                    'login_gubun' : v_login_gubun
-                    }        
+            created_flag = manager.objects.filter(mgr_id=ida).exists()
+            if not created_flag:
+                message = "Fail"
+                context = {'message': message}
+            else:
+                rows = manager.objects.filter(mgr_id=ida)[0]
+                v_apl_id = rows.mgr_id
+                v_apl_nm = rows.mgr_nm.replace('\'','')
+                context = {'message': message,
+                        'apl_nm' : v_apl_nm,
+                        'apl_id' : v_apl_id,
+                        'mng_area' : rows.mng_area,
+                        'mgr_div' : rows.mgr_div,
+                        'dept_cd' : rows.dept_cd,
+                        'dept_nm' : rows.dept_nm,
+                        'ofc_lvl_cd' : rows.ofc_lvl_cd,
+                        'ofc_lvl_nm' : rows.ofc_lvl_nm,
+                        'func_cd' : rows.func_cd,
+                        'func_nm' : rows.func_nm,
+                        'status' : rows.status,
+                        'mob_no' : rows.mob_no,
+                        'tel_no' : rows.tel_no,
+                        'h_addr' : rows.h_addr,
+                        'post_no' : rows.h_post_no,
+                        'email_addr' : rows.email_addr,
+                        'login_gubun_code' : v_login_gubun_code,
+                        'login_gubun' : v_login_gubun
+                        }        
 #         context = {'message': message,'member_id':v_userid}
 
         return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
