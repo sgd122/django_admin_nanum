@@ -73,7 +73,7 @@ def post_login(request):
 		v_login_gubun = str(results[0].std_detl_code_nm)
 		v_user_div =  str(results[0].user_div)
 
-	if v_user_div == "M":
+	if v_user_div == "M" || v_user_div == "S":
 		created_flag = "ok"
 	elif v_user_div == "G":
 		# 학부모
@@ -92,7 +92,7 @@ def post_login(request):
 		
 		message = "Ok"
 		# rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
-		if v_user_div == "M":
+		if v_user_div == "M" || v_user_div == "S":
 			# 멘토/학생
 			rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
 			v_apl_id = rows.apl_id
@@ -170,7 +170,7 @@ def post_login(request):
 			v_user_div =  str(results[0].user_div)
 
 
-		if v_user_div == "M":
+		if v_user_div == "M" || v_user_div == "S":
 			# 멘토/학생
 			context = {'message': message,
 					'apl_nm' : v_apl_nm,
