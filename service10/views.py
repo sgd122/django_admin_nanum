@@ -280,7 +280,7 @@ def post_login(request):
 						}
 		elif v_user_div == "E":
 			# 멘티
-			created_flag2 = manager.objects.filter(mgr_id=ida).exists()
+			created_flag2 = mentee.objects.filter(mnte_id=ida,pwd=passa).exists()
 			if not created_flag2:
 				message = "Fail"
 				context = {'message': message}

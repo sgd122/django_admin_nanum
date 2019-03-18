@@ -663,12 +663,12 @@ def login_login(request):
                         }
         elif v_user_div == "E":
             # 멘티
-            created_flag2 = manager.objects.filter(mnte_id=ida).exists()
+            created_flag2 = mentee.objects.filter(mnte_id=ida,pwd=passa).exists()
             if not created_flag2:
                 message = "Fail"
                 context = {'message': message}
             else:
-                rows = manager.objects.filter(mnte_id=ida)[0]
+                rows = mentee.objects.filter(mnte_id=ida,pwd=passa)[0]
                 v_apl_id = rows.mnte_id
                 v_apl_nm = rows.mnte_nm.replace('\'','')
                 context = {'message': message,
