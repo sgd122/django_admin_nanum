@@ -101,7 +101,15 @@ urlpatterns = [
     # 교사 마이페이지
     path('myapge/tchrList/', tchrMypage_list.as_view(), name='tchrMypage_list'), 
     # 학부모 마이페이지
-    path('myapge/grdList/', grdMypage_list.as_view(), name='grdMypage_list'),          
+    path('myapge/grdList/', grdMypage_list.as_view(), name='grdMypage_list'),    
+    # 기타사용자 마이페이지
+    path('myapge/ectUserList/', ectUserListMypage_list.as_view(), name='ectUserListMypage_list'),       
+    # 마이페이지 프로그램리스트
+    path('myapge/programList/', programMypage_list.as_view(), name='programMypage_list'),    
+    # 멘토 프로그램별 멘티 리스트
+    path('myapge/mentoMenteList/', mentoMenteMypage_list.as_view(), name='mentoMenteMypage_list'),
+    # 교사,학부모 프로그램별 멘티 리스트
+    path('myapge/pgmMenteList/', pgmMenteMypage_list.as_view(), name='pgmMenteMypage_list'),         
     ########################################################################################
     # myPage
     #
