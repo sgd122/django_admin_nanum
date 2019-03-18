@@ -9564,6 +9564,7 @@ def com_upload(request):
     DIR = os.getcwd()
     UPLOAD_DIR = str(DIR) + '/media/mp_mtr/'
     UPLOAD_DIR = '/NANUM/www/img/mp_mtr/'
+    UPLOAD_DIR_JOB = '/NANUM/www/img/mp_job/'
     if request.method == 'POST':
         l_user_id = request.POST.get("user_id")
         l_mp_id = request.POST.get("mp_id")
@@ -9572,7 +9573,16 @@ def com_upload(request):
         print(l_mp_id)
         file = request.FILES['file']
         filename = file._name
+
+        # job
+        job_file = request.FILES['job_file']
+        job_filename = job_file._name
+
         n_filename = str(l_user_id) + '_' + str(l_mp_id) + '' + os.path.splitext(filename)[1]
+
+        # job
+        n_job_filename = str(l_user_id) + '_' + str(l_mp_id) + '' + os.path.splitext(job_filename)[1]
+
         print(n_filename)
         print (UPLOAD_DIR)
         
@@ -9582,9 +9592,18 @@ def com_upload(request):
             fp.write(chunk)
         fp.close()
 
+        # job
+        fp = open('%s/%s' % (UPLOAD_DIR, n_job_filename) , 'wb')
+
+        for chunk in job_file.chunks():
+            fp.write(chunk)
+        fp.close()
+        # job
+
         cursor = connection.cursor()
         fullFile = str(UPLOAD_DIR) + str(n_filename)
         fullFile = "/img/mp_mtr/"+ str(n_filename)
+        job_fullFile = "/img/mp_job/"+ str(n_job_filename)
         insert_sql = "update service20_mp_mtr set  id_pic = '" + str(fullFile) + "' where mp_id = '"+ str(l_mp_id) + "' and apl_id = '" +  str(l_user_id) +"' "
         print(insert_sql)
         cursor.execute(insert_sql)
