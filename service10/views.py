@@ -49,6 +49,40 @@ def post_login(request):
 	
 	client_ip = request.META['REMOTE_ADDR']
 
+	# /*********************
+	# * 메뉴리스트(user_div)
+	#     C   KO  공통
+	#     D   KO  조교
+	#     E   KO  멘티
+	#     G   KO  학부모
+	#     M   KO  멘토
+	#     R   KO  담당자
+	#     S   KO  학생
+	#     T   KO  교사
+	# *********************/
+	query = " select distinct A.user_id,A.user_div,B.std_detl_code_nm from vw_nanum_login as A left join service20_com_cdd as B on (B.std_grp_code = 'CM0001' and A.user_div = B.std_detl_code) "
+	query += " where user_id = '"+str(ida)+"'"
+	cursor = connection.cursor()
+	query_result = cursor.execute(query)  
+	results = namedtuplefetchall(cursor)  
+	if query_result == 0:
+		v_login_gubun = ''
+	else:
+		v_login_gubun_code = str(results[0].user_div)
+		v_login_gubun = str(results[0].std_detl_code_nm)
+		v_user_div =  str(results[0].user_div)
+
+	if v_user_div == "M":
+		created_flag = "ok"
+	elif v_user_div == "G":
+		# 학부모
+		created_flag = "ok"
+	elif v_user_div == "T":
+		# 교사
+		created_flag = "ok"
+	elif v_user_div == "R":
+		# 담당자
+		created_flag = "ok"
 
 	if not created_flag:
 		message = "Fail"
