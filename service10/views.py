@@ -99,10 +99,10 @@ def post_login(request):
 		elif v_user_div == "G":
 			# 학부모
 			created_flag2 = guardian.objects.filter(grdn_id=ida,pwd=passa).exists()
-            if not created_flag2:
-                message = "Fail"
-                context = {'message': message}
-            else:
+			if not created_flag2:
+				message = "Fail"
+				context = {'message': message}
+			else:
 				# select * from service20_guardian;
 				rows = guardian.objects.filter(grdn_id=ida,pwd=passa)[0]
 				v_apl_id = rows.grdn_id
@@ -110,21 +110,21 @@ def post_login(request):
 		elif v_user_div == "T":
 			# 교사
 			created_flag2 = teacher.objects.filter(tchr_id=ida,pwd=passa).exists()
-            if not created_flag2:
-                message = "Fail"
-                context = {'message': message}
-            else:
-				# select * from service20_teacher;
+			if not created_flag2:
+				message = "Fail"
+				context = {'message': message}
+			else:
+				# select * from service20_teacher;	
 				rows = teacher.objects.filter(tchr_id=ida,pwd=passa)[0]
 				v_apl_id = rows.tchr_id
 				v_apl_nm = rows.tchr_nm.replace('\'','')
 		elif v_user_div == "R":
 			# 담당자
 			created_flag2 = manager.objects.filter(mgr_id=ida).exists()
-            if not created_flag2:
-                message = "Fail"
-                context = {'message': message}
-            else:
+			if not created_flag2:
+				message = "Fail"
+				context = {'message': message}
+			else:
 				# select * from service20_manager;
 				rows = manager.objects.filter(mgr_id=ida)[0]
 				v_apl_id = rows.mgr_id
