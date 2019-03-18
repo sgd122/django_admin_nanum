@@ -125,7 +125,7 @@ def post_login(request):
 
 		if v_user_div == "M":
 			# 멘토/학생
-
+			rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
 		elif v_user_div == "G":
 			# 학부모
 			# select * from service20_guardian;
