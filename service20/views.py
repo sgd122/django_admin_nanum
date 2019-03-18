@@ -4111,7 +4111,9 @@ class MP0101M_list_all_Serializer(serializers.ModelSerializer):
     statusCode = serializers.SerializerMethodField()
     status_nm  = serializers.SerializerMethodField()
     sup_org_nm = serializers.SerializerMethodField()
+    mng_org_nm = serializers.SerializerMethodField()
     apl_no = serializers.SerializerMethodField()
+    apl_id = serializers.SerializerMethodField()
 
     apl_fr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     apl_to_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
@@ -4120,7 +4122,31 @@ class MP0101M_list_all_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = mpgm
-        fields = '__all__'
+        fields = (
+            'mp_id',
+            'mp_name',
+            'status',
+            'statusCode',
+            'yr',
+            'yr_seq',
+            'sup_org',
+            'mng_org',
+            'applyFlag',
+            'applyStatus',
+            'apl_fr_dt',
+            'apl_to_dt',
+            'mnt_fr_dt',
+            'mnt_to_dt',
+            'cnt_trn',
+            'status',
+            'status_nm',
+            'applyFlagNm',
+            'sup_org_nm',
+            'mng_org_nm',
+            'mgr_nm',
+            'apl_no',
+            'apl_id',
+        )
 
     def get_applyFlag(self, obj):
         return obj.applyFlag    
@@ -4142,12 +4168,21 @@ class MP0101M_list_all_Serializer(serializers.ModelSerializer):
 
     def get_status_nm(self,obj):
         return obj.status_nm   
+
     def get_status(self,obj):
         return obj.status
+
     def get_sup_org_nm(self,obj):
         return obj.sup_org_nm
-    def get_apl_no(self,obj):
-        return obj.apl_no    
+
+    def get_mng_org_nm(self, obj):
+        return obj.mng_org_nm
+
+    def get_apl_no(self, obj):
+        return obj.apl_no
+
+    def get_apl_id(self, obj):
+        return obj.apl_id
 
 
 class MP0101M_list_all(generics.ListAPIView):
@@ -4178,9 +4213,9 @@ class MP0101M_list_all(generics.ListAPIView):
         query += "              WHERE  std_grp_code = 'MP0053'  "
         query += "                 AND std_detl_code = B.status)  "
         query += " end                                         AS applyFlagNm,  "
-        query += " B.apl_no, "
-
         query += " c1.std_detl_code_nm   AS sup_org_nm, "
+        query += " c2.std_detl_code_nm   AS mng_org_nm, "
+        query += " B.apl_no   AS apl_no, B.apl_id AS apl_id, "
         query += "        A.*  "
         query += " FROM   service20_mpgm A  "
         query += "        LEFT JOIN service20_mp_mtr B  "
@@ -4188,12 +4223,11 @@ class MP0101M_list_all(generics.ListAPIView):
         # query += "                    AND A.yr = B.yr  "
         query += "                    AND B.apl_id = '"+str(ida)+"' )  "
         query += "        LEFT JOIN service20_com_cdd c1 ON (c1.std_grp_code  = 'MP0004' AND c1.std_detl_code = A.sup_org) "
-        query += " WHERE  B.apl_id = '"+str(ida)+"'  "        
+        query += "        LEFT JOIN service20_com_cdd c2 ON (c2.std_grp_code = 'MP0003' AND c2.std_detl_code = A.mng_org)"
+        query += " WHERE  B.apl_id = '"+str(ida)+"'  "
         query += " ORDER  BY A.apl_fr_dt DESC,  "
         query += "           A.apl_to_dt DESC  "
 
-
-        
         queryset = mpgm.objects.raw(query)
         
 
