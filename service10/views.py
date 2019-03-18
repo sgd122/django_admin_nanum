@@ -81,8 +81,8 @@ def post_login(request):
 	elif v_user_div == "T":
 		# 교사
 		created_flag = "ok"
-	elif v_user_div == "R":
-		# 담당자
+	elif v_user_div == "E":
+		# 멘티
 		created_flag = "ok"
 
 	if not created_flag:
