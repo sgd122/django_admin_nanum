@@ -4027,6 +4027,7 @@ class MP0101M_list(generics.ListAPIView):
         query += "                AND std_detl_code = A.status))      AS status_nm,  "
         query += "        Ifnull(B.status, 'N')                       AS applyFlag,  "
         
+        query += " case when now() between DATE(A.apl_fr_dt) and DATE(A.apl_to_dt) then 'Y' else 'N' end dateAplYn, "
 
         query += " E.score03, D.att_val,"
 
