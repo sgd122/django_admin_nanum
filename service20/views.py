@@ -7618,13 +7618,7 @@ def MP0105M_update(request,pk):
     if pk == 1:
         # /*보고서현황작성_승인요청*/
         update_text = " update service20_mp_rep "
-        update_text += " set mtr_obj    = '"+str(mtr_obj)  +"'    /*학습목표*/         "    
-        update_text += " , mtr_desc    = '"+str(mtr_desc) +"'    /*학습내용*/         "    
-        update_text += " , coatching   = '"+str(coatching)+"'    /*학습외 지도(상담)*/"    
-        update_text += " , spcl_note   = '"+str(spcl_note)+"'    /*특이사항*/         "    
-        update_text += " , mtr_revw    = '"+str(mtr_revw) +"'    /*소감문*/           "    
-
-        update_text += " , mnte_id     = '" +mnte_id+"'      /*담당멘티id*/ "
+        update_text += " set mnte_id    = '" +mnte_id+"'      /*담당멘티id*/ "
         update_text += " , mnte_nm     = '" +mte_nm+"'      /*담당멘티명*/ "
         update_text += " , tchr_id     = '" +tchr_id+"'      /*담당교사id*/ "
         update_text += " , tchr_nm     = '" +teacher+"'      /*담당교사명*/ "
@@ -7649,18 +7643,16 @@ def MP0105M_update(request,pk):
         update_text += " and apl_no = '"+str(apl_no)+"' "
         update_text += " and rep_no = '"+str(rep_no)+"' "
 
-        
+        # 따옴표 처리(학습목표, 학습내용, 학습외 지도(상담), 특이사항, 소감문)
+        mp_rep.objects.filter(mp_id=str(mp_id),apl_no=str(apl_no),rep_no=str(rep_no)).update(mtr_obj=str(mtr_obj))        
+        mp_rep.objects.filter(mp_id=str(mp_id),apl_no=str(apl_no),rep_no=str(rep_no)).update(mtr_desc=str(mtr_desc))
+        mp_rep.objects.filter(mp_id=str(mp_id),apl_no=str(apl_no),rep_no=str(rep_no)).update(coatching=str(coatching))
+        mp_rep.objects.filter(mp_id=str(mp_id),apl_no=str(apl_no),rep_no=str(rep_no)).update(spcl_note=str(spcl_note))
+        mp_rep.objects.filter(mp_id=str(mp_id),apl_no=str(apl_no),rep_no=str(rep_no)).update(mtr_revw=str(mtr_revw))
     elif pk == 2:
         # /*보고서현황작성_승인요청*/
         update_text = " update service20_mp_rep "
-        update_text += " set mtr_obj    = '"+str(mtr_obj)  +"'    /*학습목표*/         "    
-        update_text += " , mtr_desc    = '"+str(mtr_desc) +"'    /*학습내용*/         "    
-        update_text += " , coatching   = '"+str(coatching)+"'    /*학습외 지도(상담)*/"    
-        update_text += " , spcl_note   = '"+str(spcl_note)+"'    /*특이사항*/         "    
-        update_text += " , mtr_revw    = '"+str(mtr_revw) +"'    /*소감문*/           "    
-        update_text += " , rep_dt      = case when rep_dt is null then rep_dt else now() end    /*보고서작성일*/     "    
-
-        update_text += " , mnte_id     = '" +mnte_id+"'      /*담당멘티id*/ "
+        update_text += " set mnte_id    = '" +mnte_id+"'      /*담당멘티id*/ "
         update_text += " , mnte_nm     = '" +mte_nm+"'      /*담당멘티명*/ "
         update_text += " , tchr_id     = '" +tchr_id+"'      /*담당교사id*/ "
         update_text += " , tchr_nm     = '" +teacher+"'      /*담당교사명*/ "
@@ -7684,6 +7676,13 @@ def MP0105M_update(request,pk):
         update_text += " and mp_id  = '" +mp_id+"' "
         update_text += " and apl_no = '"+str(apl_no)+"' "
         update_text += " and rep_no = '"+str(rep_no)+"' "
+
+        # 따옴표 처리(학습목표, 학습내용, 학습외 지도(상담), 특이사항, 소감문)
+        mp_rep.objects.filter(mp_id=str(mp_id),apl_no=str(apl_no),rep_no=str(rep_no)).update(mtr_obj=str(mtr_obj))        
+        mp_rep.objects.filter(mp_id=str(mp_id),apl_no=str(apl_no),rep_no=str(rep_no)).update(mtr_desc=str(mtr_desc))
+        mp_rep.objects.filter(mp_id=str(mp_id),apl_no=str(apl_no),rep_no=str(rep_no)).update(coatching=str(coatching))
+        mp_rep.objects.filter(mp_id=str(mp_id),apl_no=str(apl_no),rep_no=str(rep_no)).update(spcl_note=str(spcl_note))
+        mp_rep.objects.filter(mp_id=str(mp_id),apl_no=str(apl_no),rep_no=str(rep_no)).update(mtr_revw=str(mtr_revw)) 
     
     print(update_text)
     cursor = connection.cursor()
