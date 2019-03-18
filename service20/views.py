@@ -7271,8 +7271,8 @@ def MP01041M_upload(request):
     req = request
     DIR = os.getcwd()
     UPLOAD_DIR = str(DIR) + '/media/MP01041M/'
-    # UPLOAD_DIR = '/NANUM/www/img/mp_attend/'
-    UPLOAD_DIR = 'img'
+    UPLOAD_DIR = '/NANUM/www/img/mp_attend/'
+    # UPLOAD_DIR = 'img'
     
     if request.method == 'POST':
         l_mp_id = request.POST.get("u_mp_id")
