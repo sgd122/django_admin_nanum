@@ -90,8 +90,30 @@ def post_login(request):
 	else:
 		
 		message = "Ok"
-		rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
-
+		# rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
+		if v_user_div == "M":
+			# 멘토/학생
+			rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
+			v_apl_id = rows.apl_id
+			v_apl_nm = rows.apl_nm.replace('\'','')
+		elif v_user_div == "G":
+			# 학부모
+			# select * from service20_guardian;
+			rows = guardian.objects.filter(apl_id=ida)[0]
+			v_apl_id = rows.grdn_id
+			v_apl_nm = rows.grdn_nm.replace('\'','')
+		elif v_user_div == "T":
+			# 교사
+			# select * from service20_teacher;
+			rows = teacher.objects.filter(apl_id=ida)[0]
+			v_apl_id = rows.tchr_id
+			v_apl_nm = rows.tchr_nm.replace('\'','')
+		elif v_user_div == "R":
+			# 담당자
+			# select * from service20_manager;
+			rows = manager.objects.filter(apl_id=ida)[0]
+			v_apl_id = rows.mgr_id
+			v_apl_nm = rows.mgr_nm.replace('\'','')
 		
 
 		client_ip = request.META['REMOTE_ADDR']
@@ -139,17 +161,6 @@ def post_login(request):
 		results = namedtuplefetchall(cursor)  
 		v_login_gubun_code = ''
 		
-		# /*********************
-		# * 메뉴리스트(user_div)
-		#     C   KO  공통
-		#     D   KO  조교
-		#     E   KO  멘티
-		#     G   KO  학부모
-		#     M   KO  멘토
-		#     R   KO  담당자
-		#     S   KO  학생
-		#     T   KO  교사
-		# *********************/
 		if query_result == 0:
 			v_login_gubun = ''
 		else:
@@ -157,29 +168,6 @@ def post_login(request):
 			v_login_gubun = str(results[0].std_detl_code_nm)
 			v_user_div =  str(results[0].user_div)
 
-		if v_user_div == "M":
-			# 멘토/학생
-			rows = vm_nanum_stdt.objects.filter(apl_id=ida)[0]
-			v_apl_id = rows.apl_id
-			v_apl_nm = rows.apl_nm.replace('\'','')
-		elif v_user_div == "G":
-			# 학부모
-			# select * from service20_guardian;
-			rows = guardian.objects.filter(apl_id=ida)[0]
-			v_apl_id = rows.grdn_id
-			v_apl_nm = rows.grdn_nm.replace('\'','')
-		elif v_user_div == "T":
-			# 교사
-			# select * from service20_teacher;
-			rows = teacher.objects.filter(apl_id=ida)[0]
-			v_apl_id = rows.tchr_id
-			v_apl_nm = rows.tchr_nm.replace('\'','')
-		elif v_user_div == "R":
-			# 담당자
-			# select * from service20_manager;
-			rows = manager.objects.filter(apl_id=ida)[0]
-			v_apl_id = rows.mgr_id
-			v_apl_nm = rows.mgr_nm.replace('\'','')
 
 		context = {'message': message,
 					'apl_nm' : v_apl_nm,
