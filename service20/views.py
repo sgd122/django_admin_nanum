@@ -66,7 +66,7 @@ def login_login(request):
             v_login_gubun = str(results[0].std_detl_code_nm)
             v_user_div =  str(results[0].user_div)
         
-        if v_user_div == "M" || v_user_div == "S":
+        if v_user_div == "M" or v_user_div == "S":
 
 
             # 로그인할 유저정보를 넣어주자 (모두 문자열)
@@ -2787,7 +2787,7 @@ class MS0101M_list(generics.ListAPIView):
         query += "        AND IF(A.status = '10'  "
         query += "               AND Now() > A.apl_to_dt, 'xx', A.status) LIKE  "
         query += "            Ifnull(Nullif('"+str(l_status)+"', ''), '%%')  "
-        query += "            || '%%'  "
+        query += "            or '%%'  "
         query += " ORDER  BY A.apl_fr_dt DESC,  "
         query += "           A.apl_to_dt DESC  "
         queryset = msch.objects.raw(query)
@@ -4187,7 +4187,7 @@ class MP0101M_list(generics.ListAPIView):
         query += "        AND IF(A.status = '10'  "
         query += "               AND Now() > A.apl_to_dt, 'xx', A.status) LIKE  "
         query += "            Ifnull(Nullif('"+str(l_status)+"', ''), '%%')  "
-        query += "            || '%%'  "
+        query += "            or '%%'  "
         query += " ORDER  BY A.mp_id DESC, A.apl_fr_dt DESC,  "
         query += "           A.apl_to_dt DESC  "
 
