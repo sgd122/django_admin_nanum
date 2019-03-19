@@ -609,19 +609,20 @@ def login_login(request):
 
         elif v_user_div == "G":
             # 학부모
+            message = "Ok"
             if super_flag == "Y":
-                created_flag2 = guardian.objects.filter(grdn_id=ida).exists()
+                created_flag2 = guardian.objects.filter(grdn_id=id).exists()
             else:
-                created_flag2 = guardian.objects.filter(grdn_id=ida,pwd=pswd).exists()
+                created_flag2 = guardian.objects.filter(grdn_id=id,pwd=pswd).exists()
 
             if not created_flag2:
                 message = "Fail"
                 context = {'message': message}
             else:
                 if super_flag == "Y":
-                    rows = guardian.objects.filter(grdn_id=ida,pwd=pswd)[0]
+                    rows = guardian.objects.filter(grdn_id=id,pwd=pswd)[0]
                 else:
-                    rows = guardian.objects.filter(grdn_id=ida)[0]
+                    rows = guardian.objects.filter(grdn_id=id)[0]
                 v_apl_id = rows.grdn_id
                 v_apl_nm = rows.grdn_nm.replace('\'','')
                 context = {'message': message,
@@ -642,18 +643,19 @@ def login_login(request):
                         }
         elif v_user_div == "T":
             # 교사
+            message = "Ok"
             if super_flag == "Y":
-                created_flag2 = teacher.objects.filter(tchr_id=ida,pwd=pswd).exists()
+                created_flag2 = teacher.objects.filter(tchr_id=id,pwd=pswd).exists()
             else:
-                created_flag2 = teacher.objects.filter(tchr_id=ida).exists()
+                created_flag2 = teacher.objects.filter(tchr_id=id).exists()
             if not created_flag2:
                 message = "Fail"
                 context = {'message': message}
             else:
                 if super_flag == "Y":
-                    rows = teacher.objects.filter(tchr_id=ida,pwd=pswd)[0]
+                    rows = teacher.objects.filter(tchr_id=id,pwd=pswd)[0]
                 else:
-                    rows = teacher.objects.filter(tchr_id=ida)[0]
+                    rows = teacher.objects.filter(tchr_id=id)[0]
                 v_apl_id = rows.tchr_id
                 v_apl_nm = rows.tchr_nm.replace('\'','')
                 context = {'message': message,
@@ -676,18 +678,19 @@ def login_login(request):
                         }
         elif v_user_div == "E":
             # 멘티
+            message = "Ok"
             if super_flag == "Y":
-                created_flag2 = mentee.objects.filter(mnte_id=ida).exists()
+                created_flag2 = mentee.objects.filter(mnte_id=id).exists()
             else:
-                created_flag2 = mentee.objects.filter(mnte_id=ida,pwd=passa).exists()
+                created_flag2 = mentee.objects.filter(mnte_id=id,pwd=pswd).exists()
             if not created_flag2:
                 message = "Fail"
                 context = {'message': message}
             else:
                 if super_flag == "Y":
-                    rows = mentee.objects.filter(mnte_id=ida)[0]
+                    rows = mentee.objects.filter(mnte_id=id)[0]
                 else:
-                    rows = mentee.objects.filter(mnte_id=ida,pwd=passa)[0]
+                    rows = mentee.objects.filter(mnte_id=id,pwd=pswd)[0]
                 v_apl_id = rows.mnte_id
                 v_apl_nm = rows.mnte_nm.replace('\'','')
                 context = {'message': message,
@@ -1265,7 +1268,7 @@ class com_combo_appr(generics.ListAPIView):
         query += "     , std_detl_code as std_detl_code"
         query += "     , std_detl_code_nm as std_detl_code_nm"
         query += "  from service20_com_cdd"
-        query += " where std_grp_code = 'MP0068'    /* 보호자승인여부 */"
+        query += " where std_grp_code = 'MP0082'    /* 승인여부 */"
 
         queryset = com_cdd.objects.raw(query)
 
