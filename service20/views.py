@@ -609,6 +609,7 @@ def login_login(request):
 
         elif v_user_div == "G":
             # 학부모
+            message = "Ok"
             if super_flag == "Y":
                 created_flag2 = guardian.objects.filter(grdn_id=id).exists()
             else:
@@ -642,6 +643,7 @@ def login_login(request):
                         }
         elif v_user_div == "T":
             # 교사
+            message = "Ok"
             if super_flag == "Y":
                 created_flag2 = teacher.objects.filter(tchr_id=id,pwd=pswd).exists()
             else:
@@ -676,6 +678,7 @@ def login_login(request):
                         }
         elif v_user_div == "E":
             # 멘티
+            message = "Ok"
             if super_flag == "Y":
                 created_flag2 = mentee.objects.filter(mnte_id=id).exists()
             else:
