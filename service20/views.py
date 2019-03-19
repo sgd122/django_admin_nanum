@@ -8223,6 +8223,7 @@ class TE0202_detail_Serializer(serializers.ModelSerializer):
     mgr_nm = serializers.SerializerMethodField()
     mnte_id = serializers.SerializerMethodField()
     mp_div_nm = serializers.SerializerMethodField()
+    mnte_nm = serializers.SerializerMethodField()
 
     class Meta:
         model = mp_att
@@ -8244,6 +8245,8 @@ class TE0202_detail_Serializer(serializers.ModelSerializer):
         return obj.mnte_id
     def get_mp_div_nm(self,obj):
         return obj.mp_div_nm
+    def get_mnte_nm(self,obj):
+        return obj.mnte_nm
 
 class TE0202_detail(generics.ListAPIView):
     queryset = mp_att.objects.all()
@@ -8289,6 +8292,7 @@ class TE0202_detail(generics.ListAPIView):
         query += "     , substring(t1.mgr_dt, 1, 16)  as mgr_dt   /* 관리자 승인일시 */"
         query += "     , t3.mnte_id as mnte_id"
         query += "     , t1.att_sts as att_sts"
+        query += "     , t3.mnte_nm as mnte_nm"
         query += "  from service20_mp_att t1"
         query += "  left join service20_mp_mtr t2 on (t2.mp_id = t1.mp_id"
         query += "                                   and t2.apl_no = t1.apl_no)"

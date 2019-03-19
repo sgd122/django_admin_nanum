@@ -247,6 +247,8 @@ class ms_apl(models.Model):
   ascore4 = models.DecimalField(max_digits=7, decimal_places=2, default=0, verbose_name='가산점4' )
   ascore5 = models.DecimalField(max_digits=7, decimal_places=2, default=0, verbose_name='가산점5' )
   ascore6 = models.DecimalField(max_digits=7, decimal_places=2, default=0, verbose_name='가산점6' )
+  file_job_fav = models.CharField(max_length=100, null=True, blank=True, verbose_name='직업선호도 조사지 파일 경로' )
+  intv_cmt = models.CharField(max_length=500, null=True, blank=True, verbose_name='면접심사평' )
 
 
   class Meta:
@@ -256,6 +258,7 @@ class ms_apl(models.Model):
 
     index_together = ["apl_id"]
     index_together = ["apl_nm"]
+
 
 
 
@@ -572,7 +575,6 @@ class mp_sub(models.Model):
     unique_together=("mp_id", "att_id", "att_seq")
 
 
-
 class mp_mtr(models.Model):
   mp_id = models.CharField(max_length=10, null=False, verbose_name='멘토링 프로그램ID' )
   apl_no = models.PositiveIntegerField(null=False, verbose_name='지원 NO' )
@@ -618,12 +620,12 @@ class mp_mtr(models.Model):
   score4 = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True, verbose_name='봉사점수합계' )
   score5 = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True, verbose_name='자격증 개수' )
   score6 = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True, verbose_name='직전학기 학점' )
-  cscore1 = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True, verbose_name='변환점수1' )
-  cscore2 = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True, verbose_name='변환점수2' )
-  cscore3 = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True, verbose_name='변환점수3' )
-  cscore4 = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True, verbose_name='변환점수4' )
-  cscore5 = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True, verbose_name='변환점수5' )
-  cscore6 = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True, verbose_name='변환점수6' )
+  cscore1 = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True, verbose_name='변환점수1-성적' )
+  cscore2 = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True, verbose_name='변환점수2-어학' )
+  cscore3 = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True, verbose_name='변환점수3-봉사' )
+  cscore4 = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True, verbose_name='변환점수4-지원서' )
+  cscore5 = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True, verbose_name='변환점수5-교직' )
+  cscore6 = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True, verbose_name='변환점수6-거주지' )
   doc_rank = models.PositiveIntegerField(null=True, blank=True, verbose_name='서류심사등수' )
   doc_rslt = models.CharField(max_length=1, null=True, blank=True, verbose_name='서류심사결과' )
   intv_team = models.PositiveIntegerField(null=True, blank=True, verbose_name='면접팀' )
@@ -666,12 +668,23 @@ class mp_mtr(models.Model):
   pr_term_div = models.CharField(max_length=2, null=True, blank=True, verbose_name='직전학기코드' )
   cmp_term = models.PositiveIntegerField(null=True, blank=True, verbose_name='현재기준 이수학기' )
 
+
+  ascore1 = models.DecimalField(max_digits=7, decimal_places=2, default=0, verbose_name='가산점1' )
+  ascore2 = models.DecimalField(max_digits=7, decimal_places=2, default=0, verbose_name='가산점2' )
+  ascore3 = models.DecimalField(max_digits=7, decimal_places=2, default=0, verbose_name='가산점3' )
+  ascore4 = models.DecimalField(max_digits=7, decimal_places=2, default=0, verbose_name='가산점4' )
+  ascore5 = models.DecimalField(max_digits=7, decimal_places=2, default=0, verbose_name='가산점5' )
+  ascore6 = models.DecimalField(max_digits=7, decimal_places=2, default=0, verbose_name='가산점6' )
+  file_job_fav = models.CharField(max_length=100, null=True, blank=True, verbose_name='직업선호도 조사지 파일 경로' )
+  intv_cmt = models.CharField(max_length=500, null=True, blank=True, verbose_name='면접심사평' )
+
   class Meta:
     verbose_name = '프로그램 지원자(멘토)'
     verbose_name_plural =  verbose_name
     unique_together=("mp_id", "apl_no")
 
     index_together = ["mntr_id"]
+
 
 
 
