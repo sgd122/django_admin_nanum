@@ -1211,6 +1211,30 @@ def login_session(request):
         context = {'message': message,}
         return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
+#공지사항
+class com_notice_Serializer(serializers.ModelSerializer):
+    
+    ins_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+
+    class Meta:
+        model = bbs1
+        fields = '__all__'
+
+class com_notice(generics.ListAPIView):
+    queryset = bbs1.objects.all()
+    serializer_class = com_notice_Serializer
+
+    def list(self, request):   
+        queryset = self.get_queryset()
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
 
 # 년도 콤보박스 ###################################################
 class com_combo_yr_Serializer(serializers.ModelSerializer):

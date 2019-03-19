@@ -21,6 +21,8 @@ urlpatterns = [
     # 공통(com)
     #
     ########################################################################################    
+    #공지사항
+    path('com/notice/', com_notice.as_view(), name='com_notice'), 
     #파일업로드(멘토스쿨용)
     path('com/upload/ms/', com_upload_ms, name='com_upload_ms'), 
     #파일업로드
