@@ -6842,38 +6842,38 @@ class MP01041M_att(generics.ListAPIView):
         # query += "   and t1.att_no = '" + l_att_no + "'"
 
         query = "/* 출석 상세 그리드 */"
-        query += " select t2.id as id"
-        query += "     , t2.mp_id as mp_id"
-        query += "     , t2.apl_no as apl_no"
-        query += "     , t1.req_no as req_no"
-        query += "     , t2.att_no as att_no"
+        query += " select t1.id as id"
+        query += "     , t1.mp_id as mp_id"
+        query += "     , t1.apl_no as apl_no"
+        query += "     , t2.req_no as req_no"
+        query += "     , t1.att_no as att_no"
         query += "     , t3.mp_name as mp_name"
-        query += "     , t2.mp_div as mp_div"
+        query += "     , t1.mp_div as mp_div"
         query += "     , t6.std_detl_code_nm as mp_div_nm"
-        query += "     , t2.att_div as att_div"
+        query += "     , t1.att_div as att_div"
         query += "     , t5.std_detl_code_nm as att_div_nm"
-        query += "     , t2.att_sts as att_sts"
+        query += "     , t1.att_sts as att_sts"
         query += "     , t4.std_detl_code_nm as att_sts_nm"
-        query += "     , t2.att_saddr as att_saddr"
-        query += "     , t2.att_eaddr as att_eaddr"
-        query += "     , t2.mtr_desc as mtr_desc"
-        query += "     , t2.mtr_pic as mtr_pic"
-        query += "     , substring(t2.att_sdt, 1, 11) as att_sdt"
-        query += "     , substring(t2.att_sdt, 12, 8) as att_stm"
-        query += "     , substring(t2.att_edt, 1, 11) as att_edt"
-        query += "     , substring(t2.att_edt, 12, 8) as att_etm"
-        query += "     , t2.elap_tm as elap_tm"
-        query += "     , t2.appr_tm as appr_tm"
-        query += "     , t2.exp_amt as exp_amt"
-        query += "     , t2.appr_nm as appr_nm"
+        query += "     , t1.att_saddr as att_saddr"
+        query += "     , t1.att_eaddr as att_eaddr"
+        query += "     , t1.mtr_desc as mtr_desc"
+        query += "     , t1.mtr_pic as mtr_pic"
+        query += "     , substring(t1.att_sdt, 1, 11) as att_sdt"
+        query += "     , substring(t1.att_sdt, 12, 8) as att_stm"
+        query += "     , substring(t1.att_edt, 1, 11) as att_edt"
+        query += "     , substring(t1.att_edt, 12, 8) as att_etm"
+        query += "     , t1.elap_tm as elap_tm"
+        query += "     , t1.appr_tm as appr_tm"
+        query += "     , t1.exp_amt as exp_amt"
+        query += "     , t1.appr_nm as appr_nm"
         query += "     , t3.mgr_nm as mgr_nm"
-        query += "     , t1.t_req_desc as req_desc"
-        query += "  from service20_mp_att_req t1"
-        query += "  left join service20_mp_att t2 on (t2.mp_id = t1.mp_id and t2.apl_no = t1.apl_no and t2.att_no = t1.att_no)"
-        query += "  left join service20_mpgm t3 on (t3.mp_id = t1.mp_id and t3.mp_id = t2.mp_id)"
-        query += "  left join service20_com_cdd t4 on (t4.std_grp_code = 'MP0060' and t4.std_detl_code = t2.att_sts)"
-        query += "  left join service20_com_cdd t5 on (t5.std_grp_code = 'MP0063' and t5.std_detl_code = t2.att_div)"
-        query += "  left join service20_com_cdd t6 on (t6.std_grp_code = 'MP0059' and t6.std_detl_code = t2.mp_div)"
+        query += "     , t2.t_req_desc as req_desc"
+        query += "  from service20_mp_att t1"
+        query += "  left join service20_mp_att_req t2 on (t2.mp_id = t1.mp_id and t2.apl_no = t1.apl_no and t2.att_no = t1.att_no)"
+        query += "  left join service20_mpgm t3 on (t3.mp_id = t1.mp_id)"
+        query += "  left join service20_com_cdd t4 on (t4.std_grp_code = 'MP0060' and t4.std_detl_code = t1.att_sts)"
+        query += "  left join service20_com_cdd t5 on (t5.std_grp_code = 'MP0063' and t5.std_detl_code = t1.att_div)"
+        query += "  left join service20_com_cdd t6 on (t6.std_grp_code = 'MP0059' and t6.std_detl_code = t1.mp_div)"
         query += " where t1.mp_id = '" + l_mp_id + "'"
         query += "   and t1.apl_no = '" + l_apl_no + "'"
         query += "   and t1.att_no = '" + l_att_no + "'"
@@ -8598,79 +8598,10 @@ class TE0203_detail(generics.ListAPIView):
         query += "   and t1.pgm_id    = '" + l_pgm_id + "'     /* 만족도 조사 대상(멘토스쿨, 프로그램, 학습외) */"
         query += "   and t1.surv_seq  = '" + l_surv_seq + "'  /* 만족도 seq */"
         query += "   and t1.ansr_id   = '" + l_ansr_id + "'    /* 응답자 id */"
-        query += "   and t1.ansr_div  = '" + l_ansr_div + "'    /* 응답자 구분 */"
+        # query += "   and t1.ansr_div  = '" + l_ansr_div + "'    /* 응답자 구분 */"
         query += "  order by t2.sort_seq /* 정렬 순서 */"
 
 
-        queryset = cm_surv_a.objects.raw(query)
-
-        serializer_class = self.get_serializer_class()
-        serializer = serializer_class(queryset, many=True)
-
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        return Response(serializer.data)
-
-
-# 유저에 따른 만족도 조사 질문 리스트 ###################################################
-class TE0203_detail_Serializer(serializers.ModelSerializer):
-    # testField = serializers.SerializerMethodField()
-    sort_seq = serializers.SerializerMethodField()
-    ques_desc = serializers.SerializerMethodField()
-    ques_div = serializers.SerializerMethodField()
-    
-    class Meta:
-        model = cm_surv_a
-        fields = ('pgm_id','surv_seq','ansr_id','ques_no','ansr_div','sort_seq','ques_desc','ans_t1','ans_t2','ans_t3','ques_dt','ques_div')
-
-    def get_sort_seq(self,obj):
-        return obj.sort_seq
-    def get_ques_desc(self,obj):
-        return obj.ques_desc
-    def get_ques_div(self,obj):
-        return obj.ques_div 
-
-class TE0203_detail(generics.ListAPIView):
-    queryset = cm_surv_a.objects.all()
-    serializer_class = TE0203_detail_Serializer
-
-
-    def list(self, request):
-        l_ansr_id = request.GET.get('ansr_id', "")
-        l_pgm_id = request.GET.get('pgm_id', "")
-        l_surv_seq = request.GET.get('surv_seq', "")
-
-        queryset = self.get_queryset()
-
-        # /* 만족도 조사 */
-        # /* 유저에 따른 만족도 조사 질문 */
-        # /* TE0203/list/detail/ */
-        query = " select t3.id as id /* id */"
-        query += "     , t3.pgm_id as pgm_id  /* 만족도 조사 대상(멘토스쿨, 프로그램, 학습외) */"
-        query += "     , t3.surv_seq as surv_seq/* 만족도 seq */"
-        query += "     , t3.ansr_id as ansr_id /* 응답자 id */"
-        query += "     , t3.ques_no as ques_no /* 만족도 조사 항목 id */"
-        query += "     , t3.ansr_div as ansr_div /* 응답자 구분(cm0001) */"
-        query += "     , t1.sort_seq as sort_seq /* 정렬 순서 */"
-        query += "     , t2.ques_desc as ques_desc/* 질문지    */"
-        query += "     , t3.ans_t1 as ans_t1  /* 선다형 답 */"
-        query += "     , t3.ans_t2 as ans_t2  /* 수필형 답 */"
-        query += "     , t3.ans_t3 as ans_t3  /* 선택 답 */"
-        query += "     , t3.ques_dt as ques_dt /* 설문조사일자 */"
-        query += "     , t2.ques_div as ques_div"
-        query += "  from service20_cm_surv_a t3     /* 만족도 조사 답변 상세 */"
-        query += "  left join service20_cm_surv t2   on (t2.ques_no = t3.ques_no)    /* 만족도 조사 문항 */"
-        query += "  left join service20_cm_surv_q t1 on (t1.ques_no = t3.ques_no"
-        query += "                                   and t1.surv_id = t3.surv_id)    /* 만족도 조사 출제 문항 */"
-        query += " where 1=1"
-        query += "   and t3.ansr_id = '" + l_ansr_id + "'"
-        query += "   and t3.pgm_id = '" + l_pgm_id + "'"
-        query += "   and t3.surv_seq = '" + l_surv_seq + "'"
-
-        print(query)
         queryset = cm_surv_a.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
@@ -8781,7 +8712,7 @@ def TE0203_Insert(request):
     return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 #####################################################################################
 # TE0203 - END
-#####################################################################################'
+#####################################################################################
 
 #####################################################################################
 # TE0204 - START
