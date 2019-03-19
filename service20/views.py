@@ -1213,6 +1213,9 @@ def login_session(request):
 
 #공지사항
 class com_notice_Serializer(serializers.ModelSerializer):
+    
+    ins_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+
     class Meta:
         model = bbs1
         fields = '__all__'
