@@ -1268,7 +1268,7 @@ class com_combo_appr(generics.ListAPIView):
         query += "     , std_detl_code as std_detl_code"
         query += "     , std_detl_code_nm as std_detl_code_nm"
         query += "  from service20_com_cdd"
-        query += " where std_grp_code = 'MP0068'    /* 보호자승인여부 */"
+        query += " where std_grp_code = 'MP0082'    /* 승인여부 */"
 
         queryset = com_cdd.objects.raw(query)
 
