@@ -2213,7 +2213,7 @@ class menteMypage_list(generics.ListAPIView):
         query += " , t1.status      /* 상태(mp0054) */ "
         query += " , (select std_detl_code_nm from service20_com_cdd where std_detl_code = t1.status and std_grp_code = 'mp0054') as status_nm "
         query += " from service20_mp_mte t1     /* 프로그램 지원자(멘티) */ "
-        query += " , service20_mpgm t2          /* 프로그램 지원자(멘티) */ "
+        query += " , service20_mpgm t2           "
         query += " where 1=1 "
         query += " and t1.mp_id    = t2.mp_id "
         query += " and t1.mnte_id  = '"+l_user_id+"'     /* 지원 no */ "
@@ -2647,7 +2647,7 @@ class mschListMypage_list(generics.ListAPIView):
 
         return Response(serializer.data)        
 
-# 활동내역 리스트 ###################################################
+# 멘토 활동내역 리스트 ###################################################
 class mentoActiveListMypage_list_Serializer(serializers.ModelSerializer):
 
     evt_gb_nm = serializers.SerializerMethodField()
@@ -2698,7 +2698,241 @@ class mentoActiveListMypage_list(generics.ListAPIView):
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
 
-        return Response(serializer.data)                                 
+        return Response(serializer.data)       
+
+# 멘티 활동내역 리스트 ###################################################
+class menteActiveListMypage_list_Serializer(serializers.ModelSerializer):
+
+    evt_gb_nm = serializers.SerializerMethodField()
+    evt_dat = serializers.SerializerMethodField()
+
+    class Meta:
+        model = mp_mte_log
+        fields = '__all__'
+
+
+    def get_evt_gb_nm(self,obj):
+        return obj.evt_gb_nm                              
+    def get_evt_dat(self,obj):
+        return obj.evt_dat  
+        
+class menteActiveListMypage_list(generics.ListAPIView):
+    queryset = mp_mte_log.objects.all()
+    serializer_class = menteActiveListMypage_list_Serializer
+
+    def list(self, request):
+        l_mp_id = request.GET.get('mp_id', "")
+        l_user_id = request.GET.get('user_id', "")
+
+        queryset = self.get_queryset()
+
+        query  = "select t1.id  "
+        query += "     , t1.mp_id       /* 멘토링 프로그램id */ "
+        query += "     , t1.mnte_no      /* 지원 no */ "
+        query += "     , t1.mnte_id     /* 멘토id */ "
+        query += "     , t1.evt_gb      /* 이벤트구분(mp0055) */ "
+        query += "     , (select std_detl_code_nm from service20_com_cdd where std_detl_code = t1.evt_gb and std_grp_code = 'mp0056') as evt_gb_nm "
+        query += "     , substring(t1.evt_dat,1,10) as evt_dat     /* 이벤트일시 */ "
+        query += "     , t1.evt_rsn_grp /* 이벤트 사유 */ "
+        query += "     , t1.evt_rsn_cd  /* 이벤트 사유(공통코드 std_detl_code) */ "
+        query += "     , t1.evt_desc    /* 이벤트 내용 */ "
+        query += "  from service20_mp_mte_log t1     /* 프로그램 지원자(멘토) 로그 */ "
+        query += " where 1=1 "
+        query += "   and t1.mp_id = '"+str(l_mp_id)+"' "
+        query += "   and t1.mnte_id = '"+str(l_user_id)+"' "
+
+        queryset = mp_mte_log.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)   
+
+# 멘토 출석 리스트 ###################################################
+class mentoAttdListMypage_list_Serializer(serializers.ModelSerializer):
+
+    apl_no = serializers.SerializerMethodField()
+    sum_elap_tm = serializers.SerializerMethodField()
+    sum_appr_tm = serializers.SerializerMethodField()
+    sum_exp_amt = serializers.SerializerMethodField()
+    cum_appr_tm = serializers.SerializerMethodField()
+    att_ym = serializers.SerializerMethodField()
+
+    class Meta:
+        model = mp_mtr
+        fields = ('mp_id','apl_no','mntr_id','indv_div','team_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','bank_acct','bank_cd','bank_nm','bank_dpsr','cnt_mp_a','cnt_mp_p','cnt_mp_c','cnt_mp_g','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','sum_elap_tm','sum_appr_tm','sum_exp_amt','cum_appr_tm', 'att_ym')
+    
+    def get_apl_no(self,obj):
+        return obj.apl_no
+    def get_sum_elap_tm(self,obj):
+        return obj.sum_elap_tm
+    def get_sum_appr_tm(self,obj):
+        return obj.sum_appr_tm
+    def get_sum_exp_amt(self,obj):
+        return obj.sum_exp_amt
+    def get_cum_appr_tm(self,obj):
+        return obj.cum_appr_tm
+    def get_att_ym(self,obj):
+        return obj.att_ym
+
+
+class mentoAttdListMypage_list(generics.ListAPIView):
+    queryset = mpgm.objects.all()
+    serializer_class = mentoAttdListMypage_list_Serializer
+
+    def list(self, request):
+        l_mp_id = request.GET.get('mp_id', "")
+        l_apl_id = request.GET.get('apl_id', "")
+
+        queryset = self.get_queryset()
+
+        query = " select t3.id,t3.mp_id     /* 멘토링 프로그램id*/ "
+        query += " , t1.apl_no    /* 멘토 지원 no*/ "
+        query += " , t3.mntr_id         /* 멘토id*/ "
+        query += " , t3.apl_nm          /* 지원자(멘토,학생) 명*/ "
+        query += " , t3.unv_nm          /* 지원자 대학교 명*/ "
+        query += " , t3.cllg_nm         /* 지원자 대학 명*/ "
+        query += " , t3.dept_nm         /* 지원자 학부/학과 명*/ "
+        query += " , t3.sch_yr          /* 학년 */"
+        query += " , substring(t1.att_sdt, 1, 7) AS att_ym"
+        query += " , TIME_FORMAT(sec_to_time( sum(time_to_sec(t1.elap_tm)) ), '%%H시간 %%i분 %%s초')  sum_elap_tm  /* 경과시간*/ "
+        query += " , sum(t1.appr_tm)   sum_appr_tm /* 인정시간*/ "
+        query += " , sum(t1.exp_amt)   sum_exp_amt /* 지급 활동비 */"
+        query += " , sum(t1.appr_tm)   cum_appr_tm /* 누적시간*/ "
+        query += " , t3.bank_nm         /* 은행 명*/ "
+        query += " , t3.bank_acct       /* 은행 계좌 번호*/ "
+        query += " , t3.apl_id "
+        query += " from service20_mp_att t1     /* 프로그램 출석부(멘토)*/ "
+        query += " left join service20_mp_mtr t3 on (t3.mp_id    = t1.mp_id "
+        query += " and t3.apl_no   = t1.apl_no) "
+        query += " where 1=1 "       
+        query += " and t1.mp_id    = '" + l_mp_id + "'    /* 멘토링 프로그램id */ "
+        query += " and t3.apl_id   = '" + l_apl_id + "'   "
+        query += " group by t1.mp_id     /* 멘토링 프로그램id */ "
+        query += " , substring(t1.att_sdt, 1, 7) "
+        query += " , t1.apl_no    /* 멘토 지원 no */ "
+        query += " , t3.mntr_id         /* 멘토id  */ "
+        query += " , t3.apl_nm          /* 지원자(멘토,학생) 명 */ "
+        query += " , t3.unv_nm          /* 지원자 대학교 명 */ "
+        query += " , t3.cllg_nm         /* 지원자 대학 명 */ "
+        query += " , t3.dept_nm         /* 지원자 학부/학과 명 */ "
+        query += " , t3.sch_yr          /* 학년 */ "
+        query += " , t3.bank_nm         /* 은행 명 */ "
+        query += " , t3.bank_acct "
+
+        print(query)
+        queryset = mp_mtr.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+# 멘토 출석 리스트 상세 ###################################################
+class mentoAttdDetailListMypage_list_Serializer(serializers.ModelSerializer):
+
+    mp_div_nm = serializers.SerializerMethodField()
+    mnte_id = serializers.SerializerMethodField()
+    mnte_nm = serializers.SerializerMethodField()
+    mgr_nm = serializers.SerializerMethodField()
+    expl_yn = serializers.SerializerMethodField()
+    apl_id = serializers.SerializerMethodField()
+    att_etm = serializers.SerializerMethodField()
+    att_stm = serializers.SerializerMethodField()
+    mnte_no = serializers.SerializerMethodField()
+    
+    # mgr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+    
+    class Meta:
+        model = mp_att
+        fields = '__all__'
+    
+    def get_mp_div_nm(self,obj):
+        return obj.mp_div_nm
+    def get_mnte_id(self,obj):
+        return obj.mnte_id
+    def get_mnte_nm(self,obj):
+        return obj.mnte_nm
+    def get_mgr_nm(self,obj):
+        return obj.mgr_nm
+    def get_expl_yn(self,obj):
+        return obj.expl_yn
+    def get_apl_id(self,obj):
+        return obj.apl_id
+    def get_att_etm(self,obj):
+        return obj.att_etm
+    def get_att_stm(self,obj):
+        return obj.att_stm  
+    def get_mnte_no(self,obj):
+        return obj.mnte_no  
+
+
+class mentoAttdDetailListMypage_list(generics.ListAPIView):
+    queryset = mpgm.objects.all()
+    serializer_class = mentoAttdDetailListMypage_list_Serializer
+
+    def list(self, request):
+        l_mp_id = request.GET.get('mp_id', "")
+        l_apl_id = request.GET.get('apl_id', "")
+
+        queryset = self.get_queryset()
+
+        query = " select t1.id,t1.mp_id     /* 멘토링 프로그램id */  "
+        query += " , t1.apl_no    /* 멘토 지원 no */  "
+        query += " , t1.att_no    /* 출석순서(seq) */  "
+        query += " , t1.mp_div    /* 교육구분(mp0059) */  "
+        query += " , c1.std_detl_code_nm   as mp_div_nm "
+        query += " , t2.mnte_id     /* 멘티id */  "
+        query += " , t2.mnte_no     /* 멘티지원No */  "
+        query += " , t2.mnte_nm     /* 멘티명 */  "
+        query += " , substring(t1.att_sdt, 1, 10) as att_sdt   /* 출석일시(교육시작일시) */  "
+        query += " , substring(t1.att_sdt, 12, 5) as att_stm   /* 출석일시(교육시작일시) */  "
+        query += " , substring(t1.att_edt, 12, 5) as att_etm   /* 출석일시(교육시작일시) */  "
+        query += " , substring(t1.elap_tm, 1, 5)  as elap_tm   /* 경과시간*/ "
+        query += " , t1.appr_tm   /* 인정시간 */  "
+        query += " , t1.mtr_desc  /* 멘토링 내용(보고서) */  "
+        query += " , t1.appr_id   /* 승인자id */  "
+        query += " , t1.appr_nm   /* 승인자명 */  "
+        query += " , substring(t1.appr_dt, 1, 16)  as appr_dt  /* 보호자 승인일시 */  "
+        query += " , t1.mgr_id    /* 관리자id */  "
+        query += " , t4.mgr_nm    /* 관리자명 */  "
+        query += " , substring(t1.mgr_dt, 1, 16)  as mgr_dt   /* 관리자 승인일시 */  "
+        query += " , t1.expl_yn as expl_yn   /* 소명상태 */  "
+        query += " , t1.exp_amt   /* 지급 활동비 */  "
+        query += " , t3.apl_id /* 학번 */ "
+        query += " from service20_mp_att t1     /* 프로그램 출석부(멘토) */ "
+        query += " left join service20_mp_mte t2  on (t2.mp_id  = t1.mp_id and t2.apl_no = t1.apl_no)  "
+        query += " left join service20_mp_mtr t3 on (t3.mp_id    = t1.mp_id and t3.apl_no   = t1.apl_no) "
+        query += " left join service20_mpgm   t4 on (t4.mp_id    = t1.mp_id) "
+        query += " left join service20_com_cdd c1 on (c1.std_grp_code  = 'mp0059' and c1.std_detl_code = t1.mp_div) "
+        query += " where 1=1 "     
+        query += " and t1.mp_id    = '" + l_mp_id + "'   /* 멘토링 프로그램id */ "
+        query += " and t3.apl_id   = '" + l_apl_id + "' "
+        query += " order by t1.att_no DESC    /* 출석순서(seq) */ "
+
+
+
+        queryset = mp_att.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)                                  
 #####################################################################################
 # mypage - END
 #####################################################################################

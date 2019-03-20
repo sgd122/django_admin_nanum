@@ -115,8 +115,14 @@ urlpatterns = [
     path('myapge/pgmMenteList/', pgmMenteMypage_list.as_view(), name='pgmMenteMypage_list'),   
     # 멘토스쿨
     path('myapge/mschList/', mschListMypage_list.as_view(), name='mschListMypage_list'), 
-    # 활동 내역
-    path('myapge/mentoActiveList/', mentoActiveListMypage_list.as_view(), name='mentoActiveListMypage_list'),     
+    # 멘토 활동 내역
+    path('myapge/mentoActiveList/', mentoActiveListMypage_list.as_view(), name='mentoActiveListMypage_list'),  
+    # 멘티 활동 내역
+    path('myapge/menteActiveList/', menteActiveListMypage_list.as_view(), name='menteActiveListMypage_list'),        
+    # 멘토 출석부
+    path('myapge/mentoAttdList/', mentoAttdListMypage_list.as_view(), name='mentoAttdListMypage_list'), 
+    # 멘토 출석부(상세)
+    path('myapge/mentoAttdDetailList/', mentoAttdDetailListMypage_list.as_view(), name='mentoAttdDetailListMypage_list'),     
     ########################################################################################
     # myPage
     #
