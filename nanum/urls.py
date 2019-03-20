@@ -15,13 +15,29 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.conf import settings
+from django.conf.urls.static import static
+
+admin.site.site_header = "부산대학교 나눔"
+admin.site.site_title = "부산대학교 나눔"
+admin.site.index_title = "부산대학교 나눔"
 
 urlpatterns = [
+
     path('admin/', admin.site.urls),
+    path('admint/', include('service20.urls')),
+
+
     path('polls/', include('polls.urls')),
-	path('post2/', include('post2.urls')),    
+   path('post2/', include('post2.urls')),    
     path('api/', include('api.urls')),
     path('service10/', include('service10.urls')),
     path('service20/', include('service20.urls')),
+
+    path('ckeditor/', include('ckeditor_uploader.urls')),
+
     
 ]
+
+
+urlpatterns += static('media/', document_root=settings.MEDIA_ROOT)

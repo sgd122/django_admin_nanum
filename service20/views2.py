@@ -170,11 +170,11 @@ def msFn2(request):
     query = "select * from service20_ms_apl where ms_id = '" +str(ms_id)+"' order by (cscore1+cscore2+cscore3+cscore4+cscore5) desc"
     rank = 1
     queryset = msch.objects.raw(query)
-    
+	
     cursor = connection.cursor()
     query_doc1 = "select tot_apl from service20_msch where ms_id = '" +str(ms_id)+ "'"
     cursor.execute(query_doc1)
-    results_doc1 = namedtuplefetchall(cursor)   
+    results_doc1 = namedtuplefetchall(cursor)	
     val_doc1 = results_doc1[0].tot_apl
     #
     i = 0
@@ -215,7 +215,7 @@ def msFn3(request):
  
     writer = csv.writer(response, encoding='euc-kr')
     writer.writerow(['apl_no', 'unv_nm', 'dept_nm', 'apl_id', 'apl_nm', 'gen', 'cscore1', 'cscore2', 'cscore3', 'cscore4', 'cscore5', 'doc_rslt', 'doc_rank', 'intv_team', 'intv_dt', 'intv_part_pl','intv_part_ac'])
-    
+	
     print(ms_id)
     if ms_id == None:
         users = ms_apl.objects.all().values_list('apl_no', 'unv_nm', 'dept_nm', 'apl_id', 'apl_nm', 'gen', 'cscore1', 'cscore2', 'cscore3', 'cscore4', 'cscore5', 'doc_rslt', 'doc_rank', 'intv_team', 'intv_dt', 'intv_part_pl','intv_part_ac')
@@ -232,97 +232,97 @@ def msFn3(request):
 @csrf_exempt
 def msFn4(request):
 
-    ms_id = request.GET.get('ms_id', None)
-    cursor = connection.cursor()
+	ms_id = request.GET.get('ms_id', None)
+	cursor = connection.cursor()
 
-    query_a = "select intv_dt from service20_msch where ms_id = '"+ ms_id + "'"
-    cursor.execute(query_a)
-    results_a = namedtuplefetchall(cursor)  
-    query_b = "select * from service20_ms_apl where doc_rslt = 'P' and ms_id = '"+ ms_id + "'order by id"
-    cursor.execute(query_b)
-    results_b = namedtuplefetchall(cursor)  
+	query_a = "select intv_dt from service20_msch where ms_id = '"+ ms_id + "'"
+	cursor.execute(query_a)
+	results_a = namedtuplefetchall(cursor)	
+	query_b = "select * from service20_ms_apl where doc_rslt = 'P' and ms_id = '"+ ms_id + "'order by id"
+	cursor.execute(query_b)
+	results_b = namedtuplefetchall(cursor)	
 
-    print(query_b)
-     
+	print(query_b)
+	 
 
-    #면접 그룹 인원수
-    query_01 = "select att_val, att_unit from service20_ms_sub where ms_id =  '"+ ms_id + "' and att_id = 'MS0019' and att_cdd = '01' and use_yn = 'Y'"
-    cursor.execute(query_01)
-    results_01 = namedtuplefetchall(cursor) 
-    val_01 = results_01[0].att_val
-    val_01_copy = val_01
+	#면접 그룹 인원수
+	query_01 = "select att_val, att_unit from service20_ms_sub where ms_id =  '"+ ms_id + "' and att_id = 'MS0019' and att_cdd = '01' and use_yn = 'Y'"
+	cursor.execute(query_01)
+	results_01 = namedtuplefetchall(cursor)	
+	val_01 = results_01[0].att_val
+	val_01_copy = val_01
 
-    #면접시작시간
-    query_02 = "select att_val, att_unit from service20_ms_sub where ms_id =  '"+ ms_id + "' and att_id = 'MS0019' and att_cdd = '02' and use_yn = 'Y'"
-    cursor.execute(query_02)
-    results_02 = namedtuplefetchall(cursor) 
-    val_02 = results_02[0].att_val
-    val_02_copy = val_02
+	#면접시작시간
+	query_02 = "select att_val, att_unit from service20_ms_sub where ms_id =  '"+ ms_id + "' and att_id = 'MS0019' and att_cdd = '02' and use_yn = 'Y'"
+	cursor.execute(query_02)
+	results_02 = namedtuplefetchall(cursor)	
+	val_02 = results_02[0].att_val
+	val_02_copy = val_02
 
-    #시간 간격
-    query_03 = "select att_val, att_unit from service20_ms_sub where ms_id =  '"+ ms_id + "' and att_id = 'MS0019' and att_cdd = '03' and use_yn = 'Y'"
-    cursor.execute(query_03)
-    results_03 = namedtuplefetchall(cursor) 
-    val_03 = results_03[0].att_val
+	#시간 간격
+	query_03 = "select att_val, att_unit from service20_ms_sub where ms_id =  '"+ ms_id + "' and att_id = 'MS0019' and att_cdd = '03' and use_yn = 'Y'"
+	cursor.execute(query_03)
+	results_03 = namedtuplefetchall(cursor)	
+	val_03 = results_03[0].att_val
 
-    #휴식 가능 팀수
-    query_04 = "select att_val, att_unit from service20_ms_sub where ms_id =  '"+ ms_id + "' and att_id = 'MS0019' and att_cdd = '04' and use_yn = 'Y'"
-    cursor.execute(query_04)
-    results_04 = namedtuplefetchall(cursor) 
-    val_04 = results_04[0].att_val
+	#휴식 가능 팀수
+	query_04 = "select att_val, att_unit from service20_ms_sub where ms_id =  '"+ ms_id + "' and att_id = 'MS0019' and att_cdd = '04' and use_yn = 'Y'"
+	cursor.execute(query_04)
+	results_04 = namedtuplefetchall(cursor)	
+	val_04 = results_04[0].att_val
 
-    #휴식 시간
-    query_05 = "select att_val, att_unit from service20_ms_sub where ms_id =  '"+ ms_id + "' and att_id = 'MS0019' and att_cdd = '05' and use_yn = 'Y'"
-    cursor.execute(query_05)
-    results_05 = namedtuplefetchall(cursor) 
-    val_05 = results_05[0].att_val
+	#휴식 시간
+	query_05 = "select att_val, att_unit from service20_ms_sub where ms_id =  '"+ ms_id + "' and att_id = 'MS0019' and att_cdd = '05' and use_yn = 'Y'"
+	cursor.execute(query_05)
+	results_05 = namedtuplefetchall(cursor)	
+	val_05 = results_05[0].att_val
 
-    #면접 장소
-    query_06 = "select att_val, att_unit from service20_ms_sub where ms_id =  '"+ ms_id + "' and att_id = 'MS0019' and att_cdd = '06' and use_yn = 'Y'"
-    cursor.execute(query_06)
-    results_06 = namedtuplefetchall(cursor) 
-    val_06 = results_06[0].att_val
-    print("bbbb")
-    
-    lv_intv_team = 1 #면접번호
-    lv_cnt = 1
+	#면접 장소
+	query_06 = "select att_val, att_unit from service20_ms_sub where ms_id =  '"+ ms_id + "' and att_id = 'MS0019' and att_cdd = '06' and use_yn = 'Y'"
+	cursor.execute(query_06)
+	results_06 = namedtuplefetchall(cursor)	
+	val_06 = results_06[0].att_val
+	print("bbbb")
+	
+	lv_intv_team = 1 #면접번호
+	lv_cnt = 1
 
-    l_data = str(results_a[0].intv_dt) +" " + str(val_02) + ":00"
-    l_data2 = datetime.datetime.strptime(l_data,"%Y-%m-%d %H:%M:%S")
-    for var in results_b:
-        
-        insert_sql = "update service20_ms_apl set "
-        insert_sql += "intv_team='"+ str(lv_intv_team) +"'," 
-        insert_sql += "intv_dt='"+ str(l_data2) +"'" 
-        insert_sql += " where 1=1 " 
-        insert_sql += " and id='"+ str(var.id) +"'" 
+	l_data = str(results_a[0].intv_dt) +" " + str(val_02) + ":00"
+	l_data2 = datetime.datetime.strptime(l_data,"%Y-%m-%d %H:%M:%S")
+	for var in results_b:
+		
+		insert_sql = "update service20_ms_apl set "
+		insert_sql += "intv_team='"+ str(lv_intv_team) +"'," 
+		insert_sql += "intv_dt='"+ str(l_data2) +"'" 
+		insert_sql += " where 1=1 " 
+		insert_sql += " and id='"+ str(var.id) +"'" 
 
-        print(insert_sql)
+		print(insert_sql)
 
-        cursor.execute(insert_sql)
-        
-        print("면접팀" + str(lv_intv_team))
-        print("면접일" + str(results_a[0].intv_dt))
-        print("면접시간" + str(l_data2))
-        print("휴식가능" + str(val_04)) 
-        #면접번호랑 카운트랑 같으면 하나 증가시켜준다
-        if int(lv_cnt) == int(val_01):
-            val_01 = int(val_01) + int(val_01_copy)
+		cursor.execute(insert_sql)
+		
+		print("면접팀" + str(lv_intv_team))
+		print("면접일" + str(results_a[0].intv_dt))
+		print("면접시간" + str(l_data2))
+		print("휴식가능" + str(val_04)) 
+		#면접번호랑 카운트랑 같으면 하나 증가시켜준다
+		if int(lv_cnt) == int(val_01):
+			val_01 = int(val_01) + int(val_01_copy)
 
-            #휴식시간 같으면 거시기한다
-            if int(lv_intv_team) == int(val_04):
-                l_data2 = l_data2 + datetime.timedelta(minutes=int(val_05))
+			#휴식시간 같으면 거시기한다
+			if int(lv_intv_team) == int(val_04):
+				l_data2 = l_data2 + datetime.timedelta(minutes=int(val_05))
 
-            lv_intv_team = lv_intv_team +1
+			lv_intv_team = lv_intv_team +1
 
-            #휴식가능 시간을 만들어준다.
-            l_data2 = l_data2 + datetime.timedelta(minutes=int(val_03))
-        lv_cnt = lv_cnt + 1
+			#휴식가능 시간을 만들어준다.
+			l_data2 = l_data2 + datetime.timedelta(minutes=int(val_03))
+		lv_cnt = lv_cnt + 1
 
-    message = "Ok" 
-    context = {'message': message,}
+	message = "Ok" 
+	context = {'message': message,}
 
-    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+	return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 
 class UploadFileForm(forms.Form):
@@ -353,45 +353,45 @@ def msFn6(request):
 #합격자 업로드.
 @csrf_exempt
 def msFn6_Submit(request):
-    apl_id = request.GET.get('apl_id', None)
-    ms_id = request.GET.get('ms_id', None)
-    #print(apl_id)
-    #print(ms_id)
-    cursor = connection.cursor()
-    insert_sql = "update service20_ms_apl set "
-    insert_sql += "doc_rslt='P' "
-    insert_sql += " where 1=1" 
-    insert_sql += " and ms_id='"+ ms_id +"'" 
-    insert_sql += " and apl_id='"+ apl_id +"'"
-    cursor.execute(insert_sql)
+	apl_id = request.GET.get('apl_id', None)
+	ms_id = request.GET.get('ms_id', None)
+	#print(apl_id)
+	#print(ms_id)
+	cursor = connection.cursor()
+	insert_sql = "update service20_ms_apl set "
+	insert_sql += "doc_rslt='P' "
+	insert_sql += " where 1=1" 
+	insert_sql += " and ms_id='"+ ms_id +"'" 
+	insert_sql += " and apl_id='"+ apl_id +"'"
+	cursor.execute(insert_sql)
 
-    message = "Ok" 
-    context = {'message': message,}
-    
-    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+	message = "Ok" 
+	context = {'message': message,}
+	
+	return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 
 #합격자 업로드.
 @csrf_exempt
 def msFn6_Submit2(request):
-    apl_id = request.GET.get('apl_id', None)
-    ms_id = request.GET.get('ms_id', None)
-    print(apl_id)
-    print(ms_id)
-    print("울트라 잘된다.............................................")
-    cursor = connection.cursor()
-    insert_sql = "update service20_ms_apl set "
-    insert_sql += "doc_rslt='N' "
-    insert_sql += " where doc_rslt<>'P'" 
-    insert_sql += " and ms_id='"+ ms_id +"'" 
+	apl_id = request.GET.get('apl_id', None)
+	ms_id = request.GET.get('ms_id', None)
+	print(apl_id)
+	print(ms_id)
+	print("울트라 잘된다.............................................")
+	cursor = connection.cursor()
+	insert_sql = "update service20_ms_apl set "
+	insert_sql += "doc_rslt='N' "
+	insert_sql += " where doc_rslt<>'P'" 
+	insert_sql += " and ms_id='"+ ms_id +"'" 
 
-    print(insert_sql)
-    cursor.execute(insert_sql)
+	print(insert_sql)
+	cursor.execute(insert_sql)
 
-    message = "Ok" 
-    context = {'message': message,}
-    
-    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+	message = "Ok" 
+	context = {'message': message,}
+	
+	return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 
 
@@ -419,167 +419,167 @@ def msFn7(request):
 #최종 합격자 업로드.
 @csrf_exempt
 def msFn7_Submit(request):
-    apl_id = request.GET.get('apl_id', None)
-    ms_id = request.GET.get('ms_id', None)
-    #print(apl_id)
-    #print(ms_id)
-    cursor = connection.cursor()
-    
-    print("되야함11")
-    #멘토 ID
-    query_01 = "select CONCAT('M',substr(DATE_FORMAT(now(), '%Y'),3,2),(select ifnull(lpad(max(right(mntr_id,2)) + 1,4,0),'0001')   from service20_mentor where substr(mntr_id,2,2)  = substr(DATE_FORMAT(now(), '%Y'),3,2))) as id from dual"
-    cursor.execute(query_01)
-    results_01 = namedtuplefetchall(cursor) 
-    val_01 = results_01[0].id
-    print("되야함22")
-    
-    insert_sql = "update service20_ms_apl set "
-    insert_sql += "fnl_rslt='P',"
-    insert_sql += "mntr_id='"+ str(results_01[0].id) +"'," 
-    insert_sql += "mntr_dt=now()" 
-    insert_sql += " where 1=1" 
-    insert_sql += " and ms_id='"+ str(ms_id) +"'" 
-    insert_sql += " and apl_id='"+ str(apl_id) +"'" 
-    print("되야함33")
-    print("시작")
-    print(insert_sql)
-    cursor.execute(insert_sql)
+	apl_id = request.GET.get('apl_id', None)
+	ms_id = request.GET.get('ms_id', None)
+	#print(apl_id)
+	#print(ms_id)
+	cursor = connection.cursor()
+	
+	print("되야함11")
+	#멘토 ID
+	query_01 = "select CONCAT('M',substr(DATE_FORMAT(now(), '%Y'),3,2),(select ifnull(lpad(max(right(mntr_id,2)) + 1,4,0),'0001')   from service20_mentor where substr(mntr_id,2,2)  = substr(DATE_FORMAT(now(), '%Y'),3,2))) as id from dual"
+	cursor.execute(query_01)
+	results_01 = namedtuplefetchall(cursor)	
+	val_01 = results_01[0].id
+	print("되야함22")
+	
+	insert_sql = "update service20_ms_apl set "
+	insert_sql += "fnl_rslt='P',"
+	insert_sql += "mntr_id='"+ str(results_01[0].id) +"'," 
+	insert_sql += "mntr_dt=now()" 
+	insert_sql += " where 1=1" 
+	insert_sql += " and ms_id='"+ str(ms_id) +"'" 
+	insert_sql += " and apl_id='"+ str(apl_id) +"'" 
+	print("되야함33")
+	print("시작")
+	print(insert_sql)
+	cursor.execute(insert_sql)
 
-    print("한솔이는 E클래스 사줄꼐")
-    instr_sql = "INSERT"
-    instr_sql += " INTO   service20_mentor "  
-    instr_sql += "       (                 "
-    instr_sql += "              MNTR_ID ,  "
-    instr_sql += "              MNTR_NM ,"
-    instr_sql += "              MNTR_NM_E ,"
-    instr_sql += "              MS_ID ,"
-    instr_sql += "              APL_NO ,"
-    instr_sql += "              APL_ID ,"
-    instr_sql += "              MNTR_DT ,"
-    instr_sql += "              UNV_CD ,"
-    instr_sql += "              UNV_NM ,"
-    instr_sql += "              CLLG_CD ,"
-    instr_sql += "              CLLG_NM ,"
-    instr_sql += "              DEPT_CD ,"
-    instr_sql += "              DEPT_NM ,"
-    instr_sql += "              BRTH_DT ,"
-    instr_sql += "              GEN ,"
-    instr_sql += "              YR ,"
-    instr_sql += "              TERM_DIV ,"
-    instr_sql += "              SCH_YR ,"
-    instr_sql += "              EXP_DT ,"
-    instr_sql += "              EXP_RSN ,"
-    instr_sql += "              MOB_NO ,"
-    instr_sql += "              TEL_NO ,"
-    instr_sql += "              TEL_NO_G ,"
-    instr_sql += "              H_ADDR ,"
-    instr_sql += "              POST_NO ,"
-    instr_sql += "              EMAIL_ADDR ,"
-    instr_sql += "              BANK_ACCT ,"
-    instr_sql += "              BANK_CD ,"
-    instr_sql += "              BANK_NM ,"
-    instr_sql += "              BANK_DPSR ,"
-    instr_sql += "              CNT_MP_A ,"
-    instr_sql += "              CNT_MP_P ,"
-    instr_sql += "              CNT_MP_C ,"
-    instr_sql += "              CNT_MP_G ,"
-    instr_sql += "              INS_ID ,"
-    instr_sql += "              INS_IP ,"
-    instr_sql += "              INS_DT ,"
-    instr_sql += "              INS_PGM ,"
-    instr_sql += "              UPD_ID ,"
-    instr_sql += "              UPD_IP ,"
-    instr_sql += "              UPD_DT ,"
-    instr_sql += "              UPD_PGM"
-    instr_sql += "       )"
-    instr_sql += "SELECT '"+  str(results_01[0].id) + "',"
-    instr_sql += "       APL_NM ,"
-    instr_sql += "       ' ',"
-    instr_sql += "       MS_ID ,"
-    instr_sql += "       APL_NO ,"
-    instr_sql += "       APL_ID ,"
-    instr_sql += "       MNTR_DT ,"
-    instr_sql += "       UNV_CD ,"
-    instr_sql += "       UNV_NM ,"
-    instr_sql += "       CLLG_CD ,"
-    instr_sql += "       CLLG_NM ,"
-    instr_sql += "       DEPT_CD ,"
-    instr_sql += "       DEPT_NM ,"
-    instr_sql += "       BRTH_DT ,"
-    instr_sql += "       GEN ,"
-    instr_sql += "       YR ,"
-    instr_sql += "       TERM_DIV ,"
-    instr_sql += "       SCH_YR ,"
-    instr_sql += "       NULL ,"
-    instr_sql += "       NULL ,"
-    instr_sql += "       MOB_NO ,"
-    instr_sql += "       TEL_NO ,"
-    instr_sql += "       TEL_NO_G ,"
-    instr_sql += "       H_ADDR ,"
-    instr_sql += "       POST_NO ,"
-    instr_sql += "       EMAIL_ADDR ,"
-    instr_sql += "       NULL ,"
-    instr_sql += "       NULL ,"
-    instr_sql += "       NULL ,"
-    instr_sql += "       NULL ,"
-    instr_sql += "       0 ,"
-    instr_sql += "       0 ,"
-    instr_sql += "       0 ,"
-    instr_sql += "       0 ,"
-    instr_sql += "       '5550541',"
-    instr_sql += "       '0.0.0.1',"
-    instr_sql += "       NOW() ,"
-    instr_sql += "       'MySQL',"
-    instr_sql += "       NULL ," 
-    instr_sql += "       NULL ," 
-    instr_sql += "       NULL ,"
-    instr_sql += "       NULL" 
-    instr_sql += " FROM   service20_ms_apl"
-    instr_sql += " WHERE  MNTR_ID = '" + str(results_01[0].id) + "'"
+	print("한솔이는 E클래스 사줄꼐")
+	instr_sql = "INSERT"
+	instr_sql += " INTO   service20_mentor "  
+	instr_sql += "       (                 "
+	instr_sql += "              MNTR_ID ,  "
+	instr_sql += "              MNTR_NM ,"
+	instr_sql += "              MNTR_NM_E ,"
+	instr_sql += "              MS_ID ,"
+	instr_sql += "              APL_NO ,"
+	instr_sql += "              APL_ID ,"
+	instr_sql += "              MNTR_DT ,"
+	instr_sql += "              UNV_CD ,"
+	instr_sql += "              UNV_NM ,"
+	instr_sql += "              CLLG_CD ,"
+	instr_sql += "              CLLG_NM ,"
+	instr_sql += "              DEPT_CD ,"
+	instr_sql += "              DEPT_NM ,"
+	instr_sql += "              BRTH_DT ,"
+	instr_sql += "              GEN ,"
+	instr_sql += "              YR ,"
+	instr_sql += "              TERM_DIV ,"
+	instr_sql += "              SCH_YR ,"
+	instr_sql += "              EXP_DT ,"
+	instr_sql += "              EXP_RSN ,"
+	instr_sql += "              MOB_NO ,"
+	instr_sql += "              TEL_NO ,"
+	instr_sql += "              TEL_NO_G ,"
+	instr_sql += "              H_ADDR ,"
+	instr_sql += "              POST_NO ,"
+	instr_sql += "              EMAIL_ADDR ,"
+	instr_sql += "              BANK_ACCT ,"
+	instr_sql += "              BANK_CD ,"
+	instr_sql += "              BANK_NM ,"
+	instr_sql += "              BANK_DPSR ,"
+	instr_sql += "              CNT_MP_A ,"
+	instr_sql += "              CNT_MP_P ,"
+	instr_sql += "              CNT_MP_C ,"
+	instr_sql += "              CNT_MP_G ,"
+	instr_sql += "              INS_ID ,"
+	instr_sql += "              INS_IP ,"
+	instr_sql += "              INS_DT ,"
+	instr_sql += "              INS_PGM ,"
+	instr_sql += "              UPD_ID ,"
+	instr_sql += "              UPD_IP ,"
+	instr_sql += "              UPD_DT ,"
+	instr_sql += "              UPD_PGM"
+	instr_sql += "       )"
+	instr_sql += "SELECT '"+  str(results_01[0].id) + "',"
+	instr_sql += "       APL_NM ,"
+	instr_sql += "       ' ',"
+	instr_sql += "       MS_ID ,"
+	instr_sql += "       APL_NO ,"
+	instr_sql += "       APL_ID ,"
+	instr_sql += "       MNTR_DT ,"
+	instr_sql += "       UNV_CD ,"
+	instr_sql += "       UNV_NM ,"
+	instr_sql += "       CLLG_CD ,"
+	instr_sql += "       CLLG_NM ,"
+	instr_sql += "       DEPT_CD ,"
+	instr_sql += "       DEPT_NM ,"
+	instr_sql += "       BRTH_DT ,"
+	instr_sql += "       GEN ,"
+	instr_sql += "       YR ,"
+	instr_sql += "       TERM_DIV ,"
+	instr_sql += "       SCH_YR ,"
+	instr_sql += "       NULL ,"
+	instr_sql += "       NULL ,"
+	instr_sql += "       MOB_NO ,"
+	instr_sql += "       TEL_NO ,"
+	instr_sql += "       TEL_NO_G ,"
+	instr_sql += "       H_ADDR ,"
+	instr_sql += "       POST_NO ,"
+	instr_sql += "       EMAIL_ADDR ,"
+	instr_sql += "       NULL ,"
+	instr_sql += "       NULL ,"
+	instr_sql += "       NULL ,"
+	instr_sql += "       NULL ,"
+	instr_sql += "       0 ,"
+	instr_sql += "       0 ,"
+	instr_sql += "       0 ,"
+	instr_sql += "       0 ,"
+	instr_sql += "       '5550541',"
+	instr_sql += "       '0.0.0.1',"
+	instr_sql += "       NOW() ,"
+	instr_sql += "       'MySQL',"
+	instr_sql += "       NULL ," 
+	instr_sql += "       NULL ," 
+	instr_sql += "       NULL ,"
+	instr_sql += "       NULL" 
+	instr_sql += " FROM   service20_ms_apl"
+	instr_sql += " WHERE  MNTR_ID = '" + str(results_01[0].id) + "'"
 
-    #print(instr_sql)
-    cursor.execute(instr_sql)
+	#print(instr_sql)
+	cursor.execute(instr_sql)
 
-    message = "Ok" 
-    context = {'message': message,}
-    
-    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+	message = "Ok" 
+	context = {'message': message,}
+	
+	return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 #불합격자 업로드.
 @csrf_exempt
 def msFn7_Submit2(request):
-    apl_id = request.GET.get('apl_id', None)
-    ms_id = request.GET.get('ms_id', None)
-    print(apl_id)
-    print(ms_id)
-    print("울트라 잘된다.............................................")
-    cursor = connection.cursor()
-    insert_sql = "update service20_ms_apl set "
-    insert_sql += "doc_rslt='N' "
-    insert_sql += " where doc_rslt<>'P'" 
-    insert_sql += " and ms_id='"+ ms_id +"'" 
+	apl_id = request.GET.get('apl_id', None)
+	ms_id = request.GET.get('ms_id', None)
+	print(apl_id)
+	print(ms_id)
+	print("울트라 잘된다.............................................")
+	cursor = connection.cursor()
+	insert_sql = "update service20_ms_apl set "
+	insert_sql += "doc_rslt='N' "
+	insert_sql += " where doc_rslt<>'P'" 
+	insert_sql += " and ms_id='"+ ms_id +"'" 
 
-    print(insert_sql)
+	print(insert_sql)
 
-    cursor.execute(insert_sql)
+	cursor.execute(insert_sql)
 
-    message = "Ok" 
-    context = {'message': message,}
-    
-    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+	message = "Ok" 
+	context = {'message': message,}
+	
+	return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 
 
 #멘토스쿨 리포트보기.
 @csrf_exempt
 def msFn8(request):
-    print("aa")
-    context = None
-    return render(
-        request,
-        #'report/reportProgram.html',
-        'report/reportProgram.html',
-        context)
+	print("aa")
+	context = None
+	return render(
+		request,
+		#'report/reportProgram.html',
+		'report/reportProgram.html',
+		context)
 
 
 
@@ -759,27 +759,27 @@ class msPop1_Det5Serializer(serializers.ModelSerializer):
 
 class msPop1_Det5(generics.ListAPIView):
 
-    queryset = ms_sub.objects.all()
-    serializer_class = msPop1_Det5Serializer
-    def list(self, request):
-        ms_id = request.GET.get('ms_id', None)
-        apl_no = request.GET.get('user_id', None)
-        att_cdd_id = request.GET.get('att_cdd_id', None)
-        nm_id = request.GET.get('nm_id', None)
+	queryset = ms_sub.objects.all()
+	serializer_class = msPop1_Det5Serializer
+	def list(self, request):
+		ms_id = request.GET.get('ms_id', None)
+		apl_no = request.GET.get('user_id', None)
+		att_cdd_id = request.GET.get('att_cdd_id', None)
+		nm_id = request.GET.get('nm_id', None)
 
-        
+		
 
-        query = "select A.*, B.* from   service20_ms_sub A left outer join service20_ms_mrk B on     A.ms_id   = B.ms_id and    A.att_cdd = B.mrk_id where  A.att_id   = 'MS0016' and    B.apl_no         = '" + apl_no +"' and    A.att_cdd        = '"+att_cdd_id+"' and    B.item_cd = '"+nm_id+"' order by item_cd"
-        
-        print(query)
-        queryset = ms_sub.objects.raw(query)        
-        serializer_class = self.get_serializer_class()
-        serializer = serializer_class(queryset, many=True)
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-        return Response(serializer.data)    
+		query = "select A.*, B.* from   service20_ms_sub A left outer join service20_ms_mrk B on     A.ms_id   = B.ms_id and    A.att_cdd = B.mrk_id where  A.att_id   = 'MS0016' and    B.apl_no         = '" + apl_no +"' and    A.att_cdd        = '"+att_cdd_id+"' and    B.item_cd = '"+nm_id+"' order by item_cd"
+		
+		print(query)
+		queryset = ms_sub.objects.raw(query)        
+		serializer_class = self.get_serializer_class()
+		serializer = serializer_class(queryset, many=True)
+		page = self.paginate_queryset(queryset)
+		if page is not None:
+			serializer = self.get_serializer(page, many=True)
+			return self.get_paginated_response(serializer.data)
+		return Response(serializer.data)    
 
 
 def namedtuplefetchall(cursor):
@@ -793,102 +793,102 @@ def namedtuplefetchall(cursor):
 #지원서 점수 저장하기
 @csrf_exempt
 def msPop1_Det5_Save(request):
-    ms_id = request.GET.get('ms_id', None)  
-    test_div = request.GET.get('test_div', None)  
-    
-    apl_no = request.GET.get('apl_no', None)
-    mrk_id = request.GET.get('mrk_id', None)
-    mrk_nm = request.GET.get('mrk_nm', None)
-    score = request.GET.get('score', None)
-    item_cd = request.GET.get('item_cd', None)
-    item_nm = request.GET.get('item_nm', None)
+	ms_id = request.GET.get('ms_id', None)  
+	test_div = request.GET.get('test_div', None)  
+	
+	apl_no = request.GET.get('apl_no', None)
+	mrk_id = request.GET.get('mrk_id', None)
+	mrk_nm = request.GET.get('mrk_nm', None)
+	score = request.GET.get('score', None)
+	item_cd = request.GET.get('item_cd', None)
+	item_nm = request.GET.get('item_nm', None)
 
-    mrk_seq = request.GET.get('mrk_seq', None)
-    mrk_no = request.GET.get('mrk_no', None)
+	mrk_seq = request.GET.get('mrk_seq', None)
+	mrk_no = request.GET.get('mrk_no', None)
 
-    cursor = connection.cursor()
-    query = "select count(1) as cnt  from service20_ms_mrk  where apl_no ='"+ apl_no +"' and ms_id='"+ ms_id +"' and mrk_id = '" +mrk_id + "' and item_cd = '" +item_cd + "' and test_div = '" +test_div +   "' and mrk_seq = '" +mrk_seq +    "' and mrk_no = '" +mrk_no +   "' "
-    cursor.execute(query)
-    results = namedtuplefetchall(cursor)    
-    num = results[0].cnt
-
-
-    if num > 0:
-        print("건수가 있음")
-        insert_sql = "update service20_ms_mrk set "
-
-        insert_sql += "score='"+ score +"'," 
-        insert_sql += "item_cd='"+ item_cd +"'," 
-        insert_sql += "item_nm='"+ item_nm +"'" 
-
-        insert_sql += " where 1=1" 
-        insert_sql += " and ms_id='"+ ms_id +"'" 
-        insert_sql += " and test_div='"+ test_div +"'" 
-        insert_sql += " and apl_no='"+ apl_no +"'" 
-        insert_sql += " and mrk_seq='"+ mrk_seq +"'" 
-        insert_sql += " and mrk_no='"+ mrk_no +"'" 
-        insert_sql += " and mrk_id='"+ mrk_id +"'" 
-        #print(insert_sql)
-        cursor.execute(insert_sql)
+	cursor = connection.cursor()
+	query = "select count(1) as cnt  from service20_ms_mrk  where apl_no ='"+ apl_no +"' and ms_id='"+ ms_id +"' and mrk_id = '" +mrk_id + "' and item_cd = '" +item_cd + "' and test_div = '" +test_div +   "' and mrk_seq = '" +mrk_seq +    "' and mrk_no = '" +mrk_no +   "' "
+	cursor.execute(query)
+	results = namedtuplefetchall(cursor)	
+	num = results[0].cnt
 
 
-    else:
-        
-        print("건수가 없음")
-        
-        if score == None:
-            score = '0'
-        elif score == '':
-            score = '0'
+	if num > 0:
+		print("건수가 있음")
+		insert_sql = "update service20_ms_mrk set "
 
-        insert_sql = "insert into service20_ms_mrk (ms_id, test_div, apl_no, mrk_seq, mrk_no, mrk_id, mak_nm, score, item_cd, item_nm)"
-        insert_sql += "values("
-        insert_sql += "'"+ ms_id +"'," 
-        insert_sql += "'10'," 
-        insert_sql += "'"+ apl_no +"'," 
-        insert_sql += "'"+ mrk_seq +"',"  #mrk_id
-        insert_sql += "'"+ mrk_no +"',"  #mrk_id
-        insert_sql += "'"+ mrk_id +"',"  #mrk_id
-        insert_sql += "'"+ mrk_nm +"',"  #mrk_nm
-        insert_sql += "'"+ score +"',"  #score
-        insert_sql += "'"+ item_cd +"',"  #item_cd
-        insert_sql += "'"+ item_nm +"')"  #item_nm
-        #print(insert_sql)
+		insert_sql += "score='"+ score +"'," 
+		insert_sql += "item_cd='"+ item_cd +"'," 
+		insert_sql += "item_nm='"+ item_nm +"'" 
 
-        cursor.execute(insert_sql)
-        
-
-    query = " select (sum(score) / 3) as res from service20_ms_mrk where apl_no = '" + apl_no + "' and ms_id = '" + ms_id +"'"
-
-    print(query)
-
-    cursor.execute(query)
-    results = namedtuplefetchall(cursor)    
-    score4 = results[0].res
-    
-    print("aaaa")
-    insert_sql = "update service20_ms_apl set "
-    insert_sql += "cscore4='"+ str(score4) +"'" 
-    insert_sql += " where 1=1" 
-    print("bbbb")
-    insert_sql += " and ms_id='"+ str(ms_id) +"'" 
-    insert_sql += " and apl_no='"+ str(apl_no) +"'" 
-    print("cccc")
-    
-    print(insert_sql)
-
-    #print(insert_sql)
-    cursor.execute(insert_sql)
-
-    
-        
-
-    message = "Ok" 
-    context = {'message': message,}
+		insert_sql += " where 1=1" 
+		insert_sql += " and ms_id='"+ ms_id +"'" 
+		insert_sql += " and test_div='"+ test_div +"'" 
+		insert_sql += " and apl_no='"+ apl_no +"'" 
+		insert_sql += " and mrk_seq='"+ mrk_seq +"'" 
+		insert_sql += " and mrk_no='"+ mrk_no +"'" 
+		insert_sql += " and mrk_id='"+ mrk_id +"'" 
+		#print(insert_sql)
+		cursor.execute(insert_sql)
 
 
-    #return HttpResponse(json.dumps(context), content_type="application/json")
-    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+	else:
+		
+		print("건수가 없음")
+		
+		if score == None:
+			score = '0'
+		elif score == '':
+			score = '0'
+
+		insert_sql = "insert into service20_ms_mrk (ms_id, test_div, apl_no, mrk_seq, mrk_no, mrk_id, mak_nm, score, item_cd, item_nm)"
+		insert_sql += "values("
+		insert_sql += "'"+ ms_id +"'," 
+		insert_sql += "'10'," 
+		insert_sql += "'"+ apl_no +"'," 
+		insert_sql += "'"+ mrk_seq +"',"  #mrk_id
+		insert_sql += "'"+ mrk_no +"',"  #mrk_id
+		insert_sql += "'"+ mrk_id +"',"  #mrk_id
+		insert_sql += "'"+ mrk_nm +"',"  #mrk_nm
+		insert_sql += "'"+ score +"',"  #score
+		insert_sql += "'"+ item_cd +"',"  #item_cd
+		insert_sql += "'"+ item_nm +"')"  #item_nm
+		#print(insert_sql)
+
+		cursor.execute(insert_sql)
+		
+
+	query = " select (sum(score) / 3) as res from service20_ms_mrk where apl_no = '" + apl_no + "' and ms_id = '" + ms_id +"'"
+
+	print(query)
+
+	cursor.execute(query)
+	results = namedtuplefetchall(cursor)	
+	score4 = results[0].res
+	
+	print("aaaa")
+	insert_sql = "update service20_ms_apl set "
+	insert_sql += "cscore4='"+ str(score4) +"'" 
+	insert_sql += " where 1=1" 
+	print("bbbb")
+	insert_sql += " and ms_id='"+ str(ms_id) +"'" 
+	insert_sql += " and apl_no='"+ str(apl_no) +"'" 
+	print("cccc")
+	
+	print(insert_sql)
+
+	#print(insert_sql)
+	cursor.execute(insert_sql)
+
+	
+		
+
+	message = "Ok" 
+	context = {'message': message,}
+
+
+	#return HttpResponse(json.dumps(context), content_type="application/json")
+	return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 
 @csrf_exempt
@@ -939,7 +939,7 @@ def mpFn1(request):
             vl_cscore2 = var2.fin_scr
             #mp_mtr.objects.filter(id=val.id,mp_id=val.mp_id).update(cscore2=vl_cscore2)
 
-    #어학
+	#어학
     for val in queryset:
         vl_cscore2 = val.score3
         query3  = " SELECT   MAX(CASE WHEN t3.eval_div = 'S' AND t3.min_scr <= t1.score AND t1.score < t3.max_scr THEN t3.fin_scr "
@@ -953,7 +953,7 @@ def mpFn1(request):
         query3 += "   AND t1.mp_id = '"+ str(val.mp_id) +"' "
                 
         cursor.execute(query3)
-        results = namedtuplefetchall(cursor)    
+        results = namedtuplefetchall(cursor)	
         
         query_cnt = len(list(results))
 
@@ -966,9 +966,9 @@ def mpFn1(request):
            print("print222")
            print(results[0].cnv_scr)
            if results[0].cnv_scr == None:
-              vl_cscore2 = '0'
+           	  vl_cscore2 = '0'
            else:
-              vl_cscore2 = results[0].cnv_scr
+           	  vl_cscore2 = results[0].cnv_scr
            
 
         mp_mtr.objects.filter(id=val.id,mp_id=val.mp_id).update(cscore2=vl_cscore2)
@@ -1044,7 +1044,7 @@ def mpFn1(request):
     query5 += "    ), '%')  "
     print(query5)
     cursor.execute(query5)
-    """
+	"""
 
     #멘토스쿨 합격자 업로드
     #query_mento = f"""UPDATE service20_mp_mtr A SET ms_trn_yn = 'Y' WHERE apl_id = (SELECT apl_id from service20_mentor where apl_id = A.apl_id) AND mp_id = '{val.mp_id}'"""
@@ -1127,7 +1127,7 @@ def mpFn2(request):
     cursor.execute(insert_sql)
 
 
-    queryset2 = cm_cnv_scr.objects.all()    
+    queryset2 = cm_cnv_scr.objects.all()	
     query = "select * from service20_mp_mtr where mp_id = '" +str(mp_id)+"' and dept_appr_div='Y'  order by ifnull(cscore1,0)+ifnull(cscore2,0)+ifnull(cscore3,0)+ifnull(cscore4,0)+ifnull(cscore5,0)+ifnull(cscore6,0) DESC"
     rank = 1
     queryset = mp_mtr.objects.raw(query)
@@ -1136,7 +1136,7 @@ def mpFn2(request):
     
     query_doc1 = "select cnt_doc_res from service20_mpgm where mp_id = '" +str(mp_id)+ "'"
     cursor.execute(query_doc1)
-    results_doc1 = namedtuplefetchall(cursor)   
+    results_doc1 = namedtuplefetchall(cursor)	
     #val_doc1 = results_doc1[0].cnt_doc_suc
     val_doc1 = results_doc1[0].cnt_doc_res #서류전형 예비인원(실제 없음) 실제 이 컬럼에서 데이터를 처리함.
 
@@ -1168,46 +1168,46 @@ def mpFn2(request):
     print("a2")
     #val_doc1 0이면 전체 합격
     if int(val_doc1) == 0:
-        print(" ")
-        val_doc2 = vl_cnt
-        mp_mtr.objects.filter(mp_id=str(mp_id),dept_appr_div='Y').update(doc_rslt='P')
+    	print(" ")
+    	val_doc2 = vl_cnt
+    	mp_mtr.objects.filter(mp_id=str(mp_id),dept_appr_div='Y').update(doc_rslt='P')
     else:
-        val_doc2 = float(vl_cnt) - float(val_doc1)
+    	val_doc2 = float(vl_cnt) - float(val_doc1)
 
     print("a3")
     i = 0
     l_doc_rslt = ''
     for val in queryset:
         if int(i) < int(val_doc2):            
-            l_doc_rslt = 'P'
+        	l_doc_rslt = 'P'
             #mp_mtr.objects.filter(id=val.id,mp_id=val.mp_id).update(doc_rslt='P')
 
         else:
-            l_doc_rslt = 'N'
+        	l_doc_rslt = 'N'
 
 
-        
+      	
 
         #공통설정에 있는 10점 (디폴트) 이하인 애들은 탈락시켜야하는데....
         if att_val != None and float(att_val) != 0 :
             if float(val.tot_doc) <= float(att_val):
                 if val.ms_trn_yn != 'Y':
-                    l_doc_rslt = 'N'
+        	        l_doc_rslt = 'N'
 
 
         if not val.cscore4:
-            l_doc_rslt = 'N'
+        	l_doc_rslt = 'N'
 
         
         print("으하하")        
         print(val.apl_id)
 
         if val.id == '829':
-            print("여기서 에러111")
-            print(val.id)
+        	print("여기서 에러111")
+        	print(val.id)
 
-        if val.cscore4 == None or int(val.cscore4) == 0:            
-            l_doc_rslt = 'N'
+        if val.cscore4 == None or int(val.cscore4) == 0:        	
+        	l_doc_rslt = 'N'
 
         print("여기서 에러222")
 
@@ -1265,148 +1265,148 @@ def mpFn3(request):
 @csrf_exempt
 def mpFn4(request):
 
-    print("aaabbb")
-    mp_id = request.GET.get('mp_id', None)
-    cursor = connection.cursor()
-    print("aa1")
-    query_a = "select intv_dt from service20_mpgm where mp_id = '"+ mp_id + "'"
-    cursor.execute(query_a)
-    results_a = namedtuplefetchall(cursor)  
+	print("aaabbb")
+	mp_id = request.GET.get('mp_id', None)
+	cursor = connection.cursor()
+	print("aa1")
+	query_a = "select intv_dt from service20_mpgm where mp_id = '"+ mp_id + "'"
+	cursor.execute(query_a)
+	results_a = namedtuplefetchall(cursor)	
 
-    #query_b = "select * from service20_mp_mtr where doc_rslt = 'P' and mp_id = '"+ mp_id + "' order by id"
-    query_b = "select * from service20_mp_mtr a WHERE a.doc_rslt = 'P' AND a.mp_id = '"+ mp_id + "' and not EXISTS (SELECT * from service20_mentor c WHERE c.apl_id = a.apl_id ) order BY a.id"
+	#query_b = "select * from service20_mp_mtr where doc_rslt = 'P' and mp_id = '"+ mp_id + "' order by id"
+	query_b = "select * from service20_mp_mtr a WHERE a.doc_rslt = 'P' AND a.mp_id = '"+ mp_id + "' and not EXISTS (SELECT * from service20_mentor c WHERE c.apl_id = a.apl_id ) order BY a.id"
 
-    query_b = f""" 
-                select   *
-                from     service20_mp_mtr a
-                WHERE    a.doc_rslt = 'P'
-                AND      a.mp_id    = '{mp_id}'
-                and      not EXISTS
-                         (SELECT *
-                         from    service20_mentor c
-                         WHERE   c.apl_id = a.apl_id
-                         )
-                AND a.apl_id NOT IN (SELECT apl_id from service20_mp_mtr WHERE mp_id IN  ('P190001','P190002')  and intv_rslt = 'P')
-                order BY a.id
-    """
+	query_b = f""" 
+				select   *
+				from     service20_mp_mtr a
+				WHERE    a.doc_rslt = 'P'
+				AND      a.mp_id    = '{mp_id}'
+				and      not EXISTS
+				         (SELECT *
+				         from    service20_mentor c
+				         WHERE   c.apl_id = a.apl_id
+				         )
+				AND a.apl_id NOT IN (SELECT apl_id from service20_mp_mtr WHERE mp_id IN  ('P190001','P190002')  and intv_rslt = 'P')
+				order BY a.id
+	"""
 
-    query_b = f"""
-        SELECT A.* FROM (
-        SELECT *
-        from     service20_mp_mtr a
-        WHERE    a.doc_rslt = 'P'
-        AND      a.mp_id    ='{mp_id}'
-        and      not EXISTS
-                 (SELECT *
-                 from    service20_mentor c
-                 WHERE   c.apl_id = a.apl_id
-                 )
-        order BY a.id
-        LIMIT 70, 141
-        ) A
-    """ 
+	query_b = f"""
+		SELECT A.* FROM (
+		SELECT *
+		from     service20_mp_mtr a
+		WHERE    a.doc_rslt = 'P'
+		AND      a.mp_id    ='{mp_id}'
+		and      not EXISTS
+		         (SELECT *
+		         from    service20_mentor c
+		         WHERE   c.apl_id = a.apl_id
+		         )
+		order BY a.id
+		LIMIT 70, 141
+		) A
+	"""	
 
-    
+	
 
-    cursor.execute(query_b)
-    results_b = namedtuplefetchall(cursor)  
+	cursor.execute(query_b)
+	results_b = namedtuplefetchall(cursor)	
 
-     
-    print("aa2")
-    #면접 그룹 인원수
-    query_01 = "select att_val, att_unit from service20_mp_sub where mp_id =  '"+ mp_id + "' and att_id = 'MS0019' and att_cdd = '01' and use_yn = 'Y'"
-    cursor.execute(query_01)
-    results_01 = namedtuplefetchall(cursor) 
-    val_01 = results_01[0].att_val
-    val_01_copy = val_01
+	 
+	print("aa2")
+	#면접 그룹 인원수
+	query_01 = "select att_val, att_unit from service20_mp_sub where mp_id =  '"+ mp_id + "' and att_id = 'MS0019' and att_cdd = '01' and use_yn = 'Y'"
+	cursor.execute(query_01)
+	results_01 = namedtuplefetchall(cursor)	
+	val_01 = results_01[0].att_val
+	val_01_copy = val_01
 
-    #면접시작시간
-    query_02 = "select att_val, att_unit from service20_mp_sub where mp_id =  '"+ mp_id + "' and att_id = 'MS0019' and att_cdd = '02' and use_yn = 'Y'"
-    cursor.execute(query_02)
-    results_02 = namedtuplefetchall(cursor) 
-    val_02 = results_02[0].att_val
-    val_02_copy = val_02
+	#면접시작시간
+	query_02 = "select att_val, att_unit from service20_mp_sub where mp_id =  '"+ mp_id + "' and att_id = 'MS0019' and att_cdd = '02' and use_yn = 'Y'"
+	cursor.execute(query_02)
+	results_02 = namedtuplefetchall(cursor)	
+	val_02 = results_02[0].att_val
+	val_02_copy = val_02
 
-    #시간 간격
-    query_03 = "select att_val, att_unit from service20_mp_sub where mp_id =  '"+ mp_id + "' and att_id = 'MS0019' and att_cdd = '03' and use_yn = 'Y'"
-    cursor.execute(query_03)
-    results_03 = namedtuplefetchall(cursor) 
-    val_03 = results_03[0].att_val
+	#시간 간격
+	query_03 = "select att_val, att_unit from service20_mp_sub where mp_id =  '"+ mp_id + "' and att_id = 'MS0019' and att_cdd = '03' and use_yn = 'Y'"
+	cursor.execute(query_03)
+	results_03 = namedtuplefetchall(cursor)	
+	val_03 = results_03[0].att_val
 
-    #휴식 가능 팀수
-    query_04 = "select att_val, att_unit from service20_mp_sub where mp_id =  '"+ mp_id + "' and att_id = 'MS0019' and att_cdd = '04' and use_yn = 'Y'"
-    cursor.execute(query_04)
-    results_04 = namedtuplefetchall(cursor) 
-    val_04 = results_04[0].att_val
+	#휴식 가능 팀수
+	query_04 = "select att_val, att_unit from service20_mp_sub where mp_id =  '"+ mp_id + "' and att_id = 'MS0019' and att_cdd = '04' and use_yn = 'Y'"
+	cursor.execute(query_04)
+	results_04 = namedtuplefetchall(cursor)	
+	val_04 = results_04[0].att_val
 
-    #휴식 시간
-    query_05 = "select att_val, att_unit from service20_mp_sub where mp_id =  '"+ mp_id + "' and att_id = 'MS0019' and att_cdd = '05' and use_yn = 'Y'"
-    cursor.execute(query_05)
-    results_05 = namedtuplefetchall(cursor) 
-    val_05 = results_05[0].att_val
+	#휴식 시간
+	query_05 = "select att_val, att_unit from service20_mp_sub where mp_id =  '"+ mp_id + "' and att_id = 'MS0019' and att_cdd = '05' and use_yn = 'Y'"
+	cursor.execute(query_05)
+	results_05 = namedtuplefetchall(cursor)	
+	val_05 = results_05[0].att_val
 
-    #면접 장소
-    query_06 = "select att_val, att_unit from service20_mp_sub where mp_id =  '"+ mp_id + "' and att_id = 'MS0019' and att_cdd = '06' and use_yn = 'Y'"
-    cursor.execute(query_06)
-    results_06 = namedtuplefetchall(cursor) 
-    val_06 = results_06[0].att_val
-    print("bbbb")
-    
-    lv_intv_team = 1 #면접번호
-    lv_cnt = 1
-    print("aa3")
+	#면접 장소
+	query_06 = "select att_val, att_unit from service20_mp_sub where mp_id =  '"+ mp_id + "' and att_id = 'MS0019' and att_cdd = '06' and use_yn = 'Y'"
+	cursor.execute(query_06)
+	results_06 = namedtuplefetchall(cursor)	
+	val_06 = results_06[0].att_val
+	print("bbbb")
+	
+	lv_intv_team = 1 #면접번호
+	lv_cnt = 1
+	print("aa3")
 
-    l_data = str(results_a[0].intv_dt) +" " + str(val_02) + ":00"
-    l_data2 = datetime.datetime.strptime(l_data,"%Y-%m-%d %H:%M:%S")
+	l_data = str(results_a[0].intv_dt) +" " + str(val_02) + ":00"
+	l_data2 = datetime.datetime.strptime(l_data,"%Y-%m-%d %H:%M:%S")
 
-    """
-    insert_sql = "update service20_mp_mtr set "
-    insert_sql += "intv_team='0'," 
-    insert_sql += "intv_dt=null " 
-    insert_sql += " where 1=1 " 
-    insert_sql += " and mp_id='"+ str(mp_id) +"'" 
-    cursor.execute(insert_sql)
-    """
+	"""
+	insert_sql = "update service20_mp_mtr set "
+	insert_sql += "intv_team='0'," 
+	insert_sql += "intv_dt=null " 
+	insert_sql += " where 1=1 " 
+	insert_sql += " and mp_id='"+ str(mp_id) +"'" 
+	cursor.execute(insert_sql)
+	"""
 
-    for var in results_b:
-        """
-        insert_sql = "update service20_mp_mtr set "
-        insert_sql += "intv_team='0'," 
-        insert_sql += "intv_dt=null " 
-        insert_sql += " where 1=1 " 
-        insert_sql += " and id='"+ str(var.id) +"'" 
-        cursor.execute(insert_sql)
-        """
-        
-        insert_sql = "update service20_mp_mtr set "
-        insert_sql += "intv_team='"+ str(lv_intv_team) +"'," 
-        insert_sql += "intv_dt='"+ str(l_data2) +"'" 
-        insert_sql += " where 1=1 " 
-        insert_sql += " and id='"+ str(var.id) +"'" 
-        cursor.execute(insert_sql)
-        
-        print("면접팀" + str(lv_intv_team))
-        print("면접일" + str(results_a[0].intv_dt))
-        print("면접시간" + str(l_data2))
-        print("휴식가능" + str(val_04)) 
-        #면접번호랑 카운트랑 같으면 하나 증가시켜준다
-        if int(lv_cnt) == int(val_01):
-            val_01 = int(val_01) + int(val_01_copy)
+	for var in results_b:
+		"""
+		insert_sql = "update service20_mp_mtr set "
+		insert_sql += "intv_team='0'," 
+		insert_sql += "intv_dt=null " 
+		insert_sql += " where 1=1 " 
+		insert_sql += " and id='"+ str(var.id) +"'" 
+		cursor.execute(insert_sql)
+		"""
+		
+		insert_sql = "update service20_mp_mtr set "
+		insert_sql += "intv_team='"+ str(lv_intv_team) +"'," 
+		insert_sql += "intv_dt='"+ str(l_data2) +"'" 
+		insert_sql += " where 1=1 " 
+		insert_sql += " and id='"+ str(var.id) +"'" 
+		cursor.execute(insert_sql)
+		
+		print("면접팀" + str(lv_intv_team))
+		print("면접일" + str(results_a[0].intv_dt))
+		print("면접시간" + str(l_data2))
+		print("휴식가능" + str(val_04)) 
+		#면접번호랑 카운트랑 같으면 하나 증가시켜준다
+		if int(lv_cnt) == int(val_01):
+			val_01 = int(val_01) + int(val_01_copy)
 
-            #휴식시간 같으면 거시기한다
-            if int(lv_intv_team) == int(val_04):
-                l_data2 = l_data2 + datetime.timedelta(minutes=int(val_05))
+			#휴식시간 같으면 거시기한다
+			if int(lv_intv_team) == int(val_04):
+				l_data2 = l_data2 + datetime.timedelta(minutes=int(val_05))
 
-            lv_intv_team = lv_intv_team +1
+			lv_intv_team = lv_intv_team +1
 
-            #휴식가능 시간을 만들어준다.
-            l_data2 = l_data2 + datetime.timedelta(minutes=int(val_03))
-        lv_cnt = lv_cnt + 1
+			#휴식가능 시간을 만들어준다.
+			l_data2 = l_data2 + datetime.timedelta(minutes=int(val_03))
+		lv_cnt = lv_cnt + 1
 
-    message = "Ok" 
-    context = {'message': message,}
+	message = "Ok" 
+	context = {'message': message,}
 
-    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+	return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 #합격자 업로드.
 @csrf_exempt
@@ -1432,41 +1432,41 @@ def mpFn6(request):
 #합격자 업로드.
 @csrf_exempt
 def mpFn6_Submit(request):
-    apl_id = request.GET.get('apl_id', None)
-    mp_id = request.GET.get('mp_id', None)
-    #print(apl_id)
-    #print(ms_id)
-    cursor = connection.cursor()
-    insert_sql = "update service20_mp_mtr set "
-    insert_sql += "doc_rslt='P' "
-    insert_sql += " where 1=1" 
-    insert_sql += " and mp_id='"+ mp_id +"'" 
-    insert_sql += " and apl_id='"+ apl_id +"'"
-    cursor.execute(insert_sql)
+	apl_id = request.GET.get('apl_id', None)
+	mp_id = request.GET.get('mp_id', None)
+	#print(apl_id)
+	#print(ms_id)
+	cursor = connection.cursor()
+	insert_sql = "update service20_mp_mtr set "
+	insert_sql += "doc_rslt='P' "
+	insert_sql += " where 1=1" 
+	insert_sql += " and mp_id='"+ mp_id +"'" 
+	insert_sql += " and apl_id='"+ apl_id +"'"
+	cursor.execute(insert_sql)
 
-    message = "Ok" 
-    context = {'message': message,}
-    
-    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+	message = "Ok" 
+	context = {'message': message,}
+	
+	return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 #합격자 업로드.
 @csrf_exempt
 def mpFn6_Submit2(request):
-    apl_id = request.GET.get('apl_id', None)
-    mp_id = request.GET.get('mp_id', None)
+	apl_id = request.GET.get('apl_id', None)
+	mp_id = request.GET.get('mp_id', None)
 
-    cursor = connection.cursor()
-    insert_sql = "update service20_mp_mtr set "
-    insert_sql += "doc_rslt='N' "
-    insert_sql += " where doc_rslt<>'P'" 
-    insert_sql += " and mp_id='"+ mp_id +"'" 
+	cursor = connection.cursor()
+	insert_sql = "update service20_mp_mtr set "
+	insert_sql += "doc_rslt='N' "
+	insert_sql += " where doc_rslt<>'P'" 
+	insert_sql += " and mp_id='"+ mp_id +"'" 
 
-    cursor.execute(insert_sql)
+	cursor.execute(insert_sql)
 
-    message = "Ok" 
-    context = {'message': message,}
-    
-    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+	message = "Ok" 
+	context = {'message': message,}
+	
+	return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 
 
@@ -1494,32 +1494,32 @@ def mpFn7(request):
 #최종 합격자 업로드.
 @csrf_exempt
 def mpFn7_Submit(request):
-    apl_id = request.GET.get('apl_id', None)
-    mp_id = request.GET.get('mp_id', None)
-    #print(apl_id)
-    #print(ms_id)
-    cursor = connection.cursor()
+	apl_id = request.GET.get('apl_id', None)
+	mp_id = request.GET.get('mp_id', None)
+	#print(apl_id)
+	#print(ms_id)
+	cursor = connection.cursor()
 
-    #멘토 ID
-    query_01 = "select CONCAT('M',substr(DATE_FORMAT(now(), '%Y'),3,2),(select ifnull(lpad(max(right(mntr_id,2)) + 1,4,0),'0001')   from service20_mentor where substr(mntr_id,2,2)  = substr(DATE_FORMAT(now(), '%Y'),3,2))) as id from dual"
-    cursor.execute(query_01)
-    results_01 = namedtuplefetchall(cursor) 
-    val_01 = results_01[0].id
+	#멘토 ID
+	query_01 = "select CONCAT('M',substr(DATE_FORMAT(now(), '%Y'),3,2),(select ifnull(lpad(max(right(mntr_id,2)) + 1,4,0),'0001')   from service20_mentor where substr(mntr_id,2,2)  = substr(DATE_FORMAT(now(), '%Y'),3,2))) as id from dual"
+	cursor.execute(query_01)
+	results_01 = namedtuplefetchall(cursor)	
+	val_01 = results_01[0].id
 
-    
-    insert_sql = "update service20_mp_mtr set "
-    insert_sql += "fnl_rslt='P' "
-    insert_sql += " where 1=1" 
-    insert_sql += " and mp_id='"+ str(ms_id) +"'" 
-    insert_sql += " and mntr_id='"+ str(results_01[0].id) +"'" 
-    insert_sql += " and mntr_dt=now()"
+	
+	insert_sql = "update service20_mp_mtr set "
+	insert_sql += "fnl_rslt='P' "
+	insert_sql += " where 1=1" 
+	insert_sql += " and mp_id='"+ str(ms_id) +"'" 
+	insert_sql += " and mntr_id='"+ str(results_01[0].id) +"'" 
+	insert_sql += " and mntr_dt=now()"
 
-    cursor.execute(insert_sql)
+	cursor.execute(insert_sql)
 
-    message = "Ok" 
-    context = {'message': message,}
-    
-    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+	message = "Ok" 
+	context = {'message': message,}
+	
+	return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 
 #지원서 평가  업로드.
@@ -1549,106 +1549,106 @@ def mpFn9(request):
 #지원서 평가  업로드 확인버튼
 @csrf_exempt
 def mpFn9_Submit(request):
-    apl_id = request.GET.get('apl_id', None)
-    mp_id = request.GET.get('mp_id', None)
-    pro_id = request.GET.get('pro_id', None)
-    item_cd = request.GET.get('item_cd', None)
-    score = request.GET.get('score', None)
-    cursor = connection.cursor()
+	apl_id = request.GET.get('apl_id', None)
+	mp_id = request.GET.get('mp_id', None)
+	pro_id = request.GET.get('pro_id', None)
+	item_cd = request.GET.get('item_cd', None)
+	score = request.GET.get('score', None)
+	cursor = connection.cursor()
 
-    mp_mtr.objects.filter(apl_id=apl_id,mp_id=mp_id).update(dept_appr_div='Y')
+	mp_mtr.objects.filter(apl_id=apl_id,mp_id=mp_id).update(dept_appr_div='Y')
 
-    print("aa1")
-    l_apl_no_query = "select apl_no FROM service20_mp_mtr WHERE mp_id = '"+ str(mp_id) +"' AND apl_id = '"+ str(apl_id) +"'"
-    print(l_apl_no_query)
-    cursor.execute(l_apl_no_query)
-    results = namedtuplefetchall(cursor)    
-    l_apl_no = results[0].apl_no
+	print("aa1")
+	l_apl_no_query = "select apl_no FROM service20_mp_mtr WHERE mp_id = '"+ str(mp_id) +"' AND apl_id = '"+ str(apl_id) +"'"
+	print(l_apl_no_query)
+	cursor.execute(l_apl_no_query)
+	results = namedtuplefetchall(cursor)	
+	l_apl_no = results[0].apl_no
 
-    print("aa2")
-    l_com_cdd_query = "select sort_seq_no,std_detl_code_nm FROM service20_com_cdd WHERE std_grp_code = 'MS0015' AND std_detl_code = '"+ str(item_cd) +"'"
-    print(l_com_cdd_query)
-    cursor.execute(l_com_cdd_query)
-    results = namedtuplefetchall(cursor)    
-    l_sort_seq_no = results[0].sort_seq_no
-    
-    
-    print("aa3")
-    l_mp_sub_query = "select att_cdd,att_unit,att_val FROM service20_mp_sub WHERE  mp_id = '"+ str(mp_id) +"' and att_cdh = 'MS0016' AND att_val ='"+ str(pro_id) +"'"
-    print(l_mp_sub_query)
-    cursor.execute(l_mp_sub_query)
-    results = namedtuplefetchall(cursor)    
-    l_mrk_no = results[0].att_cdd
-    l_mrk_nm = results[0].att_unit
-
-
-
-    l_mp_sub_query = "select att_cdd,att_unit,att_val FROM service20_mp_sub WHERE  mp_id = '"+ str(mp_id) +"' and att_cdh = 'MS0015' AND att_cdd ='"+ str(item_cd) +"'"
-    print(l_mp_sub_query)
-    cursor.execute(l_mp_sub_query)
-    results = namedtuplefetchall(cursor)    
-    l_item_nm = results[0].att_val
-    l_att_cdd = results[0].att_cdd
-
-    print("aa4")
-    
-    #print(apl_id)
-    #print(ms_id)
+	print("aa2")
+	l_com_cdd_query = "select sort_seq_no,std_detl_code_nm FROM service20_com_cdd WHERE std_grp_code = 'MS0015' AND std_detl_code = '"+ str(item_cd) +"'"
+	print(l_com_cdd_query)
+	cursor.execute(l_com_cdd_query)
+	results = namedtuplefetchall(cursor)	
+	l_sort_seq_no = results[0].sort_seq_no
+	
+	
+	print("aa3")
+	l_mp_sub_query = "select att_cdd,att_unit,att_val FROM service20_mp_sub WHERE  mp_id = '"+ str(mp_id) +"' and att_cdh = 'MS0016' AND att_val ='"+ str(pro_id) +"'"
+	print(l_mp_sub_query)
+	cursor.execute(l_mp_sub_query)
+	results = namedtuplefetchall(cursor)	
+	l_mrk_no = results[0].att_cdd
+	l_mrk_nm = results[0].att_unit
 
 
-    print("아이템")
-    print(item_cd)
-    if item_cd =='06':
-        insert_sql = f"""delete from service20_mp_mrk_h where  mp_id = '{mp_id}' and test_div = '10' and apl_no = '{l_apl_no}' and mrk_seq = '8' and mrk_no = '{l_mrk_no}' """
 
-        print(insert_sql)
-        cursor.execute(insert_sql)      
-        insert_sql = f"""insert into service20_mp_mrk_h (mp_id, test_div, apl_no, mrk_seq, mrk_no, mrk_id, mak_nm, grade) 
-                         select '{mp_id}'
-                               ,'10'
-                               ,'{l_apl_no}' 
-                               ,'8' 
-                               ,'{l_mrk_no}'
-                               ,'{pro_id}'
-                               ,'{l_mrk_nm}'
-                               ,'{score}'
-                         from dual
-        """
-        print(insert_sql)
-        cursor.execute(insert_sql)      
-    elif item_cd =='07':
-        insert_sql = f"""update service20_mp_mrk_h set tot_score  = '{score}' where mp_id = '{mp_id}' and test_div = '10' and apl_no = '{l_apl_no}' and mrk_seq = '8' and mrk_no = '{l_mrk_no}' 
-        """
-        print(insert_sql)
-        cursor.execute(insert_sql)  
-    else:
+	l_mp_sub_query = "select att_cdd,att_unit,att_val FROM service20_mp_sub WHERE  mp_id = '"+ str(mp_id) +"' and att_cdh = 'MS0015' AND att_cdd ='"+ str(item_cd) +"'"
+	print(l_mp_sub_query)
+	cursor.execute(l_mp_sub_query)
+	results = namedtuplefetchall(cursor)	
+	l_item_nm = results[0].att_val
+	l_att_cdd = results[0].att_cdd
 
-        insert_sql = "delete from service20_mp_mrk where  mp_id = '" + str(mp_id) + "' and test_div = '10' and apl_no = '"+ str(l_apl_no) + "' and mrk_seq = '" + str(l_sort_seq_no) + "' and item_cd = '" + str(item_cd) + "' and mrk_no = '" + str(l_mrk_no) + "'"
-        print(insert_sql)
-        cursor.execute(insert_sql)      
-
-        insert_sql = "insert into service20_mp_mrk (mp_id, test_div, apl_no, mrk_seq, mrk_no, mrk_id, mak_nm, score, item_cd, item_nm) "
-        insert_sql += "select '" + str(mp_id) + "'," 
-        insert_sql += "'10'," 
-        insert_sql += "'" + str(l_apl_no)  +"'," 
-        insert_sql += "'" + str(l_sort_seq_no)  +"',"
-        insert_sql += "'" + str(l_mrk_no)  +"',"
-        insert_sql += "'" + str(pro_id)  +"',"  
-        insert_sql += "'" + str(l_mrk_nm)  +"',"    
-        insert_sql += "'" + str(score)  +"',"
-        insert_sql += "'" + str(item_cd)  +"',"
-        insert_sql += "'" + str(l_item_nm)  +"'"
-        insert_sql += "from dual" 
-        print(insert_sql)
-    
+	print("aa4")
+	
+	#print(apl_id)
+	#print(ms_id)
 
 
-    print("aa5")
+	print("아이템")
+	print(item_cd)
+	if item_cd =='06':
+		insert_sql = f"""delete from service20_mp_mrk_h where  mp_id = '{mp_id}' and test_div = '10' and apl_no = '{l_apl_no}' and mrk_seq = '8' and mrk_no = '{l_mrk_no}' """
 
-    message = "Ok" 
-    context = {'message': message,}
-    
-    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+		print(insert_sql)
+		cursor.execute(insert_sql)		
+		insert_sql = f"""insert into service20_mp_mrk_h (mp_id, test_div, apl_no, mrk_seq, mrk_no, mrk_id, mak_nm, grade) 
+					     select '{mp_id}'
+					           ,'10'
+					           ,'{l_apl_no}' 
+					           ,'8' 
+					           ,'{l_mrk_no}'
+					           ,'{pro_id}'
+					           ,'{l_mrk_nm}'
+					           ,'{score}'
+					     from dual
+		"""
+		print(insert_sql)
+		cursor.execute(insert_sql)		
+	elif item_cd =='07':
+		insert_sql = f"""update service20_mp_mrk_h set tot_score  = '{score}' where mp_id = '{mp_id}' and test_div = '10' and apl_no = '{l_apl_no}' and mrk_seq = '8' and mrk_no = '{l_mrk_no}' 
+		"""
+		print(insert_sql)
+		cursor.execute(insert_sql)	
+	else:
+
+		insert_sql = "delete from service20_mp_mrk where  mp_id = '" + str(mp_id) + "' and test_div = '10' and apl_no = '"+ str(l_apl_no) + "' and mrk_seq = '" + str(l_sort_seq_no) + "' and item_cd = '" + str(item_cd) + "' and mrk_no = '" + str(l_mrk_no) + "'"
+		print(insert_sql)
+		cursor.execute(insert_sql)		
+
+		insert_sql = "insert into service20_mp_mrk (mp_id, test_div, apl_no, mrk_seq, mrk_no, mrk_id, mak_nm, score, item_cd, item_nm) "
+		insert_sql += "select '" + str(mp_id) + "'," 
+		insert_sql += "'10'," 
+		insert_sql += "'" + str(l_apl_no)  +"'," 
+		insert_sql += "'" + str(l_sort_seq_no)  +"',"
+		insert_sql += "'" + str(l_mrk_no)  +"',"
+		insert_sql += "'" + str(pro_id)  +"',"	
+		insert_sql += "'" + str(l_mrk_nm)  +"',"	
+		insert_sql += "'" + str(score)  +"',"
+		insert_sql += "'" + str(item_cd)  +"',"
+		insert_sql += "'" + str(l_item_nm)  +"'"
+		insert_sql += "from dual" 
+		print(insert_sql)
+	
+
+
+	print("aa5")
+
+	message = "Ok" 
+	context = {'message': message,}
+	
+	return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 #가선점 평가  업로드.
 @csrf_exempt
@@ -1673,35 +1673,35 @@ def mpFn10(request):
 #가산점 평가  업로드 확인버튼
 @csrf_exempt
 def mpFn10_Submit(request):
-    apl_id = request.GET.get('apl_id', None)
-    mp_id = request.GET.get('mp_id', None)
-    score = request.GET.get('score', None)
-    item_cd = request.GET.get('item_cd', None)
-    
-    cursor = connection.cursor()
+	apl_id = request.GET.get('apl_id', None)
+	mp_id = request.GET.get('mp_id', None)
+	score = request.GET.get('score', None)
+	item_cd = request.GET.get('item_cd', None)
+	
+	cursor = connection.cursor()
 
-    print(item_cd)
+	print(item_cd)
 
-    if score != None:
-        if item_cd=='01':
-                print("01")
-                insert_sql = f"""update service20_mp_mtr set cscore5 = '0' where mp_id = '{mp_id}' and apl_id = '{apl_id}'""" 
-                cursor.execute(insert_sql)                              
-                insert_sql = f"""update service20_mp_mtr set cscore5 = '{score}' where mp_id = '{mp_id}' and apl_id = '{apl_id}'""" 
-                cursor.execute(insert_sql)
-        elif item_cd=='02':
-                print("02")
-                insert_sql = f"""update service20_mp_mtr set cscore6 = '0' where mp_id = '{mp_id}' and apl_id = '{apl_id}'""" 
-                print(insert_sql)               
-                insert_sql = f"""update service20_mp_mtr set cscore6 = '{score}' where mp_id = '{mp_id}' and apl_id = '{apl_id}'""" 
-                print(insert_sql)
-                cursor.execute(insert_sql)          
+	if score != None:
+		if item_cd=='01':
+				print("01")
+				insert_sql = f"""update service20_mp_mtr set cscore5 = '0' where mp_id = '{mp_id}' and apl_id = '{apl_id}'""" 
+				cursor.execute(insert_sql)								
+				insert_sql = f"""update service20_mp_mtr set cscore5 = '{score}' where mp_id = '{mp_id}' and apl_id = '{apl_id}'""" 
+				cursor.execute(insert_sql)
+		elif item_cd=='02':
+				print("02")
+				insert_sql = f"""update service20_mp_mtr set cscore6 = '0' where mp_id = '{mp_id}' and apl_id = '{apl_id}'""" 
+				print(insert_sql)				
+				insert_sql = f"""update service20_mp_mtr set cscore6 = '{score}' where mp_id = '{mp_id}' and apl_id = '{apl_id}'""" 
+				print(insert_sql)
+				cursor.execute(insert_sql)			
 
 
-    message = "Ok" 
-    context = {'message': message,}
-    
-    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})   
+	message = "Ok" 
+	context = {'message': message,}
+	
+	return JsonResponse(context,json_dumps_params={'ensure_ascii': True})	
 
 
 
@@ -1810,7 +1810,7 @@ def mpPop1_Det2(request):
                     'score03' : rows.score03,
                     'score04' : rows.score04,
                     'score05' : rows.score05,
-                    'dept_chr_id' : rows.dept_chr_id
+					'dept_chr_id' : rows.dept_chr_id
                     }
     #return HttpResponse(json.dumps(context), content_type="application/json")
     return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
@@ -1887,325 +1887,325 @@ class mpPop1_Det5Serializer(serializers.ModelSerializer):
         return obj.score
 
 class mpPop1_Det5(generics.ListAPIView):
-    queryset = mp_sub.objects.all()
-    serializer_class = mpPop1_Det5Serializer
-    def list(self, request):
-        mp_id = request.GET.get('mp_id', None)
-        apl_no = request.GET.get('user_id', None)
-        att_cdd_id = request.GET.get('att_cdd_id', None)
-        nm_id = request.GET.get('nm_id', None)
+	queryset = mp_sub.objects.all()
+	serializer_class = mpPop1_Det5Serializer
+	def list(self, request):
+		mp_id = request.GET.get('mp_id', None)
+		apl_no = request.GET.get('user_id', None)
+		att_cdd_id = request.GET.get('att_cdd_id', None)
+		nm_id = request.GET.get('nm_id', None)
 
-        query = "select A.*, B.* from   service20_mp_sub A left outer join service20_mp_mrk B on     A.mp_id   = B.mp_id and    A.att_cdd = B.mrk_id where  A.att_id   = 'MS0016' and    B.apl_no         = '" + apl_no +"' and    A.att_cdd        = '"+att_cdd_id+"' and    B.item_cd = '"+nm_id+"' order by item_cd"
-        
-        print(query)
-        queryset = mp_sub.objects.raw(query)        
-        serializer_class = self.get_serializer_class()
-        serializer = serializer_class(queryset, many=True)
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-        return Response(serializer.data)    
+		query = "select A.*, B.* from   service20_mp_sub A left outer join service20_mp_mrk B on     A.mp_id   = B.mp_id and    A.att_cdd = B.mrk_id where  A.att_id   = 'MS0016' and    B.apl_no         = '" + apl_no +"' and    A.att_cdd        = '"+att_cdd_id+"' and    B.item_cd = '"+nm_id+"' order by item_cd"
+		
+		print(query)
+		queryset = mp_sub.objects.raw(query)        
+		serializer_class = self.get_serializer_class()
+		serializer = serializer_class(queryset, many=True)
+		page = self.paginate_queryset(queryset)
+		if page is not None:
+			serializer = self.get_serializer(page, many=True)
+			return self.get_paginated_response(serializer.data)
+		return Response(serializer.data)    
 
 
 
 
 @csrf_exempt
 def mpPop1_Det5_Save(request):
-    mp_id = request.GET.get('mp_id', None)  
-    test_div = request.GET.get('test_div', None)  
-    
-    apl_no = request.GET.get('apl_no', None)
-    mrk_id = request.GET.get('mrk_id', None)
-    mrk_nm = request.GET.get('mrk_nm', None)
-    score = request.GET.get('score', None)
-    item_cd = request.GET.get('item_cd', None)
-    item_nm = request.GET.get('item_nm', None)
+	mp_id = request.GET.get('mp_id', None)  
+	test_div = request.GET.get('test_div', None)  
+	
+	apl_no = request.GET.get('apl_no', None)
+	mrk_id = request.GET.get('mrk_id', None)
+	mrk_nm = request.GET.get('mrk_nm', None)
+	score = request.GET.get('score', None)
+	item_cd = request.GET.get('item_cd', None)
+	item_nm = request.GET.get('item_nm', None)
 
-    mrk_seq = request.GET.get('mrk_seq', None)
-    mrk_no = request.GET.get('mrk_no', None)
+	mrk_seq = request.GET.get('mrk_seq', None)
+	mrk_no = request.GET.get('mrk_no', None)
 
-    cursor = connection.cursor()
-    query = "select count(1) as cnt  from service20_mp_mrk  where apl_no ='"+ str(apl_no) +"' and mp_id='"+ str(mp_id) +"' and mrk_id = '" + str(mrk_id) + "' and item_cd = '" + str(item_cd) + "' and test_div = '" + str(test_div) +   "' and mrk_seq = '" + str(mrk_seq) +    "' and mrk_no = '" + str(mrk_no) +   "' "
-    print(query)
-    cursor.execute(query)
-    results = namedtuplefetchall(cursor)    
-    num = results[0].cnt
-
-
-    if num > 0:
-        print("건수가 있음")
-        if score == '':
-            score = '0'
-
-        insert_sql = "update service20_mp_mrk set "
-
-        insert_sql += "score='"+ score +"'," 
-        insert_sql += "item_cd='"+ item_cd +"'," 
-        insert_sql += "item_nm='"+ item_nm +"'" 
-
-        insert_sql += " where 1=1" 
-        insert_sql += " and mp_id='"+ mp_id +"'" 
-        insert_sql += " and test_div='"+ test_div +"'" 
-        insert_sql += " and apl_no='"+ apl_no +"'" 
-        insert_sql += " and mrk_seq='"+ mrk_seq +"'" 
-        insert_sql += " and mrk_no='"+ mrk_no +"'" 
-        insert_sql += " and mrk_id='"+ mrk_id +"'" 
-        print(insert_sql)
-        cursor.execute(insert_sql)
+	cursor = connection.cursor()
+	query = "select count(1) as cnt  from service20_mp_mrk  where apl_no ='"+ str(apl_no) +"' and mp_id='"+ str(mp_id) +"' and mrk_id = '" + str(mrk_id) + "' and item_cd = '" + str(item_cd) + "' and test_div = '" + str(test_div) +   "' and mrk_seq = '" + str(mrk_seq) +    "' and mrk_no = '" + str(mrk_no) +   "' "
+	print(query)
+	cursor.execute(query)
+	results = namedtuplefetchall(cursor)	
+	num = results[0].cnt
 
 
-    else:
-        
-        print("건수가 없음")
-        
-        if score == None:
-            score = '0'
-        elif score == '':
-            score = '0'
+	if num > 0:
+		print("건수가 있음")
+		if score == '':
+			score = '0'
 
-        insert_sql = "insert into service20_mp_mrk (mp_id, test_div, apl_no, mrk_seq, mrk_no, mrk_id, mak_nm, score, item_cd, item_nm)"
-        insert_sql += "values("
-        insert_sql += "'"+ mp_id +"'," 
-        insert_sql += "'10'," 
-        insert_sql += "'"+ apl_no +"'," 
-        insert_sql += "'"+ mrk_seq +"',"  #mrk_id
-        insert_sql += "'"+ mrk_no +"',"  #mrk_id
-        insert_sql += "'"+ mrk_id +"',"  #mrk_id
-        insert_sql += "'"+ mrk_nm +"',"  #mrk_nm
-        insert_sql += "'"+ score +"',"  #score
-        insert_sql += "'"+ item_cd +"',"  #item_cd
-        insert_sql += "'"+ item_nm +"')"  #item_nm
-        #print(insert_sql)
+		insert_sql = "update service20_mp_mrk set "
 
-        cursor.execute(insert_sql)
-        
+		insert_sql += "score='"+ score +"'," 
+		insert_sql += "item_cd='"+ item_cd +"'," 
+		insert_sql += "item_nm='"+ item_nm +"'" 
 
-    message = "Ok" 
-    context = {'message': message,}
+		insert_sql += " where 1=1" 
+		insert_sql += " and mp_id='"+ mp_id +"'" 
+		insert_sql += " and test_div='"+ test_div +"'" 
+		insert_sql += " and apl_no='"+ apl_no +"'" 
+		insert_sql += " and mrk_seq='"+ mrk_seq +"'" 
+		insert_sql += " and mrk_no='"+ mrk_no +"'" 
+		insert_sql += " and mrk_id='"+ mrk_id +"'" 
+		print(insert_sql)
+		cursor.execute(insert_sql)
 
 
-    #return HttpResponse(json.dumps(context), content_type="application/json")
-    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+	else:
+		
+		print("건수가 없음")
+		
+		if score == None:
+			score = '0'
+		elif score == '':
+			score = '0'
+
+		insert_sql = "insert into service20_mp_mrk (mp_id, test_div, apl_no, mrk_seq, mrk_no, mrk_id, mak_nm, score, item_cd, item_nm)"
+		insert_sql += "values("
+		insert_sql += "'"+ mp_id +"'," 
+		insert_sql += "'10'," 
+		insert_sql += "'"+ apl_no +"'," 
+		insert_sql += "'"+ mrk_seq +"',"  #mrk_id
+		insert_sql += "'"+ mrk_no +"',"  #mrk_id
+		insert_sql += "'"+ mrk_id +"',"  #mrk_id
+		insert_sql += "'"+ mrk_nm +"',"  #mrk_nm
+		insert_sql += "'"+ score +"',"  #score
+		insert_sql += "'"+ item_cd +"',"  #item_cd
+		insert_sql += "'"+ item_nm +"')"  #item_nm
+		#print(insert_sql)
+
+		cursor.execute(insert_sql)
+		
+
+	message = "Ok" 
+	context = {'message': message,}
+
+
+	#return HttpResponse(json.dumps(context), content_type="application/json")
+	return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 
 #멘토링 리포트보기.
 @csrf_exempt
 def mpFn8(request):
-    context = None
-    return render(
-        request,
-        #'report/reportProgram.html',
-        'report/choice.html',
-        context)
+	context = None
+	return render(
+		request,
+		#'report/reportProgram.html',
+		'report/choice.html',
+		context)
 
 #멘토링 리포트보기.
 @csrf_exempt
 def mpFn8_2(request):
-    context = None
-    return render(
-        request,
-        'report/reportProgram.html',
-        #'report/choice.html',
-        context)    
+	context = None
+	return render(
+		request,
+		'report/reportProgram.html',
+		#'report/choice.html',
+		context)	
 
 #멘토링 리포트보기.
 @csrf_exempt
 def mpFn8_assist(request):
-    context = None
-    return render(
-        request,
-        'report/reportProgram_assistant.html',
-        #'report/choice.html',
-        context)
+	context = None
+	return render(
+		request,
+		'report/reportProgram_assistant.html',
+		#'report/choice.html',
+		context)
 
 
 
 #학과장 일괄승인하기
 @csrf_exempt
 def mpFn8_assist_confirm_all(request):
-    cursor = connection.cursor()
-    key = request.GET.get('key', None)
-    mp_id = request.GET.get('mp_id', None)
+	cursor = connection.cursor()
+	key = request.GET.get('key', None)
+	mp_id = request.GET.get('mp_id', None)
 
-    login_id = request.session.get('user_id')
+	login_id = request.session.get('user_id')
 
-    query2 = f'''
-        SELECT * from service20_dept_ast where ast_id = '{login_id}' or dean_emp_id = '{login_id}'
-    ''' 
-    queryset = dept_ast.objects.raw(query2)
-    dept_cd = ''
-    for q in queryset:
-        dept_cd = q.dept_cd
-        dean_emp_id = q.dean_emp_id
-        dean_emp_nm = q.dean_emp_nm
-        ast_id = q.ast_id
-        ast_nm = q.ast_nm
+	query2 = f'''
+		SELECT * from service20_dept_ast where ast_id = '{login_id}' or dean_emp_id = '{login_id}'
+	'''	
+	queryset = dept_ast.objects.raw(query2)
+	dept_cd = ''
+	for q in queryset:
+		dept_cd = q.dept_cd
+		dean_emp_id = q.dean_emp_id
+		dean_emp_nm = q.dean_emp_nm
+		ast_id = q.ast_id
+		ast_nm = q.ast_nm
 
 
-    insert_sql = f"""update service20_mp_mtr set 
-                              dept_appr_div = 'Y',
-                              dept_chr_id = '{dean_emp_id}', 
-                              dept_chr_nm = '{dean_emp_nm}', 
-                              ast_id = '{ast_id}',
-                              ast_nm = '{ast_nm}',
-                              dept_retn_rsn = '', 
-                              dept_appr_dt = DATE_FORMAT(now(),'%Y%m%d') 
-                      where  dept_cd = '{dept_cd}'
+	insert_sql = f"""update service20_mp_mtr set 
+	                          dept_appr_div = 'Y',
+	                          dept_chr_id = '{dean_emp_id}', 
+	                          dept_chr_nm = '{dean_emp_nm}', 
+	                          ast_id = '{ast_id}',
+	                          ast_nm = '{ast_nm}',
+	                          dept_retn_rsn = '', 
+	                          dept_appr_dt = DATE_FORMAT(now(),'%Y%m%d') 
+	                  where  dept_cd = '{dept_cd}'
                         and  id = '{key}'
-                      """ 
-    print(insert_sql)
-    cursor.execute(insert_sql)
+	                  """ 
+	print(insert_sql)
+	cursor.execute(insert_sql)
 
-    message = "Ok" 
-    context = {'message': message,}
-    
-    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})   
+	message = "Ok" 
+	context = {'message': message,}
+	
+	return JsonResponse(context,json_dumps_params={'ensure_ascii': True})	
 
 
 
 #학과장 승인하기
 @csrf_exempt
 def mpFn8_assist_confirm(request):
-    cursor = connection.cursor()
-    apl_id = request.GET.get('apl_id', None)
-    mp_id = request.GET.get('mp_id', None)
+	cursor = connection.cursor()
+	apl_id = request.GET.get('apl_id', None)
+	mp_id = request.GET.get('mp_id', None)
 
-    login_id = request.session.get('user_id')
+	login_id = request.session.get('user_id')
 
-    query2 = f'''
-        SELECT * from service20_dept_ast where ast_id = '{login_id}' or dean_emp_id = '{login_id}'
-    ''' 
-    queryset = dept_ast.objects.raw(query2)
-    dept_cd = ''
-    for q in queryset:
-        dept_cd = q.dept_cd
-        dean_emp_id = q.dean_emp_id
-        dean_emp_nm = q.dean_emp_nm
-        ast_id = q.ast_id
-        ast_nm = q.ast_nm
+	query2 = f'''
+		SELECT * from service20_dept_ast where ast_id = '{login_id}' or dean_emp_id = '{login_id}'
+	'''	
+	queryset = dept_ast.objects.raw(query2)
+	dept_cd = ''
+	for q in queryset:
+		dept_cd = q.dept_cd
+		dean_emp_id = q.dean_emp_id
+		dean_emp_nm = q.dean_emp_nm
+		ast_id = q.ast_id
+		ast_nm = q.ast_nm
 
 
 
-    insert_sql = f"""update service20_mp_mtr set 
-                              dept_appr_div = 'Y',
-                              dept_chr_id = '{dean_emp_id}', 
-                              dept_chr_nm = '{dean_emp_nm}', 
-                              ast_id = '{ast_id}',
-                              ast_nm = '{ast_nm}',
-                              dept_retn_rsn = '', 
-                              dept_appr_dt = DATE_FORMAT(now(),'%Y%m%d') 
+	insert_sql = f"""update service20_mp_mtr set 
+	                          dept_appr_div = 'Y',
+	                          dept_chr_id = '{dean_emp_id}', 
+	                          dept_chr_nm = '{dean_emp_nm}', 
+	                          ast_id = '{ast_id}',
+	                          ast_nm = '{ast_nm}',
+	                          dept_retn_rsn = '', 
+	                          dept_appr_dt = DATE_FORMAT(now(),'%Y%m%d') 
 
-                      where  dept_cd = '{dept_cd}' 
-                       and apl_id = '{apl_id}' """
+	                  where  dept_cd = '{dept_cd}' 
+	                   and apl_id = '{apl_id}' """
 
-    #insert_sql = f"""update service20_mp_mtr set dept_appr_div = 'Y',dept_retn_rsn = '', dept_appr_dt = DATE_FORMAT(now(),'%Y%m%d') where mp_id = '{mp_id}' and apl_id = '{apl_id}'""" 
+	#insert_sql = f"""update service20_mp_mtr set dept_appr_div = 'Y',dept_retn_rsn = '', dept_appr_dt = DATE_FORMAT(now(),'%Y%m%d') where mp_id = '{mp_id}' and apl_id = '{apl_id}'""" 
 
-    cursor.execute(insert_sql)
+	cursor.execute(insert_sql)
 
-    message = "Ok" 
-    context = {'message': message,}
-    
-    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})   
+	message = "Ok" 
+	context = {'message': message,}
+	
+	return JsonResponse(context,json_dumps_params={'ensure_ascii': True})	
 
 #학과장 반려
 @csrf_exempt
 def mpFn8_assist_cancle(request):
-    cursor = connection.cursor()
-    apl_id = request.GET.get('apl_id', None)
-    mp_id = request.GET.get('mp_id', None)
-    content = request.GET.get('content', None)
+	cursor = connection.cursor()
+	apl_id = request.GET.get('apl_id', None)
+	mp_id = request.GET.get('mp_id', None)
+	content = request.GET.get('content', None)
 
-    insert_sql = f"""update service20_mp_mtr set 
-                            dept_appr_div = 'N', 
-                            dept_appr_dt = '',
-                            dept_chr_id = '',
-                            dept_chr_nm = '',
-                            ast_id = '',
-                            ast_nm = ''
-                     where mp_id = '{mp_id}' and apl_id = '{apl_id}'""" 
-    cursor.execute(insert_sql)
+	insert_sql = f"""update service20_mp_mtr set 
+	                        dept_appr_div = 'N', 
+	                        dept_appr_dt = '',
+	                        dept_chr_id = '',
+	                        dept_chr_nm = '',
+	                        ast_id = '',
+	                        ast_nm = ''
+	                 where mp_id = '{mp_id}' and apl_id = '{apl_id}'""" 
+	cursor.execute(insert_sql)
 
-    message = "Ok" 
-    context = {'message': message,} 
-    
-    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})   
+	message = "Ok" 
+	context = {'message': message,} 
+	
+	return JsonResponse(context,json_dumps_params={'ensure_ascii': True})	
 
 
 #면접 관리자 코멘트
 @csrf_exempt
 def mpFn8_gabu(request):
-    cursor = connection.cursor()
-    apl_id = request.GET.get('apl_id', None)
-    mp_id = request.GET.get('mp_id', None)
-    content = request.GET.get('commnet', None)
-    intv_rslt = request.GET.get('gabu',None)
+	cursor = connection.cursor()
+	apl_id = request.GET.get('apl_id', None)
+	mp_id = request.GET.get('mp_id', None)
+	content = request.GET.get('commnet', None)
+	intv_rslt = request.GET.get('gabu',None)
 
-    insert_sql = f"""update service20_mp_mtr set 
-                            intv_cmt = '{content}'
-                     where mp_id = '{mp_id}' and apl_id = '{apl_id}'""" 
+	insert_sql = f"""update service20_mp_mtr set 
+	                        intv_cmt = '{content}'
+	                 where mp_id = '{mp_id}' and apl_id = '{apl_id}'""" 
 
-    print(insert_sql)
-    
-    cursor.execute(insert_sql)
+	print(insert_sql)
+	
+	cursor.execute(insert_sql)
 
-    message = "Ok" 
-    context = {'message': message,} 
-    
-    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+	message = "Ok" 
+	context = {'message': message,} 
+	
+	return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 #면접 심사위원 가부 및 코멘트
 @csrf_exempt
 def mpFn8_gabu2(request):
-    cursor = connection.cursor()
-    apl_id = request.GET.get('apl_id', None)
-    mp_id = request.GET.get('mp_id', None)
-    content = request.GET.get('commnet', None)
-    intv_rslt = request.GET.get('gabu',None)
-    pro_id = request.GET.get('pro_id',None)
+	cursor = connection.cursor()
+	apl_id = request.GET.get('apl_id', None)
+	mp_id = request.GET.get('mp_id', None)
+	content = request.GET.get('commnet', None)
+	intv_rslt = request.GET.get('gabu',None)
+	pro_id = request.GET.get('pro_id',None)
 
 
-    l_apl_no_query = f"""select apl_no FROM service20_mp_mtr WHERE mp_id = '{mp_id}' AND apl_id = '{apl_id}'"""
+	l_apl_no_query = f"""select apl_no FROM service20_mp_mtr WHERE mp_id = '{mp_id}' AND apl_id = '{apl_id}'"""
 
-    print(l_apl_no_query)
-    cursor.execute(l_apl_no_query)
-    results = namedtuplefetchall(cursor)    
-    l_apl_no = results[0].apl_no
+	print(l_apl_no_query)
+	cursor.execute(l_apl_no_query)
+	results = namedtuplefetchall(cursor)	
+	l_apl_no = results[0].apl_no
 
-    l_mp_sub_query = f""" SELECT * FROM service20_mp_sub WHERE mp_id = '{mp_id}' AND att_cdh = 'MS0020' and att_val = '{pro_id}'"""
-    print(l_mp_sub_query)
-    cursor.execute(l_mp_sub_query)
-    results = namedtuplefetchall(cursor)    
-    l_mrk_no = results[0].att_val
-    l_mrk_nm = results[0].att_unit
+	l_mp_sub_query = f""" SELECT * FROM service20_mp_sub WHERE mp_id = '{mp_id}' AND att_cdh = 'MS0020' and att_val = '{pro_id}'"""
+	print(l_mp_sub_query)
+	cursor.execute(l_mp_sub_query)
+	results = namedtuplefetchall(cursor)	
+	l_mrk_no = results[0].att_val
+	l_mrk_nm = results[0].att_unit
 
 
-    insert_sql = f"""delete from service20_mp_mrk where  mp_id = '{mp_id}' and test_div = '20' and apl_no = '{l_apl_no}' and mrk_id = '{pro_id}'"""
-    print(insert_sql)
-    cursor.execute(insert_sql)      
+	insert_sql = f"""delete from service20_mp_mrk where  mp_id = '{mp_id}' and test_div = '20' and apl_no = '{l_apl_no}' and mrk_id = '{pro_id}'"""
+	print(insert_sql)
+	cursor.execute(insert_sql)		
 
-    insert_sql = f"""insert into service20_mp_mrk (mp_id, test_div, apl_no, mrk_seq, mrk_no, mrk_id, mak_nm, score, item_cd, item_nm,mrk_cmt) 
-                     select '{mp_id}' ,
-                            '20',
-                            '{l_apl_no}',
-                            '1',
-                            (SELECT ifnull(max(mrk_no),0) + 1 from service20_mp_mrk a where a.mp_id = mp_id and a.test_div = '20' and a.apl_no = apl_no and a.mrk_seq = mrk_seq),
-                            '{l_mrk_no}',
-                            '{l_mrk_nm}',
-                            '{intv_rslt}',
-                            '10',
-                            '면접',
-                            '{content}'
-                     from dual
-                    """
-    print(insert_sql)       
-    
-    cursor.execute(insert_sql)
+	insert_sql = f"""insert into service20_mp_mrk (mp_id, test_div, apl_no, mrk_seq, mrk_no, mrk_id, mak_nm, score, item_cd, item_nm,mrk_cmt) 
+ 	                 select '{mp_id}' ,
+ 	                        '20',
+ 	                        '{l_apl_no}',
+ 	                        '1',
+ 	                        (SELECT ifnull(max(mrk_no),0) + 1 from service20_mp_mrk a where a.mp_id = mp_id and a.test_div = '20' and a.apl_no = apl_no and a.mrk_seq = mrk_seq),
+ 	                        '{l_mrk_no}',
+ 	                        '{l_mrk_nm}',
+ 	                        '{intv_rslt}',
+ 	                        '10',
+ 	                        '면접',
+ 	                        '{content}'
+ 	                 from dual
+	                """
+	print(insert_sql)		
+	
+	cursor.execute(insert_sql)
 
-    message = "Ok" 
-    context = {'message': message,} 
-    
-    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+	message = "Ok" 
+	context = {'message': message,} 
+	
+	return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 
 #멘토링 리포트보기 상세 리스트
@@ -2333,239 +2333,239 @@ def sms(request):
 
 @csrf_exempt
 def sms_result(request):
-    vlSelectNo = request.GET.get('id')
-    vlFlag = request.GET.get('flag')
-    ms_id = ''
-    apl_no = ''
+	vlSelectNo = request.GET.get('id')
+	vlFlag = request.GET.get('flag')
+	ms_id = ''
+	apl_no = ''
 
-    if vlFlag == 'mp':
-        cursor = connection.cursor()
-        query_b = "select mp_id, apl_no,ms_trn_yn from service20_mp_mtr where id = '"+ vlSelectNo +"'"
-        print(query_b)
-        cursor.execute(query_b)
-        results_b = namedtuplefetchall(cursor)  
-        ms_id = results_b[0].mp_id
-        apl_no = results_b[0].apl_no
+	if vlFlag == 'mp':
+		cursor = connection.cursor()
+		query_b = "select mp_id, apl_no,ms_trn_yn from service20_mp_mtr where id = '"+ vlSelectNo +"'"
+		print(query_b)
+		cursor.execute(query_b)
+		results_b = namedtuplefetchall(cursor)	
+		ms_id = results_b[0].mp_id
+		apl_no = results_b[0].apl_no
 
-        ms_trn_yn = results_b[0].ms_trn_yn
-
-
-        print("A1")
-
-        if ms_trn_yn == 'Y' :
-            query =  f"""SELECT CASE A.DOC_RSLT WHEN 'P' THEN   CONCAT(   A.APL_NM, '님 ', CHAR(10)
-                                               , (SELECT MP_NAME 
-                                               FROM service20_mpgm B
-                                              WHERE B.MP_ID    = '{ms_id}'), ' 선발 면접 및 멘토스쿨 이수 대상에서 제외됩니다.', CHAR(10),
-                                          '최종 합격발표는 3월 25일 전후 예정입니다.'
-                                          )
-                                 WHEN 'N' THEN    CONCAT(   A.APL_NM, '님', CHAR(10)
-                                          , (SELECT MP_NAME
-                                               FROM service20_mpgm B
-                                              WHERE B.MP_ID    = '{ms_id}'), ' 서류젼형에 불합격 했습니다.', CHAR(10)
-                                          , '다음 기회에 도전 부탁드립니다.' )
-                                 ELSE 'NO MESSAGE' END MSG
-                          FROM service20_mp_mtr A
-                         WHERE A.MP_ID    = '{ms_id}'
-                           AND A.APL_NO   = '{apl_no}'"""
-        else:
+		ms_trn_yn = results_b[0].ms_trn_yn
 
 
-            query =  f"""SELECT CASE A.DOC_RSLT WHEN 'P' THEN   CONCAT(   A.APL_NM, '님 ', CHAR(10)
-                                               , (SELECT MP_NAME 
-                                               FROM service20_mpgm B
-                                              WHERE B.MP_ID    = '{ms_id}'), ' 서류젼형 합격을 축하합니다.', CHAR(10)
-                                          , '면접 일시 : ', SUBSTRING(A.INTV_DT, 1, 16), '(', A.INTV_TEAM, '팀)', CHAR(10)
-                                          , '장소 :',    (SELECT B.ATT_VAL
-                                                  FROM service20_mp_sub B
-                                                  WHERE B.MP_ID  = A.MP_ID
-                                                   AND B.ATT_ID = 'MS0019' 
-                                                   AND B.ATT_CDH = 'MS0019'
-                                                   AND B.ATT_CDD = '06'), CHAR(10)
-                                          , '면접시간 15분전 대기 바랍니다.' )
-                                 WHEN 'N' THEN    CONCAT(   A.APL_NM, '님', CHAR(10)
-                                          , (SELECT MP_NAME
-                                               FROM service20_mpgm B
-                                              WHERE B.MP_ID    = '{ms_id}'), ' 서류젼형에 불합격 했습니다.', CHAR(10)
-                                          , '다음 기회에 도전 부탁드립니다.' )
-                                 ELSE 'NO MESSAGE' END MSG
-                          FROM service20_mp_mtr A
-                         WHERE A.MP_ID    = '{ms_id}'
-                           AND A.APL_NO   = '{apl_no}'"""
+		print("A1")
 
-        
-        print(query)
-
-        
-        cursor.execute(query)
-        results = namedtuplefetchall(cursor)    
-        msg = results[0].MSG
+		if ms_trn_yn == 'Y' :
+			query =  f"""SELECT CASE A.DOC_RSLT WHEN 'P' THEN   CONCAT(   A.APL_NM, '님 ', CHAR(10)
+			                                   , (SELECT MP_NAME 
+			                                   FROM service20_mpgm B
+			                                  WHERE B.MP_ID    = '{ms_id}'), ' 선발 면접 및 멘토스쿨 이수 대상에서 제외됩니다.', CHAR(10),
+			                              '최종 합격발표는 3월 25일 전후 예정입니다.'
+			                              )
+			                     WHEN 'N' THEN    CONCAT(   A.APL_NM, '님', CHAR(10)
+			                              , (SELECT MP_NAME
+			                                   FROM service20_mpgm B
+			                                  WHERE B.MP_ID    = '{ms_id}'), ' 서류젼형에 불합격 했습니다.', CHAR(10)
+			                              , '다음 기회에 도전 부탁드립니다.' )
+			                     ELSE 'NO MESSAGE' END MSG
+			              FROM service20_mp_mtr A
+			             WHERE A.MP_ID    = '{ms_id}'
+			               AND A.APL_NO   = '{apl_no}'"""
+		else:
 
 
+			query =  f"""SELECT CASE A.DOC_RSLT WHEN 'P' THEN   CONCAT(   A.APL_NM, '님 ', CHAR(10)
+			                                   , (SELECT MP_NAME 
+			                                   FROM service20_mpgm B
+			                                  WHERE B.MP_ID    = '{ms_id}'), ' 서류젼형 합격을 축하합니다.', CHAR(10)
+			                              , '면접 일시 : ', SUBSTRING(A.INTV_DT, 1, 16), '(', A.INTV_TEAM, '팀)', CHAR(10)
+			                              , '장소 :',    (SELECT B.ATT_VAL
+			                                      FROM service20_mp_sub B
+			                                      WHERE B.MP_ID  = A.MP_ID
+			                                       AND B.ATT_ID = 'MS0019' 
+			                                       AND B.ATT_CDH = 'MS0019'
+			                                       AND B.ATT_CDD = '06'), CHAR(10)
+			                              , '면접시간 15분전 대기 바랍니다.' )
+			                     WHEN 'N' THEN    CONCAT(   A.APL_NM, '님', CHAR(10)
+			                              , (SELECT MP_NAME
+			                                   FROM service20_mpgm B
+			                                  WHERE B.MP_ID    = '{ms_id}'), ' 서류젼형에 불합격 했습니다.', CHAR(10)
+			                              , '다음 기회에 도전 부탁드립니다.' )
+			                     ELSE 'NO MESSAGE' END MSG
+			              FROM service20_mp_mtr A
+			             WHERE A.MP_ID    = '{ms_id}'
+			               AND A.APL_NO   = '{apl_no}'"""
 
-        print(msg)
-        message = "Ok"
-        context = {'message': message,
-                         'msg' : msg,
-        }
-        return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+		
+		print(query)
 
-    else:
-
-        cursor = connection.cursor()
-        query_b = "select ms_id, apl_no from service20_ms_apl where id = '"+ vlSelectNo +"'"
-        print(query_b)
-        cursor.execute(query_b)
-        results_b = namedtuplefetchall(cursor)  
-        ms_id = results_b[0].ms_id
-        apl_no = results_b[0].apl_no
-
-        print("시작111")
-        print(apl_no)
-
-        query =  f"""SELECT CASE A.DOC_RSLT WHEN 'P' THEN   CONCAT(   A.APL_NM, '님 ', CHAR(10)
-                                           , (SELECT MP_NAME 
-                                           FROM service20_mpgm B
-                                          WHERE B.MP_ID    = '{ms_id}'), ' 서류젼형 합격을 축하합니다.', CHAR(10)
-                                      , '면접 일시 : ', SUBSTRING(A.INTV_DT, 1, 16), '(', A.INTV_TEAM, '팀)', CHAR(10)
-                                      , '장소 :',    (SELECT B.ATT_VAL
-                                              FROM service20_mp_sub B
-                                              WHERE B.MP_ID  = A.MP_ID
-                                               AND B.ATT_ID = 'MS0019' 
-                                               AND B.ATT_CDH = 'MS0019'
-                                               AND B.ATT_CDD = '06'), CHAR(10)
-                                      , '면접시간 15분전 대기 바랍니다.' )
-                             WHEN 'N' THEN    CONCAT(   A.APL_NM, '님', CHAR(10)
-                                      , (SELECT MP_NAME
-                                           FROM service20_mpgm B
-                                          WHERE B.MP_ID    = '{ms_id}'), ' 서류젼형에 불합격 했습니다.', CHAR(10)
-                                      , '다음 기회에 도전 부탁드립니다.' )
-                             ELSE 'NO MESSAGE' END MSG
-                      FROM service20_mp_mtr A
-                     WHERE A.MP_ID    = '{ms_id}'
-                       AND A.APL_NO   = '{apl_no}'"""
-
-        
-        print(query)
-
-        
-        cursor.execute(query)
-        results = namedtuplefetchall(cursor)    
-        msg = results[0].MSG
+		
+		cursor.execute(query)
+		results = namedtuplefetchall(cursor)	
+		msg = results[0].MSG
 
 
-        print(msg)
-        message = "Ok"
-        context = {'message': message,
-                         'msg' : msg,
-        }
-        return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+
+		print(msg)
+		message = "Ok"
+		context = {'message': message,
+						 'msg' : msg,
+		}
+		return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+
+	else:
+
+		cursor = connection.cursor()
+		query_b = "select ms_id, apl_no from service20_ms_apl where id = '"+ vlSelectNo +"'"
+		print(query_b)
+		cursor.execute(query_b)
+		results_b = namedtuplefetchall(cursor)	
+		ms_id = results_b[0].ms_id
+		apl_no = results_b[0].apl_no
+
+		print("시작111")
+		print(apl_no)
+
+		query =  f"""SELECT CASE A.DOC_RSLT WHEN 'P' THEN   CONCAT(   A.APL_NM, '님 ', CHAR(10)
+		                                   , (SELECT MP_NAME 
+		                                   FROM service20_mpgm B
+		                                  WHERE B.MP_ID    = '{ms_id}'), ' 서류젼형 합격을 축하합니다.', CHAR(10)
+		                              , '면접 일시 : ', SUBSTRING(A.INTV_DT, 1, 16), '(', A.INTV_TEAM, '팀)', CHAR(10)
+		                              , '장소 :',    (SELECT B.ATT_VAL
+		                                      FROM service20_mp_sub B
+		                                      WHERE B.MP_ID  = A.MP_ID
+		                                       AND B.ATT_ID = 'MS0019' 
+		                                       AND B.ATT_CDH = 'MS0019'
+		                                       AND B.ATT_CDD = '06'), CHAR(10)
+		                              , '면접시간 15분전 대기 바랍니다.' )
+		                     WHEN 'N' THEN    CONCAT(   A.APL_NM, '님', CHAR(10)
+		                              , (SELECT MP_NAME
+		                                   FROM service20_mpgm B
+		                                  WHERE B.MP_ID    = '{ms_id}'), ' 서류젼형에 불합격 했습니다.', CHAR(10)
+		                              , '다음 기회에 도전 부탁드립니다.' )
+		                     ELSE 'NO MESSAGE' END MSG
+		              FROM service20_mp_mtr A
+		             WHERE A.MP_ID    = '{ms_id}'
+		               AND A.APL_NO   = '{apl_no}'"""
+
+		
+		print(query)
+
+		
+		cursor.execute(query)
+		results = namedtuplefetchall(cursor)	
+		msg = results[0].MSG
+
+
+		print(msg)
+		message = "Ok"
+		context = {'message': message,
+						 'msg' : msg,
+		}
+		return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 @csrf_exempt
 def sms_send(request):
 
 
-    print('문자문자문자111')
-    key = request.GET.get('key')
-    method = request.GET.get('method')
-    msg = request.GET.get('msg')
-    print('문자문자문자222')
-    queryset = mp_mtr.objects.all()
-    queryset = queryset.filter(id=key)[0]
+	print('문자문자문자111')
+	key = request.GET.get('key')
+	method = request.GET.get('method')
+	msg = request.GET.get('msg')
+	print('문자문자문자222')
+	queryset = mp_mtr.objects.all()
+	queryset = queryset.filter(id=key)[0]
 
-    print('문자문자문자333')
-    print(queryset.apl_id)
-    push_userid = queryset.apl_id
-    login_id = request.session.get('user_id')
+	print('문자문자문자333')
+	print(queryset.apl_id)
+	push_userid = queryset.apl_id
+	login_id = request.session.get('user_id')
 
-    if login_id == 'admin':
-        login_id = '515440'
+	if login_id == 'admin':
+		login_id = '515440'
 
 
-    user_id = login_id
+	user_id = login_id
 
-    print('문자문자문자222')
-    print(user_id)
+	print('문자문자문자222')
+	print(user_id)
 
-    push_chk = 'S'
-    push_userid = push_userid
-    #push_userid = '515440'
-    push_title = '부산대학교 나눔입니다'
-    push_content = msg
-    tickerText = ' '
-    push_time = '60'
-    cdr_id = login_id
-    sms_content = push_content
-    sms_nb = '0515103322'
-    client_ip = request.META['REMOTE_ADDR']
-    data_info = {'user_id':user_id,'push_chk': push_chk,'push_userid': push_userid,'push_title': push_title,'push_content': push_content,'tickerText': tickerText,'push_time': push_time,'cdr_id': cdr_id,'sms_content': sms_content,'sms_nb': sms_nb}
-    #print(data_info)
-    with requests.Session() as s:
-        first_page = s.post('http://msg.pusan.ac.kr/api/push.asp', data=data_info)
-        html = first_page.text
-        print(html)
-        soup = bs(html, 'html.parser')
+	push_chk = 'S'
+	push_userid = push_userid
+	#push_userid = '515440'
+	push_title = '부산대학교 나눔입니다'
+	push_content = msg
+	tickerText = ' '
+	push_time = '60'
+	cdr_id = login_id
+	sms_content = push_content
+	sms_nb = '0515103322'
+	client_ip = request.META['REMOTE_ADDR']
+	data_info = {'user_id':user_id,'push_chk': push_chk,'push_userid': push_userid,'push_title': push_title,'push_content': push_content,'tickerText': tickerText,'push_time': push_time,'cdr_id': cdr_id,'sms_content': sms_content,'sms_nb': sms_nb}
+	#print(data_info)
+	with requests.Session() as s:
+		first_page = s.post('http://msg.pusan.ac.kr/api/push.asp', data=data_info)
+		html = first_page.text
+		print(html)
+		soup = bs(html, 'html.parser')
 
-    message = html
-    context = {'message': message
-    }
-    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+	message = html
+	context = {'message': message
+	}
+	return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 
 
 #학과장 조교한테 승인 push 날리는 부분
 @csrf_exempt
 def sms_send_assist(request):
-    key = request.GET.get('key')
-    method = request.GET.get('method')
-    msg = request.GET.get('msg')
+	key = request.GET.get('key')
+	method = request.GET.get('method')
+	msg = request.GET.get('msg')
 
-    queryset = mp_mtr.objects.all()
-    #queryset = queryset.filter(id=key)[0]
+	queryset = mp_mtr.objects.all()
+	#queryset = queryset.filter(id=key)[0]
 
-    #print(queryset.apl_id)
-    #push_userid = queryset.apl_id
-    login_id = request.session.get('user_id', 'admin')
+	#print(queryset.apl_id)
+	#push_userid = queryset.apl_id
+	login_id = request.session.get('user_id', 'admin')
 
-    if login_id == 'admin':
-        login_id = '515440'
+	if login_id == 'admin':
+		login_id = '515440'
 
 
-    user_id = login_id
-    push_chk = 'PO'
-    push_userid = '515440'
-    #push_userid = '515440'
-    push_title = '멘토링 지원서 학과장 승인 요청.'
-    push_content = '멘토링 지원서 학과장 승인 요청.'
-    tickerText = ' '
-    push_time = '60'
-    cdr_id = '515440'
-    sms_content = push_content
-    sms_nb = '0515103322'
-    client_ip = request.META['REMOTE_ADDR']
-    data_info = {'user_id':user_id,'push_chk': push_chk,'push_userid': push_userid,'push_title': push_title,'push_content': push_content,'tickerText': tickerText,'push_time': push_time,'cdr_id': cdr_id,'sms_content': sms_content,'sms_nb': sms_nb}
-    #print(data_info)
-    with requests.Session() as s:
-        first_page = s.post('http://msg.pusan.ac.kr/api/push.asp', data=data_info)
-        html = first_page.text
-        #print(html)
-        soup = bs(html, 'html.parser')
+	user_id = login_id
+	push_chk = 'PO'
+	push_userid = '515440'
+	#push_userid = '515440'
+	push_title = '멘토링 지원서 학과장 승인 요청.'
+	push_content = '멘토링 지원서 학과장 승인 요청.'
+	tickerText = ' '
+	push_time = '60'
+	cdr_id = '515440'
+	sms_content = push_content
+	sms_nb = '0515103322'
+	client_ip = request.META['REMOTE_ADDR']
+	data_info = {'user_id':user_id,'push_chk': push_chk,'push_userid': push_userid,'push_title': push_title,'push_content': push_content,'tickerText': tickerText,'push_time': push_time,'cdr_id': cdr_id,'sms_content': sms_content,'sms_nb': sms_nb}
+	#print(data_info)
+	with requests.Session() as s:
+		first_page = s.post('http://msg.pusan.ac.kr/api/push.asp', data=data_info)
+		html = first_page.text
+		#print(html)
+		soup = bs(html, 'html.parser')
 
-    message = "Ok"
-    context = {'message': message
-    }
-    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+	message = "Ok"
+	context = {'message': message
+	}
+	return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 
 
 
 @csrf_exempt
 def returnsso(request,response):
-        message = "Ok"
-        context = {'message': message,
-    
-        }
-        return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+		message = "Ok"
+		context = {'message': message,
+	
+		}
+		return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 
 
@@ -2573,175 +2573,175 @@ def returnsso(request,response):
 
 @csrf_exempt
 def mssql(request):
-    vlSelectNo = request.GET.get('id')
-    vlFlag = request.GET.get('flag')
-    # MSSQL 접속
-    conn = pymssql.connect(server='192.168.2.124', user='nanum', password='n@num*!@', database='hakjuk', port='1221')
-    
-    print("aaaaaaaaaaa1")
-    cursor = conn.cursor()
-    print("aaaaaaaaaaa22")
+	vlSelectNo = request.GET.get('id')
+	vlFlag = request.GET.get('flag')
+	# MSSQL 접속
+	conn = pymssql.connect(server='192.168.2.124', user='nanum', password='n@num*!@', database='hakjuk', port='1221')
+	
+	print("aaaaaaaaaaa1")
+	cursor = conn.cursor()
+	print("aaaaaaaaaaa22")
 
-    query = "select apl_id,pr_yr,pr_sch_yr,pr_term_div from WM_HANUM_STDT where apl_id = '201470117'"
+	query = "select apl_id,pr_yr,pr_sch_yr,pr_term_div from WM_HANUM_STDT where apl_id = '201470117'"
 
-    cursor.execute(query)  
-    
-    print("aaaaaaaaaaaa33")
-    row = cursor.fetchone()  
-    print(row)
-    message = 'Fail'
-    i = 0
-    while row:
-        message = str(row) + str(row[0])  + " " + str(row[1])  +  " " + str(row[2])  +  " " + str(row[3])  
-        row = cursor.fetchone() 
-        i = i + 1
+	cursor.execute(query)  
+	
+	print("aaaaaaaaaaaa33")
+	row = cursor.fetchone()  
+	print(row)
+	message = 'Fail'
+	i = 0
+	while row:
+		message = str(row) + str(row[0])  + " " + str(row[1])  +  " " + str(row[2])  +  " " + str(row[3])  
+		row = cursor.fetchone() 
+		i = i + 1
 
-    context = {'message': message
-                    
-    }
-    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+	context = {'message': message
+					
+	}
+	return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 
 @csrf_exempt
 def mssql2(request):
-    vlSelectNo = request.GET.get('id')
-    vlFlag = request.GET.get('flag')
-    # MSSQL 접속
-    #conn = pymssql.connect(server='192.168.2.124', user='nanum', password='n@num*!@', database='HAKJUK', port='1221')
-    print("a0")
-    conn =  pyodbc.connect('driver={ODBC Driver 17 for SQL Server};server=192.168.2.124;database=HAKJUK;uid=nanum;pwd=n@num*!@,port=1221')
+	vlSelectNo = request.GET.get('id')
+	vlFlag = request.GET.get('flag')
+	# MSSQL 접속
+	#conn = pymssql.connect(server='192.168.2.124', user='nanum', password='n@num*!@', database='HAKJUK', port='1221')
+	print("a0")
+	conn =  pyodbc.connect('driver={ODBC Driver 17 for SQL Server};server=192.168.2.124;database=HAKJUK;uid=nanum;pwd=n@num*!@,port=1221')
 
-    print("a1")
-    cursor = conn.cursor()
-    print("a2")
-    cursor.execute("select apl_id from WM_HANUM_STDT where apl_id = '201678120'")  
-    print("a3")
-    row = cursor.fetchone()  
-    while row:
-        print(str(row[0]) + " " + str(row[1]) + " " + str(row[2]))
-        row = cursor.fetchone() 
-    message = "Ok"
-    context = {'message': message
-                    
-    }
-    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+	print("a1")
+	cursor = conn.cursor()
+	print("a2")
+	cursor.execute("select apl_id from WM_HANUM_STDT where apl_id = '201678120'")  
+	print("a3")
+	row = cursor.fetchone()  
+	while row:
+		print(str(row[0]) + " " + str(row[1]) + " " + str(row[2]))
+		row = cursor.fetchone() 
+	message = "Ok"
+	context = {'message': message
+					
+	}
+	return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 
 @csrf_exempt
 def mssql_export(request):
-    vlSelectNo = request.GET.get('id')
-    vlFlag = request.GET.get('flag')
-    # MSSQL 접속
+	vlSelectNo = request.GET.get('id')
+	vlFlag = request.GET.get('flag')
+	# MSSQL 접속
 
 
-    conn = pymssql.connect(server='192.168.2.124', user='nanum', password='n@num*!@', database='hakjuk', port='1221')
-    cursor = conn.cursor()
-    #query = "select emp_id, emp_nm, dept_cd, dept_nm, jw_cd, jw_nm, mob_no, tel_no, email_addr, if_dt from vw_nanum_dept_dean where emp_id = '" +vlSelectNo +"'"
-    query = "select emp_id, emp_nm, dept_cd, dept_nm, jw_cd, jw_nm, mob_no, tel_no, email_addr, if_dt from vw_nanum_dept_dean"
-    cursor.execute(query)  
-    row = cursor.fetchone()  
-    
-    print("aaaaaaaaa")
-    message = 'Fail'
-    i = 0
-    while row:
-        message = str(row[0])  + " || " + str(row[1])  +  " || " + str(row[2])  +  " || " + str(row[3]) +  " || " + str(row[4])  +  " || " + str(row[5])  +  " || " + str(row[6])  +  " || " + str(row[7]) +  " || " + str(row[8])  +  " || " + str(row[9]) 
-        insert_sql = "insert into vm_nanum_dept_dean_osh(emp_id, emp_nm, dept_cd, dept_nm, jw_cd, jw_nm, mob_no, tel_no, email_addr,if_dt)"
-        insert_sql += "values("
-        insert_sql += "'"+ str(row[0]) +"'," 
-        insert_sql += "'"+ str(row[1]) +"'," 
-        insert_sql += "'"+ str(row[2]) +"'," 
-        insert_sql += "'"+ str(row[3]) +"'," 
-        insert_sql += "'"+ str(row[4]) +"'," 
-        insert_sql += "'"+ str(row[5]) +"'," 
-        insert_sql += "'"+ str(row[6]) +"'," 
-        insert_sql += "'"+ str(row[7]) +"'," 
-        insert_sql += "'"+ str(row[8]) +"'," 
-        insert_sql += "now() )"  #item_nm
-        cursor1 = connection.cursor()
-        query_result = cursor1.execute(insert_sql)    
-        print(insert_sql) 
-        i = i + 1
-        row = cursor.fetchone()  
+	conn = pymssql.connect(server='192.168.2.124', user='nanum', password='n@num*!@', database='hakjuk', port='1221')
+	cursor = conn.cursor()
+	#query = "select emp_id, emp_nm, dept_cd, dept_nm, jw_cd, jw_nm, mob_no, tel_no, email_addr, if_dt from vw_nanum_dept_dean where emp_id = '" +vlSelectNo +"'"
+	query = "select emp_id, emp_nm, dept_cd, dept_nm, jw_cd, jw_nm, mob_no, tel_no, email_addr, if_dt from vw_nanum_dept_dean"
+	cursor.execute(query)  
+	row = cursor.fetchone()  
+	
+	print("aaaaaaaaa")
+	message = 'Fail'
+	i = 0
+	while row:
+		message = str(row[0])  + " || " + str(row[1])  +  " || " + str(row[2])  +  " || " + str(row[3]) +  " || " + str(row[4])  +  " || " + str(row[5])  +  " || " + str(row[6])  +  " || " + str(row[7]) +  " || " + str(row[8])  +  " || " + str(row[9]) 
+		insert_sql = "insert into vm_nanum_dept_dean_osh(emp_id, emp_nm, dept_cd, dept_nm, jw_cd, jw_nm, mob_no, tel_no, email_addr,if_dt)"
+		insert_sql += "values("
+		insert_sql += "'"+ str(row[0]) +"'," 
+		insert_sql += "'"+ str(row[1]) +"'," 
+		insert_sql += "'"+ str(row[2]) +"'," 
+		insert_sql += "'"+ str(row[3]) +"'," 
+		insert_sql += "'"+ str(row[4]) +"'," 
+		insert_sql += "'"+ str(row[5]) +"'," 
+		insert_sql += "'"+ str(row[6]) +"'," 
+		insert_sql += "'"+ str(row[7]) +"'," 
+		insert_sql += "'"+ str(row[8]) +"'," 
+		insert_sql += "now() )"  #item_nm
+		cursor1 = connection.cursor()
+		query_result = cursor1.execute(insert_sql)    
+		print(insert_sql) 
+		i = i + 1
+		row = cursor.fetchone()  
 
 
-    context = {'message': i
-                    
-    }
-    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+	context = {'message': i
+					
+	}
+	return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 
 @csrf_exempt
 def mssql_export2(request):
-    vlSelectNo = request.GET.get('id')
-    vlFlag = request.GET.get('flag')
-    # MSSQL 접속
+	vlSelectNo = request.GET.get('id')
+	vlFlag = request.GET.get('flag')
+	# MSSQL 접속
 
 
-    conn = pymssql.connect(server='192.168.2.124', user='nanum', password='n@num*!@', database='hakjuk', port='1221')
-    cursor = conn.cursor()
-    #query = "select emp_id, emp_nm, dept_cd, dept_nm, jw_cd, jw_nm, mob_no, tel_no, email_addr, if_dt from vw_nanum_dept_dean where emp_id = '" +vlSelectNo +"'"
-    query = "select emp_id, emp_nm, dept_cd, dept_nm, mob_no, tel_no, email_addr, if_dt from vw_nanum_dept_assistant"
+	conn = pymssql.connect(server='192.168.2.124', user='nanum', password='n@num*!@', database='hakjuk', port='1221')
+	cursor = conn.cursor()
+	#query = "select emp_id, emp_nm, dept_cd, dept_nm, jw_cd, jw_nm, mob_no, tel_no, email_addr, if_dt from vw_nanum_dept_dean where emp_id = '" +vlSelectNo +"'"
+	query = "select emp_id, emp_nm, dept_cd, dept_nm, mob_no, tel_no, email_addr, if_dt from vw_nanum_dept_assistant"
 
 
-    cursor.execute(query)  
-    row = cursor.fetchone()  
-    
-    print("aaaaaaaaa")
-    message = 'Fail'
-    i = 0
-    while row:
-        message = str(row[0])  + " || " + str(row[1])  +  " || " + str(row[2])  +  " || " + str(row[3]) +  " || " + str(row[4])  +  " || " + str(row[5])  +  " || " + str(row[6]) 
-        insert_sql = "insert into vm_nanum_dept_assistant_osh(emp_id, emp_nm, dept_cd, dept_nm, mob_no, tel_no, email_addr,if_dt)"
-        insert_sql += "values("
-        insert_sql += "'"+ str(row[0]) +"'," 
-        insert_sql += "'"+ str(row[1]) +"'," 
-        insert_sql += "'"+ str(row[2]) +"'," 
-        insert_sql += "'"+ str(row[3]) +"'," 
-        insert_sql += "'"+ str(row[4]) +"'," 
-        insert_sql += "'"+ str(row[5]) +"'," 
-        insert_sql += "'"+ str(row[6]) +"'," 
-        insert_sql += "now() )"  #item_nm
-        cursor1 = connection.cursor()
-        query_result = cursor1.execute(insert_sql)    
-        print(insert_sql) 
-        i = i + 1
-        row = cursor.fetchone()  
+	cursor.execute(query)  
+	row = cursor.fetchone()  
+	
+	print("aaaaaaaaa")
+	message = 'Fail'
+	i = 0
+	while row:
+		message = str(row[0])  + " || " + str(row[1])  +  " || " + str(row[2])  +  " || " + str(row[3]) +  " || " + str(row[4])  +  " || " + str(row[5])  +  " || " + str(row[6]) 
+		insert_sql = "insert into vm_nanum_dept_assistant_osh(emp_id, emp_nm, dept_cd, dept_nm, mob_no, tel_no, email_addr,if_dt)"
+		insert_sql += "values("
+		insert_sql += "'"+ str(row[0]) +"'," 
+		insert_sql += "'"+ str(row[1]) +"'," 
+		insert_sql += "'"+ str(row[2]) +"'," 
+		insert_sql += "'"+ str(row[3]) +"'," 
+		insert_sql += "'"+ str(row[4]) +"'," 
+		insert_sql += "'"+ str(row[5]) +"'," 
+		insert_sql += "'"+ str(row[6]) +"'," 
+		insert_sql += "now() )"  #item_nm
+		cursor1 = connection.cursor()
+		query_result = cursor1.execute(insert_sql)    
+		print(insert_sql) 
+		i = i + 1
+		row = cursor.fetchone()  
 
 
-    context = {'message': i
-                    
-    }
-    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+	context = {'message': i
+					
+	}
+	return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 
 
 @csrf_exempt
 def returnsso(request):
-        a =  request.POST.get('gbn')
-        b =  request.POST.get('sta')
-        request.session['member_id'] = 'aaaaaasss'
+		a =  request.POST.get('gbn')
+		b =  request.POST.get('sta')
+		request.session['member_id'] = 'aaaaaasss'
 
-        message = "Ok"
-        context = {'message': message,
-        }
-        return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+		message = "Ok"
+		context = {'message': message,
+		}
+		return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 
 
 @csrf_exempt
 def returnsso2(request):
-        
-        print(request.session['member_id'])
+		
+		print(request.session['member_id'])
 
-        if request.session['member_id'] == None:
-            message = 'NoSession'
-        else:
-            message = request.session['member_id']
-        
-        context = {'message': message,
-        }
-        return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+		if request.session['member_id'] == None:
+			message = 'NoSession'
+		else:
+			message = request.session['member_id']
+		
+		context = {'message': message,
+		}
+		return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 
 
@@ -2803,7 +2803,7 @@ class ms_com_cd1(generics.ListAPIView):
         queryset = self.get_queryset()
 
         l_ms_id = request.GET.get('ms_id',None)
-        
+		
         #queryset = queryset.filter(std_grp_code="MS0010")
         query  = "select (                                  "
         query += "       CASE                               "
@@ -2823,7 +2823,7 @@ class ms_com_cd1(generics.ListAPIView):
         query += "                          'MS0011',       "    
         query += "                          'MS0012',       "    
         query += "                          'MS0013',       "  
-        query += "                          'MS0014',       "       
+        query += "                          'MS0014',       "		
         query += "                          'MS0015',       "
         query += "                          'MS0016',       "
         query += "                          'MS0020')       "
@@ -2911,95 +2911,95 @@ class mp_com_cd1(generics.ListAPIView):
 #멘토스쿨 설정값 저장하기
 @csrf_exempt
 def ms_com_save1(request):
-    l_id = request.GET.get('id', None)
-    l_ms_id = request.GET.get('ms_id', None)
-    l_std_grp_code = request.GET.get('std_grp_code', None)
-    l_std_detl_code = request.GET.get('std_detl_code', None)
-    l_tflag = request.GET.get('tflag', None)
-    
-    print(l_id)
-    print(l_ms_id)
-    print(l_std_detl_code)
-    print(l_tflag)
-    
-    cursor = connection.cursor()
-    if l_tflag=='d':
-        insert_sql = "delete from service20_ms_sub where  ms_id = '" + str(l_ms_id) + "' and att_id = '"+ l_std_grp_code + "' and att_cdd = '"+ l_id+ "' "
-        print(insert_sql)  
+	l_id = request.GET.get('id', None)
+	l_ms_id = request.GET.get('ms_id', None)
+	l_std_grp_code = request.GET.get('std_grp_code', None)
+	l_std_detl_code = request.GET.get('std_detl_code', None)
+	l_tflag = request.GET.get('tflag', None)
+	
+	print(l_id)
+	print(l_ms_id)
+	print(l_std_detl_code)
+	print(l_tflag)
+	
+	cursor = connection.cursor()
+	if l_tflag=='d':
+		insert_sql = "delete from service20_ms_sub where  ms_id = '" + str(l_ms_id) + "' and att_id = '"+ l_std_grp_code + "' and att_cdd = '"+ l_id+ "' "
+		print(insert_sql)  
 
-    if l_tflag=='i':
-        insert_sql = "insert into service20_ms_sub(ms_id, att_id, att_seq, att_cdh, att_cdd, att_val, att_unit, use_yn, sort_seq) "
-        insert_sql += "select '" + str(l_ms_id) + "'," 
-        insert_sql += "'" + str(l_std_grp_code) +"'," 
-        insert_sql += "(select COALESCE(max(att_seq),0) + 1 from service20_ms_sub where ms_id = '" + str(l_ms_id) +"') ," 
-        insert_sql += "std_grp_code, std_detl_code, std_detl_code_nm, '', 'Y', sort_seq_no from service20_com_cdd where std_grp_code = '"+ str(l_std_grp_code) +"' and std_detl_code = '"+ str(l_std_detl_code)+ "'"
-        print(insert_sql) 
-    cursor.execute(insert_sql)
-    message = "Ok" 
-    context = {'message': message,}
-    
-    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+	if l_tflag=='i':
+		insert_sql = "insert into service20_ms_sub(ms_id, att_id, att_seq, att_cdh, att_cdd, att_val, att_unit, use_yn, sort_seq) "
+		insert_sql += "select '" + str(l_ms_id) + "'," 
+		insert_sql += "'" + str(l_std_grp_code) +"'," 
+		insert_sql += "(select COALESCE(max(att_seq),0) + 1 from service20_ms_sub where ms_id = '" + str(l_ms_id) +"') ," 
+		insert_sql += "std_grp_code, std_detl_code, std_detl_code_nm, '', 'Y', sort_seq_no from service20_com_cdd where std_grp_code = '"+ str(l_std_grp_code) +"' and std_detl_code = '"+ str(l_std_detl_code)+ "'"
+		print(insert_sql) 
+	cursor.execute(insert_sql)
+	message = "Ok" 
+	context = {'message': message,}
+	
+	return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 
 #멘토스쿨 설정값 저장하기
 @csrf_exempt
 def ms_com_save2(request):
-    l_ms_id = request.GET.get('ms_id', None)
-    l_t4_1 = request.GET.get('l_t4_1', None)
-    l_t4_2 = request.GET.get('l_t4_2', None)
-    l_t4_3 = request.GET.get('l_t4_3', None)
-    l_t4_4 = request.GET.get('l_t4_4', None)
+	l_ms_id = request.GET.get('ms_id', None)
+	l_t4_1 = request.GET.get('l_t4_1', None)
+	l_t4_2 = request.GET.get('l_t4_2', None)
+	l_t4_3 = request.GET.get('l_t4_3', None)
+	l_t4_4 = request.GET.get('l_t4_4', None)
 
-    
-    cursor = connection.cursor()
-    insert_sql = "update service20_ms_sub set att_val = '" + str(l_t4_1) +"' where  ms_id = '" + str(l_ms_id) + "' and att_id = 'MS0013' and att_cdd = '10' "
-    print(insert_sql)   
-    cursor.execute(insert_sql)
-    insert_sql = "update service20_ms_sub set att_val = '" + str(l_t4_2) +"' where  ms_id = '" + str(l_ms_id) + "' and att_id = 'MS0013' and att_cdd = '20' "
-    cursor.execute(insert_sql)
-    insert_sql = "update service20_ms_sub set att_val = '" + str(l_t4_3) +"' where  ms_id = '" + str(l_ms_id) + "' and att_id = 'MS0013' and att_cdd = '30' "
-    cursor.execute(insert_sql)
-    insert_sql = "update service20_ms_sub set att_val = '" + str(l_t4_4) +"' where  ms_id = '" + str(l_ms_id) + "' and att_id = 'MS0013' and att_cdd = '40' "
-    cursor.execute(insert_sql)
-    insert_sql = "update service20_ms_sub set att_val = '" + str(l_t4_4) +"' where  ms_id = '" + str(l_ms_id) + "' and att_id = 'MS0013' and att_cdd = '50' "
-    cursor.execute(insert_sql)
+	
+	cursor = connection.cursor()
+	insert_sql = "update service20_ms_sub set att_val = '" + str(l_t4_1) +"' where  ms_id = '" + str(l_ms_id) + "' and att_id = 'MS0013' and att_cdd = '10' "
+	print(insert_sql)	
+	cursor.execute(insert_sql)
+	insert_sql = "update service20_ms_sub set att_val = '" + str(l_t4_2) +"' where  ms_id = '" + str(l_ms_id) + "' and att_id = 'MS0013' and att_cdd = '20' "
+	cursor.execute(insert_sql)
+	insert_sql = "update service20_ms_sub set att_val = '" + str(l_t4_3) +"' where  ms_id = '" + str(l_ms_id) + "' and att_id = 'MS0013' and att_cdd = '30' "
+	cursor.execute(insert_sql)
+	insert_sql = "update service20_ms_sub set att_val = '" + str(l_t4_4) +"' where  ms_id = '" + str(l_ms_id) + "' and att_id = 'MS0013' and att_cdd = '40' "
+	cursor.execute(insert_sql)
+	insert_sql = "update service20_ms_sub set att_val = '" + str(l_t4_4) +"' where  ms_id = '" + str(l_ms_id) + "' and att_id = 'MS0013' and att_cdd = '50' "
+	cursor.execute(insert_sql)
 
-    message = "Ok" 
-    context = {'message': message,}
-    
-    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+	message = "Ok" 
+	context = {'message': message,}
+	
+	return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 
 @csrf_exempt
 def mp_com_save1(request):
-    l_id = request.GET.get('id', None)
-    l_mp_id = request.GET.get('mp_id', None)
-    l_std_grp_code = request.GET.get('std_grp_code', None)
-    l_std_detl_code = request.GET.get('std_detl_code', None)
-    l_tflag = request.GET.get('tflag', None)
-    
-    print(l_id)
-    print(l_mp_id)
-    print(l_std_detl_code)
-    print(l_tflag)
-    
-    cursor = connection.cursor()
-    if l_tflag=='d':
-        insert_sql = "delete from service20_mp_sub where  mp_id = '" + str(l_mp_id) + "' and att_id = '"+ l_std_grp_code + "' and att_cdd = '"+ l_id+ "' "
-        print(insert_sql)  
+	l_id = request.GET.get('id', None)
+	l_mp_id = request.GET.get('mp_id', None)
+	l_std_grp_code = request.GET.get('std_grp_code', None)
+	l_std_detl_code = request.GET.get('std_detl_code', None)
+	l_tflag = request.GET.get('tflag', None)
+	
+	print(l_id)
+	print(l_mp_id)
+	print(l_std_detl_code)
+	print(l_tflag)
+	
+	cursor = connection.cursor()
+	if l_tflag=='d':
+		insert_sql = "delete from service20_mp_sub where  mp_id = '" + str(l_mp_id) + "' and att_id = '"+ l_std_grp_code + "' and att_cdd = '"+ l_id+ "' "
+		print(insert_sql)  
 
-    if l_tflag=='i':
-        insert_sql = "insert into service20_mp_sub(mp_id, att_id, att_seq, att_cdh, att_cdd, att_val, att_unit, use_yn, sort_seq) "
-        insert_sql += "select '" + str(l_mp_id) + "'," 
-        insert_sql += "'" + str(l_std_grp_code) +"'," 
-        insert_sql += "(select COALESCE(max(att_seq),0) + 1 from service20_mp_sub where mp_id = '" + str(l_mp_id) +"') ," 
-        insert_sql += "std_grp_code, std_detl_code, std_detl_code_nm, '', 'Y', sort_seq_no from service20_com_cdd where std_grp_code = '"+ str(l_std_grp_code) +"' and std_detl_code = '"+ str(l_std_detl_code)+ "'"
-        print(insert_sql) 
-    cursor.execute(insert_sql)
-    message = "Ok" 
-    context = {'message': message,}
-    
-    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+	if l_tflag=='i':
+		insert_sql = "insert into service20_mp_sub(mp_id, att_id, att_seq, att_cdh, att_cdd, att_val, att_unit, use_yn, sort_seq) "
+		insert_sql += "select '" + str(l_mp_id) + "'," 
+		insert_sql += "'" + str(l_std_grp_code) +"'," 
+		insert_sql += "(select COALESCE(max(att_seq),0) + 1 from service20_mp_sub where mp_id = '" + str(l_mp_id) +"') ," 
+		insert_sql += "std_grp_code, std_detl_code, std_detl_code_nm, '', 'Y', sort_seq_no from service20_com_cdd where std_grp_code = '"+ str(l_std_grp_code) +"' and std_detl_code = '"+ str(l_std_detl_code)+ "'"
+		print(insert_sql) 
+	cursor.execute(insert_sql)
+	message = "Ok" 
+	context = {'message': message,}
+	
+	return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
 
 
@@ -3007,37 +3007,37 @@ def mp_com_save1(request):
 @csrf_exempt
 def upload(request):
 
-    req = request
-    DIR = os.getcwd()
-    UPLOAD_DIR = str(DIR) + '/media/mp_mtr/'
-    if request.method == 'POST':
-        l_user_id = request.POST.get("user_id")
-        l_mp_id = request.POST.get("mp_id")
+	req = request
+	DIR = os.getcwd()
+	UPLOAD_DIR = str(DIR) + '/media/mp_mtr/'
+	if request.method == 'POST':
+		l_user_id = request.POST.get("user_id")
+		l_mp_id = request.POST.get("mp_id")
 
-        print(l_user_id)
-        print(l_mp_id)
-        file = request.FILES['file']
-        filename = file._name
-        n_filename = str(l_user_id) + '_' + str(l_mp_id) + '' + os.path.splitext(filename)[1]
-        print(n_filename)
-        print (UPLOAD_DIR)
-        
-        fp = open('%s/%s' % (UPLOAD_DIR, n_filename) , 'wb')
+		print(l_user_id)
+		print(l_mp_id)
+		file = request.FILES['file']
+		filename = file._name
+		n_filename = str(l_user_id) + '_' + str(l_mp_id) + '' + os.path.splitext(filename)[1]
+		print(n_filename)
+		print (UPLOAD_DIR)
+		
+		fp = open('%s/%s' % (UPLOAD_DIR, n_filename) , 'wb')
 
-        for chunk in file.chunks():
-            fp.write(chunk)
-        fp.close()
+		for chunk in file.chunks():
+			fp.write(chunk)
+		fp.close()
 
-        cursor = connection.cursor()
-        fullFile = str(UPLOAD_DIR) + str(n_filename)
-        insert_sql = "update service20_mp_mtr set  id_pic = '" + str(fullFile) + "' where mp_id = '"+ str(l_mp_id) + "' and apl_id = '" +  str(l_user_id) +"' "
-        print(insert_sql)
-        cursor.execute(insert_sql)
+		cursor = connection.cursor()
+		fullFile = str(UPLOAD_DIR) + str(n_filename)
+		insert_sql = "update service20_mp_mtr set  id_pic = '" + str(fullFile) + "' where mp_id = '"+ str(l_mp_id) + "' and apl_id = '" +  str(l_user_id) +"' "
+		print(insert_sql)
+		cursor.execute(insert_sql)
 
-        return HttpResponse('File Uploaded')
+		return HttpResponse('File Uploaded')
 
-    return HttpResponse('Failed to Upload File')
-        
+	return HttpResponse('Failed to Upload File')
+		
 
 
 #공지사항
@@ -3187,12 +3187,12 @@ class MPAttView(View):
             mtrs = mp_mte.objects.filter(mp_id=att.mp_id, apl_no=att.apl_no)
             print(mtrs)
             for m in mp_att_mte.objects.filter(
-                    mp_id=att.mp_id,
-                    apl_no=att.apl_no,
-                    att_sdt=att.att_sdt,
-                    att_edt__isnull=True,
-                    mnte_no__in=[e.mnte_no for e in mtrs]
-            ):
+					mp_id=att.mp_id,
+					apl_no=att.apl_no,
+					att_sdt=att.att_sdt,
+					att_edt__isnull=True,
+					mnte_no__in=[e.mnte_no for e in mtrs]
+			):
                 m.att_edt = datetime.datetime.now()
                 m.appr_tm = (datetime.datetime.now() - att.att_sdt).seconds // 3600
                 m.elap_tm = f'{m.appr_tm}:00'
@@ -3232,10 +3232,10 @@ class TeacherMP0101MList(View):
         teacher_id = request.GET.get('user_id')
         query = f'''
             SELECT mpgm.*, mp_mte.*, c1.std_detl_code_nm  AS sup_org_nm, c2.std_detl_code_nm AS mng_org_nm, mp_mte.apl_no AS apl_no,
-                mp_mte.sch_nm AS mnte_sch, mp_mte.sch_yr AS mnte_sch_yr
+				mp_mte.sch_nm AS mnte_sch, mp_mte.sch_yr AS mnte_sch_yr
                 FROM service20_mpgm mpgm
             INNER JOIN (SELECT * from service20_mp_mte WHERE tchr_id = '{teacher_id}') mp_mte ON mp_mte.mp_id = mpgm.mp_id
-            INNER JOIN service20_mp_mtr mp_mtr on mp_mte.mp_id = mp_mtr.mp_id and mp_mte.apl_no = mp_mtr.apl_no
+			INNER JOIN service20_mp_mtr mp_mtr on mp_mte.mp_id = mp_mtr.mp_id and mp_mte.apl_no = mp_mtr.apl_no
             LEFT JOIN service20_com_cdd c1 ON (c1.std_grp_code  = 'MP0004' AND c1.std_detl_code = mpgm.sup_org)
             LEFT JOIN service20_com_cdd c2 ON (c2.std_grp_code = 'MP0003' AND c2.std_detl_code = mpgm.mng_org)
         '''
@@ -3247,10 +3247,10 @@ class TeacherMP0101MList(View):
                 'mnt_fr_dt': m.mnt_fr_dt,
                 'mnt_to_dt': m.mnt_to_dt,
                 'mp_name': m.mp_name,
-                'mnte_nm': m.mnte_nm,
-                'mnte_id': m.mnte_id,
-                'mnte_sch': m.mnte_sch,
-                'mnte_sch_yr': m.mnte_sch_yr,
+				'mnte_nm': m.mnte_nm,
+				'mnte_id': m.mnte_id,
+				'mnte_sch': m.mnte_sch,
+				'mnte_sch_yr': m.mnte_sch_yr,
                 'sup_org_nm': m.sup_org_nm,
                 'mng_org_nm': m.mng_org_nm,
                 'mgr_nm': m.mgr_nm,
@@ -3280,7 +3280,7 @@ class GuardianMP0101MList(View):
                 'sup_org_nm': m.sup_org_nm,
                 'mng_org_nm': m.mng_org_nm,
                 'mgr_nm': m.mgr_nm,
-                'mnte_nm': m.mnte_nm,
+				'mnte_nm': m.mnte_nm,
             } for m in queryset
         ], safe=False)
 

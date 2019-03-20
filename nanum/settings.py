@@ -16,11 +16,13 @@ from django.contrib import admin
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 STATIC_URL = '/static/'
-#STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+STATIC_ROOT = os.path.join(BASE_DIR, "www_dir/","static")
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
+CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
+CKEDITOR_UPLOAD_PATH = 'uploads/'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -33,8 +35,18 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-
 # Application definition
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'font_names': 'Gothic; Nanum Pen;',
+    },
+}
+# Application definition
+
+
+
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -44,7 +56,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'ckeditor',
+    'ckeditor_uploader',
     'rest_framework',
+    
     'member',
     'post',
     'polls',
@@ -55,6 +69,10 @@ INSTALLED_APPS = [
     'service20',
 
 ]
+
+
+#CKEDITOR_UPLOAD_PATH = "uploads/"
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -89,19 +107,26 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'nanum.wsgi.application'
 
-
+AUTHENTICATION_BACKENDS = [
+    'nanum.backends.SettingsBackend', # 우리가 만든 AUTH를 먼저 검사
+    'django.contrib.auth.backends.ModelBackend', # Django가 관리하는 AUTH
+]
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'pnanum', # DB명
+        #'NAME': 'pnanum', # DB명
+        'NAME': 'pnanum', # DB명 
+        #'NAME': 'pnanum', # DB명
         'USER': 'nanum', # 데이터베이스 계정
         'PASSWORD': 'nanum1234', # 계정 비밀번호
         'HOST': '114.202.247.167', # 데이테베이스 주소(IP)
         'PORT': '3306', # 데이터베이스 포트(보통은 3306)
-    }
+    },
+
+
 }
 
 
@@ -123,7 +148,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
+#IMPORT_EXPORT_USE_TRANSACTIONS = True
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
@@ -137,8 +162,19 @@ USE_L10N = True
 
 USE_TZ = False
 
+FILE_UPLOAD_HANDLERS = ("django_excel.ExcelMemoryFileUploadHandler",
+                        "django_excel.TemporaryExcelFileUploadHandler")
 
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+
+
+
+# -*-coding:utf-8-*-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
-
 

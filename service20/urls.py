@@ -456,7 +456,7 @@ urlpatterns = [
     path('msPop1_Det5_Save/', msPop1_Det5_Save, name='msPop1_Det5_Save'), 
     #멘토스쿨 리포트 조회
     path('msFn8/', msFn8, name='msFn8'), 
-    
+	
 
 
 
@@ -482,7 +482,7 @@ urlpatterns = [
     #합격자업로드_전송
     path('mpFn6_Submit2/', mpFn6_Submit2, name='mpFn6_Submit2'),
 
-    #
+	#
 
     #합격자업로드
     path('mpFn7/', mpFn7, name='mpFn7'),
@@ -573,53 +573,53 @@ urlpatterns = [
     path('sms_send_assist/', sms_send_assist, name='sms_send_assist'), 
 
 
-    #리턴URLTest
+	#리턴URLTest
     path('returnsso/', returnsso, name='returnsso'), 
 
 
 
-    #개인정보리턴
+	#개인정보리턴
     path('agree_cont1/', agree_cont1.as_view(), name='agree_cont1'), 
 
 
 
-    #멘토스쿨공통코드학년가져오기
+	#멘토스쿨공통코드학년가져오기
     path('ms_com_cd1/', ms_com_cd1.as_view(), name='ms_com_cd1'), 
 
-    #멘토스쿨공통코드학년저장하기
+	#멘토스쿨공통코드학년저장하기
     path('ms_com_save1/', ms_com_save1, name='ms_com_save1'), 
 
-    #멘토스쿨공통코드학점평균저장하기
+	#멘토스쿨공통코드학점평균저장하기
     path('ms_com_save2/', ms_com_save2, name='ms_com_save2'),     
 
 
     #멘토링프로그램공통코드학년가져오기
     path('mp_com_cd1/', mp_com_cd1.as_view(), name='mp_com_cd1'), 
 
-    #멘토링프로그램공통코드학년저장하기
+	#멘토링프로그램공통코드학년저장하기
     path('mp_com_save1/', mp_com_save1, name='mp_com_save1'),
 
 
 
 
 
-    #관리자로그인
+	#관리자로그인
     path('admint/', ms_com_cd1.as_view(), name='ms_com_cd1'), 
 
 
  
-    #파일업로드
+	#파일업로드
     path('upload/', upload, name='upload'), 
 
-    #공지사항
+	#공지사항
     path('bbs1/', bbs1.as_view(), name='bbs1'), 
 
 
-    #공통코드 이름 가져오기
+	#공통코드 이름 가져오기
     path('comcode/', comcode.as_view(), name='comcode'), 
 
-    ###모바일
-    #멘토링 프로그램 List
+	###모바일
+	#멘토링 프로그램 List
 
     ########################################################################################
     # view2 부분 (종료)
@@ -651,3 +651,9 @@ urlpatterns = [
     #강주원 작업 종료
 
 
+
+
+
+
+
+]
