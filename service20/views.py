@@ -3407,12 +3407,12 @@ def MS0101M_save(request):
             tel_no_g=v_tel_no_g,
             h_addr=rows.h_addr,
             email_addr=rows.email_addr,
-            # score1=rows.score01,
-            # score2=rows.score02,
-            # score3=rows.score03,
-            # score4=rows.score04,
-            # score5=rows.score05,
-            # score6=rows.score06,
+            score1=rows.score01,
+            score2=rows.score02,
+            score3=rows.score03,
+            score4=rows.score04,
+            score5=rows.score05,
+            score6=rows.score06,
             cmp_term=rows.cmp_term,
             pr_yr=rows.pr_yr,
             pr_sch_yr=rows.pr_sch_yr,
@@ -3934,12 +3934,12 @@ def MS0101M_adm_update(request):
 
     update_text = " update service20_ms_apl a,service20_vw_nanum_stdt b "
     update_text += " SET a.status = '10' "
-    # update_text += " , a.score1 = b.score01 "
-    # update_text += " , a.score2 = b.score02 "
-    # update_text += " , a.score3 = b.score03 "
-    # update_text += " , a.score4 = b.score04 "
-    # update_text += " , a.score5 = b.score05 "
-    # update_text += " , a.score6 = b.score06 "
+    update_text += " , a.score1 = b.score01 "
+    update_text += " , a.score2 = b.score02 "
+    update_text += " , a.score3 = b.score03 "
+    update_text += " , a.score4 = b.score04 "
+    update_text += " , a.score5 = b.score05 "
+    update_text += " , a.score6 = b.score06 "
     update_text += " , a.cmp_term = b.cmp_term "
     update_text += " , a.h_addr = b.h_addr "
     update_text += " , a.email_addr = b.email_addr "
