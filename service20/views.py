@@ -9697,11 +9697,7 @@ def com_upload(request):
     DIR = os.getcwd()
     UPLOAD_DIR = str(DIR) + '/media/mp_mtr/'
     UPLOAD_DIR = '/NANUM/www/img/mp_mtr/'
-    UPLOAD_DIR_JOB = '/NANUM/www/img/mp_job/'
-
-    UPLOAD_DIR = '/home/'
-    UPLOAD_DIR_JOB = '/home/'
-    
+    UPLOAD_DIR_JOB = '/NANUM/www/img/mp_job/'    
 
     if request.method == 'POST':
 
@@ -9739,7 +9735,7 @@ def com_upload(request):
             # job
             job_file = request.FILES['job_file']
             job_filename = job_file._name
-            n_job_filename = str(l_user_id) + '_job_' + str(l_mp_id) + '' + os.path.splitext(job_filename)[1]
+            n_job_filename = str(l_user_id) + '_' + str(l_mp_id) + '' + os.path.splitext(job_filename)[1]
 
             # job
             fp = open('%s/%s' % (UPLOAD_DIR, n_job_filename) , 'wb')
