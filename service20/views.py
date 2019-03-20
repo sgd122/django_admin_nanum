@@ -1235,23 +1235,26 @@ class com_notice(generics.ListAPIView):
 
         return Response(serializer.data)
 
-#공지사항_디테일
-class com_notice_detail_Serializer(serializers.ModelSerializer):
+#멘토링 소개
+class com_mentoHistory_Serializer(serializers.ModelSerializer):
     
     ins_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
 
     class Meta:
-        model = bbs1
+        model = mpgm_introduce
         fields = '__all__'
 
-class com_notice_detail(generics.ListAPIView):
-    queryset = bbs1.objects.all()
-    serializer_class = com_notice_Serializer
+class com_mentoHistory(generics.ListAPIView):
+    queryset = mpgm_introduce.objects.all()
+    serializer_class = com_mentoHistory_Serializer
 
     def list(self, request):   
-        #queryset = bbs1.objects.filter(id=ida)
+        l_mp_id = request.GET.get('mp_id', "")
 
         queryset = self.get_queryset()
+        
+        queryset = mpgm_introduce.objects.filter(mp_id=l_mp_id)
+
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
         page = self.paginate_queryset(queryset)
