@@ -6535,8 +6535,10 @@ class MP0104M_list(generics.ListAPIView):
         query += " and t3.term_div    = '" + l_term_div + "'    /* 학기 */ "        
         query += " and t1.mp_id    = '" + l_mp_id + "'    /* 멘토링 프로그램id */ "
         query += " and t3.apl_id   = '" + l_apl_id + "'   "
-        query += " and (('" + l_appr_yn + "' = 'Y' and t1.appr_dt IS NOT NULL) OR ('" + l_appr_yn + "' <> 'Y' and t1.appr_dt IS NULL))"
-        query += " and (('" + l_mgr_yn + "' = 'Y' and t1.mgr_dt IS NOT NULL) OR ('" + l_mgr_yn + "' <> 'Y' and t1.mgr_dt IS NULL))"
+        query += " and t1.appr_div   = '" + l_appr_yn + "'   "
+        query += " and t1.mgr_div   = '" + l_mgr_yn + "'   "
+        # query += " and (('" + l_appr_yn + "' = 'Y' and t1.appr_dt IS NOT NULL) OR ('" + l_appr_yn + "' <> 'Y' and t1.appr_dt IS NULL))"
+        # query += " and (('" + l_mgr_yn + "' = 'Y' and t1.mgr_dt IS NOT NULL) OR ('" + l_mgr_yn + "' <> 'Y' and t1.mgr_dt IS NULL))"
         query += " and (t1.att_sdt >= CONCAT('" + l_yr + "-" + l_month1 + "', '-01') AND t1.att_sdt < ADDDATE(LAST_DAY(CONCAT('" + l_yr + "-" + l_month2 + "', '-01')), 1))"
         query += " group by t1.mp_id     /* 멘토링 프로그램id */ "
         query += " , substring(t1.att_sdt, 1, 7) "
@@ -6658,8 +6660,10 @@ class MP0104M_Detail(generics.ListAPIView):
         query += " and t3.term_div    = '" + l_term_div + "'    /* 학기 */ "      
         query += " and t1.mp_id    = '" + l_mp_id + "'   /* 멘토링 프로그램id */ "
         query += " and t3.apl_id   = '" + l_apl_id + "' "
-        query += " and (('" + l_appr_yn + "' = 'Y' and t1.appr_dt IS NOT NULL) OR ('" + l_appr_yn + "' <> 'Y' and t1.appr_dt IS NULL))"
-        query += " and (('" + l_mgr_yn + "' = 'Y' and t1.mgr_dt IS NOT NULL) OR ('" + l_mgr_yn + "' <> 'Y' and t1.mgr_dt IS NULL))"
+        query += " and t1.appr_div   = '" + l_appr_yn + "'   "
+        query += " and t1.mgr_div   = '" + l_mgr_yn + "'   "
+        # query += " and (('" + l_appr_yn + "' = 'Y' and t1.appr_dt IS NOT NULL) OR ('" + l_appr_yn + "' <> 'Y' and t1.appr_dt IS NULL))"
+        # query += " and (('" + l_mgr_yn + "' = 'Y' and t1.mgr_dt IS NOT NULL) OR ('" + l_mgr_yn + "' <> 'Y' and t1.mgr_dt IS NULL))"
         query += " and (t1.att_sdt >= CONCAT('" + l_yr + "-" + l_month1 + "', '-01') AND t1.att_sdt < ADDDATE(LAST_DAY(CONCAT('" + l_yr + "-" + l_month2 + "', '-01')), 1))"
         query += " order by t1.att_no DESC    /* 출석순서(seq) */ "
 
@@ -8496,8 +8500,10 @@ class TE0202_detail(generics.ListAPIView):
         query += "  left join service20_mpgm   t4 on (t4.mp_id    = t1.mp_id)"
         query += " left join service20_com_cdd c1 on (c1.std_grp_code  = 'mp0059' and c1.std_detl_code = t1.mp_div) "
         query += " where t1.mp_id    = '" + l_mp_id + "'    /* 멘토링 프로그램id */"
-        query += "   and (('" + l_appr_yn + "' = 'Y' and t1.appr_dt is not null) or ('" + l_appr_yn + "' <> 'Y' and t1.appr_dt is null))"
-        query += "   and (('" + l_mgr_yn + "' = 'Y' and t1.mgr_dt is not null) or ('" + l_mgr_yn + "' <> 'Y' and t1.mgr_dt is null))"
+        query += "   and t1.appr_div    = '" + l_appr_yn + "' "
+        query += "   and t1.mgr_div    = '" + l_mgr_yn + "' "
+        # query += "   and (('" + l_appr_yn + "' = 'Y' and t1.appr_dt is not null) or ('" + l_appr_yn + "' <> 'Y' and t1.appr_dt is null))"
+        # query += "   and (('" + l_mgr_yn + "' = 'Y' and t1.mgr_dt is not null) or ('" + l_mgr_yn + "' <> 'Y' and t1.mgr_dt is null))"
         query += " and (t1.att_sdt >= CONCAT('" + l_yr + "-" + l_month1 + "', '-01') AND t1.att_sdt < ADDDATE(LAST_DAY(CONCAT('" + l_yr + "-" + l_month2 + "', '-01')), 1))"
         query += "   and t3.mnte_id = '" + l_mnte_id + "'"
         query += " order by t1.att_no"
@@ -8514,7 +8520,6 @@ class TE0202_detail(generics.ListAPIView):
             return self.get_paginated_response(serializer.data)
 
         return Response(serializer.data)
-
 
 # 멘티출석확인 멘토 출석 승인 ###################################################
 @csrf_exempt
@@ -8559,8 +8564,10 @@ def TE0202_Approval(request):
     query += "     , upd_dt = now()"
     query += "     , upd_pgm = '" + upd_pgm + "'"
     query += " where t1.mp_id = '" + l_mp_id + "'"
-    query += "    and (('" + l_appr_yn + "' = 'Y' and t1.appr_dt is not null) or ('" + l_appr_yn + "' <> 'Y' and t1.appr_dt is null))"
-    query += "   and (('" + l_mgr_yn + "' = 'Y' and t1.mgr_dt is not null) or ('" + l_mgr_yn + "' <> 'Y' and t1.mgr_dt is null))"
+    query += "   and t1.appr_div    = '" + l_appr_yn + "' "
+    query += "   and t1.mgr_div    = '" + l_mgr_yn + "' "
+    # query += "    and (('" + l_appr_yn + "' = 'Y' and t1.appr_dt is not null) or ('" + l_appr_yn + "' <> 'Y' and t1.appr_dt is null))"
+    # query += "   and (('" + l_mgr_yn + "' = 'Y' and t1.mgr_dt is not null) or ('" + l_mgr_yn + "' <> 'Y' and t1.mgr_dt is null))"
     query += "   and t1.apl_no = '" + l_apl_no + "'"
     query += "   and t1.att_no = '" + l_att_no + "'"
     
@@ -9697,11 +9704,7 @@ def com_upload(request):
     DIR = os.getcwd()
     UPLOAD_DIR = str(DIR) + '/media/mp_mtr/'
     UPLOAD_DIR = '/NANUM/www/img/mp_mtr/'
-    UPLOAD_DIR_JOB = '/NANUM/www/img/mp_job/'
-
-    UPLOAD_DIR = '/home/'
-    UPLOAD_DIR_JOB = '/home/'
-    
+    UPLOAD_DIR_JOB = '/NANUM/www/img/mp_job/'    
 
     if request.method == 'POST':
 
@@ -9739,7 +9742,7 @@ def com_upload(request):
             # job
             job_file = request.FILES['job_file']
             job_filename = job_file._name
-            n_job_filename = str(l_user_id) + '_job_' + str(l_mp_id) + '' + os.path.splitext(job_filename)[1]
+            n_job_filename = str(l_user_id) + '_' + str(l_mp_id) + '' + os.path.splitext(job_filename)[1]
 
             # job
             fp = open('%s/%s' % (UPLOAD_DIR, n_job_filename) , 'wb')
