@@ -9712,15 +9712,15 @@ def com_upload(request):
         l_job_file = request.POST.get("job_file")
 
         if l_file == None:
-            print("========None(l_file)======")
+            print("========None(l_file)======"+l_file)
         else:
-            print("========file(l_file)======")
+            print("========file(l_file)======"+l_file)
 
         
         if l_job_file == None:
-            print("========None(l_job_file)======")
+            print("========None(l_job_file)======"+l_job_file)
         else:
-            print("========file(l_job_file)======")    
+            print("========file(l_job_file)======"+l_job_file)    
         print("========go======")
         file = request.FILES['file']
         if file == None:
