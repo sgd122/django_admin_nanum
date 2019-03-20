@@ -66,7 +66,7 @@ def login_login(request):
             v_login_gubun = str(results[0].std_detl_code_nm)
             v_user_div =  str(results[0].user_div)
         
-        if v_user_div == "M" or v_user_div == "S":
+        if v_user_div == "M" or v_user_div == "S" or v_user_div == '' or v_user_div == None:
 
 
             # 로그인할 유저정보를 넣어주자 (모두 문자열)
@@ -2739,7 +2739,7 @@ class MS0101M_list_chk_1(generics.ListAPIView):
 
         # 학년체크
         query = " select t1.id,t1.sch_yr, IFNULL(t4.en_cnt,0) as en_cnt, fn_mp_sub_desc_select_01('"+ms_id+"','MS0010') as mp_select01"
-        query += "     , CASE WHEN IFNULL(t4.en_cnt,0) > 0 THEN '신청' ELSE CONCAT('신청불가:', fn_mp_sub_desc_select_01('"+ms_id+"','MS0010'), '만 신청가능') END  as name "
+        query += "     , CASE WHEN IFNULL(t4.en_cnt,0) > 0 THEN '신청' ELSE CONCAT('신청불가:', fn_ms_sub_desc_select_01('"+ms_id+"','MS0010'), '만 신청가능') END  as name "
         query += "     , CASE WHEN IFNULL(t4.en_cnt,0) > 0 THEN 'Y' ELSE 'N' END  as code "
         query += "  FROM service20_vw_nanum_stdt t1     /* 부산대학교 학생 정보 */ "
         query += " LEFT JOIN (SELECT t2.apl_id, COUNT(*) en_cnt "
@@ -9765,63 +9765,6 @@ def com_upload(request):
 
     return HttpResponse('Failed to Upload File')
 
-@csrf_exempt
-def com_upload_job(request):
-
-    req = request
-    DIR = os.getcwd()
-    UPLOAD_DIR = str(DIR) + '/media/mp_mtr/'
-    UPLOAD_DIR = '/NANUM/www/img/mp_mtr/'
-    UPLOAD_DIR_JOB = '/NANUM/www/img/mp_job/'
-
-    UPLOAD_DIR = '/home/'
-    UPLOAD_DIR_JOB = '/home/'
-    if request.method == 'POST':
-        l_user_id = request.POST.get("user_id")
-        l_mp_id = request.POST.get("mp_id")
-
-        print(l_user_id)
-        print(l_mp_id)
-        file = request.FILES['file']
-        filename = file._name
-
-        # job
-        job_file = request.FILES['job_file']
-        job_filename = job_file._name
-
-        n_filename = str(l_user_id) + '_' + str(l_mp_id) + '' + os.path.splitext(filename)[1]
-
-        # job
-        n_job_filename = str(l_user_id) + '_job_' + str(l_mp_id) + '' + os.path.splitext(job_filename)[1]
-
-        print(n_filename)
-        print (UPLOAD_DIR)
-        
-        fp = open('%s/%s' % (UPLOAD_DIR, n_filename) , 'wb')
-
-        for chunk in file.chunks():
-            fp.write(chunk)
-        fp.close()
-
-        # job
-        fp = open('%s/%s' % (UPLOAD_DIR, n_job_filename) , 'wb')
-
-        for chunk in job_file.chunks():
-            fp.write(chunk)
-        fp.close()
-        # job
-
-        cursor = connection.cursor()
-        fullFile = str(UPLOAD_DIR) + str(n_filename)
-        fullFile = "/img/mp_mtr/"+ str(n_filename)
-        job_fullFile = "/img/mp_job/"+ str(n_job_filename)
-        insert_sql = "update service20_mp_mtr set  file_job_fav = '" + str(job_fullFile) + "', id_pic = '" + str(fullFile) + "' where mp_id = '"+ str(l_mp_id) + "' and apl_id = '" +  str(l_user_id) +"' "
-        print(insert_sql)
-        cursor.execute(insert_sql)
-
-        return HttpResponse('File Uploaded')
-
-    return HttpResponse('Failed to Upload File')
 
 def namedtuplefetchall(cursor):
     "Return all rows from a cursor as a namedtuple"
