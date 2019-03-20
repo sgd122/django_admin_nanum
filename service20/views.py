@@ -3254,7 +3254,7 @@ class MS0101M_list(generics.ListAPIView):
         query += "               AND Now() > A.apl_to_dt, 'xx', A.status) LIKE  "
         query += "            Ifnull(Nullif('"+str(l_status)+"', ''), '%%')  "
         query += "            or '%%'  "
-        query += " ORDER  BY A.apl_fr_dt DESC,  "
+        query += " ORDER  BY A.ms_id DESC, A.apl_fr_dt DESC,  "
         query += "           A.apl_to_dt DESC  "
         queryset = msch.objects.raw(query)
 
