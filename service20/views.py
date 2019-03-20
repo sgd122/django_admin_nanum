@@ -9698,6 +9698,9 @@ def com_upload(request):
     UPLOAD_DIR = str(DIR) + '/media/mp_mtr/'
     UPLOAD_DIR = '/NANUM/www/img/mp_mtr/'
     UPLOAD_DIR_JOB = '/NANUM/www/img/mp_job/'
+
+    UPLOAD_DIR = '/home/'
+    UPLOAD_DIR_JOB = '/home/'
     if request.method == 'POST':
         l_user_id = request.POST.get("user_id")
         l_mp_id = request.POST.get("mp_id")
