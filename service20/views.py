@@ -3384,24 +3384,24 @@ def MS0101M_save(request):
         else:
             v_tel_no_g = rows.tel_no_g.replace('-', '')
             
-        # score01 = rows.score01
-        # score02 = rows.score02
-        # score03 = rows.score03
-        # score04 = rows.score04
-        # score05 = rows.score05
-        # score06 = rows.score06
-        # if score01 == None:
-        #     score01 = 0
-        # if score02 == None:
-        #     score02 = 0
-        # if score03 == None:
-        #     score03 = 0
-        # if score04 == None:
-        #     score04 = 0
-        # if score05 == None:
-        #     score05 = 0
-        # if score06 == None:
-        #     score06 = 0
+        score01 = rows.score01
+        score02 = rows.score02
+        score03 = rows.score03
+        score04 = rows.score04
+        score05 = rows.score05
+        score06 = rows.score06
+        if score01 == None:
+            score01 = 0
+        if score02 == None:
+            score02 = 0
+        if score03 == None:
+            score03 = 0
+        if score04 == None:
+            score04 = 0
+        if score05 == None:
+            score05 = 0
+        if score06 == None:
+            score06 = 0
         
         model_instance = ms_apl(
             ms_id=ms_id, 
