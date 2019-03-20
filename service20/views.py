@@ -9731,7 +9731,6 @@ def com_upload(request):
             cursor = connection.cursor()
             fullFile = str(UPLOAD_DIR) + str(n_filename)
             fullFile = "/img/mp_mtr/"+ str(n_filename)
-            job_fullFile = "/img/mp_job/"+ str(n_job_filename)
             insert_sql = "update service20_mp_mtr set id_pic = '" + str(fullFile) + "' where mp_id = '"+ str(l_mp_id) + "' and apl_id = '" +  str(l_user_id) +"' "
             print(insert_sql)
             cursor.execute(insert_sql)
@@ -9751,8 +9750,6 @@ def com_upload(request):
             # job
 
             cursor = connection.cursor()
-            fullFile = str(UPLOAD_DIR) + str(n_filename)
-            fullFile = "/img/mp_mtr/"+ str(n_filename)
             job_fullFile = "/img/mp_job/"+ str(n_job_filename)
             insert_sql = "update service20_mp_mtr set  file_job_fav = '" + str(job_fullFile) + "' where mp_id = '"+ str(l_mp_id) + "' and apl_id = '" +  str(l_user_id) +"' "
             print(insert_sql)
