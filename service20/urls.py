@@ -409,8 +409,7 @@ urlpatterns = [
 ################################################################################################################################################################################    
 
     
-    
-   ########################################################################################
+    ########################################################################################
     # view2 부분 (시작)
     #
     ########################################################################################
@@ -455,6 +454,11 @@ urlpatterns = [
     path('msPop1_Det5/', msPop1_Det5.as_view(), name='msPop1_Det5'), 
     #멘토스쿨 핍압1_조회5_답변_저장
     path('msPop1_Det5_Save/', msPop1_Det5_Save, name='msPop1_Det5_Save'), 
+    #멘토스쿨 리포트 조회
+    path('msFn8/', msFn8, name='msFn8'), 
+    
+
+
 
     #멘토스쿨 환산표
     #path('msFn1/', msFn1, name='msFn1'),
@@ -478,8 +482,62 @@ urlpatterns = [
     #합격자업로드_전송
     path('mpFn6_Submit2/', mpFn6_Submit2, name='mpFn6_Submit2'),
 
+    #
+
     #합격자업로드
     path('mpFn7/', mpFn7, name='mpFn7'),
+
+
+    #멘토링 리포트 조회 페이지 이동
+    path('mpFn8/', mpFn8, name='mpFn8'), 
+
+    #멘토링 리포트 조회 페이지 이동
+    path('mpFn8_2/', mpFn8_2, name='mpFn8_2'), 
+
+    #멘토링 리포트 조회 상세 리스트
+    path('mpFn8_Det1/', mpFn8_Det1.as_view(), name='mpFn8_Det1'), 
+
+    #멘토링 리포트 조회 상세 리스트(서류채점자)
+    path('mpFn8_Det2/', mpFn8_Det2.as_view(), name='mpFn8_Det2'), 
+
+    #MP_MTR 학번으로 보기 (조교)
+    path('mpFn8_Det3/', mpFn8_Det3.as_view(), name='mpFn8_Det3'), 
+
+    #멘토링 리포트 조교
+    path('mpFn8_assist/', mpFn8_assist, name='mpFn8_assist'), 
+    #학과장 승인
+    path('mpFn8_assist_confirm/', mpFn8_assist_confirm, name='mpFn8_assist_confirm'), 
+
+    #학과장 일괄승인
+    path('mpFn8_assist_confirm_all/', mpFn8_assist_confirm_all, name='mpFn8_assist_confirm_all'), 
+
+    #학과장 반려
+    path('mpFn8_assist_cancle/', mpFn8_assist_cancle, name='mpFn8_assist_cancle'), 
+
+
+    #면접 관리자 코멘트
+    path('mpFn8_gabu/', mpFn8_gabu, name='mpFn8_gabu'), 
+
+    #면접 가부
+    path('mpFn8_gabu2/', mpFn8_gabu2, name='mpFn8_gabu2'), 
+    
+    
+
+    
+    
+    #지원서 점수 업로드
+    path('mpFn9/', mpFn9, name='mpFn9'),
+
+    #지원서 점수 업로드
+    path('mpFn9_Submit/', mpFn9_Submit, name='mpFn9_Submit'),
+
+    #가산점 점수 업로드
+    path('mpFn10/', mpFn10, name='mpFn10'),
+
+    #지원서 점수 업로드
+    path('mpFn10_Submit/', mpFn10_Submit, name='mpFn10_Submit'),
+
+
     #최종합격자업로드_전송
     #path('msFn7_Submit/', msFn7_Submit, name='msFn7_Submit'),
     #최종합격자업로드_전송
@@ -506,13 +564,19 @@ urlpatterns = [
     path('sms_result/', sms_result, name='sms_result'), 
 
 
-    path('mssql/', mssql, name='mssql'), 
-    path('mssql2/', mssql2, name='mssql'), 
+
+    #학교 시스템으로 sms을 send 해준다
+    path('sms_send/', sms_send, name='sms_send'), 
+
+
+    #조교, 학과장한테 SMS를 보낸다.
+    path('sms_send_assist/', sms_send_assist, name='sms_send_assist'), 
+
 
     #리턴URLTest
     path('returnsso/', returnsso, name='returnsso'), 
-    #리턴URLTest
-    path('returnsso2/', returnsso2, name='returnsso2'), 
+
+
 
     #개인정보리턴
     path('agree_cont1/', agree_cont1.as_view(), name='agree_cont1'), 
@@ -525,13 +589,34 @@ urlpatterns = [
     #멘토스쿨공통코드학년저장하기
     path('ms_com_save1/', ms_com_save1, name='ms_com_save1'), 
 
+    #멘토스쿨공통코드학점평균저장하기
+    path('ms_com_save2/', ms_com_save2, name='ms_com_save2'),     
 
 
+    #멘토링프로그램공통코드학년가져오기
+    path('mp_com_cd1/', mp_com_cd1.as_view(), name='mp_com_cd1'), 
+
+    #멘토링프로그램공통코드학년저장하기
+    path('mp_com_save1/', mp_com_save1, name='mp_com_save1'),
+
+
+
+
+
+    #관리자로그인
+    path('admint/', ms_com_cd1.as_view(), name='ms_com_cd1'), 
+
+
+ 
     #파일업로드
     path('upload/', upload, name='upload'), 
 
     #공지사항
     path('bbs1/', bbs1.as_view(), name='bbs1'), 
+
+
+    #공통코드 이름 가져오기
+    path('comcode/', comcode.as_view(), name='comcode'), 
 
     ###모바일
     #멘토링 프로그램 List
@@ -540,4 +625,29 @@ urlpatterns = [
     # view2 부분 (종료)
     #
     ########################################################################################
-]
+
+
+
+    ########################################################################################
+    # 강주원 (시작)
+    #
+    ########################################################################################
+
+    # 강주원 작업 시작
+
+    # 교사용 멘토링 프로그램 리스트
+    path('MP0101M/teacher/list/', TeacherMP0101MList.as_view(), name='MP0101M_list_teacher'),
+    # 부모용 멘토링 프로그램 리스트
+    path('MP0101M/guardian/list/', GuardianMP0101MList.as_view(), name='MP0101M_list_guardian'),
+    # 멘토링 프로그램 상세 조회
+    path('MP0101M/mpgms/detail/', MPAttView.as_view(), name='MP0101M_detail'),
+
+    # 질문문항 세트 수정
+    path('MP0101M/questions/', MoveQuestionView.as_view(), name='MoveQuestion'),
+    path('users/login/', UserLoginView.as_view(), name='UserLogin'),
+    
+    # 난수 API
+    path('RANDOM/number/', RandomViewSet.as_view(), name='Random'),
+    #강주원 작업 종료
+
+
