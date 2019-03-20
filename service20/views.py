@@ -9705,77 +9705,50 @@ def com_upload(request):
 
     if request.method == 'POST':
 
-        try:
+        l_user_id = request.POST.get("user_id")
+        l_mp_id = request.POST.get("mp_id")
+        print("========go======")
+        file = request.FILES['file']
+        if file == None:
+            print("========None======")
+        else:
+            print("========file======")
+        filename = file._name
 
-            l_user_id = request.POST.get("user_id")
-            l_mp_id = request.POST.get("mp_id")
+        # job
+        job_file = request.FILES['job_file']
+        job_filename = job_file._name
 
-            print(l_user_id)
-            print(l_mp_id)
-            file = request.FILES['file']
-            filename = file._name
+        n_filename = str(l_user_id) + '_' + str(l_mp_id) + '' + os.path.splitext(filename)[1]
 
-            # job
-            job_file = request.FILES['job_file']
-            job_filename = job_file._name
+        # job
+        n_job_filename = str(l_user_id) + '_job_' + str(l_mp_id) + '' + os.path.splitext(job_filename)[1]
 
-            n_filename = str(l_user_id) + '_' + str(l_mp_id) + '' + os.path.splitext(filename)[1]
+        print(n_filename)
+        print (UPLOAD_DIR)
+        
+        fp = open('%s/%s' % (UPLOAD_DIR, n_filename) , 'wb')
 
-            # job
-            n_job_filename = str(l_user_id) + '_job_' + str(l_mp_id) + '' + os.path.splitext(job_filename)[1]
+        for chunk in file.chunks():
+            fp.write(chunk)
+        fp.close()
 
-            print(n_filename)
-            print (UPLOAD_DIR)
-            
-            fp = open('%s/%s' % (UPLOAD_DIR, n_filename) , 'wb')
+        # job
+        fp = open('%s/%s' % (UPLOAD_DIR, n_job_filename) , 'wb')
 
-            for chunk in file.chunks():
-                fp.write(chunk)
-            fp.close()
+        for chunk in job_file.chunks():
+            fp.write(chunk)
+        fp.close()
+        # job
 
-            # job
-            fp = open('%s/%s' % (UPLOAD_DIR, n_job_filename) , 'wb')
-
-            for chunk in job_file.chunks():
-                fp.write(chunk)
-            fp.close()
-            # job
-
-            cursor = connection.cursor()
-            fullFile = str(UPLOAD_DIR) + str(n_filename)
-            fullFile = "/img/mp_mtr/"+ str(n_filename)
-            job_fullFile = "/img/mp_job/"+ str(n_job_filename)
-            insert_sql = "update service20_mp_mtr set  file_job_fav = '" + str(job_fullFile) + "', id_pic = '" + str(fullFile) + "' where mp_id = '"+ str(l_mp_id) + "' and apl_id = '" +  str(l_user_id) +"' "
-            print(insert_sql)
-            cursor.execute(insert_sql)
-        except IndexError:
-            l_user_id = request.POST.get("user_id")
-            l_mp_id = request.POST.get("mp_id")
-
-            print(l_user_id)
-            print(l_mp_id)
-
-            # job
-            job_file = request.FILES['job_file']
-            job_filename = job_file._name
-
-            # job
-            n_job_filename = str(l_user_id) + '_job_' + str(l_mp_id) + '' + os.path.splitext(job_filename)[1]
-
-            # job
-            fp = open('%s/%s' % (UPLOAD_DIR, n_job_filename) , 'wb')
-
-            for chunk in job_file.chunks():
-                fp.write(chunk)
-            fp.close()
-            # job
-
-            cursor = connection.cursor()
-            
-            job_fullFile = "/img/mp_job/"+ str(n_job_filename)
-            insert_sql = "update service20_mp_mtr set  file_job_fav = '" + str(job_fullFile) + "' where mp_id = '"+ str(l_mp_id) + "' and apl_id = '" +  str(l_user_id) +"' "
-            print(insert_sql)
-            cursor.execute(insert_sql)
+        cursor = connection.cursor()
+        fullFile = str(UPLOAD_DIR) + str(n_filename)
+        fullFile = "/img/mp_mtr/"+ str(n_filename)
+        job_fullFile = "/img/mp_job/"+ str(n_job_filename)
+        insert_sql = "update service20_mp_mtr set  file_job_fav = '" + str(job_fullFile) + "', id_pic = '" + str(fullFile) + "' where mp_id = '"+ str(l_mp_id) + "' and apl_id = '" +  str(l_user_id) +"' "
+        print(insert_sql)
+        cursor.execute(insert_sql)
+        
         return HttpResponse('File Uploaded')
 
     return HttpResponse('Failed to Upload File')
