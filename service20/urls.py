@@ -23,6 +23,7 @@ urlpatterns = [
     ########################################################################################    
     #공지사항
     path('com/notice/', com_notice.as_view(), name='com_notice'), 
+    path('com/notice/detail/', com_notice_detail.as_view(), name='com_notice_detail'), 
     #파일업로드(멘토스쿨용)
     path('com/upload/ms/', com_upload_ms, name='com_upload_ms'), 
     #파일업로드
@@ -111,7 +112,11 @@ urlpatterns = [
     # 멘토 프로그램별 멘티 리스트
     path('myapge/mentoMenteList/', mentoMenteMypage_list.as_view(), name='mentoMenteMypage_list'),
     # 교사,학부모 프로그램별 멘티 리스트
-    path('myapge/pgmMenteList/', pgmMenteMypage_list.as_view(), name='pgmMenteMypage_list'),         
+    path('myapge/pgmMenteList/', pgmMenteMypage_list.as_view(), name='pgmMenteMypage_list'),   
+    # 멘토스쿨
+    path('myapge/mschList/', mschListMypage_list.as_view(), name='mschListMypage_list'), 
+    # 활동 내역
+    path('myapge/mentoActiveList/', mentoActiveListMypage_list.as_view(), name='mentoActiveListMypage_list'),     
     ########################################################################################
     # myPage
     #
