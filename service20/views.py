@@ -9717,7 +9717,7 @@ def com_upload(request):
         n_filename = str(l_user_id) + '_' + str(l_mp_id) + '' + os.path.splitext(filename)[1]
 
         # job
-        n_job_filename = str(l_user_id) + '_' + str(l_mp_id) + '' + os.path.splitext(job_filename)[1]
+        n_job_filename = str(l_user_id) + '_job_' + str(l_mp_id) + '' + os.path.splitext(job_filename)[1]
 
         print(n_filename)
         print (UPLOAD_DIR)
