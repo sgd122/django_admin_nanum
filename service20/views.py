@@ -9707,6 +9707,20 @@ def com_upload(request):
 
         l_user_id = request.POST.get("user_id")
         l_mp_id = request.POST.get("mp_id")
+
+        l_file = request.POST.get("file")
+        l_job_file = request.POST.get("job_file")
+
+        if l_file == None:
+            print("========None(l_file)======")
+        else:
+            print("========file(l_file)======")
+
+        
+        if l_job_file == None:
+            print("========None(l_job_file)======")
+        else:
+            print("========file(l_job_file)======")    
         print("========go======")
         file = request.FILES['file']
         if file == None:
