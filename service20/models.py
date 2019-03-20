@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from member.models import Member
 from ckeditor.fields import RichTextField
+from ckeditor_uploader.fields import RichTextUploadingField
 from collections import namedtuple
 from collections  import OrderedDict
 
@@ -2059,7 +2060,9 @@ class mp_rvw(models.Model):
 class bbs1(models.Model):
   subject = models.CharField(max_length=255, null=True, blank=True, verbose_name='타이틀' )
   name = models.CharField(max_length=50, null=True, blank=True, verbose_name='작성자' )
-  html = RichTextField()
+
+  html = RichTextUploadingField()
+
   file = models.FileField(upload_to='files',null=True,blank=True,verbose_name='파일')
   hits = models.IntegerField(max_length=50, null=True, blank=True, verbose_name='작성자' )
   ins_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='입력자ID' )
@@ -2076,7 +2079,7 @@ class mpgm_introduce(models.Model):
   subject = models.CharField(max_length=255, null=True, blank=True, verbose_name='타이틀' )
   name = models.CharField(max_length=50, null=True, blank=True, verbose_name='작성자' )
   mp_id = models.CharField(max_length=10, null=False, verbose_name='첫 지원 멘토링 프로그램ID' )
-  html = RichTextField()
+  html = RichTextUploadingField()
   file = models.FileField(upload_to='files',null=True,blank=True,verbose_name='파일')
   hits = models.IntegerField(max_length=50, null=True, blank=True, verbose_name='작성자' )
   ins_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='입력자ID' )
