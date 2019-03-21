@@ -9957,10 +9957,10 @@ def com_upload_ms(request):
             # job
             job_file = request.FILES['job_file']
             job_filename = job_file._name
-            n_job_filename = str(l_user_id) + '_' + str(l_mp_id) + '' + os.path.splitext(job_filename)[1]
+            n_job_filename = str(l_user_id) + '_' + str(l_ms_id) + '' + os.path.splitext(job_filename)[1]
 
             # job
-            fp = open('%s/%s' % (UPLOAD_DIR, n_job_filename) , 'wb')
+            fp = open('%s/%s' % (UPLOAD_DIR_JOB, n_job_filename) , 'wb')
 
             for chunk in job_file.chunks():
                 fp.write(chunk)
@@ -10026,7 +10026,7 @@ def com_upload(request):
             n_job_filename = str(l_user_id) + '_' + str(l_mp_id) + '' + os.path.splitext(job_filename)[1]
 
             # job
-            fp = open('%s/%s' % (UPLOAD_DIR, n_job_filename) , 'wb')
+            fp = open('%s/%s' % (UPLOAD_DIR_JOB, n_job_filename) , 'wb')
 
             for chunk in job_file.chunks():
                 fp.write(chunk)
