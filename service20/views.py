@@ -3169,7 +3169,7 @@ class MS0101M_list_chk_5_Serializer(serializers.ModelSerializer):
     
     chk = serializers.SerializerMethodField()
     class Meta:
-        model = com_cdd
+        model = mentor
         fields = '__all__'
 
     def get_chk(self, obj):
@@ -3184,7 +3184,7 @@ class MS0101M_list_chk_5(generics.ListAPIView):
         apl_id = request.GET.get('apl_id', "")
 
         # -- 멘토체크
-        query = "select '1' as id,COUNT(*) as mentor_num from service20_mentor where apl_id = '"+str(apl_id)+"'"
+        query = "select COUNT(*) as mentor_num,A.* from service20_mentor A where apl_id = '"+str(apl_id)+"'"
 
         queryset = com_cdd.objects.raw(query)
         
@@ -4613,7 +4613,7 @@ class MP0101M_list_chk_5_Serializer(serializers.ModelSerializer):
     
     chk = serializers.SerializerMethodField()
     class Meta:
-        model = com_cdd
+        model = mentor
         fields = '__all__'
 
     def get_chk(self, obj):
@@ -4628,7 +4628,7 @@ class MP0101M_list_chk_5(generics.ListAPIView):
         apl_id = request.GET.get('apl_id', "")
 
         # -- 멘토체크
-        query = "select '1' as id,COUNT(*) as mentor_num from service20_mentor where apl_id = '"+str(apl_id)+"'"
+        query = "select COUNT(*) as mentor_num,A.* from service20_mentor A where apl_id = '"+str(apl_id)+"'"
 
         queryset = com_cdd.objects.raw(query)
         
