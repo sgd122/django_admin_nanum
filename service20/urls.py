@@ -74,7 +74,8 @@ urlpatterns = [
     path('com/combo/att/div/', com_combo_att_div.as_view(), name='com_combo_att_div'),
     # 출석상태 콤보박스
     path('com/combo/att/status/', com_combo_att_status.as_view(), name='com_combo_att_status'),
-
+    # 학습외 프로그램 리스트(콤보)
+    path('com/combo/spcProgram/', com_combo_spcProgram.as_view(), name='com_combo_spcProgram'),
     ########################################################################################
     # 공통(com)
     #
