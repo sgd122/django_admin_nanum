@@ -4020,6 +4020,7 @@ def MS0101M_adm_update(request):
     update_text += " AND a.ms_id = '"+str(ms_id)+"' "
     update_text += " AND a.apl_id = '"+str(apl_id)+"' "
     update_text += " AND a.apl_id = b.apl_id "
+    update_text += " AND ifnull(a.dept_appr_div,'N') = 'N' "
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)
 
@@ -5670,6 +5671,8 @@ def MP0101M_adm_update(request):
     update_text += " AND a.mp_id = '"+str(mp_id)+"' "
     update_text += " AND a.apl_id = '"+str(apl_id)+"' "
     update_text += " AND a.apl_id = b.apl_id "
+    update_text += " AND ifnull(a.dept_appr_div,'N') = 'N' "
+    
     cursor = connection.cursor()
     query_result = cursor.execute(update_text)
 
