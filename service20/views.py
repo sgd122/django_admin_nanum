@@ -3597,8 +3597,36 @@ def MS0101M_save(request):
             update_text = " update service20_ms_apl set dept_chr_id = '"+results[0].dean_emp_id+"', dept_chr_nm = '"+results[0].dean_emp_nm+"', ast_id = '"+results[0].ast_id+"', dept_appr_div = '"+results[0].ast_nm+"', dept_appr_div = 'N' "
             update_text += " where ms_id = '"+str(ms_id)+"' and apl_no = '"+str(apl_no)+"'"
 
+        # 문자전송
+        query = " select a.* from service20_ms_apl a where ms_id = '"+str(ms_id)+"' and apl_no = '"+str(apl_no)+"'"
+        cursor = connection.cursor()
+        query_result = cursor.execute(query)  
+        results_m = namedtuplefetchall(cursor)  
 
-            
+        user_id = '515440'
+        push_chk = 'PO'
+        # push_userid = '515440'
+        push_userid = results[0].ast_id
+        push_title = results_m[0].apl_nm + " 학생 교육기부 지원서 학과장 승인 요청"
+        push_content = results_m[0].apl_nm + " 학생 교육기부 지원서 학과장 승인 요청"
+        tickerText = ' '
+        push_time = '60'
+        # cdr_id = '515440'
+        cdr_id = results[0].ast_id
+        sms_content = push_content
+        sms_nb = '0515103322'
+        client_ip = request.META['REMOTE_ADDR']
+        data_info = {'user_id':user_id,'push_chk': push_chk,'push_userid': push_userid,'push_title': push_title,'push_content': push_content,'tickerText': tickerText,'push_time': push_time,'cdr_id': cdr_id,'sms_content': sms_content,'sms_nb': sms_nb}
+        print("::data_info::")
+        print(data_info)
+        # with requests.Session() as s:
+        #     first_page = s.post('http://msg.pusan.ac.kr/api/push.asp', data=data_info)
+        #     html = first_page.text
+        #     #print(html)
+        #     soup = bs(html, 'html.parser')
+
+        message = "Ok"
+        
         context = {'message': 'Ok'}
 
     #return HttpResponse(json.dumss(context), content_type="application/json")
@@ -3709,7 +3737,8 @@ class MS0101M_adm_list_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = ms_apl
-        fields = ('ms_id','apl_no','mntr_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','fnl_rslt','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','ms_name','pr_yr','pr_sch_yr','pr_term_div','statusCode','status_nm')
+        # fields = ('ms_id','apl_no','mntr_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','fnl_rslt','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','ms_name','pr_yr','pr_sch_yr','pr_term_div','statusCode','status_nm')
+        fields = '__all__'
 
     def get_ms_name(self,obj):
         return obj.ms_name
@@ -4204,7 +4233,8 @@ class MS0101M_report_list_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = ms_apl
-        fields = ('ms_id','apl_no','mntr_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','fnl_rslt','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','ms_name','pr_yr','pr_sch_yr','pr_term_div','statusNm','statusCode','pr_term_cnt','trn_term_nm','trn_term','mpgm_yr')
+        #fields = ('ms_id','apl_no','mntr_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','fnl_rslt','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','ms_name','pr_yr','pr_sch_yr','pr_term_div','statusNm','statusCode','pr_term_cnt','trn_term_nm','trn_term','mpgm_yr')
+        fields = '__all__'
     def get_ms_name(self,obj):
         return obj.ms_name
 
@@ -5186,6 +5216,35 @@ def MP0101M_save(request):
             update_text = " update service20_mp_mtr set dept_chr_id = '"+results[0].dean_emp_id+"', dept_chr_nm = '"+results[0].dean_emp_nm+"', ast_id = '"+results[0].ast_id+"', dept_appr_div = '"+results[0].ast_nm+"', dept_appr_div = 'N' "
             update_text += " where mp_id = '"+str(mp_id)+"' and apl_no = '"+str(apl_no)+"'"
 
+
+        # 문자전송
+        query = " select a.* from service20_mp_mtr a where mp_id = '"+str(mp_id)+"' and apl_no = '"+str(apl_no)+"'"
+        cursor = connection.cursor()
+        query_result = cursor.execute(query)  
+        results_m = namedtuplefetchall(cursor)  
+
+        user_id = '515440'
+        push_chk = 'PO'
+        # push_userid = '515440'
+        push_userid = results[0].ast_id
+        push_title = results_m[0].apl_nm + " 학생 교육기부 지원서 학과장 승인 요청"
+        push_content = results_m[0].apl_nm + " 학생 교육기부 지원서 학과장 승인 요청"
+        tickerText = ' '
+        push_time = '60'
+        # cdr_id = '515440'
+        cdr_id = results[0].ast_id
+        sms_content = push_content
+        sms_nb = '0515103322'
+        client_ip = request.META['REMOTE_ADDR']
+        data_info = {'user_id':user_id,'push_chk': push_chk,'push_userid': push_userid,'push_title': push_title,'push_content': push_content,'tickerText': tickerText,'push_time': push_time,'cdr_id': cdr_id,'sms_content': sms_content,'sms_nb': sms_nb}
+        print("::data_info::")
+        print(data_info)
+        # with requests.Session() as s:
+        #     first_page = s.post('http://msg.pusan.ac.kr/api/push.asp', data=data_info)
+        #     html = first_page.text
+        #     #print(html)
+        #     soup = bs(html, 'html.parser')
+
         context = {'message': 'Ok'}
 
 
@@ -5305,7 +5364,8 @@ class MP0101M_adm_list_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = mp_mtr
-        fields = ('mp_id','apl_no','mntr_id','indv_div','team_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','bank_acct','bank_cd','bank_nm','bank_dpsr','cnt_mp_a','cnt_mp_p','cnt_mp_c','cnt_mp_g','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','fnl_rslt','acpt_dt','acpt_div','acpt_cncl_rsn','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','mp_name','pr_yr','pr_sch_yr','pr_term_div','statusCode','status_nm')
+        #fields = ('mp_id','apl_no','mntr_id','indv_div','team_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','bank_acct','bank_cd','bank_nm','bank_dpsr','cnt_mp_a','cnt_mp_p','cnt_mp_c','cnt_mp_g','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','fnl_rslt','acpt_dt','acpt_div','acpt_cncl_rsn','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','mp_name','pr_yr','pr_sch_yr','pr_term_div','statusCode','status_nm')
+        fields = '__all__'
 
     def get_mp_name(self,obj):
         return obj.mp_name
@@ -5824,7 +5884,8 @@ class MP0101M_report_list_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = mp_mtr
-        fields = ('mp_id','apl_no','mntr_id','indv_div','team_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','bank_acct','bank_cd','bank_nm','bank_dpsr','cnt_mp_a','cnt_mp_p','cnt_mp_c','cnt_mp_g','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','fnl_rslt','acpt_dt','acpt_div','acpt_cncl_rsn','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','mp_name','statusNm','statusCode','id_pic','mpgm_yr','mnt_term','mnt_term_nm','pr_yr','pr_sch_yr','pr_term_div','pr_term_cnt','dept_appr_dt2','dept_chr_nm')
+        #fields = ('mp_id','apl_no','mntr_id','indv_div','team_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','bank_acct','bank_cd','bank_nm','bank_dpsr','cnt_mp_a','cnt_mp_p','cnt_mp_c','cnt_mp_g','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','fnl_rslt','acpt_dt','acpt_div','acpt_cncl_rsn','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','mp_name','statusNm','statusCode','id_pic','mpgm_yr','mnt_term','mnt_term_nm','pr_yr','pr_sch_yr','pr_term_div','pr_term_cnt','dept_appr_dt2','dept_chr_nm')
+        fields = '__all__'
 
     def get_mp_name(self,obj):
         return obj.mp_name
