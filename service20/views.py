@@ -3577,6 +3577,27 @@ def MS0101M_save(request):
         print(update_text) 
         cursor = connection.cursor()
         query_result = cursor.execute(update_text)     
+
+
+        query = " select b.* from service20_vw_nanum_stdt a, service20_dept_ast b where a.dept_cd = b.dept_cd and b.status = 'Y' and a.apl_id = '"+apl_id+"' "
+        cursor = connection.cursor()
+        query_result = cursor.execute(query)  
+        results = namedtuplefetchall(cursor)  
+        query_cnt = len(list(results))
+        print("::query_cnt::")
+        print(query_cnt)
+        if query_cnt == '1':
+            # MP_MTR.DEPT_CHR_ID(학과장 ID) = DEPT_AST.DEAN_EMP_ID
+            # MP_MTR.DEPT_CHR_NM(학과장 명) = DEPT_AST.DEAN_EMP_NM
+            # MP_MTR.AST_ID(조교 ID)        = DEPT_AST.AST_ID
+            # MP_MTR.AST_NM(조교 명)        = DEPT_AST.AST_NM
+            # MP_MTR.DEPT_APPR_DIV(학과 승인 여부) = 'N'
+
+            # service20_ms_apl
+            update_text = " update service20_ms_apl set dept_chr_id = '"+results[0].dean_emp_id+"', dept_chr_nm = '"+results[0].dean_emp_nm+"', ast_id = '"+results[0].ast_id+"', dept_appr_div = '"+results[0].ast_nm+"', dept_appr_div = 'N' "
+            update_text += " where ms_id = '"+str(ms_id)+"' and apl_no = '"+str(apl_no)+"'"
+
+
             
         context = {'message': 'Ok'}
 
@@ -5147,6 +5168,23 @@ def MP0101M_save(request):
         cursor = connection.cursor()
         query_result = cursor.execute(update_text)    
 
+        query = " select b.* from service20_vw_nanum_stdt a, service20_dept_ast b where a.dept_cd = b.dept_cd and b.status = 'Y' and a.apl_id = '"+apl_id+"' "
+        cursor = connection.cursor()
+        query_result = cursor.execute(query)  
+        results = namedtuplefetchall(cursor)  
+        query_cnt = len(list(results))
+        print("::query_cnt::")
+        print(query_cnt)
+        if query_cnt == '1':
+            # MP_MTR.DEPT_CHR_ID(학과장 ID) = DEPT_AST.DEAN_EMP_ID
+            # MP_MTR.DEPT_CHR_NM(학과장 명) = DEPT_AST.DEAN_EMP_NM
+            # MP_MTR.AST_ID(조교 ID)        = DEPT_AST.AST_ID
+            # MP_MTR.AST_NM(조교 명)        = DEPT_AST.AST_NM
+            # MP_MTR.DEPT_APPR_DIV(학과 승인 여부) = 'N'
+
+            # service20_ms_apl
+            update_text = " update service20_mp_mtr set dept_chr_id = '"+results[0].dean_emp_id+"', dept_chr_nm = '"+results[0].dean_emp_nm+"', ast_id = '"+results[0].ast_id+"', dept_appr_div = '"+results[0].ast_nm+"', dept_appr_div = 'N' "
+            update_text += " where mp_id = '"+str(mp_id)+"' and apl_no = '"+str(apl_no)+"'"
 
         context = {'message': 'Ok'}
 
