@@ -3162,7 +3162,41 @@ class MS0101M_list_chk_4(generics.ListAPIView):
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
 
-        return Response(serializer.data)      
+        return Response(serializer.data) 
+
+class MS0101M_list_chk_5_Serializer(serializers.ModelSerializer):
+
+    
+    chk = serializers.SerializerMethodField()
+    class Meta:
+        model = com_cdd
+        fields = '__all__'
+
+    def get_chk(self, obj):
+        return obj.chk
+
+class MS0101M_list_chk_5(generics.ListAPIView):
+    queryset = mpgm.objects.all()
+    serializer_class = MS0101M_list_chk_5_Serializer
+
+    def list(self, request):
+        
+        apl_id = request.GET.get('apl_id', "")
+
+        # -- 멘토체크
+        query = "select '1' as id,COUNT(*) as mentor_num from service20_mentor where apl_id = '"+str(apl_id)+"'"
+
+        queryset = com_cdd.objects.raw(query)
+        
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, context={'request': request}, many=True)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)          
 
 class MS0101M_list_Serializer(serializers.ModelSerializer):
 
@@ -4561,6 +4595,40 @@ class MP0101M_list_chk_4(generics.ListAPIView):
         query += "                             ) "
         query += "            AND apl_id = '"+apl_id+"' "
         query += "        ) T1 "
+
+        queryset = com_cdd.objects.raw(query)
+        
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, context={'request': request}, many=True)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)        
+
+class MP0101M_list_chk_5_Serializer(serializers.ModelSerializer):
+
+    
+    chk = serializers.SerializerMethodField()
+    class Meta:
+        model = com_cdd
+        fields = '__all__'
+
+    def get_chk(self, obj):
+        return obj.chk
+
+class MP0101M_list_chk_5(generics.ListAPIView):
+    queryset = mpgm.objects.all()
+    serializer_class = MP0101M_list_chk_5_Serializer
+
+    def list(self, request):
+        
+        apl_id = request.GET.get('apl_id', "")
+
+        # -- 멘토체크
+        query = "select '1' as id,COUNT(*) as mentor_num from service20_mentor where apl_id = '"+str(apl_id)+"'"
 
         queryset = com_cdd.objects.raw(query)
         

@@ -137,6 +137,7 @@ urlpatterns = [
     path('MS0101M/list/chk/2/', MS0101M_list_chk_2.as_view(), name='MS0101M_list_chk_2'),
     path('MS0101M/list/chk/3/', MS0101M_list_chk_3.as_view(), name='MS0101M_list_chk_3'),
     path('MS0101M/list/chk/4/', MS0101M_list_chk_4.as_view(), name='MS0101M_list_chk_4'),
+    path('MS0101M/list/chk/5/', MS0101M_list_chk_5.as_view(), name='MS0101M_list_chk_5'),
     # 멘토스쿨 리스트 조회
     path('MS0101M/list/', MS0101M_list.as_view(), name='MS0101M_list'),
     # 멘토스쿨 질문유형 가져오기
@@ -177,6 +178,7 @@ urlpatterns = [
     path('MP0101M/list/chk/2/', MP0101M_list_chk_2.as_view(), name='MP0101M_list_chk_2'),
     path('MP0101M/list/chk/3/', MP0101M_list_chk_3.as_view(), name='MP0101M_list_chk_3'),
     path('MP0101M/list/chk/4/', MP0101M_list_chk_4.as_view(), name='MP0101M_list_chk_4'),
+    path('MP0101M/list/chk/5/', MP0101M_list_chk_5.as_view(), name='MP0101M_list_chk_5'),
     # 멘토링 프로그램 리스트 조회
     path('MP0101M/list/', MP0101M_list.as_view(), name='MP0101M_list'),
     # 멘토링 프로그램 신청내역
