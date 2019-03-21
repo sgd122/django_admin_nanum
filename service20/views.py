@@ -3107,13 +3107,13 @@ class MS0101M_list_chk_3(generics.ListAPIView):
 class MS0101M_list_chk_4_Serializer(serializers.ModelSerializer):
 
     
-    chk = serializers.SerializerMethodField()
+    mentor_num = serializers.SerializerMethodField()
     class Meta:
-        model = com_cdd
+        model = mentor
         fields = '__all__'
 
-    def get_chk(self, obj):
-        return obj.chk
+    def get_mentor_num(self, obj):
+        return obj.mentor_num
 
 class MS0101M_list_chk_4(generics.ListAPIView):
     queryset = mpgm.objects.all()
@@ -4609,11 +4609,13 @@ class MP0101M_list_chk_4(generics.ListAPIView):
 class MP0101M_list_chk_5_Serializer(serializers.ModelSerializer):
 
     
-
+    mentor_num = serializers.SerializerMethodField()
     class Meta:
         model = mentor
         fields = '__all__'
 
+    def get_mentor_num(self, obj):
+        return obj.mentor_num
 
 class MP0101M_list_chk_5(generics.ListAPIView):
     queryset = mpgm.objects.all()
