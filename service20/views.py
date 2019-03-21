@@ -3186,7 +3186,7 @@ class MS0101M_list_chk_5(generics.ListAPIView):
         # -- 멘토체크
         query = "select COUNT(*) as mentor_num,A.* from service20_mentor A where apl_id = '"+str(apl_id)+"'"
 
-        queryset = com_cdd.objects.raw(query)
+        queryset = mentor.objects.raw(query)
         
 
         serializer_class = self.get_serializer_class()
@@ -4630,7 +4630,7 @@ class MP0101M_list_chk_5(generics.ListAPIView):
         # -- 멘토체크
         query = "select COUNT(*) as mentor_num,A.* from service20_mentor A where apl_id = '"+str(apl_id)+"'"
 
-        queryset = com_cdd.objects.raw(query)
+        queryset = mentor.objects.raw(query)
         
 
         serializer_class = self.get_serializer_class()
