@@ -9424,7 +9424,7 @@ class TE0204_list_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = mp_rvw
-        fields = ('yr', 'mnt_term', 'mp_id', 'mp_name', 'mnt_fr_dt', 'mnt_to_dt', 'mnt_frto_dt', 'mnte_id', 'mnte_nm', 'sch_nm', 'sch_yr', 'grd_id', 'grd_nm', 'grd_rel', 'grd_rel_nm', 'tchr_id', 'tchr_nm', 'apl_id', 'apl_nm', 'status', 'status_nm', 'rvw_dt', 'cmp_dt', 'write_dt', 'mtr_revw', 'rvwr_id', 'rep_no', 'rep_div', 'rvwr_div')
+        fields = '__all__'
 
 
     def get_yr(self,obj):
