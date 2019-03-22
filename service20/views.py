@@ -10028,6 +10028,7 @@ class com_combo_spcProgram(generics.ListAPIView):
     def list(self, request):
         yr = request.GET.get('yr', "")
         yr_seq = request.GET.get('yr_seq', "")
+        apl_term = request.GET.get('apl_term', "")
 
         queryset = self.get_queryset()
         
