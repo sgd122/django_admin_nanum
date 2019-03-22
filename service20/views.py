@@ -3283,6 +3283,7 @@ class MS0101M_list(generics.ListAPIView):
         query += "        LEFT JOIN service20_com_cdd c1 ON (c1.std_grp_code  = 'MP0004' AND c1.std_detl_code = A.sup_org) "
         query += " WHERE  A.yr = '"+str(l_yr)+"'  "
         query += "        AND A.apl_term = '"+str(l_apl_term)+"'  "
+        query += "        AND A.use_div = 'Y' "
         # query += "        AND (SELECT Count(1)  "
         # query += "             FROM   service20_mentor  "
         # query += "             WHERE  apl_id = '"+str(ida)+"') > 0  "
@@ -3615,6 +3616,14 @@ def MS0101M_save(request):
         query_result = cursor.execute(update_text)     
 
 
+        query = " select b.* from service20_vw_nanum_stdt a where a.apl_id = '"+apl_id+"' "
+        cursor = connection.cursor()
+        query_result = cursor.execute(query)  
+        results_st = namedtuplefetchall(cursor)  
+        v_dept_cd = results_st[0].dept_cd
+        v_mjr_cd = results_st[0].mjr_cd
+
+        
         query = " select b.* from service20_vw_nanum_stdt a, service20_dept_ast b where a.dept_cd = b.dept_cd and b.status = 'Y' and a.apl_id = '"+apl_id+"' "
         cursor = connection.cursor()
         query_result = cursor.execute(query)  
@@ -3632,6 +3641,22 @@ def MS0101M_save(request):
             # service20_ms_apl
             update_text = " update service20_ms_apl set dept_chr_id = '"+results[0].dean_emp_id+"', dept_chr_nm = '"+results[0].dean_emp_nm+"', ast_id = '"+results[0].ast_id+"', dept_appr_div = '"+results[0].ast_nm+"', dept_appr_div = 'N' "
             update_text += " where ms_id = '"+str(ms_id)+"' and apl_no = '"+str(apl_no)+"'"
+        elif query_cnt != '0':
+            query = " select b.* from service20_vw_nanum_stdt a, service20_dept_ast b where a.dept_cd = b.dept_cd and a.mjr_cd = b.mjr_cd and b.status = 'Y' and a.apl_id = '"+apl_id+"' "
+            cursor = connection.cursor()
+            query_result = cursor.execute(query)
+            results = namedtuplefetchall(cursor)
+
+            queryset = dept_ast.objects.raw(query)
+            for val in queryset:
+                update_text = " update service20_ms_apl set dept_chr_id = '"+val.dean_emp_id+"', dept_chr_nm = '"+val.dean_emp_nm+"', ast_id = '"+val.ast_id+"', dept_appr_div = '"+val.ast_nm+"', dept_appr_div = 'N' "
+                update_text += " where ms_id = '"+str(ms_id)+"' and apl_no = '"+str(apl_no)+"'"
+
+        # mjr_cd
+        # 멘토스쿨/프로그램 지원 시 학과조교 검색 시
+        # 전공까지 조건 걸어서 조회해야하는데
+        # 1.학과로만 조교 찾아서 세팅
+        # 2.1에서 2건이상 나오면 학과,전공 걸어서 조교 찾아서 세팅
 
 
         queryset = dept_ast.objects.raw(query)
@@ -4785,7 +4810,7 @@ class MP0101M_list(generics.ListAPIView):
 
         query += " WHERE  A.yr = '"+str(l_yr)+"'  "
         query += "        AND A.apl_term = '"+str(l_apl_term)+"'  "
-
+        query += "        AND A.use_div = 'Y' "
 
         query += "        AND E.apl_id = '"+str(ida)+"'"
         # query += "        AND (SELECT Count(1)  "
@@ -5272,6 +5297,14 @@ def MP0101M_save(request):
         cursor = connection.cursor()
         query_result = cursor.execute(update_text)    
 
+        query = " select b.* from service20_vw_nanum_stdt a where a.apl_id = '"+apl_id+"' "
+        cursor = connection.cursor()
+        query_result = cursor.execute(query)  
+        results_st = namedtuplefetchall(cursor)  
+        v_dept_cd = results_st[0].dept_cd
+        v_mjr_cd = results_st[0].mjr_cd
+
+
         query = " select b.* from service20_vw_nanum_stdt a, service20_dept_ast b where a.dept_cd = b.dept_cd and b.status = 'Y' and a.apl_id = '"+apl_id+"' "
         cursor = connection.cursor()
         query_result = cursor.execute(query)  
@@ -5289,6 +5322,22 @@ def MP0101M_save(request):
             # service20_ms_apl
             update_text = " update service20_mp_mtr set dept_chr_id = '"+results[0].dean_emp_id+"', dept_chr_nm = '"+results[0].dean_emp_nm+"', ast_id = '"+results[0].ast_id+"', dept_appr_div = '"+results[0].ast_nm+"', dept_appr_div = 'N' "
             update_text += " where mp_id = '"+str(mp_id)+"' and apl_no = '"+str(apl_no)+"'"
+        elif query_cnt != '0':
+            query = " select b.* from service20_vw_nanum_stdt a, service20_dept_ast b where a.dept_cd = b.dept_cd and a.mjr_cd = b.mjr_cd and b.status = 'Y' and a.apl_id = '"+apl_id+"' "
+            cursor = connection.cursor()
+            query_result = cursor.execute(query)
+            results = namedtuplefetchall(cursor)
+
+            queryset = dept_ast.objects.raw(query)
+            for val in queryset:
+                update_text = " update service20_mp_mtr set dept_chr_id = '"+val.dean_emp_id+"', dept_chr_nm = '"+val.dean_emp_nm+"', ast_id = '"+val.ast_id+"', dept_appr_div = '"+val.ast_nm+"', dept_appr_div = 'N' "
+                update_text += " where mp_id = '"+str(mp_id)+"' and apl_no = '"+str(apl_no)+"'"
+
+        # mjr_cd
+        # 멘토스쿨/프로그램 지원 시 학과조교 검색 시
+        # 전공까지 조건 걸어서 조회해야하는데
+        # 1.학과로만 조교 찾아서 세팅
+        # 2.1에서 2건이상 나오면 학과,전공 걸어서 조교 찾아서 세팅
 
 
         queryset = dept_ast.objects.raw(query)
@@ -9826,8 +9875,7 @@ class TT0107M_list(generics.ListAPIView):
         query += " and t1.status like Ifnull(Nullif('"+str(l_status)+"', ''), '%%')  "
         query += " and t1.rep_div   = '"+l_rep_div+"'"
         query += " and t1.mp_id     = '"+l_mp_id+"'"
-        query += " and ( t4.tchr_id = '"+l_user_id+"'"
-        query += "    or t4.grd_id  = '"+l_user_id+"'"
+        query += " and ( t1.appr_id = '"+l_user_id+"'"
         query += "    or t4.mnte_id = '"+l_user_id+"')"
 
 
@@ -10121,7 +10169,7 @@ class mpmgListView(generics.ListAPIView):
     def list(self, request):
         queryset = self.get_queryset()
 
-        query = "select * from service20_mpgm where status = '20' order by apl_fr_dt desc, apl_to_dt desc"
+        query = "select * from service20_mpgm where status = '20' and use_div = 'Y' order by apl_fr_dt desc, apl_to_dt desc"
 
 
         queryset = mpgm.objects.raw(query)
