@@ -3616,12 +3616,12 @@ def MS0101M_save(request):
         query_result = cursor.execute(update_text)     
 
 
-        query = " select b.* from service20_vw_nanum_stdt a where a.apl_id = '"+apl_id+"' "
-        cursor = connection.cursor()
-        query_result = cursor.execute(query)  
-        results_st = namedtuplefetchall(cursor)  
-        v_dept_cd = results_st[0].dept_cd
-        v_mjr_cd = results_st[0].mjr_cd
+        # query = " select b.* from service20_vw_nanum_stdt a where a.apl_id = '"+apl_id+"' "
+        # cursor = connection.cursor()
+        # query_result = cursor.execute(query)  
+        # results_st = namedtuplefetchall(cursor)  
+        # v_dept_cd = results_st[0].dept_cd
+        # v_mjr_cd = results_st[0].mjr_cd
 
 
         query = " select b.* from service20_vw_nanum_stdt a, service20_dept_ast b where a.dept_cd = b.dept_cd and b.status = 'Y' and a.apl_id = '"+apl_id+"' "
@@ -5297,12 +5297,12 @@ def MP0101M_save(request):
         cursor = connection.cursor()
         query_result = cursor.execute(update_text)    
 
-        query = " select b.* from service20_vw_nanum_stdt a where a.apl_id = '"+apl_id+"' "
-        cursor = connection.cursor()
-        query_result = cursor.execute(query)  
-        results_st = namedtuplefetchall(cursor)  
-        v_dept_cd = results_st[0].dept_cd
-        v_mjr_cd = results_st[0].mjr_cd
+        # query = " select b.* from service20_vw_nanum_stdt a where a.apl_id = '"+apl_id+"' "
+        # cursor = connection.cursor()
+        # query_result = cursor.execute(query)  
+        # results_st = namedtuplefetchall(cursor)  
+        # v_dept_cd = results_st[0].dept_cd
+        # v_mjr_cd = results_st[0].mjr_cd
 
 
         query = " select b.* from service20_vw_nanum_stdt a, service20_dept_ast b where a.dept_cd = b.dept_cd and b.status = 'Y' and a.apl_id = '"+apl_id+"' "
