@@ -3659,35 +3659,35 @@ def MS0101M_save(request):
         # 2.1에서 2건이상 나오면 학과,전공 걸어서 조교 찾아서 세팅
 
 
-        queryset = dept_ast.objects.raw(query)
-        for val in queryset:
-            # 문자전송
-            query = " select a.* from service20_ms_apl a where ms_id = '"+str(ms_id)+"' and apl_no = '"+str(apl_no)+"'"
-            cursor = connection.cursor()
-            query_result = cursor.execute(query)  
-            results_m = namedtuplefetchall(cursor)  
+        # queryset = dept_ast.objects.raw(query)
+        # for val in queryset:
+        #     # 문자전송
+        #     query = " select a.* from service20_ms_apl a where ms_id = '"+str(ms_id)+"' and apl_no = '"+str(apl_no)+"'"
+        #     cursor = connection.cursor()
+        #     query_result = cursor.execute(query)  
+        #     results_m = namedtuplefetchall(cursor)  
 
-            user_id = '515440'
-            push_chk = 'PO'
-            # push_userid = '515440'
-            push_userid = val.ast_id
-            push_title = "지원서 학과장 승인 요청"
-            push_content = results_m[0].apl_nm + " 학생 멘토스쿨 지원서 학과장 승인 요청"
-            tickerText = ' '
-            push_time = '60'
-            # cdr_id = '515440'
-            cdr_id = results[0].ast_id
-            sms_content = push_content
-            sms_nb = '0515103322'
-            client_ip = request.META['REMOTE_ADDR']
-            data_info = {'user_id':user_id,'push_chk': push_chk,'push_userid': push_userid,'push_title': push_title,'push_content': push_content,'tickerText': tickerText,'push_time': push_time,'cdr_id': cdr_id,'sms_content': sms_content,'sms_nb': sms_nb}
-            print("::data_info::")
-            print(data_info)
-            # with requests.Session() as s:
-            #     first_page = s.post('http://msg.pusan.ac.kr/api/push.asp', data=data_info)
-            #     html = first_page.text
-            #     #print(html)
-            #     soup = bs(html, 'html.parser')
+        #     user_id = '515440'
+        #     push_chk = 'PO'
+        #     # push_userid = '515440'
+        #     push_userid = val.ast_id
+        #     push_title = "지원서 학과장 승인 요청"
+        #     push_content = results_m[0].apl_nm + " 학생 멘토스쿨 지원서 학과장 승인 요청"
+        #     tickerText = ' '
+        #     push_time = '60'
+        #     # cdr_id = '515440'
+        #     cdr_id = results[0].ast_id
+        #     sms_content = push_content
+        #     sms_nb = '0515103322'
+        #     client_ip = request.META['REMOTE_ADDR']
+        #     data_info = {'user_id':user_id,'push_chk': push_chk,'push_userid': push_userid,'push_title': push_title,'push_content': push_content,'tickerText': tickerText,'push_time': push_time,'cdr_id': cdr_id,'sms_content': sms_content,'sms_nb': sms_nb}
+        #     print("::data_info::")
+        #     print(data_info)
+        #     # with requests.Session() as s:
+        #     #     first_page = s.post('http://msg.pusan.ac.kr/api/push.asp', data=data_info)
+        #     #     html = first_page.text
+        #     #     #print(html)
+        #     #     soup = bs(html, 'html.parser')
 
         message = "Ok"
         
@@ -5340,30 +5340,30 @@ def MP0101M_save(request):
         # 2.1에서 2건이상 나오면 학과,전공 걸어서 조교 찾아서 세팅
 
 
-        queryset = dept_ast.objects.raw(query)
-        for val in queryset:
-            # 문자전송
-            query = " select a.* from service20_mp_mtr a where mp_id = '"+str(mp_id)+"' and apl_no = '"+str(apl_no)+"'"
-            cursor = connection.cursor()
-            query_result = cursor.execute(query)  
-            results_m = namedtuplefetchall(cursor)  
+        # queryset = dept_ast.objects.raw(query)
+        # for val in queryset:
+        #     # 문자전송
+        #     query = " select a.* from service20_mp_mtr a where mp_id = '"+str(mp_id)+"' and apl_no = '"+str(apl_no)+"'"
+        #     cursor = connection.cursor()
+        #     query_result = cursor.execute(query)  
+        #     results_m = namedtuplefetchall(cursor)  
 
-            user_id = '515440'
-            push_chk = 'PO'
-            # push_userid = '515440'
-            push_userid = val.ast_id
-            push_title = "지원서 학과장 승인 요청"
-            push_content = results_m[0].apl_nm + " 학생 교육기부 지원서 학과장 승인 요청"
-            tickerText = ' '
-            push_time = '60'
-            # cdr_id = '515440'
-            cdr_id = results[0].ast_id
-            sms_content = push_content
-            sms_nb = '0515103322'
-            client_ip = request.META['REMOTE_ADDR']
-            data_info = {'user_id':user_id,'push_chk': push_chk,'push_userid': push_userid,'push_title': push_title,'push_content': push_content,'tickerText': tickerText,'push_time': push_time,'cdr_id': cdr_id,'sms_content': sms_content,'sms_nb': sms_nb}
-            print("::data_info::")
-            print(data_info)
+        #     user_id = '515440'
+        #     push_chk = 'PO'
+        #     # push_userid = '515440'
+        #     push_userid = val.ast_id
+        #     push_title = "지원서 학과장 승인 요청"
+        #     push_content = results_m[0].apl_nm + " 학생 교육기부 지원서 학과장 승인 요청"
+        #     tickerText = ' '
+        #     push_time = '60'
+        #     # cdr_id = '515440'
+        #     cdr_id = results[0].ast_id
+        #     sms_content = push_content
+        #     sms_nb = '0515103322'
+        #     client_ip = request.META['REMOTE_ADDR']
+        #     data_info = {'user_id':user_id,'push_chk': push_chk,'push_userid': push_userid,'push_title': push_title,'push_content': push_content,'tickerText': tickerText,'push_time': push_time,'cdr_id': cdr_id,'sms_content': sms_content,'sms_nb': sms_nb}
+        #     print("::data_info::")
+        #     print(data_info)
             # with requests.Session() as s:
             #     first_page = s.post('http://msg.pusan.ac.kr/api/push.asp', data=data_info)
             #     html = first_page.text
