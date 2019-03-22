@@ -10041,7 +10041,7 @@ class com_combo_spcProgram(generics.ListAPIView):
         query += "  from service20_mp_spc t1     /* 학습외 프로그램 */ "
         query += " where 1=1 "
         query += "   and yr = '"+str(yr)+"' "
-        query += "   and yr_seq = '"+str(yr_seq)+"' "
+        query += "   and apl_term = '"+str(apl_term)+"' "
 
         print(query)
 
@@ -10092,7 +10092,7 @@ class com_combo_spc_status(generics.ListAPIView):
             return self.get_paginated_response(serializer.data)
 
         return Response(serializer.data) 
-        
+
 ###############################################################      
 # 학습외 프로그램 (콤보) End
 ###############################################################
@@ -10120,7 +10120,7 @@ class mpmgListView(generics.ListAPIView):
     def list(self, request):
         queryset = self.get_queryset()
 
-        query = "select * from service20_mpgm order by apl_fr_dt desc, apl_to_dt desc"
+        query = "select * from service20_mpgm where status = '20' order by apl_fr_dt desc, apl_to_dt desc"
 
 
         queryset = mpgm.objects.raw(query)
