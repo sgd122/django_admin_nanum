@@ -3623,7 +3623,7 @@ def MS0101M_save(request):
         v_dept_cd = results_st[0].dept_cd
         v_mjr_cd = results_st[0].mjr_cd
 
-        
+
         query = " select b.* from service20_vw_nanum_stdt a, service20_dept_ast b where a.dept_cd = b.dept_cd and b.status = 'Y' and a.apl_id = '"+apl_id+"' "
         cursor = connection.cursor()
         query_result = cursor.execute(query)  
@@ -3642,12 +3642,12 @@ def MS0101M_save(request):
             update_text = " update service20_ms_apl set dept_chr_id = '"+results[0].dean_emp_id+"', dept_chr_nm = '"+results[0].dean_emp_nm+"', ast_id = '"+results[0].ast_id+"', dept_appr_div = '"+results[0].ast_nm+"', dept_appr_div = 'N' "
             update_text += " where ms_id = '"+str(ms_id)+"' and apl_no = '"+str(apl_no)+"'"
         elif query_cnt != '0':
-            query = " select b.* from service20_vw_nanum_stdt a, service20_dept_ast b where a.dept_cd = b.dept_cd and a.mjr_cd = b.mjr_cd and b.status = 'Y' and a.apl_id = '"+apl_id+"' "
+            query2 = " select b.* from service20_vw_nanum_stdt a, service20_dept_ast b where a.dept_cd = b.dept_cd and a.mjr_cd = b.mjr_cd and b.status = 'Y' and a.apl_id = '"+apl_id+"' "
             cursor = connection.cursor()
-            query_result = cursor.execute(query)
+            query_result = cursor.execute(query2)
             results = namedtuplefetchall(cursor)
 
-            queryset = dept_ast.objects.raw(query)
+            queryset = dept_ast.objects.raw(query2)
             for val in queryset:
                 update_text = " update service20_ms_apl set dept_chr_id = '"+val.dean_emp_id+"', dept_chr_nm = '"+val.dean_emp_nm+"', ast_id = '"+val.ast_id+"', dept_appr_div = '"+val.ast_nm+"', dept_appr_div = 'N' "
                 update_text += " where ms_id = '"+str(ms_id)+"' and apl_no = '"+str(apl_no)+"'"
@@ -5323,12 +5323,12 @@ def MP0101M_save(request):
             update_text = " update service20_mp_mtr set dept_chr_id = '"+results[0].dean_emp_id+"', dept_chr_nm = '"+results[0].dean_emp_nm+"', ast_id = '"+results[0].ast_id+"', dept_appr_div = '"+results[0].ast_nm+"', dept_appr_div = 'N' "
             update_text += " where mp_id = '"+str(mp_id)+"' and apl_no = '"+str(apl_no)+"'"
         elif query_cnt != '0':
-            query = " select b.* from service20_vw_nanum_stdt a, service20_dept_ast b where a.dept_cd = b.dept_cd and a.mjr_cd = b.mjr_cd and b.status = 'Y' and a.apl_id = '"+apl_id+"' "
+            query2 = " select b.* from service20_vw_nanum_stdt a, service20_dept_ast b where a.dept_cd = b.dept_cd and a.mjr_cd = b.mjr_cd and b.status = 'Y' and a.apl_id = '"+apl_id+"' "
             cursor = connection.cursor()
-            query_result = cursor.execute(query)
+            query_result = cursor.execute(query2)
             results = namedtuplefetchall(cursor)
 
-            queryset = dept_ast.objects.raw(query)
+            queryset = dept_ast.objects.raw(query2)
             for val in queryset:
                 update_text = " update service20_mp_mtr set dept_chr_id = '"+val.dean_emp_id+"', dept_chr_nm = '"+val.dean_emp_nm+"', ast_id = '"+val.ast_id+"', dept_appr_div = '"+val.ast_nm+"', dept_appr_div = 'N' "
                 update_text += " where mp_id = '"+str(mp_id)+"' and apl_no = '"+str(apl_no)+"'"
