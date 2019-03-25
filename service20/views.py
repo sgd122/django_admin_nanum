@@ -3681,7 +3681,8 @@ def MS0101M_save(request):
         print(query_cnt)
         update_text = " update service20_ms_apl set dept_appr_div = 'N' "
         update_text += " where ms_id = '"+str(ms_id)+"' and apl_no = '"+str(apl_no)+"'"
-
+        cursor = connection.cursor()
+        query_result = cursor.execute(update_text)    
 
         # if query_cnt == '1':
         #     # MP_MTR.DEPT_CHR_ID(학과장 ID) = DEPT_AST.DEAN_EMP_ID
@@ -5369,6 +5370,8 @@ def MP0101M_save(request):
 
         update_text = " update service20_mp_mtr set dept_appr_div = 'N' "
         update_text += " where mp_id = '"+str(mp_id)+"' and apl_no = '"+str(apl_no)+"'"
+        cursor = connection.cursor()
+        query_result = cursor.execute(update_text)    
 
         # if query_cnt == '1':
         #     # MP_MTR.DEPT_CHR_ID(학과장 ID) = DEPT_AST.DEAN_EMP_ID
