@@ -4312,13 +4312,15 @@ def MS0101M_adm_cancle(request):
     upd_dt = request.POST.get('upd_dt', "")
     upd_pgm = request.POST.get('upd_pgm', "")
 
-    update_text = " update service20_msch a "
+    update_text = " update service20_ms_apl a "
     update_text += " SET status = '19' "
     update_text += " , doc_cncl_dt = now() "
     update_text += " WHERE 1=1 "
     update_text += " AND a.ms_id = '"+ms_id+"' "
     update_text += " AND a.apl_no = '"+apl_no+"' "
 
+    cursor = connection.cursor()
+    query_result = cursor.execute(update_text)
 
     update_text = " update service20_msch a "
     update_text += " SET a.cnt_apl = (select count(*) from service20_ms_apl where ms_id = '"+ms_id+"' and status='10') "
