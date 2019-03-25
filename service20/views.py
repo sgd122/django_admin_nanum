@@ -1235,6 +1235,34 @@ class com_notice(generics.ListAPIView):
 
         return Response(serializer.data)
 
+#공지사항 디테일
+class com_notice_detail_Serializer(serializers.ModelSerializer):
+    
+    ins_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+
+    class Meta:
+        model = bbs1
+        fields = '__all__'
+
+class com_notice_detail(generics.ListAPIView):
+    queryset = bbs1.objects.all()
+    serializer_class = com_notice_detail_Serializer
+
+    def list(self, request):   
+        l_id = request.GET.get('id', "")
+
+        queryset = self.get_queryset()
+        queryset = bbs1.objects.filter(id=l_id)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
 #멘토링 소개
 class com_mentoHistory_Serializer(serializers.ModelSerializer):
     

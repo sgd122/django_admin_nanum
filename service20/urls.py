@@ -23,6 +23,8 @@ urlpatterns = [
     ########################################################################################    
     #공지사항
     path('com/notice/', com_notice.as_view(), name='com_notice'), 
+    #공지사항 디테일
+    path('com/notice/detail/', com_notice_detail.as_view(), name='com_notice_detail'), 
     path('com/mentoHistory/', com_mentoHistory.as_view(), name='com_mentoHistory'), 
     #파일업로드(멘토스쿨용)
     path('com/upload/ms/', com_upload_ms, name='com_upload_ms'), 
