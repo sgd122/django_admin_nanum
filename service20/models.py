@@ -242,7 +242,8 @@ class ms_apl(models.Model):
   ast_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='조교 ID' )
   ast_nm = models.CharField(max_length=50, null=True, blank=True, verbose_name='조교 명' )
   dept_appr_div = models.CharField(max_length=1, default='N', verbose_name='학과 승인 여부' )
-  dept_appr_dt = models.CharField(max_length=10, null=True, blank=True, verbose_name='학과 승인 날짜' )
+  #dept_appr_dt = models.CharField(max_length=10, null=True, blank=True, verbose_name='학과 승인 날짜' )
+  dept_appr_dt = models.DateTimeField(null=True, blank=True, verbose_name='학과 승인 날짜' )
   dept_retn_rsn = models.CharField(max_length=2, null=True, blank=True, verbose_name='학과 반려 사유' )
   id_pic = models.CharField(max_length=100, null=True, blank=True, verbose_name='증명사진 위치' )
   ins_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='입력자ID' )
@@ -680,7 +681,10 @@ class mp_mtr(models.Model):
   ast_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='조교 ID' )
   ast_nm = models.CharField(max_length=50, null=True, blank=True, verbose_name='조교 명' )
   dept_appr_div = models.CharField(max_length=1, default='N', verbose_name='학과 승인 여부' )
-  dept_appr_dt = models.CharField(max_length=10, null=True, blank=True, verbose_name='학과 승인 날짜' )
+  #dept_appr_dt = models.CharField(max_length=10, null=True, blank=True, verbose_name='학과 승인 날짜' )
+  dept_appr_dt = models.DateTimeField(null=True, blank=True, verbose_name='학과 승인 날짜' )
+
+
   dept_retn_rsn = models.CharField(max_length=2, null=True, blank=True, verbose_name='학과 반려 사유' )
   id_pic = models.CharField(max_length=100, null=True, blank=True, verbose_name='증명사진 위치' )
   ins_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='입력자ID' )
