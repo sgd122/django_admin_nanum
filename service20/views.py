@@ -6087,7 +6087,7 @@ class MP0101M_report_list_Serializer(serializers.ModelSerializer):
     pr_term_cnt = serializers.SerializerMethodField()
     dept_appr_dt2  = serializers.SerializerMethodField()
     acpt_dt = serializers.DateTimeField(format='%Y-%m-%d')
-    ins_dt = serializers.DateTimeField(format='%Y-%m-%d')
+    ins_dt = serializers.DateTimeField(format='%Y년 %m월 %d일')
 
 
     class Meta:
