@@ -3255,6 +3255,7 @@ class MS0101M_list_Serializer(serializers.ModelSerializer):
     statusCode = serializers.SerializerMethodField()
     status_nm  = serializers.SerializerMethodField()
     sup_org_nm = serializers.SerializerMethodField()
+    dept_appr_div = serializers.SerializerMethodField()
     
     apl_fr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     apl_to_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
@@ -3288,6 +3289,8 @@ class MS0101M_list_Serializer(serializers.ModelSerializer):
         return obj.status
     def get_sup_org_nm(self,obj):
         return obj.sup_org_nm
+    def get_dept_appr_div(self,obj):
+        return obj.dept_appr_div
 
 class MS0101M_list(generics.ListAPIView):
     queryset = msch.objects.all()
@@ -3320,6 +3323,7 @@ class MS0101M_list(generics.ListAPIView):
         query += "                 AND std_detl_code = B.status)  "
         query += " end                                         AS applyFlagNm,  "
         query += " c1.std_detl_code_nm   AS sup_org_nm, "
+        query += " B.dept_appr_div   AS dept_appr_div, "
         query += "        A.*  "
         query += " FROM   service20_msch A  "
         query += "        LEFT JOIN service20_ms_apl B  "
@@ -4747,6 +4751,7 @@ class MP0101M_list_Serializer(serializers.ModelSerializer):
     score03 = serializers.SerializerMethodField()
     att_val = serializers.SerializerMethodField()
     dateAplYn = serializers.SerializerMethodField()
+    dept_appr_div = serializers.SerializerMethodField()
 
     apl_fr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     apl_to_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
@@ -4791,7 +4796,8 @@ class MP0101M_list_Serializer(serializers.ModelSerializer):
         return obj.att_val
     def get_dateAplYn(self,obj):
         return obj.dateAplYn
-    
+    def get_dept_appr_div(self,obj):
+        return obj.dept_appr_div
 
 class MP0101M_list(generics.ListAPIView):
     queryset = mpgm.objects.all()
@@ -4841,6 +4847,7 @@ class MP0101M_list(generics.ListAPIView):
         query += "                 AND std_detl_code = B.status)  "
         query += " end                                         AS applyFlagNm,  "
         query += " c1.std_detl_code_nm   AS sup_org_nm, "
+        query += " B.dept_appr_div   AS dept_appr_div, "
         query += "        A.*  "
         query += " FROM   service20_mpgm A  "
         query += "        LEFT JOIN service20_mp_mtr B  "
