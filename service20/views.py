@@ -3915,10 +3915,14 @@ class MS0101M_adm_list(generics.ListAPIView):
 # 멘토링 프로그램(관리자) - 어학
 class MS0101M_adm_list_fe_Serializer(serializers.ModelSerializer):
     
+    fn_score = serializers.SerializerMethodField()
+
     class Meta:
         model = ms_apl_fe
         fields = ('frexm_cd','frexm_nm','score','grade')
 
+    def get_fn_score(self,obj):
+        return obj.fn_score
 
 class MS0101M_adm_list_fe(generics.ListAPIView):
     queryset = ms_apl.objects.all()
@@ -3954,9 +3958,14 @@ class MS0101M_adm_list_fe(generics.ListAPIView):
 # 멘토링 프로그램(관리자) - 봉사
 class MS0101M_adm_list_sa_Serializer(serializers.ModelSerializer):
     
+    fn_score = serializers.SerializerMethodField()
+
     class Meta:
         model = ms_apl_sa
-        fields = ('ms_id','apl_no','sa_no','apl_id','apl_nm','nation_inout_cd','nation_inout_nm','sch_inout_cd','sch_inout_nm','activity_nm','manage_org_nm','start_date','start_time','end_date','end_time','tot_time')
+        fields = ('ms_id','apl_no','sa_no','apl_id','apl_nm','nation_inout_cd','nation_inout_nm','sch_inout_cd','sch_inout_nm','activity_nm','manage_org_nm','start_date','start_time','end_date','end_time','tot_time','fn_score')
+
+    def get_fn_score(self,obj):
+        return obj.fn_score
 
 
 class MS0101M_adm_list_sa(generics.ListAPIView):
