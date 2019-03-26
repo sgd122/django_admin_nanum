@@ -2666,7 +2666,7 @@ class mschListMypage_list(generics.ListAPIView):
         query += "     , t1.ms_name       /* 멘토스쿨 명 */  "
         query += "     , t1.sup_org       /* 주관기관(mp0004) */"
         query += "     , (select std_detl_code_nm from service20_com_cdd where std_detl_code = t1.sup_org and std_grp_code = 'mp0004') as sup_org_nm "
-        query += "     , t2.status  as apply_status      /* 상태(ms0024) */ "
+        query += "     , ifnull(t2.status, 'N')  as apply_status      /* 상태(ms0024) */ "
         query += "     , case when t2.status = '90' then '합격' "
         query += "            else (select std_detl_code_nm from service20_com_cdd where std_detl_code = t2.status and std_grp_code = 'ms0024') end as apply_status_nm "
         query += "     , substring(t1.apl_fr_dt,1,10) as apl_fr_dt    /* 모집기간-시작 */ "
