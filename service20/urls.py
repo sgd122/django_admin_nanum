@@ -212,6 +212,31 @@ urlpatterns = [
     path('MP0101M/admin/cancle/', MP0101M_adm_cancle, name='MP0101M_adm_cancle'), 
     # 멘토링 프로그램(레포트) - 기본정보
     path('MP0101M/report/list/', MP0101M_report_list.as_view(), name='MP0101M_report_list'),
+
+    # 멘토링 프로그램 - 해외봉사활동 프로그램 (카운트)
+    path('MP0101M/service/cnt/', MP0101M_service_cnt.as_view(), name='MP0101M_service_cnt'),
+    # 멘토링 프로그램 - 해외봉사활동 프로그램 (희망도시 콤보)
+    path('MP0101M/service/combo/city/', MP0101M_service_combo_city.as_view(), name='MP0101M_service_combo_city'),
+    # 멘토링 프로그램 - 해외봉사활동 프로그램 (분야 콤보)
+    path('MP0101M/service/combo/field/', MP0101M_service_combo_field.as_view(), name='MP0101M_service_combo_field'),
+    # 멘토링 프로그램 - 해외봉사활동 프로그램 (첨부파일 카운트)
+    path('MP0101M/service/upload/cnt/', MP0101M_service_upload_cnt.as_view(), name='MP0101M_service_upload_cnt'),
+    # 멘토링 프로그램 - 해외봉사활동 프로그램 (apl_no 가져오기)
+    path('MP0101M/service/apl_no/', MP0101M_service_apl_no.as_view(), name='MP0101M_service_apl_no'),
+    # 멘토링 프로그램 - 해외봉사활동 프로그램 (insert)
+    path('MP0101M/service/insert/', MP0101M_service_insert, name='MP0101M_service_insert'), 
+    # 멘토링 프로그램 - 해외봉사활동 프로그램 파일 업로드(insert)
+    path('MP0101M/service/upload/', MP0101M_upload, name='MP0101M_upload'),
+    # 멘토링 프로그램(관리자) - 해외봉사활동 프로그램 (데이터)
+    path('MP0101M/admin/service/chc/', MP0101M_admin_service_chc.as_view(), name='MP0101M_admin_service_chc'),    
+    # 멘토링 프로그램(관리자) - 해외봉사활동 프로그램 (첨부데이터)
+    path('MP0101M/admin/service/atc/', MP0101M_admin_service_atc.as_view(), name='MP0101M_admin_service_atc'), 
+    # 멘토링 프로그램(관리자) - 해외봉사활동 프로그램 (update)
+    path('MP0101M/service/update/', MP0101M_service_update, name='MP0101M_service_update'), 
+    # 멘토링 프로그램(관리자) - 해외봉사활동 프로그램 파일 업로드(update)
+    path('MP0101M/service/upload/update/', MP0101M_upload_update, name='MP0101M_upload_update'),
+    # 멘토링 프로그램(레포트) - 해외봉사활동 프로그램 (데이터)
+    path('MP0101M/service/report/chc/', MP0101M_service_report_chc.as_view(), name='MP0101M_service_report_chc'),
     ########################################################################################
     # 멘토링 프로그램(MP0101M - END )
     #
