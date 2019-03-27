@@ -21,6 +21,10 @@ urlpatterns = [
     # 공통(com)
     #
     ########################################################################################    
+    #자료실
+    path('com/datacenter/', com_datacenter.as_view(), name='com_datacenter'), 
+    #자료실 디테일
+    path('com/datacenter/detail/', com_datacenter_detail.as_view(), name='com_datacenter_detail'), 
     #공지사항
     path('com/notice/', com_notice.as_view(), name='com_notice'), 
     #공지사항 디테일
@@ -239,6 +243,8 @@ urlpatterns = [
     path('MP0101M/service/upload/update/', MP0101M_upload_update, name='MP0101M_upload_update'),
     # 멘토링 프로그램(레포트) - 해외봉사활동 프로그램 (데이터)
     path('MP0101M/service/report/chc/', MP0101M_service_report_chc.as_view(), name='MP0101M_service_report_chc'),
+    # 멘토링 프로그램 - mp_sub 코드 (sub_code)
+    path('MP0101M/service/sub/', MP0101M_service_sub.as_view(), name='MP0101M_service_sub'),
     ########################################################################################
     # 멘토링 프로그램(MP0101M - END )
     #

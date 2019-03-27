@@ -1211,6 +1211,59 @@ def login_session(request):
         context = {'message': message,}
         return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
+#자료실
+class com_datacenter_Serializer(serializers.ModelSerializer):
+    
+    ins_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+
+    class Meta:
+        model = bbs1
+        fields = '__all__'
+
+class com_datacenter(generics.ListAPIView):
+    queryset = bbs1.objects.all()
+    serializer_class = com_datacenter_Serializer
+
+    def list(self, request):   
+        queryset = self.get_queryset()
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+#자료실 디테일
+class com_datacenter_detail_Serializer(serializers.ModelSerializer):
+    
+    ins_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+
+    class Meta:
+        model = bbs1
+        fields = '__all__'
+
+class com_datacenter_detail(generics.ListAPIView):
+    queryset = bbs1.objects.all()
+    serializer_class = com_datacenter_detail_Serializer
+
+    def list(self, request):   
+        l_id = request.GET.get('id', "")
+
+        queryset = self.get_queryset()
+        queryset = bbs1.objects.filter(id=l_id)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+
 #공지사항
 class com_notice_Serializer(serializers.ModelSerializer):
     
@@ -6986,6 +7039,35 @@ class MP0101M_service_report_chc(generics.ListAPIView):
         query += "   and t1.att_id  = 'MP0089' "
         query += "   and t1.att_cdd = '2' "
         query += "   and t3.apl_no  = '" + l_apl_no + "' ; "
+
+        print(query)
+        queryset = mp_sub.objects.raw(query)
+        
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+# 멘토링 프로그램 - 해외봉사활동 프로그램 (mp_sub 코드) ###################################################
+class MP0101M_service_sub_Serializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = mp_sub
+        fields = '__all__'
+
+
+class MP0101M_service_sub(generics.ListAPIView):
+    queryset = mp_sub.objects.all()
+    serializer_class = MP0101M_service_sub_Serializer
+    
+    def list(self, request):
+        l_mp_id = request.GET.get('mp_id', "")
+
+        query = " select id, att_id from service20_mp_sub where mp_id = '" + l_mp_id + "' group by att_id "
 
         print(query)
         queryset = mp_sub.objects.raw(query)
