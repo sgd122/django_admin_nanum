@@ -6963,6 +6963,7 @@ def MP0101M_upload_update(request):
         l_service_upload_text = list()
         l_service_upload = list()
         l_atc_seq = list()
+        l_upload_no = list()
 
         for i in range(0,int(l_length)):
             l_att_cdd.append(request.POST.get('att_cdd_up'+str(i), ""))
@@ -6970,39 +6971,42 @@ def MP0101M_upload_update(request):
             l_service_upload.append(request.POST.get('service_upload'+str(i), ""))
             l_att_cdh.append(request.POST.get('att_cdh_up'+str(i), ""))
             l_atc_seq.append(request.POST.get('atc_seq'+str(i), ""))
+            l_upload_no.append(request.POST.get('upload_no'+str(i), ""))
 
-            file = request.FILES['service_upload' + str(i)]
-            print(file)
-            filename = file._name
-            n_filename = str(l_mp_id) + str(l_apl_id) + str(l_att_cdh[i]) + str(l_att_cdd[i]) + os.path.splitext(filename)[1]
-            print(n_filename)
-            print (UPLOAD_DIR)
-        
-            fp = open('%s/%s' % (UPLOAD_DIR, n_filename) , 'wb')
-            for chunk in file.chunks():
-                fp.write(chunk)
-            fp.close()
+            print("l_upload=====" + str(l_upload_no[i]) + "    i=====" + str(i))
 
-            cursor = connection.cursor()
-            fullFile = str(UPLOAD_DIR) + str(n_filename)    
-            fullFile = "/img/atc/"+ str(n_filename)
+            if(str(l_upload_no[i]) == str(i)):
+                file = request.FILES['service_upload' + str(i)]
+                print(file)
+                filename = file._name
+                n_filename = str(l_mp_id) + str(l_apl_id) + str(l_att_cdh[i]) + str(l_att_cdd[i]) + os.path.splitext(filename)[1]
+                print(n_filename)
+                print (UPLOAD_DIR)
+            
+                fp = open('%s/%s' % (UPLOAD_DIR, n_filename) , 'wb')
+                for chunk in file.chunks():
+                    fp.write(chunk)
+                fp.close()
 
-            query = " update service20_mp_mtr_atc "
-            query += "    set atc_cdd = '" + str(l_att_cdd[i]) + "' "
-            query += "      , atc_nm = (select std_detl_code_nm from service20_com_cdd where std_grp_code = '" + str(l_att_cdh[i]) + "' and std_detl_code = '" + str(l_att_cdd[i]) + "') "
-            query += "      , atc_file_nm = '" + str(filename) + "' "
-            query += "      , atc_file_url = '" + str(fullFile) + "' "
-            query += "      , upd_id = '" + upd_id + "'"
-            query += "      , upd_ip = '" + client_ip + "'"
-            query += "      , upd_dt = now()"
-            query += "      , upd_pgm = '" + upd_pgm + "'"
-            query += "  where mp_id = '" + str(l_mp_id) + "' "
-            query += "    and apl_no = '" + str(l_apl_no) + "' "
-            query += "    and atc_seq = '" + str(l_atc_seq[i]) + "' "
+                cursor = connection.cursor()
+                fullFile = str(UPLOAD_DIR) + str(n_filename)
+                fullFile = "/img/atc/"+ str(n_filename)
 
-            print(query)
-            cursor.execute(query)
+                query = " update service20_mp_mtr_atc "
+                query += "    set atc_cdd = '" + str(l_att_cdd[i]) + "' "
+                query += "      , atc_nm = (select std_detl_code_nm from service20_com_cdd where std_grp_code = '" + str(l_att_cdh[i]) + "' and std_detl_code = '" + str(l_att_cdd[i]) + "') "
+                query += "      , atc_file_nm = '" + str(filename) + "' "
+                query += "      , atc_file_url = '" + str(fullFile) + "' "
+                query += "      , upd_id = '" + upd_id + "'"
+                query += "      , upd_ip = '" + client_ip + "'"
+                query += "      , upd_dt = now()"
+                query += "      , upd_pgm = '" + upd_pgm + "'"
+                query += "  where mp_id = '" + str(l_mp_id) + "' "
+                query += "    and apl_no = '" + str(l_apl_no) + "' "
+                query += "    and atc_seq = '" + str(l_atc_seq[i]) + "' "
 
+                print(query)
+                cursor.execute(query)
 
         return HttpResponse('File Uploaded')
 
