@@ -4361,6 +4361,7 @@ class MS0101M_report_list_Serializer(serializers.ModelSerializer):
     trn_term = serializers.SerializerMethodField()
     mpgm_yr = serializers.SerializerMethodField()
     ins_dt2 = serializers.SerializerMethodField()
+    dept_appr_dt2 = serializers.SerializerMethodField()
 
 
     # acpt_dt = serializers.DateTimeField(format='%Y-%m-%d')
@@ -4392,6 +4393,8 @@ class MS0101M_report_list_Serializer(serializers.ModelSerializer):
         return obj.mpgm_yr
     def get_ins_dt2(self,obj):
         return obj.ins_dt2
+    def get_dept_appr_dt2(self,obj):
+        return obj.dept_appr_dt2
 
     def get_statusNm(self,obj):
         now = datetime.datetime.today()
@@ -4449,6 +4452,7 @@ class MS0101M_report_list(generics.ListAPIView):
         query += "       b.pr_term_div, "
         query += "       cast( ((b.pr_sch_yr-1)*2)+(substr(b.pr_term_div,1,1)*1) as UNSIGNED) pr_term_cnt, "
         query += "       d.std_detl_code_nm AS trn_term_nm,  "
+        query += "       DATE_FORMAT(STR_TO_DATE(a.dept_appr_dt, '%%Y%%m%%d'),'%%Y년  %%m월  %%d일') dept_appr_dt2,  "
         query += "       DATE_FORMAT(a.ins_dt,'%%Y년  %%m월  %%d일') ins_dt2,  "
         query += "       a.*  "
         query += "FROM   service20_ms_apl a,  " 
