@@ -6536,7 +6536,7 @@ def MP0101M_upload(request):
     req = request
     DIR = os.getcwd()
     UPLOAD_DIR = str(DIR) + '/media/MP0101M/'
-    UPLOAD_DIR = '/NANUM/www/atc/'
+    UPLOAD_DIR = '/NANUM/www/img/atc/'
     # UPLOAD_DIR = 'img'
     
     if request.method == 'POST':
@@ -6581,7 +6581,7 @@ def MP0101M_upload(request):
 
             cursor = connection.cursor()
             fullFile = str(UPLOAD_DIR) + str(n_filename)
-            fullFile = "/atc/"+ str(n_filename)
+            fullFile = "/img/atc/"+ str(n_filename)
 
             query = " insert into service20_mp_mtr_atc ( "
             query += "    mp_id "
@@ -6798,7 +6798,7 @@ def MP0101M_upload_update(request):
     req = request
     DIR = os.getcwd()
     UPLOAD_DIR = str(DIR) + '/media/MP0101M/'
-    UPLOAD_DIR = '/NANUM/www/atc/'
+    UPLOAD_DIR = '/NANUM/www/img/atc/'
     # UPLOAD_DIR = 'img'
     
     if request.method == 'POST':
@@ -6844,7 +6844,7 @@ def MP0101M_upload_update(request):
 
             cursor = connection.cursor()
             fullFile = str(UPLOAD_DIR) + str(n_filename)
-            fullFile = "/atc/"+ str(n_filename)
+            fullFile = "/img/atc/"+ str(n_filename)
 
             query = " update service20_mp_mtr_atc "
             query += "    set atc_cdd = '" + str(l_att_cdd[i]) + "' "
