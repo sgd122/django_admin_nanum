@@ -1241,7 +1241,7 @@ class com_datacenter_detail_Serializer(serializers.ModelSerializer):
     ins_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
 
     class Meta:
-        model = bbs1
+        model = bbs2
         fields = '__all__'
 
 class com_datacenter_detail(generics.ListAPIView):
