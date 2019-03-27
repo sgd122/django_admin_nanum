@@ -128,6 +128,8 @@ urlpatterns = [
     path('myapge/mentoAttdList/', mentoAttdListMypage_list.as_view(), name='mentoAttdListMypage_list'), 
     # 멘토 출석부(상세)
     path('myapge/mentoAttdDetailList/', mentoAttdDetailListMypage_list.as_view(), name='mentoAttdDetailListMypage_list'),     
+    # 인증서
+    path('myapge/report/certificateList/', certificateListMypage_list.as_view(), name='certificateListMypage_list'),     
     ########################################################################################
     # myPage
     #

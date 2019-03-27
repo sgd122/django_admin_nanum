@@ -2978,7 +2978,95 @@ class mentoAttdDetailListMypage_list(generics.ListAPIView):
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
 
-        return Response(serializer.data)                                  
+        return Response(serializer.data)    
+
+# 인증서 ###################################################
+class certificateListMypage_list_Serializer(serializers.ModelSerializer):
+
+    brth_dt = serializers.SerializerMethodField()
+    yr = serializers.SerializerMethodField()
+    apl_term = serializers.SerializerMethodField()
+    sup_org = serializers.SerializerMethodField()
+    sup_org_nm = serializers.SerializerMethodField()    
+    mp_name = serializers.SerializerMethodField()
+    mnt_fr_dt = serializers.SerializerMethodField()
+    mnt_to_dt = serializers.SerializerMethodField()
+    appr_tm = serializers.SerializerMethodField()
+    cur_date = serializers.SerializerMethodField()
+    
+    # mgr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+    
+    class Meta:
+        model = mp_mtr
+        fields = '__all__'
+
+    def get_brth_dt(self,obj):
+        return obj.brth_dt
+    def get_yr(self,obj):
+        return obj.yr
+    def get_apl_term(self,obj):
+        return obj.apl_term    
+    def get_sup_org(self,obj):
+        return obj.sup_org
+    def get_sup_org_nm(self,obj):
+        return obj.sup_org_nm            
+    def get_mp_name(self,obj):
+        return obj.mp_name
+    def get_mnt_fr_dt(self,obj):
+        return obj.mnt_fr_dt
+    def get_mnt_to_dt(self,obj):
+        return obj.mnt_to_dt
+    def get_appr_tm(self,obj):
+        return obj.appr_tm
+    def get_cur_date(self,obj):
+        return obj.cur_date
+
+class certificateListMypage_list(generics.ListAPIView):
+    queryset = mp_mtr.objects.all()
+    serializer_class = certificateListMypage_list_Serializer
+
+    def list(self, request):
+        l_mp_id = request.GET.get('mp_id', "")
+        l_user_id = request.GET.get('user_id', "")
+
+        queryset = self.get_queryset()
+
+        query  = "select t1.id   "
+        query += "     , t1.cllg_cd         /* 지원자 대학 코드 */ "
+        query += "     , t1.cllg_nm         /* 지원자 대학 명 */ "
+        query += "     , t1.dept_cd         /* 지원자 학부/학과 코드 */ "
+        query += "     , t1.dept_nm         /* 지원자 학부/학과 명 */ "
+        query += "     , t1.apl_id          /* 지원자(멘토,학생) 학번 */ "
+        query += "     , t1.apl_no          /* 지원자(멘토,학생) 학번 */ "
+        query += "     , t1.apl_nm          /* 지원자(멘토,학생) 명 */ "
+        query += "     , CONCAT(SUBSTRING(t1.brth_dt,1,4),'.',SUBSTRING(t1.brth_dt,5,2),'.',SUBSTRING(t1.brth_dt,7,2)) as brth_dt    /* 생년월일 */ "
+        query += "     , t2.yr              /* 연도 */ "
+        query += "     , t2.apl_term        /* 모집시기 */    "     
+        query += "     , t2.sup_org         /* 주관기관(mp0004) */ "
+        query += "     , (select std_detl_code_nm from service20_com_cdd where std_detl_code = t2.sup_org and std_grp_code = 'mp0004') as sup_org_nm "
+        query += "     , t1.mp_id           /* 멘토링 프로그램id */ "
+        query += "     , t2.mp_name         /* 멘토링 프로그램명 */ "
+        query += "     , DATE_FORMAT(t2.mnt_fr_dt, '%%Y.%%m.%%d') as mnt_fr_dt       /* 활동기간-시작 */ "
+        query += "     , DATE_FORMAT(t2.mnt_to_dt, '%%Y.%%m.%%d') as mnt_to_dt       /* 활동기간-종료 */ "
+        query += "     , sum(t3.appr_tm) as appr_tm /*활동시간*/ "
+        query += "     , date_format(now(), '%%Y년 %%m월 %%d일') as cur_date    /* 활동기간-종료 */ "
+        query += "  from service20_mp_mtr t1 "
+        query += "    left join service20_mpgm t2 on (t2.mp_id = t1.mp_id) "
+        query += "    left join service20_mp_att t3 on (t3.mp_id = t1.mp_id  "
+        query += "                                  and t3.apl_no = t1.apl_no) "
+        query += " where t1.apl_id = '" + l_user_id + "'  "
+        query += "   and t1.mp_id = '" + l_mp_id + "' "
+
+        queryset = mp_mtr.objects.raw(query)
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)                                        
 #####################################################################################
 # mypage - END
 #####################################################################################
@@ -6843,7 +6931,7 @@ def MP0101M_upload_update(request):
             fp.close()
 
             cursor = connection.cursor()
-            fullFile = str(UPLOAD_DIR) + str(n_filename)
+            fullFile = str(UPLOAD_DIR) + str(n_filename)    
             fullFile = "/img/atc/"+ str(n_filename)
 
             query = " update service20_mp_mtr_atc "
