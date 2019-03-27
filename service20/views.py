@@ -1217,11 +1217,11 @@ class com_datacenter_Serializer(serializers.ModelSerializer):
     ins_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
 
     class Meta:
-        model = bbs1
+        model = bbs2
         fields = '__all__'
 
 class com_datacenter(generics.ListAPIView):
-    queryset = bbs1.objects.all()
+    queryset = bbs2.objects.all()
     serializer_class = com_datacenter_Serializer
 
     def list(self, request):   
@@ -1245,14 +1245,14 @@ class com_datacenter_detail_Serializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class com_datacenter_detail(generics.ListAPIView):
-    queryset = bbs1.objects.all()
+    queryset = bbs2.objects.all()
     serializer_class = com_datacenter_detail_Serializer
 
     def list(self, request):   
         l_id = request.GET.get('id', "")
 
         queryset = self.get_queryset()
-        queryset = bbs1.objects.filter(id=l_id)
+        queryset = bbs2.objects.filter(id=l_id)
 
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
