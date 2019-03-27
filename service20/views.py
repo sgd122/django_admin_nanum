@@ -6580,6 +6580,7 @@ def MP0101M_service_insert(request):
 
     com_cnt = 0
     sel_cnt = 0
+    chk_cnt = 0
     for i in range(0,int(l_length)):
         # l_att_cdd.append(request.POST.get('select_'+str(i), ""))
         l_att_cdh.append(request.POST.get('att_cdh'+str(i), ""))
@@ -6589,6 +6590,9 @@ def MP0101M_service_insert(request):
         if l_chc_tp[i] == '1':
             l_att_cdd.append(request.POST.get('service_combo'+str(com_cnt), ""))
             com_cnt = com_cnt + 1
+        elif l_chc_tp[i] == '3':
+            l_att_cdd.append(request.POST.get('service_chkbox'+str(chk_cnt), ""))
+            chk_cnt = chk_cnt + 1
         else:
             l_att_cdd.append(request.POST.get('service_select'+str(sel_cnt), ""))
             sel_cnt = sel_cnt + 1
@@ -6868,6 +6872,7 @@ def MP0101M_service_update(request):
     print("length==" + l_length)
     com_cnt = 0
     sel_cnt = 0
+    chk_cnt = 0
     for i in range(0,int(l_length)):
         # l_att_cdd.append(request.POST.get('select_'+str(i), ""))
         l_att_cdh.append(request.POST.get('att_cdh'+str(i), ""))
@@ -6878,6 +6883,9 @@ def MP0101M_service_update(request):
         if l_chc_tp[i] == '1':
             l_att_cdd.append(request.POST.get('service_combo'+str(com_cnt), ""))
             com_cnt = com_cnt + 1
+        elif l_chc_tp[i] == '3':
+            l_att_cdd.append(request.POST.get('service_chkbox'+str(chk_cnt), ""))
+            chk_cnt = chk_cnt + 1
         else:
             l_att_cdd.append(request.POST.get('service_select'+str(sel_cnt), ""))
             sel_cnt = sel_cnt + 1
@@ -7085,6 +7093,7 @@ class MP0101M_service_sub(generics.ListAPIView):
             return self.get_paginated_response(serializer.data)
 
         return Response(serializer.data)
+
 #####################################################################################
 # MP0101M - END 
 #####################################################################################
