@@ -6799,7 +6799,7 @@ class MP0101M_admin_service_chc(generics.ListAPIView):
         query += "  from service20_mp_chc "
         query += " where mp_id = '" + l_mp_id + "' "
         query += "   and apl_no = '"+ l_apl_no + "'"
-        query += " order by chc_seq, chc_no "
+        query += " order by chc_no, chc_seq "
 
         queryset = mp_chc.objects.raw(query)
         
