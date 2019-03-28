@@ -4064,7 +4064,7 @@ class MS0101M_adm_list_fe_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = ms_apl_fe
-        fields = ('frexm_cd','frexm_nm','score','grade')
+        fields = ('frexm_cd','frexm_nm','score','grade','fn_score')
 
     def get_fn_score(self,obj):
         return obj.fn_score
@@ -4083,7 +4083,7 @@ class MS0101M_adm_list_fe(generics.ListAPIView):
         query += "        frexm_nm,  "
         query += "        score,  "
         query += "        grade,  "
-        query += "   fn_mp_mtr_fe_select_01('"+str(ms_ida)+"','"+str(ida)+"') as fn_score "
+        query += "   fn_ms_apl_fe_select_01('"+str(ms_ida)+"','"+str(ida)+"') as fn_score "
         query += " FROM   service20_ms_apl_fe  "
         query += " WHERE  ms_id = '"+str(ms_ida)+"'  "
         query += "        AND apl_id = '"+str(ida)+"' "
