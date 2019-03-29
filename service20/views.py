@@ -10047,6 +10047,198 @@ def MP0107_update(request,pk):
 #####################################################################################
 
 #####################################################################################
+# MP0108 - START
+#####################################################################################
+
+# 미완료 소명서 리스트 ###################################################
+class MP0108_list_Serializer(serializers.ModelSerializer):
+
+    mp_id = serializers.SerializerMethodField()
+    mp_name = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
+    status_nm = serializers.SerializerMethodField()
+    wirte_status = serializers.SerializerMethodField()
+    wirte_status_nm = serializers.SerializerMethodField()
+    wrt_dt = serializers.SerializerMethodField()
+    sbm_dt = serializers.SerializerMethodField()
+    mgr_id = serializers.SerializerMethodField()
+    mgr_nm = serializers.SerializerMethodField()
+    base_hr = serializers.SerializerMethodField()
+    act_hr = serializers.SerializerMethodField()
+    uncmp_desc = serializers.SerializerMethodField()    
+    uncmp_resp = serializers.SerializerMethodField()
+    uncmp_resp_nm = serializers.SerializerMethodField()
+    uncmp_tp = serializers.SerializerMethodField()
+    uncmp_tp_nm = serializers.SerializerMethodField()
+
+    class Meta:
+        model = mp_mtr
+        fields = '__all__'
+
+    def get_mp_id(self,obj):
+        return obj.mp_id
+    def get_mp_name(self,obj):
+        return obj.mp_name
+    def get_status(self,obj):
+        return obj.status
+    def get_status_nm(self,obj):
+        return obj.status_nm
+    def get_wirte_status(self,obj):
+        return obj.wirte_status
+    def get_wirte_status_nm(self,obj):
+        return obj.wirte_status_nm
+    def get_wrt_dt(self,obj):
+        return obj.wrt_dt
+    def get_sbm_dt(self,obj):
+        return obj.sbm_dt
+    def get_mgr_id(self,obj):
+        return obj.mgr_id
+    def get_mgr_nm(self,obj):
+        return obj.mgr_nm
+    def get_base_hr(self,obj):
+        return obj.base_hr
+    def get_act_hr(self,obj):
+        return obj.act_hr
+    def get_uncmp_desc(self,obj):
+        return obj.uncmp_desc      
+    def get_uncmp_resp(self,obj):
+        return obj.uncmp_resp 
+    def get_uncmp_resp_nm(self,obj):
+        return obj.uncmp_resp_nm 
+    def get_uncmp_tp(self,obj):
+        return obj.uncmp_tp 
+    def get_uncmp_tp_nm(self,obj):
+        return obj.uncmp_tp_nm                                                                                                                           
+
+class MP0108_list(generics.ListAPIView):
+    queryset = mp_mtr.objects.all()
+    serializer_class = MP0108_list_Serializer
+
+
+    def list(self, request):
+        l_user_id = request.GET.get('user_id', "")
+        l_yr = request.GET.get('yr', "")
+        l_apl_term = request.GET.get('apl_term', "")
+        l_mp_id = request.GET.get('mp_id', "")
+
+        queryset = self.get_queryset()
+
+        query  = "select t1.id "
+        query += "     , t2.mp_id "
+        query += "     , t2.mp_name         /* 멘토링 프로그램명 */ "
+        query += "     , t2.status          /* 프로그램상태*/ "
+        query += "     , (select std_detl_code_nm from service20_com_cdd where std_detl_code = t2.status and std_grp_code = 'mp0001') as status_nm "
+        query += "     , t3.status as wirte_status          /* 작성상태*/ "
+        query += "     , (select std_detl_code_nm from service20_com_cdd where std_detl_code = t3.status and std_grp_code = 'mp0070') as wirte_status_nm "
+        query += "     , SUBSTRING(t3.wrt_dt,1,10) as wrt_dt   /* 작성일 */ "
+        query += "     , SUBSTRING(t3.sbm_dt,1,10) as sbm_dt    /* 제출일 */ "
+        query += "     , t2.mgr_id    /*승인자id*/ "
+        query += "     , t2.mgr_nm    /*승인자명*/ "
+        query += "     , SUBSTRING(t3.mgr_dt,1,10) as mgr_dt    /* 관리자 승인일시 */    /*승인일시*/ "
+        query += "     , t1.unv_nm          /* 지원자 대학교 명 */ "
+        query += "     , t1.dept_nm         /* 지원자 학부/학과 명 */ "
+        query += "     , t1.apl_no          /* 지원자(멘토,학생) no */ "
+        query += "     , t1.apl_nm          /* 지원자(멘토,학생) 명 */ "
+        query += "     , t1.apl_id          /* 지원자(멘토,학생) 학번 */ "
+        query += "     , t1.mob_no          /* 휴대전화 */ "
+        query += "     , (select ifnull(att_val,0) "
+        query += "          from service20_mp_sub "
+        query += "         where mp_id   = t1.mp_id "
+        query += "           and att_id  = 'mp0007' "
+        query += "           and att_cdh = 'mp0007' "
+        query += "           and att_cdd = '10' ) as base_hr /* 활동 기준시간*/ "
+        query += "     , (select ifnull(sum(appr_tm),0) "
+        query += "          from service20_mp_att "
+        query += "         where mp_id   = t1.mp_id "
+        query += "           and apl_no  = t1.apl_no "
+        query += "           and att_sts in ('d', 'e') ) as act_hr /* 관리자 승인, 활동비 지급 */  "
+        query += "     , t3.uncmp_desc /* 미완료 소명 사유 */ "
+        query += "     , t3.uncmp_resp /* 미완료 귀책(ms0005) */   "
+        query += "     , (select std_detl_code_nm from service20_com_cdd where std_detl_code = t3.uncmp_resp and std_grp_code = 'ms0005') as uncmp_resp_nm "
+        query += "     , t3.uncmp_tp   /* 미완료 유형(mp0096) */   /* 중단 유형(mp0096) */         "
+        query += "     , (select std_detl_code_nm from service20_com_cdd where std_detl_code = t3.uncmp_tp and std_grp_code = 'mp0096') as uncmp_tp_nm "       
+        query += "  from service20_mp_mtr t1 "
+        query += "    inner join service20_mpgm t2 on (t2.mp_id = t1.mp_id) "
+        query += "    inner join service20_mp_ucmp_req t3 on (t3.mp_id = t1.mp_id and t1.apl_id = t3.apl_id) "
+        query += " where t1.apl_id = '"+l_user_id+"' "
+        query += "   and t2.yr = '"+l_yr+"' "
+        query += "   and t2.apl_term = '"+l_apl_term+"' "
+        query += "   and t1.mp_id like Ifnull(Nullif('" + str(l_mp_id) + "', ''), '%%')  "
+        query += " order by t2.yr desc "
+        query += "     , t2.apl_term desc "
+        query += "     , t2.status "
+
+        queryset = mp_mtr.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+# 보고서 현황 save
+@csrf_exempt
+def MP0108_update(request,pk):
+
+    uncmp_desc = request.POST.get('uncmp_desc', "")
+    mp_id      = request.POST.get('mp_id', "")
+    apl_no     = request.POST.get('apl_no', 0)
+    upd_id     = request.POST.get('upd_id', "")
+    upd_ip     = request.POST.get('upd_ip', "")
+    upd_dt     = request.POST.get('upd_dt', "")
+    upd_pgm    = request.POST.get('upd_pgm', "")
+
+    client_ip = request.META['REMOTE_ADDR']
+
+    update_text = ""
+    if pk == 1:
+        # /*미완료 소명서 저장*/
+        update_text += "update service20_mp_ucmp_req     /* 미완료 소명서 */ "
+        update_text += "   set wrt_dt     = now()                     /* 작성일 */ "
+        update_text += "     , status     = '10'                      /* 상태(mp0070) */ "
+        update_text += "     , uncmp_desc = '" + str(uncmp_desc) + "' /* 미완료 소명 사유 */ "
+        update_text += "     , upd_id     = '" + str(upd_id) + "'     /* 수정자id */ "
+        update_text += "     , upd_ip     = '" + str(client_ip) + "'  /* 수정자ip */ "
+        update_text += "     , upd_dt     = now()                     /* 수정일시 */ "
+        update_text += "     , upd_pgm    = '" + str(upd_pgm) + "'    /* 수정프로그램id */ "
+        update_text += " where mp_id = '" + str(mp_id) + "' "
+        update_text += "   and apl_no = '" + str(apl_no) + "' "
+
+        # 따옴표 처리(미완료 소명서)
+        mp_ucmp_req.objects.filter(mp_id=str(mp_id),apl_no=str(apl_no)).update(uncmp_desc=str(uncmp_desc))    
+         
+    elif pk == 2:
+        # /*미완료 소명서 제출*/
+        update_text += "update service20_mp_ucmp_req     /* 미완료 소명서 */ "
+        update_text += "   set wrt_dt     = now()                     /* 작성일 */ "
+        update_text += "     , sbm_dt     = now()                     /* 작성일 */ "
+        update_text += "     , status     = '20'                      /* 상태(mp0070) */ "
+        update_text += "     , uncmp_desc = '" + str(uncmp_desc) + "' /* 미완료 소명 사유 */ "
+        update_text += "     , upd_id     = '" + str(upd_id) + "'     /* 수정자id */ "
+        update_text += "     , upd_ip     = '" + str(client_ip) + "'  /* 수정자ip */ "
+        update_text += "     , upd_dt     = now()                     /* 수정일시 */ "
+        update_text += "     , upd_pgm    = '" + str(upd_pgm) + "'    /* 수정프로그램id */ "
+        update_text += " where mp_id = '" + str(mp_id) + "' "
+        update_text += "   and apl_no = '" + str(apl_no) + "' "
+ 
+        # 따옴표 처리(미완료 소명서)
+        mp_ucmp_req.objects.filter(mp_id=str(mp_id),apl_no=str(apl_no)).update(uncmp_desc=str(uncmp_desc))
+
+    cursor = connection.cursor()
+    query_result = cursor.execute(update_text)
+        
+    context = {'message': 'Ok'}
+
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+#####################################################################################
+# MP0108 - END
+#####################################################################################
+
+#####################################################################################
 # TE0201 - START
 #####################################################################################
 
