@@ -5092,31 +5092,7 @@ class MP0101M_list_all_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = mpgm
-        fields = (
-            'mp_id',
-            'mp_name',
-            'status',
-            'statusCode',
-            'yr',
-            'yr_seq',
-            'sup_org',
-            'mng_org',
-            'applyFlag',
-            'applyStatus',
-            'apl_fr_dt',
-            'apl_to_dt',
-            'mnt_fr_dt',
-            'mnt_to_dt',
-            'cnt_trn',
-            'status',
-            'status_nm',
-            'applyFlagNm',
-            'sup_org_nm',
-            'mng_org_nm',
-            'mgr_nm',
-            'apl_no',
-            'apl_id',
-        )
+        fields = '__all__'
 
     def get_applyFlag(self, obj):
         return obj.applyFlag    
