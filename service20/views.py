@@ -2394,6 +2394,8 @@ class grdMypage_list(generics.ListAPIView):
         query += " , t1.grd_nm      /* 보호자명 */ "
         query += " , t1.grd_tel     /* 보호자 연락처 */ "
         query += " , t1.grd_rel     /* 보호자 관계(mp0047) */ "
+        query += " , t1.mnte_id     /* 멘티id */  "
+        query += " , t1.mnte_nm     /* 멘티 명 */     "
         query += " , (select std_detl_code_nm from service20_com_cdd where std_detl_code = t1.grd_rel and std_grp_code = 'mp0047') as grd_rel_nm "
         query += " from service20_mp_mte t1     /* 프로그램 지원자(멘티) */ "
         query += " where 1=1 "
@@ -3044,8 +3046,9 @@ class certificateListMypage_list_Serializer(serializers.ModelSerializer):
     mp_name = serializers.SerializerMethodField()
     mnt_fr_dt = serializers.SerializerMethodField()
     mnt_to_dt = serializers.SerializerMethodField()
-    appr_tm = serializers.SerializerMethodField()
-    cur_date = serializers.SerializerMethodField()
+    prnt_dt = serializers.SerializerMethodField()
+    chc_val = serializers.SerializerMethodField()
+    act_hr = serializers.SerializerMethodField()
     
     # mgr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     
@@ -3069,10 +3072,12 @@ class certificateListMypage_list_Serializer(serializers.ModelSerializer):
         return obj.mnt_fr_dt
     def get_mnt_to_dt(self,obj):
         return obj.mnt_to_dt
-    def get_appr_tm(self,obj):
-        return obj.appr_tm
-    def get_cur_date(self,obj):
-        return obj.cur_date
+    def get_prnt_dt(self,obj):
+        return obj.prnt_dt
+    def get_chc_val(self,obj):
+        return obj.chc_val
+    def get_act_hr(self,obj):
+        return obj.act_hr
 
 class certificateListMypage_list(generics.ListAPIView):
     queryset = mp_mtr.objects.all()
@@ -3101,12 +3106,17 @@ class certificateListMypage_list(generics.ListAPIView):
         query += "     , t2.mp_name         /* 멘토링 프로그램명 */ "
         query += "     , DATE_FORMAT(t2.mnt_fr_dt, '%%Y.%%m.%%d') as mnt_fr_dt       /* 활동기간-시작 */ "
         query += "     , DATE_FORMAT(t2.mnt_to_dt, '%%Y.%%m.%%d') as mnt_to_dt       /* 활동기간-종료 */ "
-        query += "     , sum(t3.appr_tm) as appr_tm /*활동시간*/ "
-        query += "     , date_format(now(), '%%Y년 %%m월 %%d일') as cur_date    /* 활동기간-종료 */ "
+        query += "     , SUBSTRING(t1.act_hr,1,3) as act_hr  /* 총활동 시간 */ "
+        query += "     , t1.cert_en         /* 인증서 발급가능 */ "
+        query += "     , t1.cert_no         /* 인증번호 */ "
+        query += "     , DATE_FORMAT(t1.prnt_dt, '%%Y년 %%m월 %%d일') as prnt_dt         /* 인증서 발급일 */ "
+        query += "     , t3.chc_val         /* 봉사 국가 */      "        
         query += "  from service20_mp_mtr t1 "
         query += "    left join service20_mpgm t2 on (t2.mp_id = t1.mp_id) "
-        query += "    left join service20_mp_att t3 on (t3.mp_id = t1.mp_id  "
-        query += "                                  and t3.apl_no = t1.apl_no) "
+        query += "    left join service20_mp_chc t3 on (t3.mp_id  = t1.mp_id "
+        query += "                                   and t3.apl_no = t1.apl_no "
+        query += "                                   and t3.att_id = 'mp0090' "
+        query += "                                   and t3.att_cdh = 'mp0092')    "        
         query += " where t1.apl_id = '" + l_user_id + "'  "
         query += "   and t1.mp_id = '" + l_mp_id + "' "
 
