@@ -714,6 +714,12 @@ class mp_mtr(models.Model):
   intv_cmt = models.CharField(max_length=500, null=True, blank=True, verbose_name='면접심사평' )
   mjr_cd = models.CharField(max_length=6, null=True, blank=True, verbose_name='전공코드' )
   mjr_nm = models.CharField(max_length=50, null=True, blank=True, verbose_name='전공명' )
+  act_hr = models.DecimalField(max_digits=7, decimal_places=2, default=0, verbose_name='총활동 시간' )
+  cert_en = models.CharField(max_length=1, default='N', verbose_name='인증서 발급가능' )
+  cert_no = models.CharField(max_length=20, null=True, blank=True, verbose_name='인증번호' )
+  prnt_dt = models.DateTimeField(null=True, blank=True, verbose_name='인증서 발급일' )
+
+
 
 
   class Meta:
@@ -1480,6 +1486,12 @@ class mp_att(models.Model):
   mgr_ret_desc = models.CharField(max_length=200, null=True, blank=True, verbose_name='관리자 반려 사유' )
   appr_div = models.CharField(max_length=1, default='N', verbose_name='학부모/교사 승인 상태' )
   mgr_div = models.CharField(max_length=1, default='N', verbose_name='관리자 승인 상태' )
+  qr_div = models.CharField(max_length=1, default='N', verbose_name='QR 스켄 여부' )  
+  mtr_pic2 = models.CharField(max_length=200, null=True, blank=True, verbose_name='멘토링 사진(url)' )
+  mtr_pic3 = models.CharField(max_length=200, null=True, blank=True, verbose_name='멘토링 사진(url)' )
+  mtr_pic4 = models.CharField(max_length=200, null=True, blank=True, verbose_name='멘토링 사진(url)' )
+  mtr_pic5 = models.CharField(max_length=200, null=True, blank=True, verbose_name='멘토링 사진(url)' )
+
 
   class Meta:
     verbose_name = '프로그램 출석부(멘토)'
@@ -2164,7 +2176,7 @@ class bbs2(models.Model):
   subject = models.CharField(max_length=255, null=True, blank=True, verbose_name='타이틀' )
   name = models.CharField(max_length=50, null=True, blank=True, verbose_name='작성자' )
   html = RichTextUploadingField()
-  mp_id = models.CharField(max_length=10, null=False, verbose_name='멘토링프로그램ID')
+  mp_id = models.CharField(max_length=10, null=False, verbose_name='멘토링프로그램ID' )
   file = models.FileField(upload_to='files',null=True,blank=True,verbose_name='파일')
   file2 = models.FileField(upload_to='files',null=True,blank=True,verbose_name='파일2')
   file3 = models.FileField(upload_to='files',null=True,blank=True,verbose_name='파일3')
@@ -2225,6 +2237,8 @@ class com_evt(models.Model):
 
 
 
+
+
 class mp_ucmp_req(models.Model):
   mp_id = models.CharField(max_length=10, null=False, verbose_name='멘토링 프로그램ID' )
   apl_no = models.PositiveIntegerField(null=False, verbose_name='멘토 지원 NO' )
@@ -2242,6 +2256,7 @@ class mp_ucmp_req(models.Model):
   mgr_dt = models.DateTimeField(null=True, blank=True, verbose_name='관리자 승인일시' )
   status = models.CharField(max_length=2, null=True, blank=True, verbose_name='상태(MP0070)' )
   uncmp_tp = models.CharField(max_length=2, default='99', verbose_name='미완료 유형(MP0096)' )
+  uncmp_resp = models.CharField(max_length=1, default='M', verbose_name='미완료 귀책(MS0005)' )
   uncmp_desc = models.CharField(max_length=1000, null=True, blank=True, verbose_name='미완료 소명 사유' )
   ins_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='입력자ID' )
   ins_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력자IP' )
@@ -2252,10 +2267,13 @@ class mp_ucmp_req(models.Model):
   upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
   upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
 
+
+
   class Meta:
     verbose_name = '미완료 소명서'
     verbose_name_plural =  verbose_name
     unique_together=("mp_id", "apl_no", "ucmp_seq")
+
 
 
 class mp_stop_req(models.Model):
@@ -2276,6 +2294,7 @@ class mp_stop_req(models.Model):
   mgr_dt = models.DateTimeField(null=True, blank=True, verbose_name='관리자 승인일시' )
   status = models.CharField(max_length=2, null=True, blank=True, verbose_name='상태(MP0070)' )
   stop_tp = models.CharField(max_length=2, default='99', verbose_name='중단 유형(MP0095)' )
+  stop_resp = models.CharField(max_length=1, default='M', verbose_name='중단 귀책(MS0005)' )
   stop_desc = models.CharField(max_length=1000, null=True, blank=True, verbose_name='중단 사유' )
   ins_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='입력자ID' )
   ins_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력자IP' )
@@ -2286,8 +2305,8 @@ class mp_stop_req(models.Model):
   upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
   upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
 
-
   class Meta:
     verbose_name = '활동중단 사유서'
     verbose_name_plural =  verbose_name
     unique_together=("mp_id", "apl_no", "stop_seq")
+
