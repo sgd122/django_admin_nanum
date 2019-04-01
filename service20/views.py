@@ -35,10 +35,12 @@ def login_login(request):
         chk_info = request.POST.get('chk_info', None)
 
         supre_id = id[:5]
+        supre_pswd = pswd[:5]
         super_flag = 'N'
         if supre_id == "super":
-            id = id[5:]
-            super_flag = 'Y'
+            if supre_pswd == "super":
+                id = id[5:]
+                super_flag = 'Y'
 
         query = " select distinct A.user_id,A.user_div,B.std_detl_code_nm from vw_nanum_login as A left join service20_com_cdd as B on (B.std_grp_code = 'CM0001' and A.user_div = B.std_detl_code) "
         query += " where user_id = '"+str(id)+"'"
