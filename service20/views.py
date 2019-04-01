@@ -2191,17 +2191,13 @@ class com_user(generics.ListAPIView):
 # 멘토 마이페이지 ###################################################
 class mentoMypage_list_Serializer(serializers.ModelSerializer):
 
-    gen_nm = serializers.SerializerMethodField()
-
     class Meta:
-        model = mp_mtr
+        model = vw_nanum_stdt
         fields = '__all__'
 
-    def get_gen_nm(self,obj):
-        return obj.gen_nm
 
 class mentoMypage_list(generics.ListAPIView):
-    queryset = mp_mtr.objects.all()
+    queryset = vw_nanum_stdt.objects.all()
     serializer_class = mentoMypage_list_Serializer
 
 
@@ -2210,41 +2206,20 @@ class mentoMypage_list(generics.ListAPIView):
 
         queryset = self.get_queryset()
 
-        query  = " select * "
-        query += "   from (select t1.id  "
-        query += "              , t1.apl_id     /* 지원자(멘토,학생) 학번 */  "
-        query += "              , t1.apl_nm          /* 지원자(멘토,학생) 명 */  "
-        query += "              , t1.brth_dt         /* 생년월일 */  "
-        query += "              , t1.gen             /* 성별 */  "
-        query += "              , (select std_detl_code_nm from service20_com_cdd where std_detl_code = t1.gen and std_grp_code = 'ms0012') as gen_nm  "
-        query += "              , t1.cllg_nm         /* 지원자 대학 명 */  "
-        query += "              , t1.dept_nm         /* 지원자 학부/학과 명 */  "
-        query += "              , t1.mob_no          /* 휴대전화 */  "
-        query += "              , t1.email_addr      /* 이메일 주소 */  "
-        query += "           from service20_mp_mtr t1     /* 프로그램 지원자(멘토) */  "
-        query += "          where 1=1  "
-        query += "            and t1.mntr_id = '"+l_user_id+"'   "
-        query += "          order by t1.yr desc  "
-        query += "              , t1.term_div desc ) a   "
-        query += " union all    "
-        query += " select * "
-        query += "   from (select t2.id "
-        query += "              , t2.apl_id          /* 지원자id(학번) */ "
-        query += "              , t2.apl_nm          /* 지원자 명 */ "
-        query += "              , t2.brth_dt         /* 생년월일 */ "
-        query += "              , t2.gen             /* 성별 */ "
-        query += "              , (select std_detl_code_nm from service20_com_cdd where std_detl_code = t2.gen and std_grp_code = 'ms0012') as gen_nm  "
-        query += "              , t2.cllg_nm         /* 지원자 대학 명 */  "
-        query += "              , t2.dept_nm         /* 지원자 학부/학과 명 */  "
-        query += "              , t2.mob_no          /* 휴대전화 */  "
-        query += "              , t2.email_addr      /* 이메일 주소 */      "
-        query += "           from service20_ms_apl t2 "
-        query += "          where 1=1  "
-        query += "            and t2.apl_id = '"+l_user_id+"'     "
-        query += "          order by t2.yr desc  "
-        query += "              , t2.term_div desc ) b  "
+        query  = " select t1.id "
+        query += "      , t1.apl_id     /* 지원자(멘토,학생) 학번 */  "
+        query += "      , t1.apl_nm          /* 지원자(멘토,학생) 명 */  "
+        query += "      , t1.brth_dt         /* 생년월일 */  "
+        query += "      , t1.gen_nm             /* 성별 */  "
+        query += "      , t1.cllg_nm         /* 지원자 대학 명 */  "
+        query += "      , t1.dept_nm         /* 지원자 학부/학과 명 */  "
+        query += "      , t1.mob_no          /* 휴대전화 */  "
+        query += "      , t1.email_addr      /* 이메일 주소 */  "
+        query += "  from service20_vw_nanum_stdt t1 "
+        query += " where 1=1 "
+        query += "   and t1.apl_id = '"+l_user_id+"' "
 
-        queryset = mp_mtr.objects.raw(query)
+        queryset = vw_nanum_stdt.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
@@ -2255,7 +2230,7 @@ class mentoMypage_list(generics.ListAPIView):
             return self.get_paginated_response(serializer.data)
 
         return Response(serializer.data) 
-
+        
 # 멘티 마이페이지 ###################################################
 class menteMypage_list_Serializer(serializers.ModelSerializer):
 
@@ -5749,7 +5724,7 @@ class MP0101M_adm_list(generics.ListAPIView):
         query += " and now() > C.apl_to_dt, 'xx', C.status) as statusCode,  "
         query += " if(A.status = '10'  "
         query += " and now() > C.apl_to_dt, '모집완료', (select std_detl_code_nm  "
-        query += " from   service20_com_cdd  "
+        query += " from   service20_com_cdd  " 
         query += " where  "
         query += " std_grp_code = 'MP0001'  "
         query += " and use_indc = 'y'  "
