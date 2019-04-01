@@ -646,17 +646,17 @@ def login_login(request):
             # 교사
             message = "Ok"
             if super_flag == "Y":
-                created_flag2 = teacher.objects.filter(tchr_id=id,pwd=pswd).exists()
-            else:
                 created_flag2 = teacher.objects.filter(tchr_id=id).exists()
+            else:
+                created_flag2 = teacher.objects.filter(tchr_id=id,pwd=pswd).exists()
             if not created_flag2:
                 message = "Fail"
                 context = {'message': message}
             else:
                 if super_flag == "Y":
-                    rows = teacher.objects.filter(tchr_id=id,pwd=pswd)[0]
-                else:
                     rows = teacher.objects.filter(tchr_id=id)[0]
+                else:
+                    rows = teacher.objects.filter(tchr_id=id,pwd=pswd)[0]
                 v_apl_id = rows.tchr_id
                 v_apl_nm = rows.tchr_nm.replace('\'','')
                 context = {'message': message,
