@@ -1239,7 +1239,7 @@ class com_datacenter(generics.ListAPIView):
 #자료실 디테일
 class com_datacenter_detail_Serializer(serializers.ModelSerializer):
     
-    ins_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+    ins_dt = serializers.DateTimeField(format='%Y-%m-%d')
 
     class Meta:
         model = bbs2
@@ -1268,7 +1268,7 @@ class com_datacenter_detail(generics.ListAPIView):
 #공지사항
 class com_notice_Serializer(serializers.ModelSerializer):
     
-    ins_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+    ins_dt = serializers.DateTimeField(format='%Y-%m-%d')
 
     class Meta:
         model = bbs1
