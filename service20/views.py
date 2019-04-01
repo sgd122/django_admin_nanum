@@ -621,9 +621,9 @@ def login_login(request):
                 context = {'message': message}
             else:
                 if super_flag == "Y":
-                    rows = guardian.objects.filter(grdn_id=id,pwd=pswd)[0]
-                else:
                     rows = guardian.objects.filter(grdn_id=id)[0]
+                else:
+                    rows = guardian.objects.filter(grdn_id=id,pwd=pswd)[0]
                 v_apl_id = rows.grdn_id
                 v_apl_nm = rows.grdn_nm.replace('\'','')
                 context = {'message': message,
