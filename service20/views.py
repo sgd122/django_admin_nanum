@@ -11652,7 +11652,13 @@ class com_combo_spcProgram(generics.ListAPIView):
 
         return Response(serializer.data)  
 
-# 학습외 모집상태 콤보박스
+###############################################################      
+# 학습외 프로그램 (콤보) End
+###############################################################
+
+###############################################################      
+# 학습외 상태 (콤보) Start
+###############################################################
 class com_combo_spc_status_Serializer(serializers.ModelSerializer):
 
     
@@ -11687,9 +11693,8 @@ class com_combo_spc_status(generics.ListAPIView):
             return self.get_paginated_response(serializer.data)
 
         return Response(serializer.data) 
-        
 ###############################################################      
-# 학습외 프로그램 (콤보) End
+# 학습외 상태 (콤보) End
 ###############################################################
 
 
