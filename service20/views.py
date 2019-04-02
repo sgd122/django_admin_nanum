@@ -2230,7 +2230,7 @@ class mentoMypage_list(generics.ListAPIView):
             return self.get_paginated_response(serializer.data)
 
         return Response(serializer.data) 
-        
+
 # 멘티 마이페이지 ###################################################
 class menteMypage_list_Serializer(serializers.ModelSerializer):
 
@@ -4871,6 +4871,65 @@ class MP0101M_list_chk_5(generics.ListAPIView):
             return self.get_paginated_response(serializer.data)
 
         return Response(serializer.data)        
+
+class MP0101M_list_chk_6_Serializer(serializers.ModelSerializer):
+
+    
+    apl_cnt = serializers.SerializerMethodField()
+    intv_rslt = serializers.SerializerMethodField()
+    fnl_rslt = serializers.SerializerMethodField()
+    class Meta:
+        model = mp_mtr
+        fields = '__all__'
+
+    def get_apl_cnt(self, obj):
+        return obj.apl_cnt
+    def get_intv_rslt(self, obj):
+        return obj.intv_rslt
+    def get_fnl_rslt(self, obj):
+        return obj.fnl_rslt
+
+class MP0101M_list_chk_6(generics.ListAPIView):
+    queryset = mpgm.objects.all()
+    serializer_class = MP0101M_list_chk_6_Serializer
+
+    def list(self, request):
+        
+        apl_id = request.GET.get('apl_id', "")
+        mp_id = request.GET.get('mp_id', "")
+        yr = request.GET.get('yr', "")
+
+        # -- 멘토체크
+        query = "select '"+str(mp_id)+"' as mp_id "
+        query += "      , COUNT(t1.apl_id)           AS apl_cnt  /* 지원여부 */"
+        query += "      , IFNULL(MAX(intv_rslt), 'N') AS intv_rslt /* 합격여부 */"
+        query += "      , IFNULL(MAX(fnl_rslt), 'N') AS fnl_rslt /* 합격여부 */"
+        query += "      , CASE (SELECT IFNULL(MIN(ATT_CDD), 'Y')"
+        query += "                FROM service20_mp_sub"
+        query += "               WHERE MP_ID   = '"+str(mp_id)+"'"
+        query += "                 AND ATT_ID  = 'MP0012' /* 멘토 여부 */"
+        query += "                 AND ATT_CDH = 'MP0012') WHEN 'Y' THEN CASE WHEN (SELECT COUNT(*) FROM service20_mentor t3 WHERE t3.apl_id = '"+str(apl_id)+"') > 0 THEN 'Y' ELSE 'N' END"
+        query += "                                         WHEN 'N' THEN 'Y'"
+        query += "                                                  ELSE 'Y'"
+        query += "        END AS apl_en"
+        query += "   FROM service20_mp_mtr t1"
+        query += "  INNER JOIN service20_mpgm   t2 ON (t2.mp_id = t1.mp_id)"
+        query += "  WHERE 1=1"
+        query += "    AND t1.apl_id = '"+str(apl_id)+"'"
+        query += "    AND t2.yr     = '"+str(yr)+"'"
+
+        queryset = mp_mtr.objects.raw(query)
+        
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, context={'request': request}, many=True)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)        
+
 
 class MP0101M_list_Serializer(serializers.ModelSerializer):
 
