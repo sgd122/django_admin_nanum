@@ -2312,11 +2312,11 @@ class menteMypage_list(generics.ListAPIView):
 class tchrMypage_list_Serializer(serializers.ModelSerializer):
 
     class Meta:
-        model = mp_mte
+        model = teacher
         fields = '__all__'    
 
 class tchrMypage_list(generics.ListAPIView):
-    queryset = mp_mte.objects.all()
+    queryset = teacher.objects.all()
     serializer_class = tchrMypage_list_Serializer
 
     def list(self, request):
@@ -2325,14 +2325,13 @@ class tchrMypage_list(generics.ListAPIView):
 
         queryset = self.get_queryset()
 
-        query  = " select t1.id  "
-        query += "     , t1.tchr_id     /* 지도교사 id */  "
+        query  = " select t1.tchr_id     /* 지도교사 id */  "
         query += "     , t1.tchr_nm     /* 지도교사 명 */  "        
-        query += " from service20_mp_mte t1     /* 프로그램 지원자(멘티) */  "
+        query += " from service20_teacher t1     "
         query += " where 1=1  "
         query += " and t1.tchr_id = '"+l_user_id+"'  "
 
-        queryset = mp_mte.objects.raw(query)
+        queryset = teacher.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
@@ -2350,14 +2349,14 @@ class grdMypage_list_Serializer(serializers.ModelSerializer):
     grd_rel_nm = serializers.SerializerMethodField()
 
     class Meta:
-        model = mp_mte
+        model = guardian
         fields = '__all__'
 
     def get_grd_rel_nm(self,obj):
         return obj.grd_rel_nm          
 
 class grdMypage_list(generics.ListAPIView):
-    queryset = mp_mte.objects.all()
+    queryset = guardian.objects.all()
     serializer_class = grdMypage_list_Serializer
 
     def list(self, request):
@@ -2365,19 +2364,18 @@ class grdMypage_list(generics.ListAPIView):
 
         queryset = self.get_queryset()
 
-        query  = " select t1.id "
-        query += " , t1.grd_id      /* 주 보호자 id */ "
-        query += " , t1.grd_nm      /* 보호자명 */ "
-        query += " , t1.grd_tel     /* 보호자 연락처 */ "
-        query += " , t1.grd_rel     /* 보호자 관계(mp0047) */ "
-        query += " , t1.mnte_id     /* 멘티id */  "
-        query += " , t1.mnte_nm     /* 멘티 명 */     "
-        query += " , (select std_detl_code_nm from service20_com_cdd where std_detl_code = t1.grd_rel and std_grp_code = 'mp0047') as grd_rel_nm "
-        query += " from service20_mp_mte t1     /* 프로그램 지원자(멘티) */ "
+        query  = " select t1.grdn_id   /* 주 보호자 id */ "
+        query += " , t1.grdn_nm        /* 보호자명 */ "
+        query += " , t1.mob_no         /* 보호자 연락처 */ "
+        query += " , t1.rel_tp         /* 보호자 관계(mp0047) */ "
+        query += " , (select std_detl_code_nm from service20_com_cdd where std_detl_code = t1.rel_tp and std_grp_code = 'mp0047') as grd_rel_nm "
+        query += " , t1.moth_nat_nm     /* 국적 */  "
+        query += " , t1.email_addr     /* 이메일 */     "
+        query += " from service20_guardian t1     "
         query += " where 1=1 "
-        query += " and t1.grd_id      = '"+l_user_id+"' "
+        query += " and t1.grdn_id      = '"+l_user_id+"' "
 
-        queryset = mp_mte.objects.raw(query)
+        queryset = guardian.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
@@ -2387,7 +2385,7 @@ class grdMypage_list(generics.ListAPIView):
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
 
-        return Response(serializer.data)  
+        return Response(serializer.data) 
 
 # 기타사용자 마이페이지 ###################################################
 class ectUserListMypage_list_Serializer(serializers.ModelSerializer):
