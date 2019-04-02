@@ -149,6 +149,7 @@ urlpatterns = [
     path('MS0101M/list/chk/3/', MS0101M_list_chk_3.as_view(), name='MS0101M_list_chk_3'),
     path('MS0101M/list/chk/4/', MS0101M_list_chk_4.as_view(), name='MS0101M_list_chk_4'),
     path('MS0101M/list/chk/5/', MS0101M_list_chk_5.as_view(), name='MS0101M_list_chk_5'),
+    path('MS0101M/list/chk/7/', MS0101M_list_chk_7.as_view(), name='MS0101M_list_chk_7'),
     # 멘토스쿨 리스트 조회
     path('MS0101M/list/', MS0101M_list.as_view(), name='MS0101M_list'),
     # 멘토스쿨 질문유형 가져오기

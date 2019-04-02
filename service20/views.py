@@ -3371,6 +3371,65 @@ class MS0101M_list_chk_5(generics.ListAPIView):
 
         return Response(serializer.data)          
 
+class MS0101M_list_chk_7_Serializer(serializers.ModelSerializer):
+
+    en_cnt = serializers.SerializerMethodField()
+    mp_select01 = serializers.SerializerMethodField()
+    name = serializers.SerializerMethodField()
+    code = serializers.SerializerMethodField()
+    class Meta:
+        model = vw_nanum_stdt
+        fields = ('sch_yr','en_cnt','mp_select01','name','code')
+
+    def get_mp_select01(self, obj):
+        return obj.mp_select01
+    def get_name(self, obj):
+        return obj.name    
+    def get_code(self, obj):
+        return obj.code
+    def get_en_cnt(self, obj):
+        return obj.en_cnt        
+
+class MS0101M_list_chk_7(generics.ListAPIView):
+    queryset = mpgm.objects.all()
+    serializer_class = MS0101M_list_chk_7_Serializer
+
+    def list(self, request):
+        
+        apl_id = request.GET.get('apl_id', "")
+        ms_id = request.GET.get('ms_id', "")
+
+
+        # 학년체크
+        query = " select t1.id,t1.sch_yr, IFNULL(t4.en_cnt,0) as en_cnt, fn_ms_sub_desc_select_01('"+ms_id+"','MS0011') as mp_select01"
+        query += "     , CASE WHEN IFNULL(t4.en_cnt,0) > 0 THEN '신청' ELSE CONCAT('신청불가:', fn_ms_sub_desc_select_01('"+ms_id+"','MS0011'), '만 신청가능') END  as name "
+        query += "     , CASE WHEN IFNULL(t4.en_cnt,0) > 0 THEN 'Y' ELSE 'N' END  as code "
+        query += "  FROM service20_vw_nanum_stdt t1     /* 부산대학교 학생 정보 */ "
+        query += " LEFT JOIN (SELECT t2.apl_id, COUNT(*) en_cnt "
+        query += "              FROM service20_vw_nanum_stdt t2     /* 부산대학교 학생 정보 */ "
+        query += "             WHERE t2.cmp_term IN  "
+        query += "                   (SELECT t3.att_cdd "
+        query += "                      FROM service20_ms_sub t3 "
+        query += "                     WHERE t3.ms_id   = '"+ms_id+"' "
+        query += "                       AND t3.att_id  = 'MS0011' "
+        query += "                       AND t3.att_cdh = 'MS0011' "
+        query += "                   ) "
+        query += "             GROUP BY t2.apl_id "
+        query += "            ) t4 ON (t4.apl_id = t1.apl_id) "
+        query += " WHERE t1.apl_id = '"+apl_id+"' "
+
+        queryset = vw_nanum_stdt.objects.raw(query)
+        
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, context={'request': request}, many=True)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
 class MS0101M_list_Serializer(serializers.ModelSerializer):
 
     applyFlag = serializers.SerializerMethodField()
