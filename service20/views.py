@@ -3459,6 +3459,9 @@ class MS0101M_list(generics.ListAPIView):
         query += " WHERE  A.yr = '"+str(l_yr)+"'  "
         query += "        AND A.apl_term = '"+str(l_apl_term)+"'  "
         query += "        AND A.use_div = 'Y' "
+        
+        query += "        AND A.status > '10'  "
+
         # query += "        AND (SELECT Count(1)  "
         # query += "             FROM   service20_mentor  "
         # query += "             WHERE  apl_id = '"+str(ida)+"') > 0  "
@@ -5085,6 +5088,7 @@ class MP0101M_list(generics.ListAPIView):
         # query += "             FROM   service20_mentor  "
         # query += "             WHERE  apl_id = '"+str(ida)+"') > 0  "
         
+        query += "        AND A.status > '10'  "
 
         query += "        AND IF(A.status = '10'  "
         query += "               AND Now() > A.apl_to_dt, 'xx', A.status) LIKE  "
