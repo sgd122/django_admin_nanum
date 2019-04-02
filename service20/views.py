@@ -4916,7 +4916,7 @@ class MP0101M_list_chk_6(generics.ListAPIView):
         query += "  INNER JOIN service20_mpgm   t2 ON (t2.mp_id = t1.mp_id)"
         query += "  WHERE 1=1"
         query += "    AND t1.apl_id = '"+str(apl_id)+"'"
-        query += "    AND t2.yr     = '"+str(yr)+"'"
+        # query += "    AND t2.yr     = '"+str(yr)+"'"
 
         queryset = mp_mtr.objects.raw(query)
         
