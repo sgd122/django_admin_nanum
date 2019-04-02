@@ -4900,7 +4900,7 @@ class MP0101M_list_chk_6(generics.ListAPIView):
         yr = request.GET.get('yr', "")
 
         # -- 멘토체크
-        query = "select '"+str(mp_id)+"' as mp_id "
+        query = "select '0' as id "
         query += "      , COUNT(t1.apl_id)           AS apl_cnt  /* 지원여부 */"
         query += "      , IFNULL(MAX(intv_rslt), 'N') AS intv_rslt /* 합격여부 */"
         query += "      , IFNULL(MAX(fnl_rslt), 'N') AS fnl_rslt /* 합격여부 */"
