@@ -4907,7 +4907,7 @@ class MP0101M_list_chk_6(generics.ListAPIView):
         query += "      , COUNT(t1.apl_id)           AS apl_cnt  /* 지원여부 */"
         query += "      , IFNULL(MAX(intv_rslt), 'N') AS intv_rslt /* 합격여부 */"
         query += "      , IFNULL(MAX(fnl_rslt), 'N') AS fnl_rslt /* 합격여부 */"
-        query += "      , CASE (SELECT IFNULL(MIN(ATT_CDD), 'Y')"
+        query += "      , CASE (SELECT trim( IFNULL(MIN(ATT_CDD), 'Y') ) "
         query += "                FROM service20_mp_sub"
         query += "               WHERE MP_ID   = '"+str(mp_id)+"'"
         query += "                 AND ATT_ID  = 'MP0012' /* 멘토 여부 */"
@@ -4919,7 +4919,7 @@ class MP0101M_list_chk_6(generics.ListAPIView):
         query += "  INNER JOIN service20_mpgm   t2 ON (t2.mp_id = t1.mp_id)"
         query += "  WHERE 1=1"
         query += "    AND t1.apl_id = '"+str(apl_id)+"'"
-        # query += "    AND t2.yr     = '"+str(yr)+"'"
+        query += "    AND t2.yr in (select t3.yr from service20_mpgm t3 where t3.mp_id = '"+str(mp_id)+"')"
 
         queryset = mp_mtr.objects.raw(query)
         
