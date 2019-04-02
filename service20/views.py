@@ -4878,6 +4878,7 @@ class MP0101M_list_chk_6_Serializer(serializers.ModelSerializer):
     apl_cnt = serializers.SerializerMethodField()
     intv_rslt = serializers.SerializerMethodField()
     fnl_rslt = serializers.SerializerMethodField()
+    apl_en = serializers.SerializerMethodField()
     class Meta:
         model = mp_mtr
         fields = '__all__'
@@ -4888,6 +4889,8 @@ class MP0101M_list_chk_6_Serializer(serializers.ModelSerializer):
         return obj.intv_rslt
     def get_fnl_rslt(self, obj):
         return obj.fnl_rslt
+    def get_apl_en(self, obj):
+        return obj.apl_en
 
 class MP0101M_list_chk_6(generics.ListAPIView):
     queryset = mpgm.objects.all()
