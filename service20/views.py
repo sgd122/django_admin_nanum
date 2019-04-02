@@ -11652,6 +11652,42 @@ class com_combo_spcProgram(generics.ListAPIView):
 
         return Response(serializer.data)  
 
+# 학습외 모집상태 콤보박스
+class com_combo_spc_status_Serializer(serializers.ModelSerializer):
+
+    
+    class Meta:
+        model = com_cdd
+        fields = ('std_detl_code','std_detl_code_nm')
+
+
+class com_combo_spc_status(generics.ListAPIView):
+    queryset = com_cdd.objects.all()
+    serializer_class = com_combo_spc_status_Serializer
+
+    def list(self, request):
+        
+
+        queryset = self.get_queryset()
+        
+        query = " select '0'id,''std_detl_code,'전체'std_detl_code_nm "
+        query += " union  "
+        query += " select id,std_detl_code,std_detl_code_nm from service20_com_cdd where std_grp_code = 'MP0001' "
+        query += " union  "
+        query += " select '','xx','모집완료'  "
+
+        queryset = com_cdd.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data) 
+        
 ###############################################################      
 # 학습외 프로그램 (콤보) End
 ###############################################################
