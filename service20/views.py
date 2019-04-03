@@ -1399,7 +1399,9 @@ class com_combo_appr(generics.ListAPIView):
 
         queryset = self.get_queryset()
         
-        query = " select id as id "
+        query = " select '0' as id, '' as std_detl_code, '전체' as std_detl_code_nm "
+        query += " union  "
+        query += " select id as id "
         query += "     , std_detl_code as std_detl_code"
         query += "     , std_detl_code_nm as std_detl_code_nm"
         query += "  from service20_com_cdd"
@@ -1433,7 +1435,9 @@ class com_combo_mgr(generics.ListAPIView):
 
         queryset = self.get_queryset()
         
-        query = " select id as id "
+        query = " select '0' as id, '' as std_detl_code, '전체' as std_detl_code_nm "
+        query += " union  "
+        query += " select id as id "
         query += "     , std_detl_code as std_detl_code"
         query += "     , std_detl_code_nm as std_detl_code_nm"
         query += "  from service20_com_cdd"
@@ -1576,12 +1580,12 @@ class com_combo_month(generics.ListAPIView):
 
         return Response(serializer.data)
 
-# 취소사유 콤보박스
+# 취소사유 콤보박스 ###################################################
 class com_combo_cnclRsn_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = com_cdd
-        fields = ('std_grp_code','std_detl_code','std_detl_code_nm','rmrk','sort_seq_no')
+        fields = '__all__'
 
 
 class com_combo_cnclRsn(generics.ListAPIView):
@@ -1589,15 +1593,10 @@ class com_combo_cnclRsn(generics.ListAPIView):
     serializer_class = com_combo_cnclRsn_Serializer
 
     def list(self, request):
-        l_yr = request.GET.get('yr', "")
-        l_apl_term = request.GET.get('apl_term', "")
-        l_mp_id = request.GET.get('mp_id', "")
-        l_user_id = request.GET.get('user_id', "")
-        
 
         queryset = self.get_queryset()
         
-        query = " select id,std_grp_code,std_detl_code,std_detl_code_nm,rmrk,sort_seq_no from service20_com_cdd where std_grp_code = 'MS0004' and use_indc = 'Y'"
+        query = " select std_detl_code, std_detl_code_nm from service20_com_cdd where std_grp_code = 'ms0004' "
 
         queryset = com_cdd.objects.raw(query)
 
@@ -1609,7 +1608,7 @@ class com_combo_cnclRsn(generics.ListAPIView):
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
 
-        return Response(serializer.data)        
+        return Response(serializer.data)    
 
 class com_combo_repdiv_Serializer(serializers.ModelSerializer):
 
