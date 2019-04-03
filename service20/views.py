@@ -1596,7 +1596,7 @@ class com_combo_cnclRsn(generics.ListAPIView):
 
         queryset = self.get_queryset()
         
-        query = " select std_detl_code, std_detl_code_nm from service20_com_cdd where std_grp_code = 'ms0004' "
+        query = " select std_detl_code, std_detl_code_nm from service20_com_cdd where std_grp_code = 'ms0004' and std_detl_code <> '00' "
 
         queryset = com_cdd.objects.raw(query)
 
