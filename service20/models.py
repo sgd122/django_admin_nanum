@@ -1391,6 +1391,33 @@ class cm_cnv_scr(models.Model):
     unique_together=("eval_item", "eval_cd", "eval_seq")
 
 
+class mp_cnv_scr(models.Model):
+  mp_id = models.CharField(max_length=10, null=False, verbose_name='멘토링 프로그램ID' )
+  eval_item = models.CharField(max_length=2, null=False, verbose_name='항목(MS0023)' )
+  eval_cd = models.CharField(max_length=10, null=False, verbose_name='항목 종류' )
+  eval_seq = models.PositiveIntegerField(null=False, verbose_name='순서' )
+  eval_div = models.CharField(max_length=1, null=True, blank=True, verbose_name='점수/코드 종류' )
+  min_scr = models.PositiveIntegerField(null=False, verbose_name='최소 점수' )
+  max_scr = models.PositiveIntegerField(null=False, verbose_name='최대 점수' )
+  grade = models.CharField(max_length=50, null=False, verbose_name='코드 점수' )
+  eval_unit = models.CharField(max_length=10, null=False, verbose_name='단위' )
+  fin_scr = models.PositiveIntegerField(null=False, verbose_name='점수' )
+  ins_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='입력자ID' )
+  ins_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력자IP' )
+  ins_dt = models.DateTimeField(null=True, blank=True, verbose_name='입력일시' )
+  ins_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력프로그램ID' )
+  upd_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='수정자ID' )
+  upd_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정자IP' )
+  upd_dt = models.DateTimeField(null=True, blank=True, verbose_name='수정일시' )
+  upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
+
+
+  class Meta:
+    verbose_name = '프로그램별 점수변환(환산)표'
+    verbose_name_plural =  verbose_name
+    unique_together=("mp_id", "eval_item", "eval_cd", "eval_seq")
+
+
 
 
 class cm_sms(models.Model):
@@ -2266,7 +2293,7 @@ class bbs2(models.Model):
 class mpgm_introduce(models.Model):
   subject = models.CharField(max_length=255, null=True, blank=True, verbose_name='타이틀' )
   name = models.CharField(max_length=50, null=True, blank=True, verbose_name='작성자' )
-  mp_id = models.CharField(max_length=10, null=False, choices=(('P190001','거점중학교육성사업대학생멘토링'),('P190002','기장희망꿈나무멘토링'),('P190003','글로벌브릿지효원레인보우국악오케스트라멘토링'),('P190004','꿈사다리장학생멘토링'),('P190005','3-DAYS프로그램 멘토링'),('P190006','부산대와함께하는금정지역멘토링'),('P190007','Hi-효원멘토링'),('P190008','마음건강멘토링'),('P190009','HUGTOGETHER멘토링'),('P190010','재능봉사캠프멘토링'),('P190011','다꿈멘토링'),('P190012','부산시교육청부산대주관다문화및탈북학생대학생멘토링')), verbose_name='첫 지원 멘토링 프로그램ID' )
+  mp_id = models.CharField(max_length=10, null=False, choices=(('P190001','거점중학교육성사업대학생멘토링'),('P190002','기장희망꿈나무멘토링'),('P190003','글로벌브릿지효원레인보우국악오케스트라멘토링'),('P190004','꿈사다리장학생멘토링'),('P190005','3-DAYS프로그램 멘토링'),('P190006','부산대와함께하는금정지역멘토링'),('P190007','Hi-효원멘토링'),('P190008','마음건강멘토링'),('P190009','HUGTOGETHER멘토링'),('P190010','재능봉사캠프멘토링'),('P190011','다꿈멘토링'),('P190012','부산시교육청부산대주관다문화및탈북학생대학생멘토링'),('P190013','부산대해외봉사단')), verbose_name='첫 지원 멘토링 프로그램ID' )
   html = RichTextUploadingField()
   file = models.FileField(upload_to='files',null=True,blank=True,verbose_name='파일')
   hits = models.IntegerField(max_length=50, null=True, blank=True, verbose_name='작성자' )
