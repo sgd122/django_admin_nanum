@@ -1608,7 +1608,7 @@ class com_combo_cnclRsn(generics.ListAPIView):
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
 
-        return Response(serializer.data)    
+        return Response(serializer.data)     
 
 class com_combo_repdiv_Serializer(serializers.ModelSerializer):
 
@@ -7154,6 +7154,7 @@ def MP0101M_upload_update(request):
                 fullFile = "/img/atc/"+ str(n_filename)
 
                 atc_flag = mp_mtr_atc.objects.filter(mp_id=str(l_mp_id),apl_no=str(l_apl_no),atc_seq=str(l_atc_seq[i])).exists()
+                print("::atc_flag::"+atc_flag)
                 if not atc_flag:
                     query = " insert into service20_mp_mtr_atc ( "
                     query += "    mp_id "
