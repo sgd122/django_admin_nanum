@@ -4982,7 +4982,7 @@ class MP0101M_list_chk_6(generics.ListAPIView):
         query += "                                                  ELSE 'Y'"
         query += "        END AS apl_en"
         query += "   FROM service20_mp_mtr t1"
-        query += "  INNER JOIN service20_mpgm   t2 ON (t2.mp_id = t1.mp_id)"
+        query += "  INNER JOIN service20_mpgm   t2 ON (t2.mp_id = t1.mp_id AND t2.status >= '60' ) /* 교육진행중 */ "
         query += "  WHERE 1=1"
         query += "    AND t1.apl_id = '"+str(apl_id)+"'"
         query += "    AND t2.yr in (select t3.yr from service20_mpgm t3 where t3.mp_id = '"+str(mp_id)+"')"
