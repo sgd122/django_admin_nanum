@@ -7153,21 +7153,63 @@ def MP0101M_upload_update(request):
                 fullFile = str(UPLOAD_DIR) + str(n_filename)
                 fullFile = "/img/atc/"+ str(n_filename)
 
-                query = " update service20_mp_mtr_atc "
-                query += "    set atc_cdd = '" + str(l_att_cdd[i]) + "' "
-                query += "      , atc_nm = (select std_detl_code_nm from service20_com_cdd where std_grp_code = '" + str(l_att_cdh[i]) + "' and std_detl_code = '" + str(l_att_cdd[i]) + "') "
-                query += "      , atc_file_nm = '" + str(filename) + "' "
-                query += "      , atc_file_url = '" + str(fullFile) + "' "
-                query += "      , upd_id = '" + upd_id + "'"
-                query += "      , upd_ip = '" + client_ip + "'"
-                query += "      , upd_dt = now()"
-                query += "      , upd_pgm = '" + upd_pgm + "'"
-                query += "  where mp_id = '" + str(l_mp_id) + "' "
-                query += "    and apl_no = '" + str(l_apl_no) + "' "
-                query += "    and atc_seq = '" + str(l_atc_seq[i]) + "' "
+                atc_flag = mp_mtr_atc.objects.filter(mp_id=str(l_apl_no),apl_no=str(l_apl_no),atc_seq=str(l_atc_seq[i]).exists()
+                if not atc_flag:
+                    query = " insert into service20_mp_mtr_atc ( "
+                    query += "    mp_id "
+                    query += "    , apl_no "
+                    query += "    , atc_seq "
+                    query += "    , atc_cdh "
+                    query += "    , atc_cdd "
+                    query += "    , atc_nm "
+                    query += "    , atc_file_nm "
+                    query += "    , atc_file_url "
+                    query += "    , ins_id "
+                    query += "    , ins_ip "
+                    query += "    , ins_dt "
+                    query += "    , ins_pgm "
+                    query += "    , upd_id "
+                    query += "    , upd_ip "
+                    query += "    , upd_dt "
+                    query += "    , upd_pgm "
+                    query += " ) "
+                    query += " values ( "
+                    query += "    '" + str(l_mp_id) + "'"
+                    query += "    , '" + str(l_apl_no) + "'"
+                    query += "    , (select ifnull(max(t1.atc_seq), 0) + 1 from service20_mp_mtr_atc t1 where t1.mp_id = '" + str(l_mp_id) + "' and t1.apl_no = '" + str(l_apl_no) + "') "
+                    query += "    , '" + str(l_att_cdh[i]) + "'"
+                    query += "    , '" + str(l_att_cdd[i]) + "'"
+                    query += "    , (select std_detl_code_nm from service20_com_cdd where std_grp_code = '" + str(l_att_cdh[i]) + "' and std_detl_code = '" + str(l_att_cdd[i]) + "')"
+                    query += "    , '" + str(filename) + "'"
+                    query += "    , '" + str(fullFile) + "'"
+                    query += "    , '" + str(ins_id) + "'"
+                    query += "    , '" + str(client_ip) + "'"
+                    query += "    , now() "
+                    query += "    , '" + str(ins_pgm) + "'"
+                    query += "    , '" + str(upd_id) + "'"
+                    query += "    , '" + str(client_ip) + "'"
+                    query += "    , now() "
+                    query += "    , '" + str(upd_pgm) + "'"
+                    query += " ) "
+                    
+                    print(query)
+                    cursor.execute(query)
+                else:
+                    query = " update service20_mp_mtr_atc "
+                    query += "    set atc_cdd = '" + str(l_att_cdd[i]) + "' "
+                    query += "      , atc_nm = (select std_detl_code_nm from service20_com_cdd where std_grp_code = '" + str(l_att_cdh[i]) + "' and std_detl_code = '" + str(l_att_cdd[i]) + "') "
+                    query += "      , atc_file_nm = '" + str(filename) + "' "
+                    query += "      , atc_file_url = '" + str(fullFile) + "' "
+                    query += "      , upd_id = '" + upd_id + "'"
+                    query += "      , upd_ip = '" + client_ip + "'"
+                    query += "      , upd_dt = now()"
+                    query += "      , upd_pgm = '" + upd_pgm + "'"
+                    query += "  where mp_id = '" + str(l_mp_id) + "' "
+                    query += "    and apl_no = '" + str(l_apl_no) + "' "
+                    query += "    and atc_seq = '" + str(l_atc_seq[i]) + "' "
 
-                print(query)
-                cursor.execute(query)
+                    print(query)
+                    cursor.execute(query)
 
         return HttpResponse('File Uploaded')
 
