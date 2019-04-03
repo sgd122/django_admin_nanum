@@ -8314,7 +8314,7 @@ class MP0104M_Detail(generics.ListAPIView):
         # query += " and (('" + l_mgr_yn + "' = 'Y' and t1.mgr_dt IS NOT NULL) OR ('" + l_mgr_yn + "' <> 'Y' and t1.mgr_dt IS NULL))"
         query += " and (t1.att_sdt >= CONCAT('" + l_yr + "-" + l_month1 + "', '-01') AND t1.att_sdt < ADDDATE(LAST_DAY(CONCAT('" + l_yr + "-" + l_month2 + "', '-01')), 1))"
         query += " order by t1.att_no DESC    /* 출석순서(seq) */ "
-        print(query)
+        
         queryset = mp_att.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
