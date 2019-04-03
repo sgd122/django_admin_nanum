@@ -7153,7 +7153,7 @@ def MP0101M_upload_update(request):
                 fullFile = str(UPLOAD_DIR) + str(n_filename)
                 fullFile = "/img/atc/"+ str(n_filename)
 
-                atc_flag = mp_mtr_atc.objects.filter(mp_id=str(l_apl_no),apl_no=str(l_apl_no),atc_seq=str(l_atc_seq[i])).exists()
+                atc_flag = mp_mtr_atc.objects.filter(mp_id=str(l_mp_id),apl_no=str(l_apl_no),atc_seq=str(l_atc_seq[i])).exists()
                 if not atc_flag:
                     query = " insert into service20_mp_mtr_atc ( "
                     query += "    mp_id "
