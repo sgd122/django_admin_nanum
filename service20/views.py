@@ -8308,15 +8308,13 @@ class MP0104M_Detail(generics.ListAPIView):
         query += " and t3.term_div    = '" + l_term_div + "'    /* 학기 */ "      
         query += " and t1.mp_id    = '" + l_mp_id + "'   /* 멘토링 프로그램id */ "
         query += " and t3.apl_id   = '" + l_apl_id + "' "
-        query += " and t1.appr_div   = '" + l_appr_yn + "'   "
-        query += " and t1.mgr_div   = '" + l_mgr_yn + "'   "
+        query += " and t1.appr_div   like ifnull(nullif('" + l_appr_yn + "', ''), '%%')   "
+        query += " and t1.mgr_div   like ifnull(nullif('" + l_mgr_yn + "', ''), '%%')   "
         # query += " and (('" + l_appr_yn + "' = 'Y' and t1.appr_dt IS NOT NULL) OR ('" + l_appr_yn + "' <> 'Y' and t1.appr_dt IS NULL))"
         # query += " and (('" + l_mgr_yn + "' = 'Y' and t1.mgr_dt IS NOT NULL) OR ('" + l_mgr_yn + "' <> 'Y' and t1.mgr_dt IS NULL))"
         query += " and (t1.att_sdt >= CONCAT('" + l_yr + "-" + l_month1 + "', '-01') AND t1.att_sdt < ADDDATE(LAST_DAY(CONCAT('" + l_yr + "-" + l_month2 + "', '-01')), 1))"
         query += " order by t1.att_no DESC    /* 출석순서(seq) */ "
-
-
-
+        
         queryset = mp_att.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
@@ -8328,7 +8326,6 @@ class MP0104M_Detail(generics.ListAPIView):
             return self.get_paginated_response(serializer.data)
 
         return Response(serializer.data)
-
 
 #####################################################################################
 # MP0104M - END
@@ -10650,8 +10647,8 @@ class TE0202_detail(generics.ListAPIView):
         query += "  left join service20_mpgm   t4 on (t4.mp_id    = t1.mp_id)"
         query += " left join service20_com_cdd c1 on (c1.std_grp_code  = 'mp0059' and c1.std_detl_code = t1.mp_div) "
         query += " where t1.mp_id    = '" + l_mp_id + "'    /* 멘토링 프로그램id */"
-        query += "   and t1.appr_div    = '" + l_appr_yn + "' "
-        query += "   and t1.mgr_div    = '" + l_mgr_yn + "' "
+        query += " and t1.appr_div   like ifnull(nullif('" + l_appr_yn + "', ''), '%%')   "
+        query += " and t1.mgr_div   like ifnull(nullif('" + l_mgr_yn + "', ''), '%%')   "
         # query += "   and (('" + l_appr_yn + "' = 'Y' and t1.appr_dt is not null) or ('" + l_appr_yn + "' <> 'Y' and t1.appr_dt is null))"
         # query += "   and (('" + l_mgr_yn + "' = 'Y' and t1.mgr_dt is not null) or ('" + l_mgr_yn + "' <> 'Y' and t1.mgr_dt is null))"
         query += " and (t1.att_sdt >= CONCAT('" + l_yr + "-" + l_month1 + "', '-01') AND t1.att_sdt < ADDDATE(LAST_DAY(CONCAT('" + l_yr + "-" + l_month2 + "', '-01')), 1))"
@@ -10714,8 +10711,8 @@ def TE0202_Approval(request):
     query += "     , upd_dt = now()"
     query += "     , upd_pgm = '" + upd_pgm + "'"
     query += " where t1.mp_id = '" + l_mp_id + "'"
-    query += "   and t1.appr_div    = '" + l_appr_yn + "' "
-    query += "   and t1.mgr_div    = '" + l_mgr_yn + "' "
+    query += " and t1.appr_div   like ifnull(nullif('" + l_appr_yn + "', ''), '%%')   "
+    query += " and t1.mgr_div   like ifnull(nullif('" + l_mgr_yn + "', ''), '%%')   "
     # query += "    and (('" + l_appr_yn + "' = 'Y' and t1.appr_dt is not null) or ('" + l_appr_yn + "' <> 'Y' and t1.appr_dt is null))"
     # query += "   and (('" + l_mgr_yn + "' = 'Y' and t1.mgr_dt is not null) or ('" + l_mgr_yn + "' <> 'Y' and t1.mgr_dt is null))"
     query += "   and t1.apl_no = '" + l_apl_no + "'"
