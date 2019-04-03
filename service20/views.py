@@ -7137,7 +7137,6 @@ def MP0101M_upload_update(request):
             print("l_upload=====" + str(l_upload_no[i]) + "    i=====" + str(i))
 
             if(str(l_upload_no[i]) == str(i)):
-                print("::atc_flag_11::")
                 file = request.FILES['service_upload' + str(i)]
                 print(file)
                 filename = file._name
