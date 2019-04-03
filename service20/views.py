@@ -4940,6 +4940,7 @@ class MP0101M_list_chk_6_Serializer(serializers.ModelSerializer):
     apl_cnt = serializers.SerializerMethodField()
     intv_rslt = serializers.SerializerMethodField()
     fnl_rslt = serializers.SerializerMethodField()
+    fnl_rslt1 = serializers.SerializerMethodField()
     apl_en = serializers.SerializerMethodField()
     class Meta:
         model = mp_mtr
@@ -4951,6 +4952,8 @@ class MP0101M_list_chk_6_Serializer(serializers.ModelSerializer):
         return obj.intv_rslt
     def get_fnl_rslt(self, obj):
         return obj.fnl_rslt
+    def get_fnl_rslt1(self, obj):
+        return obj.fnl_rslt1
     def get_apl_en(self, obj):
         return obj.apl_en
 
@@ -4969,6 +4972,7 @@ class MP0101M_list_chk_6(generics.ListAPIView):
         query += "      , COUNT(t1.apl_id)           AS apl_cnt  /* 지원여부 */"
         query += "      , IFNULL(MAX(intv_rslt), 'N') AS intv_rslt /* 합격여부 */"
         query += "      , IFNULL(MAX(fnl_rslt), 'N') AS fnl_rslt /* 합격여부 */"
+        query += "      , IFNULL(MAX(IFNULL(intv_rslt,fnl_rslt)), 'N') AS fnl_rslt1 /* 합격여부 */"        
         query += "      , CASE (SELECT trim( IFNULL(MIN(ATT_CDD), 'Y') ) "
         query += "                FROM service20_mp_sub"
         query += "               WHERE MP_ID   = '"+str(mp_id)+"'"
