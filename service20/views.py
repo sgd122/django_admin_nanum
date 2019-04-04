@@ -10869,6 +10869,7 @@ def TE0202_Approval(request):
     query += "                                                      and mnte_id = '" + l_mnte_id + "' )"
     query += "                         else null end"
     query += "     , t1.appr_div = 'Y'"
+    query += "     , t1.att_sts = 'C'"
     # query += "     , t1.mgr_dt = case when '" + l_status + "' = 'C' then 'C' else null end"
     # query += "     , t1.mgr_id = case when '" + l_status + "' = 'C' then '" + l_user_id + "' else null end"
     # query += "     , t1.att_sts = case when '" + l_status + "' = 'B' then 'C' "
