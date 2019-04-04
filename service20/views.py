@@ -1603,7 +1603,7 @@ class com_combo_mnteCnclRsn(generics.ListAPIView):
 
         queryset = self.get_queryset()
         
-        query = " select id,std_grp_code,std_detl_code,std_detl_code_nm,rmrk,sort_seq_no from service20_com_cdd where std_grp_code = 'MS0004' and use_indc = 'Y'"
+        query = " select id,std_grp_code,std_detl_code,std_detl_code_nm,rmrk,sort_seq_no from service20_com_cdd where std_grp_code = 'MP0098' and use_indc = 'Y'"
 
         queryset = com_cdd.objects.raw(query)
 
