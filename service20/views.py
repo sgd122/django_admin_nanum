@@ -1581,6 +1581,46 @@ class com_combo_month(generics.ListAPIView):
         return Response(serializer.data)
 
 ###############################################################      
+# 취소사유 (콤보) Start 
+###############################################################
+class com_combo_cnclRsn_Serializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = com_cdd
+        fields = ('std_grp_code','std_detl_code','std_detl_code_nm','rmrk','sort_seq_no')
+
+
+class com_combo_cnclRsn(generics.ListAPIView):
+    queryset = com_cdd.objects.all()
+    serializer_class = com_combo_cnclRsn_Serializer
+
+    def list(self, request):
+        l_yr = request.GET.get('yr', "")
+        l_apl_term = request.GET.get('apl_term', "")
+        l_mp_id = request.GET.get('mp_id', "")
+        l_user_id = request.GET.get('user_id', "")
+        
+
+        queryset = self.get_queryset()
+        
+        query = " select id,std_grp_code,std_detl_code,std_detl_code_nm,rmrk,sort_seq_no from service20_com_cdd where std_grp_code = 'ms0004' and use_indc = 'Y'"
+
+        queryset = com_cdd.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data) 
+###############################################################      
+# 취소사유 (콤보) End
+############################################################### 
+#
+###############################################################      
 # 멘티 학습외 취소사유 (콤보) Start 
 ###############################################################
 class com_combo_mnteCnclRsn_Serializer(serializers.ModelSerializer):
