@@ -6895,8 +6895,8 @@ def MP0101M_upload(request):
     req = request
     DIR = os.getcwd()
     UPLOAD_DIR = str(DIR) + '/media/MP0101M/'
-    UPLOAD_DIR = '/NANUM/www/img/atc/'
-    # UPLOAD_DIR = 'img'
+    # UPLOAD_DIR = '/NANUM/www/img/atc/'
+    UPLOAD_DIR = 'img'
     
     if request.method == 'POST':
         l_mp_id = request.POST.get("mp_id")
@@ -6918,6 +6918,7 @@ def MP0101M_upload(request):
         l_att_cdh = list()
         l_service_upload_text = list()
         l_service_upload = list()
+        l_upload_no = list()
 
 
         for i in range(0,int(l_length)):
@@ -6925,21 +6926,18 @@ def MP0101M_upload(request):
             l_service_upload_text.append(request.POST.get('service_upload_text'+str(i), ""))
             l_service_upload.append(request.POST.get('service_upload'+str(i), ""))
             l_att_cdh.append(request.POST.get('att_cdh_up'+str(i), ""))
+            l_upload_no.append(request.POST.get('upload_no'+str(i), ""))
+            
+            print("l_upload=====" + str(l_upload_no[i]) + "    i=====" + str(i))
 
-            print("::file_sgd::"+request.POST.get('service_upload'+str(i), ""))
-            # file = request.FILES['service_upload' + str(i)]
-            try:
+            if(str(l_upload_no[i]) == str(i)):
                 file = request.FILES['service_upload' + str(i)]
-            except MultiValueDictKeyError:
-                file = False
-
-            print(file)
-            if file != False:
+                print(file)
                 filename = file._name
                 n_filename = str(l_mp_id) + str(l_apl_id) + str(l_att_cdh[i]) + str(l_att_cdd[i]) + os.path.splitext(filename)[1]
                 print(n_filename)
                 print (UPLOAD_DIR)
-            
+                
                 fp = open('%s/%s' % (UPLOAD_DIR, n_filename) , 'wb')
                 for chunk in file.chunks():
                     fp.write(chunk)
