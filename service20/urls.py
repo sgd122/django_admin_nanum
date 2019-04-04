@@ -262,8 +262,13 @@ urlpatterns = [
     #
     ########################################################################################
     # 학습외신청(멘토) 리스트
-    path('MP0102M/mento/list/', MP0102M_list.as_view(), name='MP0102M_list'),   
-    path('MP0102M/mento/list_detail/', MP0102M_list.as_view(), name='MP0102M_list'),   
+    path('MP0102M/mento/list/', MP0102M_list.as_view(), name='MP0102M_list'), 
+    # 학습외신청(멘토) 학습외 신청 및 취소
+    path('MP0102M/mento/update/', MP0102M_mento_update, name='MP0102M_mento_update'),
+    # 학습외신청(멘토) 보호자 승인 양식 detail set
+    path('MP0102M/mento/report/', MP0102M_mento_report.as_view(), name='MP0102M_mento_report'),   
+    # 학습외신청(멘토) 취소사유 콤보
+    path('MP0102M/mento/combo/cncl/', MP0102M_mento_cncl.as_view(), name='MP0102M_mento_cncl'),   
     ########################################################################################
     # 학습외신청(멘토) 리스트(MP0102M - END )
     #

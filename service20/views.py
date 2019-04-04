@@ -7418,13 +7418,71 @@ class MP0101M_service_combo(generics.ListAPIView):
 # 학습외신청(멘토) 리스트 ###################################################
 class MP0102M_list_Serializer(serializers.ModelSerializer):
 
-    testField = serializers.SerializerMethodField()
+    mp_name = serializers.SerializerMethodField()
+    mnte_no = serializers.SerializerMethodField()
+    mnte_id = serializers.SerializerMethodField()
+    mnte_nm = serializers.SerializerMethodField()
+    spc_no = serializers.SerializerMethodField()
+    spc_status_nm = serializers.SerializerMethodField()
+    mte_status = serializers.SerializerMethodField()
+    mtr_status = serializers.SerializerMethodField()
+    mtr_mgr_id = serializers.SerializerMethodField()
+    mtr_mgr_dt = serializers.SerializerMethodField()
+    mte_mgr_id = serializers.SerializerMethodField()
+    mte_mgr_dt = serializers.SerializerMethodField()
+    mgr_nm = serializers.SerializerMethodField()
+    apl_no = serializers.SerializerMethodField()
+    spc_apl_no = serializers.SerializerMethodField()
+    att_status = serializers.SerializerMethodField()
+    att_no = serializers.SerializerMethodField()
+    sati_status = serializers.SerializerMethodField()
+    cncl_rsn = serializers.SerializerMethodField()
+    partici = serializers.SerializerMethodField()
+
     class Meta:
         model = mp_spc
-        fields = ('id','mp_id','spc_no','spc_div','status','spc_name','spc_intro','yr','yr_seq','apl_ntc_fr_dt','apl_ntc_to_dt','apl_term','apl_fr_dt','apl_to_dt','mnt_term','mnt_fr_dt','mnt_to_dt','cnf_dt','appr_tm','tot_apl','cnt_apl','cnt_pln','cnt_att','use_div','pic_div','rep_div','ord_div','grd_appr_div','tch_appr_div')
+        fields = '__all__'
 
-    def get_testField(self, obj):
-        return 'test'     
+    def get_mp_name(self, obj):
+        return obj.mp_name
+    def get_mnte_no(self, obj):
+        return obj.mnte_no
+    def get_mnte_id(self, obj):
+        return obj.mnte_id
+    def get_mnte_nm(self, obj):
+        return obj.mnte_nm
+    def get_spc_no(self, obj):
+        return obj.spc_no
+    def get_spc_status_nm(self, obj):
+        return obj.spc_status_nm
+    def get_mte_status(self, obj):
+        return obj.mte_status
+    def get_mtr_status(self, obj):
+        return obj.mtr_status
+    def get_mtr_mgr_id(self, obj):
+        return obj.mtr_mgr_id
+    def get_mtr_mgr_dt(self, obj):
+        return obj.mtr_mgr_dt
+    def get_mte_mgr_id(self, obj):
+        return obj.mte_mgr_id
+    def get_mte_mgr_dt(self, obj):
+        return obj.mte_mgr_dt
+    def get_mgr_nm(self, obj):
+        return obj.mgr_nm
+    def get_apl_no(self, obj):
+        return obj.apl_no
+    def get_spc_apl_no(self, obj):
+        return obj.spc_apl_no
+    def get_att_status(self, obj):
+        return obj.att_status
+    def get_att_no(self, obj):
+        return obj.att_no
+    def get_sati_status(self, obj):
+        return obj.sati_status
+    def get_cncl_rsn(self, obj):
+        return obj.cncl_rsn
+    def get_partici(self, obj):
+        return obj.partici
 
 
 class MP0102M_list(generics.ListAPIView):
@@ -7435,13 +7493,85 @@ class MP0102M_list(generics.ListAPIView):
 
     def list(self, request):
         l_yr = request.GET.get('yr', "")
-        l_apl_term = request.GET.get('apl_term', "")
+        l_apl_term = request.GET.get('trn_term', "")
         l_status = request.GET.get('status', "")
-        ida = request.GET.get('user_id', "")
+        l_spc_div = request.GET.get('spc_div', "")
+        l_apl_id = request.GET.get('apl_id', "")
         
         queryset = self.get_queryset()
         
-        query = "select * from service20_mp_spc where yr='"+l_yr+"' and apl_term='"+l_apl_term+"'"
+        query = "/* 학습외 프로그램별 멘티 조회 */    "
+        query += " select t2.id, t3.mp_id as mp_id "
+        query += "     , t6.mp_name as mp_name "
+        query += "     , t1.mnte_no as mnte_no "
+        query += "     , t1.mnte_id as mnte_id "
+        query += "     , t5.mnte_nm as mnte_nm "
+        query += "     , t3.spc_no as spc_no  "
+        query += "     , t2.spc_div as spc_div "
+        query += "     , t2.status as spc_status "
+        query += "     , t7.std_detl_code_nm as spc_status_nm "
+        query += "     , t1.status as mte_status "
+        query += "     , t3.status as mtr_status "
+        query += "     , t2.spc_name as spc_name "
+        query += "     , t3.mgr_id as mtr_mgr_id "
+        query += "     , t3.mgr_dt as mtr_mgr_dt "
+        query += "     , t1.appr_id as appr_id "
+        query += "     , t1.appr_dt as appr_dt "
+        query += "     , t1.appr_nm as appr_nm "
+        query += "     , t1.mgr_id as mte_mgr_id "
+        query += "     , t1.mgr_dt as mte_mgr_dt "
+        query += "     , t6.mgr_nm as mgr_nm "
+        query += "     , substring(t2.ins_dt, 1, 10) as ins_dt "
+        query += "     , t2.spc_intro as spc_intro "
+        query += "     , t2.yr as yr "
+        query += "     , t2.yr_seq as yr_seq "
+        query += "     , substring(t2.apl_ntc_fr_dt, 1, 10) as apl_ntc_fr_dt "
+        query += "     , substring(t2.apl_ntc_to_dt, 1, 10) as apl_ntc_to_dt "
+        query += "     , t2.apl_term as apl_term "
+        query += "     , substring(t2.apl_fr_dt, 1, 10) as apl_fr_dt "
+        query += "     , substring(t2.apl_to_dt, 1, 10) as apl_to_dt "
+        query += "     , case when t2.mnt_term = '10' then '1' "
+        query += "            else '2' end as mnt_term "
+        query += "     , substring(t2.mnt_fr_dt, 1, 10) as mnt_fr_dt "
+        query += "     , substring(t2.mnt_to_dt, 1, 10) as mnt_to_dt "
+        query += "     , substring(t2.cnf_dt, 1, 10) as cnf_dt "
+        query += "     , t2.appr_tm as appr_tm "
+        query += "     , t2.tot_apl as tot_apl "
+        query += "     , t2.cnt_apl as cnt_apl "
+        query += "     , t2.cnt_pln as cnt_pln "
+        query += "     , t2.cnt_att as cnt_att "
+        query += "     , t2.use_div as use_div "
+        query += "     , t2.pic_div as pic_div "
+        query += "     , t2.rep_div as rep_div "
+        query += "     , t2.ord_div as ord_div "
+        query += "     , t3.apl_no as apl_no "
+        query += "     , t3.spc_apl_no as spc_apl_no "
+        query += "     , t8.att_sts as att_status "
+        query += "     , t8.att_no as att_no "
+        query += "     , (select count(0) "
+        query += "          from service20_cm_surv_a st1 "
+        query += "          left join service20_cm_surv_h st2 on (st2.pgm_id = st1.pgm_id and st2.surv_seq = st1.surv_seq and st2.ansr_id = st1.ansr_id) "
+        query += "          left join service20_cm_surv_p st3 on (st3.pgm_id = st1.pgm_id) "
+        query += "         where st3.spc_no = t2.spc_no "
+        query += "     ) as sati_status "
+        query += "     , t9.std_detl_code_nm as cncl_rsn "
+        query += "     , t10.std_detl_code_nm as partici "
+        query += "  from service20_mp_spc_mte t1 "
+        query += "  left join service20_mp_spc t2 on (t2.mp_id = t1.mp_id and t2.spc_no = t1.spc_no) "
+        query += "  left join service20_mp_spc_mtr t3 on (t3.mp_id = t1.mp_id and t3.spc_no = t1.spc_no and t3.spc_apl_no = t1.spc_apl_no and t3.apl_no = t1.apl_no) "
+        query += "  left join service20_mp_mtr t4 on (t4.mp_id = t1.mp_id and t4.apl_no = t1.apl_no) "
+        query += "  left join service20_mp_mte t5 on (t5.mp_id = t1.mp_id and t5.mnte_no = t1.mnte_no and t5.apl_no = t1.apl_no) "
+        query += "  left join service20_mpgm t6 on (t6.mp_id = t1.mp_id) "
+        query += "  left join service20_com_cdd t7 on (t7.std_grp_code = 'MP0084' and t7.std_detl_code = t2.status) "
+        query += "  left join service20_mp_att t8 on (t8.mp_id = t1.mp_id and t8.apl_no = t1.apl_no and t8.spc_no = t2.spc_no) "
+        query += "  left join service20_com_cdd t9 on (t9.std_grp_code = 'MP0099' and t9.std_detl_code = t3.cncl_rsn) "
+        query += "  left join service20_com_cdd t10 on (t10.std_grp_code = 'MP0054' and t10.std_detl_code = t5.status) "
+        query += " where t2.yr = '" + str(l_yr) + "' "
+        query += "   and t2.apl_term = '" + str(l_apl_term) + "' "
+        query += "   and t2.spc_div like ifnull(nullif('" + str(l_spc_div) + "', ''), '%%') "
+        query += "   and t2.status like ifnull(nullif('" + str(l_status) + "', ''), '%%') "
+        query += "   and t3.apl_id = trim('" + str(l_apl_id) + "') "
+
         queryset = mp_spc.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
@@ -7454,34 +7584,182 @@ class MP0102M_list(generics.ListAPIView):
 
         return Response(serializer.data)
 
-# 학습외신청(멘토) Detail ###################################################
-class MP0102M_detail_Serializer(serializers.ModelSerializer):
+# 멘토링 프로그램 - 해외봉사활동 프로그램 (update) ###################################################
+@csrf_exempt
+def MP0102M_mento_update(request):
+    l_mp_id = request.POST.get('mp_id', "")    
+    l_apl_no = request.POST.get('apl_no', "")
+    l_spc_no = request.POST.get('spc_no', "")
+    l_spc_apl_no = request.POST.get('spc_apl_no', "")
+    l_spc_status = request.POST.get('spc_status', "")
+    l_cncl_rsn = request.POST.get('cncl_rsn', "")
+
+    ins_id = request.POST.get('ins_id', "")
+    ins_ip = request.POST.get('ins_ip', "")
+    ins_dt = request.POST.get('ins_dt', "")
+    ins_pgm = request.POST.get('ins_pgm', "")
+    upd_id = request.POST.get('upd_id', "")
+    upd_ip = request.POST.get('upd_ip', "")
+    upd_dt = request.POST.get('upd_dt', "")
+    upd_pgm = request.POST.get('upd_pgm', "")
+
+    client_ip = request.META['REMOTE_ADDR']
+    
+    query = " /* 학습외 신청 및 취소 */ "
+    query += " update service20_mp_spc_mtr "
+    query += "   set status = '" + l_spc_status + "' "
+    query += "     , cncl_rsn = '" + l_cncl_rsn + "' "
+    query += "     , upd_id = '" + upd_id + "' "
+    query += "     , upd_ip = '" + client_ip + "' "
+    query += "     , upd_dt = now() "
+    query += "     , upd_pgm = '" + upd_pgm + "' "
+    query += " where mp_id = '" + l_mp_id + "' "
+    query += "   and apl_no = '" + l_apl_no + "' "
+    query += "   and spc_no = '" + l_spc_no + "' "
+    query += "   and spc_apl_no = '" + l_spc_apl_no + "' "
+        
+    cursor = connection.cursor()
+    query_result = cursor.execute(query) 
+
+    context = {'message': 'Ok'}
+
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True}) 
+
+
+# 학습외신청(멘토) 보호자 승인 양식 detail set ###################################################
+class MP0102M_mento_report_Serializer(serializers.ModelSerializer):
+
+    grd_rel = serializers.SerializerMethodField()
+    apl_id = serializers.SerializerMethodField()
+    apl_nm = serializers.SerializerMethodField()
+    mnte_nm = serializers.SerializerMethodField()
+    t_gen = serializers.SerializerMethodField()
+    m_gen = serializers.SerializerMethodField()
+    t_mob_no = serializers.SerializerMethodField()
+    m_mob_no = serializers.SerializerMethodField()
+    spc_name = serializers.SerializerMethodField()
+    dept_nm = serializers.SerializerMethodField()
+    mp_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = mp_mte
+        fields = '__all__'
+
+    def get_grd_rel(self, obj):
+        return obj.grd_rel
+    def get_apl_id(self, obj):
+        return obj.apl_id
+    def get_apl_nm(self, obj):
+        return obj.apl_nm
+    def get_mnte_nm(self, obj):
+        return obj.mnte_nm
+    def get_t_gen(self, obj):
+        return obj.t_gen
+    def get_m_gen(self, obj):
+        return obj.m_gen
+    def get_t_mob_no(self, obj):
+        return obj.t_mob_no
+    def get_m_mob_no(self, obj):
+        return obj.m_mob_no
+    def get_spc_name(self, obj):
+        return obj.spc_name
+    def get_dept_nm(self, obj):
+        return obj.dept_nm
+    def get_mp_name(self, obj):
+        return obj.mp_name
+
+class MP0102M_mento_report(generics.ListAPIView):
+    queryset = mp_mte.objects.all()
+    serializer_class = MP0102M_mento_report_Serializer
+
+    # mp_spc
+
+    def list(self, request):
+        l_mp_id = request.GET.get('mp_id', "")
+        l_mnte_no = request.GET.get('mnte_no', "")
+        l_spc_no = request.GET.get('spc_no', "")
+        l_spc_apl_no = request.GET.get('spc_apl_no', "")
+        
+        queryset = self.get_queryset()
+        
+        query = "/* 보호자승인  확인서 */ "
+        query += " select t4.id as id "
+        query += "     , t1.mp_id as mp_id "
+        query += "     , t1.mnte_no as mnte_no "
+        query += "     , t1.mnte_id as mnte_id "
+        query += "     , t4.mnte_nm as mnte_nm "
+        query += "     , t4.mnte_nm_e as mnte_nm_e "
+        query += "     , t5.dept_nm as dept_nm "
+        query += "     , t4.sch_nm as sch_nm "
+        query += "     , t4.sch_yr as sch_yr "
+        query += "     , t4.mob_no as t_mob_no "
+        query += "     , t4.h_addr as h_addr "
+        query += "     , case when t4.gen = 'm' then '남' "
+        query += "            else '여' end as t_gen "
+        query += "     , t4.grd_tel as grd_tel "
+        query += "     , t6.std_detl_code_nm as grd_rel "
+        query += "     , t2.apl_no as apl_no "
+        query += "     , t2.apl_id as apl_id "
+        query += "     , t5.apl_nm as apl_nm "
+        query += "     , t5.mob_no as m_mob_no "
+        query += "     , case when t5.gen = 'm' then '남' "
+        query += "            else '여' end as m_gen "
+        query += "     , t3.spc_name as spc_name "
+        query += "     , t7.mp_name as mp_name "
+        query += "     , t4.yr as yr "
+        query += "  from service20_mp_spc_mte t1 "
+        query += "  left join service20_mp_spc_mtr t2 on (t2.mp_id = t1.mp_id and t2.apl_no = t1.apl_no and t2.spc_no = t1.spc_no and t2.spc_apl_no = t1.spc_apl_no) "
+        query += "  left join service20_mp_spc t3 on (t3.mp_id = t1.mp_id and t3.spc_no = t1.spc_no) "
+        query += "  left join service20_mp_mte t4 on (t4.mp_id = t1.mp_id and t4.mnte_no = t1.mnte_no and t4.apl_no = t1.apl_no) "
+        query += "  left join service20_mp_mtr t5 on (t5.mp_id = t1.mp_id and t5.apl_no = t1.apl_no) "
+        query += "  left join service20_com_cdd t6 on (t6.std_grp_code = 'MP0047' and t6.std_detl_code = t4.grd_rel) "
+        query += "  left join service20_mpgm t7 on (t7.mp_id = t1.mp_id) "
+        query += " where t1.mp_id = '" + l_mp_id + "' "
+        query += "   and t1.mnte_no = '" + l_mnte_no + "' "
+        query += "   and t1.spc_no = '" + l_spc_no + "' "
+        query += "   and t1.spc_apl_no = '" + l_spc_apl_no + "' "
+
+        print(query)
+
+        queryset = mp_mte.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+
+# 학습외신청(멘토) 취소사유 콤보 ###################################################
+class MP0102M_mento_cncl_Serializer(serializers.ModelSerializer):
 
     testField = serializers.SerializerMethodField()
     class Meta:
-        model = mp_spc
-        fields = ('id','mp_id','spc_no','spc_div','status','spc_name','spc_intro','yr','yr_seq','apl_ntc_fr_dt','apl_ntc_to_dt','apl_term','apl_fr_dt','apl_to_dt','mnt_term','mnt_fr_dt','mnt_to_dt','cnf_dt','appr_tm','tot_apl','cnt_apl','cnt_pln','cnt_att','use_div','pic_div','rep_div','ord_div','grd_appr_div','tch_appr_div')
+        model = com_cdd
+        fields = '__all__'
 
     def get_testField(self, obj):
         return 'test'     
 
 
-class MP0102M_detail(generics.ListAPIView):
-    queryset = mp_spc.objects.all()
-    serializer_class = MP0102M_detail_Serializer
+class MP0102M_mento_cncl(generics.ListAPIView):
+    queryset = com_cdd.objects.all()
+    serializer_class = MP0102M_mento_cncl_Serializer
 
     # mp_spc
 
     def list(self, request):
-        l_yr = request.GET.get('yr', "")
-        l_apl_term = request.GET.get('apl_term', "")
-        l_status = request.GET.get('status', "")
-        ida = request.GET.get('user_id', "")
-        
         queryset = self.get_queryset()
         
-        query = "select * from service20_mp_spc where yr='"+l_yr+"' and apl_term='"+l_apl_term+"'"
-        queryset = mp_spc.objects.raw(query)
+        query = "select '0' as id, '' as std_detl_code, '선택' as std_detl_code_nm "
+        query += "union "
+        query += "select id, std_detl_code, std_detl_code_nm from service20_com_cdd where std_grp_code = 'MP0099'; "
+
+        queryset = com_cdd.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
