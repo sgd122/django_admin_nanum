@@ -51,8 +51,8 @@ urlpatterns = [
     path('com/combo/mp/status/', com_combo_mp_status.as_view(), name='com_combo_mp_status'),
     # 월단위 콤보박스
     path('com/combo/month/', com_combo_month.as_view(), name='com_combo_month'),
-    # 취소사유 콤보박스
-    path('com/combo/cnclRsn/', com_combo_cnclRsn.as_view(), name='com_combo_cnclRsn'),
+    # 학습외 멘티 취소사유 콤보박스
+    path('com/combo/mnteCnclRsn/', com_combo_mnteCnclRsn.as_view(), name='com_combo_mnteCnclRsn'),   
     path('com/combo/repdiv/', com_combo_repdiv.as_view(), name='com_combo_repdiv'), 
     path('com/combo/com_cdd/', com_combo_com_cdd.as_view(), name='com_combo_com_cdd'), 
     path('com/combo/program2/', com_combo_program2.as_view(), name='com_combo_program2'), 

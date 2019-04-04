@@ -1580,23 +1580,30 @@ class com_combo_month(generics.ListAPIView):
 
         return Response(serializer.data)
 
-# 취소사유 콤보박스 ###################################################
-class com_combo_cnclRsn_Serializer(serializers.ModelSerializer):
+###############################################################      
+# 멘티 학습외 취소사유 (콤보) Start 
+###############################################################
+class com_combo_mnteCnclRsn_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = com_cdd
-        fields = '__all__'
+        fields = ('std_grp_code','std_detl_code','std_detl_code_nm','rmrk','sort_seq_no')
 
 
-class com_combo_cnclRsn(generics.ListAPIView):
+class com_combo_mnteCnclRsn(generics.ListAPIView):
     queryset = com_cdd.objects.all()
-    serializer_class = com_combo_cnclRsn_Serializer
+    serializer_class = com_combo_mnteCnclRsn_Serializer
 
     def list(self, request):
+        l_yr = request.GET.get('yr', "")
+        l_apl_term = request.GET.get('apl_term', "")
+        l_mp_id = request.GET.get('mp_id', "")
+        l_user_id = request.GET.get('user_id', "")
+        
 
         queryset = self.get_queryset()
         
-        query = " select * from service20_com_cdd where std_grp_code = 'ms0004' and std_detl_code <> '00' "
+        query = " select id,std_grp_code,std_detl_code,std_detl_code_nm,rmrk,sort_seq_no from service20_com_cdd where std_grp_code = 'MS0004' and use_indc = 'Y'"
 
         queryset = com_cdd.objects.raw(query)
 
@@ -1608,7 +1615,10 @@ class com_combo_cnclRsn(generics.ListAPIView):
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
 
-        return Response(serializer.data)     
+        return Response(serializer.data) 
+###############################################################      
+# 멘티 학습외 취소사유 (콤보) End
+###############################################################    
 
 class com_combo_repdiv_Serializer(serializers.ModelSerializer):
 
