@@ -11772,6 +11772,217 @@ def TT0107M_update(request,pk):
 # TT0107M - END
 #####################################################################################
 
+#####################################################################################
+# MnteLrnO - START
+#####################################################################################
+
+# 멘티의 학습외 신청현황 리스트 ###################################################
+class MnteLrnO_list_Serializer(serializers.ModelSerializer):
+
+    mp_name = serializers.SerializerMethodField()
+    apl_id = serializers.SerializerMethodField()
+    apl_nm = serializers.SerializerMethodField()
+    apl_fr_dt = serializers.SerializerMethodField()
+    apl_to_dt = serializers.SerializerMethodField()
+    mnt_fr_dt = serializers.SerializerMethodField()
+    mnt_to_dt = serializers.SerializerMethodField()
+    status_nm = serializers.SerializerMethodField()
+    apply_yn = serializers.SerializerMethodField()
+    apply_status = serializers.SerializerMethodField()
+    apply_status_nm = serializers.SerializerMethodField()
+    cncl_dt = serializers.SerializerMethodField()
+    cncl_rsn = serializers.SerializerMethodField()
+    appr_appr = serializers.SerializerMethodField()
+    mgr_appr = serializers.SerializerMethodField()
+    pick_yn = serializers.SerializerMethodField()
+    surv_status = serializers.SerializerMethodField()
+    surv_status_nm = serializers.SerializerMethodField()
+    att_div = serializers.SerializerMethodField()
+    att_div_nm = serializers.SerializerMethodField()
+
+    class Meta:
+        model = mp_spc
+        fields = '__all__'
+
+    def get_mp_name(self,obj):
+        return obj.mp_name       
+    def get_apl_id(self,obj):
+        return obj.apl_id 
+    def get_apl_nm(self,obj):
+        return obj.apl_nm 
+    def get_apl_fr_dt(self,obj):
+        return obj.apl_fr_dt 
+    def get_apl_to_dt(self,obj):
+        return obj.apl_to_dt 
+    def get_mnt_fr_dt(self,obj):
+        return obj.mnt_fr_dt 
+    def get_mnt_to_dt(self,obj):
+        return obj.mnt_to_dt 
+    def get_status_nm(self,obj):
+        return obj.status_nm 
+    def get_apply_yn(self,obj):
+        return obj.apply_yn    
+    def get_apply_status(self,obj):
+        return obj.apply_status       
+    def get_apply_status_nm(self,obj):
+        return obj.apply_status_nm                  
+    def get_cncl_dt(self,obj):
+        return obj.cncl_dt 
+    def get_cncl_rsn(self,obj):
+        return obj.cncl_rsn 
+    def get_appr_appr(self,obj):
+        return obj.appr_appr     
+    def get_mgr_appr(self,obj):
+        return obj.mgr_appr    
+    def get_pick_yn(self,obj):
+        return obj.pick_yn    
+    def get_surv_status(self,obj):
+        return obj.surv_status 
+    def get_surv_status_nm(self,obj):
+        return obj.surv_status_nm 
+    def get_att_div(self,obj):
+        return obj.att_div 
+    def get_att_div_nm(self,obj):
+        return obj.att_div_nm                                                                                                             
+
+class MnteLrnO_list(generics.ListAPIView):
+    queryset = mp_spc.objects.all()
+    serializer_class = MnteLrnO_list_Serializer
+
+    def list(self, request):
+        l_user_id = request.GET.get('user_id', "")
+        l_yr = request.GET.get('yr', "")
+        l_apl_term = request.GET.get('apl_term', "")
+        l_spc_div = request.GET.get('spc_div', "")
+        l_status = request.GET.get('status', "")
+
+        queryset = self.get_queryset()
+
+        query  = "select t1.id "
+        query += ", t1.mp_id         /* 멘토링 프로그램id */ "
+        query += ", t2.mp_name "
+        query += ", t1.spc_no "
+        query += ", t1.spc_div       /* 교육구분(mp0064) */ "
+        query += ", t1.spc_name      /* 학습외 프로그램 명 */ "
+        query += ", t4.apl_id "
+        query += ", (select apl_nm from service20_vw_nanum_stdt where apl_id = t4.apl_id) as apl_nm "
+        query += ", substring(t1.apl_fr_dt,1,10) as apl_fr_dt    /* 모집기간-시작 */ "
+        query += ", substring(t1.apl_to_dt,1,10) as apl_to_dt      /* 모집기간-종료 */ "
+        query += ", substring(t1.mnt_fr_dt,1,10) as mnt_fr_dt     /* 활동기간-시작 */ "
+        query += ", substring(t1.mnt_to_dt,1,10) as mnt_to_dt     /* 활동기간-종료 */ "
+        query += ", (select std_detl_code_nm from service20_com_cdd where std_detl_code = t1.status and std_grp_code = 'mp0084') as status_nm  "
+        query += ", case when t1.status = '20' then 'Y' else 'N' end as apply_yn /* 신청*/ "
+        query += ", t3.status as apply_status /* 학습외신청상태*/ "
+        query += ", (select std_detl_code_nm from service20_com_cdd where std_detl_code = t3.status and std_grp_code = 'mp0085') as apply_status_nm "
+        query += ", t3.cncl_dt    /* 지원취소일 */ "
+        query += ", t3.cncl_rsn   /* 서류전형취소사유 */     "
+        query += ", case when t3.appr_dt is null then '미승인' else '승인' end as appr_appr    /* 보호자승인*/      "
+        query += ", case when t3.mgr_dt is null then '미승인' else '승인' end as mgr_appr    /* 관리자승인*/ "
+        query += ", case when t3.status = '40' then 'o' when t3.status = '49' then 'x' end as pick_yn /*선발*/ "
+        query += ", t5.status as surv_status /*만족도*/ "
+        query += ", (select std_detl_code_nm from service20_com_cdd where std_detl_code = t5.status and std_grp_code = 'cm0006') as surv_status_nm "
+        query += ", t6.att_div /*출석*/ "
+        query += ", (select std_detl_code_nm from service20_com_cdd where std_detl_code = t6.att_div and std_grp_code = 'mp0063') as att_div_nm "
+        query += "from service20_mp_spc t1     /* 학습외 프로그램 */ "
+        query += "inner join service20_mpgm t2 on (t2.mp_id = t1.mp_id) "
+        query += "inner join service20_mp_spc_mte t3 on (t3.mp_id = t1.mp_id  "
+        query += "  and t3.spc_no = t1.spc_no) "
+        query += "inner join service20_mp_spc_mtr t4 on (t4.mp_id = t1.mp_id  "
+        query += "  and t4.apl_no = t3.apl_no "
+        query += "  and t4.spc_no = t3.spc_no) "
+        query += "left join service20_cm_surv_h t5 on (t4.mp_id = t1.mp_id  "
+        query += " and t5.ansr_id = t3.mnte_id) "
+        query += "left join service20_mp_att_mte t6 on (t4.mp_id = t1.mp_id  "
+        query += "  and t6.apl_no = t3.apl_no) "
+        query += "where 1=1 "
+        query += "and t3.mnte_id = '" + l_user_id + "' "
+        query += "and t1.yr = '" + l_yr + "' "
+        query += "and t1.apl_term = '" + l_apl_term + "' "
+        query += "and t1.spc_div like Ifnull(Nullif('" + str(l_spc_div) + "', ''), '%%') "
+        query += "and t1.status like Ifnull(Nullif('" + str(l_status) + "', ''), '%%') "
+        query += "order by t2.yr DESC, t2.apl_term desc, t1.spc_div, t1.status "
+
+        queryset = mp_spc.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+# 학습외 신청 save
+@csrf_exempt
+def MnteLrnO_apply(request):
+
+    l_mp_id      = request.POST.get('mp_id', "")
+    l_spc_no     = request.POST.get('spc_no', "")
+    l_user_id     = request.POST.get('user_id', "")
+    l_upd_ip     = request.POST.get('upd_ip', "")
+    l_upd_pgm    = request.POST.get('upd_pgm', "")
+
+    client_ip = request.META['REMOTE_ADDR']
+
+    update_text = ""
+    update_text += "update service20_mp_spc_mte "
+    update_text += "   set apl_dt     = now()  /* 신청일 */ "
+    update_text += "     , status     = '10'  /* 상태(mp0085) 10:지원 */ "
+    update_text += "     , cncl_dt    = null   /* 지원취소일 */ "
+    update_text += "     , cncl_rsn   = '00'   /* 서류전형취소사유 */   "    
+    update_text += "     , upd_id     = '" + l_user_id + "'  /* 수정자id */ "
+    update_text += "     , upd_ip     = '" + l_upd_ip + "'  /* 수정자ip */ "
+    update_text += "     , upd_dt     = now()  /* 수정일시 */ "
+    update_text += "     , upd_pgm    = '" + l_upd_pgm + "' /* 수정프로그램id */ "
+    update_text += " where mp_id   = '" + l_mp_id + "' "
+    update_text += "   and spc_no  = '" + l_spc_no + "' "
+    update_text += "   and mnte_id = '" + l_user_id + "' "
+
+    cursor = connection.cursor()
+    query_result = cursor.execute(update_text)
+        
+    context = {'message': 'Ok'}
+
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})        
+
+# 학습외 신청취소 save
+@csrf_exempt
+def MnteLrnO_applyCncl(request):
+
+    l_cncl_rsn   = request.POST.get('cncl_rsn', "")
+    l_mp_id      = request.POST.get('mp_id', "")
+    l_spc_no     = request.POST.get('spc_no', "")
+    l_user_id    = request.POST.get('user_id', "")
+    l_upd_ip     = request.POST.get('upd_ip', "")
+    l_upd_pgm    = request.POST.get('upd_pgm', "")
+
+    client_ip = request.META['REMOTE_ADDR']
+
+    update_text = ""
+    update_text += "update service20_mp_spc_mte "
+    update_text += "   set status     = '19'  /* 상태(mp0085) 19:지원취소 */ "
+    update_text += "     , cncl_dt    = now()   /* 지원취소일 */ "
+    update_text += "     , cncl_rsn   = '" + l_cncl_rsn + "'   /* 서류전형취소사유 */   "
+    update_text += "     , upd_id     = '" + l_user_id + "'  /* 수정자id */ "
+    update_text += "     , upd_ip     = '" + l_upd_ip + "'  /* 수정자ip */ "
+    update_text += "     , upd_dt     = now()  /* 수정일시 */ "
+    update_text += "     , upd_pgm    = '" + l_upd_pgm + "' /* 수정프로그램id */ "
+    update_text += " where mp_id   = '" + l_mp_id + "' "
+    update_text += "   and spc_no  = '" + l_spc_no + "' "
+    update_text += "   and mnte_id = '" + l_user_id + "' "
+
+    cursor = connection.cursor()
+    query_result = cursor.execute(update_text)
+        
+    context = {'message': 'Ok'}
+
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
+#####################################################################################
+# MnteLrnO - END
+#####################################################################################
+
 
 @csrf_exempt
 def post_user_info(request):
