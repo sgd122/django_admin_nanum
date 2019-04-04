@@ -6895,8 +6895,8 @@ def MP0101M_upload(request):
     req = request
     DIR = os.getcwd()
     UPLOAD_DIR = str(DIR) + '/media/MP0101M/'
-    # UPLOAD_DIR = '/NANUM/www/img/atc/'
-    UPLOAD_DIR = 'img'
+    UPLOAD_DIR = '/NANUM/www/img/atc/'
+    # UPLOAD_DIR = 'img'
     
     if request.method == 'POST':
         l_mp_id = request.POST.get("mp_id")
@@ -6927,7 +6927,7 @@ def MP0101M_upload(request):
             l_service_upload.append(request.POST.get('service_upload'+str(i), ""))
             l_att_cdh.append(request.POST.get('att_cdh_up'+str(i), ""))
             l_upload_no.append(request.POST.get('upload_no'+str(i), ""))
-            
+
             print("l_upload=====" + str(l_upload_no[i]) + "    i=====" + str(i))
 
             if(str(l_upload_no[i]) == str(i)):
