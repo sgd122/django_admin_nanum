@@ -6925,7 +6925,7 @@ def MP0101M_upload(request):
             l_service_upload_text.append(request.POST.get('service_upload_text'+str(i), ""))
             l_service_upload.append(request.POST.get('service_upload'+str(i), ""))
             l_att_cdh.append(request.POST.get('att_cdh_up'+str(i), ""))
-
+            print("::file_sgd::"+request.POST.get('service_upload'+str(i), ""))
             file = request.FILES['service_upload' + str(i)]
             print(file)
             filename = file._name
