@@ -6524,6 +6524,7 @@ class MP0101M_service_cnt_Serializer(serializers.ModelSerializer):
     std_grp_code_nm = serializers.SerializerMethodField()
     chc_tp = serializers.SerializerMethodField()
     chc_cnt = serializers.SerializerMethodField()
+    chc_unit = serializers.SerializerMethodField()
 
     class Meta:
         model = mp_sub
@@ -6531,12 +6532,12 @@ class MP0101M_service_cnt_Serializer(serializers.ModelSerializer):
 
     def get_std_grp_code_nm(self,obj):
         return obj.std_grp_code_nm
-
     def get_chc_tp(self,obj):
         return obj.chc_tp
-
     def get_chc_cnt(self,obj):
         return obj.chc_cnt
+    def get_chc_unit(self,obj):
+        return obj.chc_unit
 
 
 class MP0101M_service_cnt(generics.ListAPIView):
@@ -6551,6 +6552,7 @@ class MP0101M_service_cnt(generics.ListAPIView):
         query += "     , t2.std_grp_code_nm "
         query += "     , max(case t1.att_cdd when '1' then t1.att_val end) as chc_tp   /* 선택 유형 : 1 콤보, 2 라디오, 3 체크 */ "
         query += "     , max(case t1.att_cdd when '2' then t1.att_val end) as chc_cnt  /* 선택 가능 갯수                       */ "
+        query += "     , max(case t1.att_cdd when '2' then ifnull(t1.att_unit, '') end) as chc_unit  /* 지망, 비지망 구분       */ "
         query += "  from service20_mp_sub t1 "
         query += "  left join service20_com_cdh t2 on (t2.std_grp_code = t1.att_cdh) "
         query += " where t1.mp_id   = '" + str(l_mp_id) + "'"
@@ -7300,6 +7302,51 @@ class MP0101M_service_sub(generics.ListAPIView):
 
         return Response(serializer.data)
 
+# 멘토링 프로그램 - 해외봉사활동 프로그램 (콤보) ###################################################
+class MP0101M_service_combo_Serializer(serializers.ModelSerializer):
+    std_detl_code = serializers.SerializerMethodField()
+    std_detl_code_nm = serializers.SerializerMethodField()
+
+    class Meta:
+        model = mp_sub
+        fields = '__all__'
+
+    def get_std_detl_code(self,obj):
+        return obj.std_detl_code
+
+    def get_std_detl_code_nm(self,obj):
+        return obj.std_detl_code_nm
+
+class MP0101M_service_combo(generics.ListAPIView):
+    queryset = mp_sub.objects.all()
+    serializer_class = MP0101M_service_combo_Serializer
+    
+    def list(self, request):
+        l_mp_id = request.GET.get('mp_id', "")
+        l_att_cdh = request.GET.get('att_cdh', "")
+
+        query = "/* 2.질문리스트의 선택 콤보에 들어갈 항목 리스트 조회 */"
+        query += " select t1.id, t1.att_cdd as std_detl_code  /* 선택형 답변 가능수 code */ "
+        query += "     , t1.att_val as std_detl_code_nm  /* 선택형 답변 가능수      */ "
+        query += "  from service20_mp_sub t1 "
+        query += " where t1.mp_id   = '" + str(l_mp_id) + "' "
+        query += "   and t1.att_id  = 'MP0090' /* 선택형 질문             */ "
+        query += "   and t1.att_cdh = '" + l_att_cdh + "' /* 선택형 질문 유형        */ "
+        query += "   and t1.use_yn  = 'Y' "
+        query += " order by t1.sort_seq"
+
+        print(query)
+        queryset = mp_sub.objects.raw(query)
+        
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
 #####################################################################################
 # MP0101M - END 
 #####################################################################################

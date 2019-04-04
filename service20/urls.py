@@ -248,6 +248,8 @@ urlpatterns = [
     path('MP0101M/service/report/chc/', MP0101M_service_report_chc.as_view(), name='MP0101M_service_report_chc'),
     # 멘토링 프로그램 - mp_sub 코드 (sub_code)
     path('MP0101M/service/sub/', MP0101M_service_sub.as_view(), name='MP0101M_service_sub'),
+    # 멘토링 프로그램 - 해외봉사활동 프로그램 (콤보)
+    path('MP0101M/service/combo/', MP0101M_service_combo.as_view(), name='MP0101M_service_combo'),
     ########################################################################################
     # 멘토링 프로그램(MP0101M - END )
     #
