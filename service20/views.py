@@ -6928,7 +6928,11 @@ def MP0101M_upload(request):
 
             print("::file_sgd::"+request.POST.get('service_upload'+str(i), ""))
             # file = request.FILES['service_upload' + str(i)]
-            file = request.FILES['service_upload'+ str(i)] if 'file' in request.FILES else False
+            try:
+                file = request.FILES['service_upload' + str(i)]
+            except MultiValueDictKeyError:
+                file = False
+
             print(file)
             if file != False:
                 filename = file._name
