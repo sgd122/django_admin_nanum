@@ -1226,7 +1226,11 @@ class com_datacenter(generics.ListAPIView):
     serializer_class = com_datacenter_Serializer
 
     def list(self, request):   
-        queryset = self.get_queryset()
+        # queryset = self.get_queryset()
+        query = " select * from service20_bbs2  order by id desc "
+
+        queryset = bbs1.objects.raw(query)
+
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
         page = self.paginate_queryset(queryset)
@@ -1280,6 +1284,11 @@ class com_notice(generics.ListAPIView):
 
     def list(self, request):   
         queryset = self.get_queryset()
+
+        query = " select * from service20_bbs1  order by id desc "
+
+        queryset = bbs1.objects.raw(query)
+
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)
         page = self.paginate_queryset(queryset)
