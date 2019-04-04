@@ -6925,61 +6925,64 @@ def MP0101M_upload(request):
             l_service_upload_text.append(request.POST.get('service_upload_text'+str(i), ""))
             l_service_upload.append(request.POST.get('service_upload'+str(i), ""))
             l_att_cdh.append(request.POST.get('att_cdh_up'+str(i), ""))
+
             print("::file_sgd::"+request.POST.get('service_upload'+str(i), ""))
-            file = request.FILES['service_upload' + str(i)]
+            # file = request.FILES['service_upload' + str(i)]
+            file = request.FILES['service_upload'+ str(i)] if 'file' in request.FILES else False
             print(file)
-            filename = file._name
-            n_filename = str(l_mp_id) + str(l_apl_id) + str(l_att_cdh[i]) + str(l_att_cdd[i]) + os.path.splitext(filename)[1]
-            print(n_filename)
-            print (UPLOAD_DIR)
-        
-            fp = open('%s/%s' % (UPLOAD_DIR, n_filename) , 'wb')
-            for chunk in file.chunks():
-                fp.write(chunk)
-            fp.close()
+            if file != False:
+                filename = file._name
+                n_filename = str(l_mp_id) + str(l_apl_id) + str(l_att_cdh[i]) + str(l_att_cdd[i]) + os.path.splitext(filename)[1]
+                print(n_filename)
+                print (UPLOAD_DIR)
+            
+                fp = open('%s/%s' % (UPLOAD_DIR, n_filename) , 'wb')
+                for chunk in file.chunks():
+                    fp.write(chunk)
+                fp.close()
 
-            cursor = connection.cursor()
-            fullFile = str(UPLOAD_DIR) + str(n_filename)
-            fullFile = "/img/atc/"+ str(n_filename)
+                cursor = connection.cursor()
+                fullFile = str(UPLOAD_DIR) + str(n_filename)
+                fullFile = "/img/atc/"+ str(n_filename)
 
-            query = " insert into service20_mp_mtr_atc ( "
-            query += "    mp_id "
-            query += "    , apl_no "
-            query += "    , atc_seq "
-            query += "    , atc_cdh "
-            query += "    , atc_cdd "
-            query += "    , atc_nm "
-            query += "    , atc_file_nm "
-            query += "    , atc_file_url "
-            query += "    , ins_id "
-            query += "    , ins_ip "
-            query += "    , ins_dt "
-            query += "    , ins_pgm "
-            query += "    , upd_id "
-            query += "    , upd_ip "
-            query += "    , upd_dt "
-            query += "    , upd_pgm "
-            query += " ) "
-            query += " values ( "
-            query += "    '" + str(l_mp_id) + "'"
-            query += "    , '" + str(l_apl_no) + "'"
-            query += "    , (select ifnull(max(t1.atc_seq), 0) + 1 from service20_mp_mtr_atc t1 where t1.mp_id = '" + str(l_mp_id) + "' and t1.apl_no = '" + str(l_apl_no) + "') "
-            query += "    , '" + str(l_att_cdh[i]) + "'"
-            query += "    , '" + str(l_att_cdd[i]) + "'"
-            query += "    , (select std_detl_code_nm from service20_com_cdd where std_grp_code = '" + str(l_att_cdh[i]) + "' and std_detl_code = '" + str(l_att_cdd[i]) + "')"
-            query += "    , '" + str(filename) + "'"
-            query += "    , '" + str(fullFile) + "'"
-            query += "    , '" + str(ins_id) + "'"
-            query += "    , '" + str(client_ip) + "'"
-            query += "    , now() "
-            query += "    , '" + str(ins_pgm) + "'"
-            query += "    , '" + str(upd_id) + "'"
-            query += "    , '" + str(client_ip) + "'"
-            query += "    , now() "
-            query += "    , '" + str(upd_pgm) + "'"
-            query += " ) "
+                query = " insert into service20_mp_mtr_atc ( "
+                query += "    mp_id "
+                query += "    , apl_no "
+                query += "    , atc_seq "
+                query += "    , atc_cdh "
+                query += "    , atc_cdd "
+                query += "    , atc_nm "
+                query += "    , atc_file_nm "
+                query += "    , atc_file_url "
+                query += "    , ins_id "
+                query += "    , ins_ip "
+                query += "    , ins_dt "
+                query += "    , ins_pgm "
+                query += "    , upd_id "
+                query += "    , upd_ip "
+                query += "    , upd_dt "
+                query += "    , upd_pgm "
+                query += " ) "
+                query += " values ( "
+                query += "    '" + str(l_mp_id) + "'"
+                query += "    , '" + str(l_apl_no) + "'"
+                query += "    , (select ifnull(max(t1.atc_seq), 0) + 1 from service20_mp_mtr_atc t1 where t1.mp_id = '" + str(l_mp_id) + "' and t1.apl_no = '" + str(l_apl_no) + "') "
+                query += "    , '" + str(l_att_cdh[i]) + "'"
+                query += "    , '" + str(l_att_cdd[i]) + "'"
+                query += "    , (select std_detl_code_nm from service20_com_cdd where std_grp_code = '" + str(l_att_cdh[i]) + "' and std_detl_code = '" + str(l_att_cdd[i]) + "')"
+                query += "    , '" + str(filename) + "'"
+                query += "    , '" + str(fullFile) + "'"
+                query += "    , '" + str(ins_id) + "'"
+                query += "    , '" + str(client_ip) + "'"
+                query += "    , now() "
+                query += "    , '" + str(ins_pgm) + "'"
+                query += "    , '" + str(upd_id) + "'"
+                query += "    , '" + str(client_ip) + "'"
+                query += "    , now() "
+                query += "    , '" + str(upd_pgm) + "'"
+                query += " ) "
 
-            cursor.execute(query)
+                cursor.execute(query)
 
 
         return HttpResponse('File Uploaded')
