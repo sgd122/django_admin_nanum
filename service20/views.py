@@ -3466,7 +3466,7 @@ class MS0101M_list_chk_7(generics.ListAPIView):
         query += " LEFT JOIN (SELECT t2.apl_id, COUNT(*) en_cnt "
         query += "              FROM service20_vw_nanum_stdt t2     /* 부산대학교 학생 정보 */ "
         query += "             WHERE t2.cmp_term IN  "
-        query += "                   (SELECT t3.att_cdd "
+        query += "                   (SELECT t3.att_cdd*1 "
         query += "                      FROM service20_ms_sub t3 "
         query += "                     WHERE t3.ms_id   = '"+ms_id+"' "
         query += "                       AND t3.att_id  = 'MS0011' "
