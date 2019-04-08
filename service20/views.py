@@ -3985,6 +3985,50 @@ def MS0101M_save(request):
         # v_dept_cd = results_st[0].dept_cd
         # v_mjr_cd = results_st[0].mjr_cd
 
+        # -- 생성_자격증(ms_apl_lc)_FROM_service20_vw_nanum_license
+
+        update_text = "insert into service20_ms_apl_lc      "
+        update_text += "     ( ms_id           /* 멘토링 프로그램id */ "
+        update_text += "     , apl_no          /* 지원 no */ "
+        update_text += "     , lc_no           /* 자격 no */ "
+        update_text += "     , apl_id          /* 학번 */ "
+        update_text += "     , apl_nm          /* 성명 */ "
+        update_text += "     , license_large_cd  "
+        update_text += "     , license_large_nm  "
+        update_text += "     , license_small_cd     "
+        update_text += "     , license_small_nm     "
+        update_text += "     , license_cd      "
+        update_text += "     , license_nm    "        
+        update_text += "     , ins_id          /* 입력자id */ "
+        update_text += "     , ins_ip          /* 입력자ip */ "
+        update_text += "     , ins_dt          /* 입력일시 */ "
+        update_text += "     , ins_pgm         /* 입력프로그램id */ "
+        update_text += ") "
+        update_text += "select '"+str(ms_id)+"' AS ms_id "
+        update_text += "     , '"+str(apl_no)+"' apl_no         /* 지원 no */ "
+        update_text += "     , @curRank := @curRank +1 AS lc_no "
+        update_text += "     , t1.apl_id          /* 학번 */ "
+        update_text += "     , t1.apl_nm          /* 성명 */ "
+        update_text += "     , t1.license_large_cd  "
+        update_text += "     , t1.license_large_nm  "
+        update_text += "     , t1.license_small_cd     "
+        update_text += "     , t1.license_small_nm     "
+        update_text += "     , t1.license_cd      "
+        update_text += "     , t1.license_nm    "        
+        update_text += "     , '"+apl_id+"' ins_id         /* 입력자id */ "
+        update_text += "     , '"+str(client_ip)+"' ins_ip         /* 입력자ip */ "
+        update_text += "     , NOW() ins_dt         /* 입력일시 */ "
+        update_text += "     , 'c' ins_pgm        /* 입력프로그램id */ "
+        update_text += "  FROM service20_vw_nanum_license t1      "
+        update_text += "     , (SELECT @curRank := 0) r "
+        update_text += " WHERE 1=1 "
+        update_text += "   AND t1.apl_id = '"+apl_id+"' "
+        print("::_FROM_service20_vw_nanum_license::")
+        print(update_text) 
+        cursor = connection.cursor()
+        query_result = cursor.execute(update_text)  
+
+        # -- 자격증 종료
 
         query = " select b.* from service20_vw_nanum_stdt a, service20_dept_ast b where a.dept_cd = b.dept_cd and b.status = 'Y' and a.apl_id = '"+apl_id+"' "
         cursor = connection.cursor()
@@ -4490,6 +4534,10 @@ def MS0101M_adm_update(request):
     cursor = connection.cursor()
     query_result = cursor.execute(delete_text)
 
+    delete_text = "delete from service20_ms_apl_lc where ms_id = '"+str(ms_id)+"' and apl_no = '"+str(apl_no)+"'"
+    cursor = connection.cursor()
+    query_result = cursor.execute(delete_text)
+
     # -- 생성_어학(ms_apl_fe)_FROM_vw_nanum_foreign_exam
 
     update_text = " insert into service20_ms_apl_fe     /* 프로그램 지원자(멘토) 어학 리스트 */ "
@@ -4604,6 +4652,51 @@ def MS0101M_adm_update(request):
     # print(update_text) 
     # cursor = connection.cursor()
     # query_result = cursor.execute(update_text)    
+    
+    # -- 생성_자격증(ms_apl_lc)_FROM_service20_vw_nanum_license
+
+    update_text = "insert into service20_ms_apl_lc      "
+    update_text += "     ( ms_id           /* 멘토링 프로그램id */ "
+    update_text += "     , apl_no          /* 지원 no */ "
+    update_text += "     , lc_no           /* 자격 no */ "
+    update_text += "     , apl_id          /* 학번 */ "
+    update_text += "     , apl_nm          /* 성명 */ "
+    update_text += "     , license_large_cd  "
+    update_text += "     , license_large_nm  "
+    update_text += "     , license_small_cd     "
+    update_text += "     , license_small_nm     "
+    update_text += "     , license_cd      "
+    update_text += "     , license_nm    "        
+    update_text += "     , ins_id          /* 입력자id */ "
+    update_text += "     , ins_ip          /* 입력자ip */ "
+    update_text += "     , ins_dt          /* 입력일시 */ "
+    update_text += "     , ins_pgm         /* 입력프로그램id */ "
+    update_text += ") "
+    update_text += "select '"+str(ms_id)+"' AS ms_id "
+    update_text += "     , '"+str(apl_no)+"' apl_no         /* 지원 no */ "
+    update_text += "     , @curRank := @curRank +1 AS lc_no "
+    update_text += "     , t1.apl_id          /* 학번 */ "
+    update_text += "     , t1.apl_nm          /* 성명 */ "
+    update_text += "     , t1.license_large_cd  "
+    update_text += "     , t1.license_large_nm  "
+    update_text += "     , t1.license_small_cd     "
+    update_text += "     , t1.license_small_nm     "
+    update_text += "     , t1.license_cd      "
+    update_text += "     , t1.license_nm    "        
+    update_text += "     , '"+apl_id+"' ins_id         /* 입력자id */ "
+    update_text += "     , '"+str(client_ip)+"' ins_ip         /* 입력자ip */ "
+    update_text += "     , NOW() ins_dt         /* 입력일시 */ "
+    update_text += "     , 'c' ins_pgm        /* 입력프로그램id */ "
+    update_text += "  FROM service20_vw_nanum_license t1      "
+    update_text += "     , (SELECT @curRank := 0) r "
+    update_text += " WHERE 1=1 "
+    update_text += "   AND t1.apl_id = '"+apl_id+"' "
+    print("::_FROM_service20_vw_nanum_license::")
+    print(update_text) 
+    cursor = connection.cursor()
+    query_result = cursor.execute(update_text)  
+
+    # -- 자격증 종료
 
     update_text = " update service20_msch a "
     update_text += " SET a.cnt_apl = (select count(*) from service20_ms_apl where ms_id = '"+ms_id+"' and status='10') "
@@ -5804,6 +5897,51 @@ def MP0101M_save(request):
         # v_mjr_cd = results_st[0].mjr_cd
 
 
+        # -- 생성_자격증(mp_mtr_lc)_FROM_service20_vw_nanum_license
+
+        update_text = "insert into service20_mp_mtr_lc      "
+        update_text += "     ( mp_id           /* 멘토링 프로그램id */ "
+        update_text += "     , apl_no          /* 지원 no */ "
+        update_text += "     , lc_no           /* 자격 no */ "
+        update_text += "     , apl_id          /* 학번 */ "
+        update_text += "     , apl_nm          /* 성명 */ "
+        update_text += "     , license_large_cd  "
+        update_text += "     , license_large_nm  "
+        update_text += "     , license_small_cd     "
+        update_text += "     , license_small_nm     "
+        update_text += "     , license_cd      "
+        update_text += "     , license_nm    "        
+        update_text += "     , ins_id          /* 입력자id */ "
+        update_text += "     , ins_ip          /* 입력자ip */ "
+        update_text += "     , ins_dt          /* 입력일시 */ "
+        update_text += "     , ins_pgm         /* 입력프로그램id */ "
+        update_text += ") "
+        update_text += "select '"+str(mp_id)+"' AS mp_id "
+        update_text += "     , '"+str(apl_no)+"' apl_no         /* 지원 no */ "
+        update_text += "     , @curRank := @curRank +1 AS lc_no "
+        update_text += "     , t1.apl_id          /* 학번 */ "
+        update_text += "     , t1.apl_nm          /* 성명 */ "
+        update_text += "     , t1.license_large_cd  "
+        update_text += "     , t1.license_large_nm  "
+        update_text += "     , t1.license_small_cd     "
+        update_text += "     , t1.license_small_nm     "
+        update_text += "     , t1.license_cd      "
+        update_text += "     , t1.license_nm    "        
+        update_text += "     , '"+apl_id+"' ins_id         /* 입력자id */ "
+        update_text += "     , '"+str(client_ip)+"' ins_ip         /* 입력자ip */ "
+        update_text += "     , NOW() ins_dt         /* 입력일시 */ "
+        update_text += "     , 'c' ins_pgm        /* 입력프로그램id */ "
+        update_text += "  FROM service20_vw_nanum_license t1      "
+        update_text += "     , (SELECT @curRank := 0) r "
+        update_text += " WHERE 1=1 "
+        update_text += "   AND t1.apl_id = '"+apl_id+"' "
+        print("::_FROM_service20_vw_nanum_license::")
+        print(update_text) 
+        cursor = connection.cursor()
+        query_result = cursor.execute(update_text)  
+
+        # -- 자격증 종료
+
         query = " select b.* from service20_vw_nanum_stdt a, service20_dept_ast b where a.dept_cd = b.dept_cd and b.status = 'Y' and a.apl_id = '"+apl_id+"' "
         cursor = connection.cursor()
         query_result = cursor.execute(query)  
@@ -6326,6 +6464,10 @@ def MP0101M_adm_update(request):
     cursor = connection.cursor()
     query_result = cursor.execute(delete_text)
 
+    delete_text = "delete from service20_mp_mtr_lc where mp_id = '"+str(mp_id)+"' and apl_no = '"+str(apl_no)+"'"
+    cursor = connection.cursor()
+    query_result = cursor.execute(delete_text)
+
     # -- 생성_어학(mp_mtr_fe)_FROM_vw_nanum_foreign_exam
 
     update_text = " insert into service20_mp_mtr_fe     /* 프로그램 지원자(멘토) 어학 리스트 */ "
@@ -6441,6 +6583,51 @@ def MP0101M_adm_update(request):
     # cursor = connection.cursor()
     # query_result = cursor.execute(update_text)    
 
+    # -- 생성_자격증(mp_mtr_lc)_FROM_service20_vw_nanum_license
+
+    update_text = "insert into service20_mp_mtr_lc      "
+    update_text += "     ( mp_id           /* 멘토링 프로그램id */ "
+    update_text += "     , apl_no          /* 지원 no */ "
+    update_text += "     , lc_no           /* 자격 no */ "
+    update_text += "     , apl_id          /* 학번 */ "
+    update_text += "     , apl_nm          /* 성명 */ "
+    update_text += "     , license_large_cd  "
+    update_text += "     , license_large_nm  "
+    update_text += "     , license_small_cd     "
+    update_text += "     , license_small_nm     "
+    update_text += "     , license_cd      "
+    update_text += "     , license_nm    "        
+    update_text += "     , ins_id          /* 입력자id */ "
+    update_text += "     , ins_ip          /* 입력자ip */ "
+    update_text += "     , ins_dt          /* 입력일시 */ "
+    update_text += "     , ins_pgm         /* 입력프로그램id */ "
+    update_text += ") "
+    update_text += "select '"+str(mp_id)+"' AS mp_id "
+    update_text += "     , '"+str(apl_no)+"' apl_no         /* 지원 no */ "
+    update_text += "     , @curRank := @curRank +1 AS lc_no "
+    update_text += "     , t1.apl_id          /* 학번 */ "
+    update_text += "     , t1.apl_nm          /* 성명 */ "
+    update_text += "     , t1.license_large_cd  "
+    update_text += "     , t1.license_large_nm  "
+    update_text += "     , t1.license_small_cd     "
+    update_text += "     , t1.license_small_nm     "
+    update_text += "     , t1.license_cd      "
+    update_text += "     , t1.license_nm    "        
+    update_text += "     , '"+apl_id+"' ins_id         /* 입력자id */ "
+    update_text += "     , '"+str(client_ip)+"' ins_ip         /* 입력자ip */ "
+    update_text += "     , NOW() ins_dt         /* 입력일시 */ "
+    update_text += "     , 'c' ins_pgm        /* 입력프로그램id */ "
+    update_text += "  FROM service20_vw_nanum_license t1      "
+    update_text += "     , (SELECT @curRank := 0) r "
+    update_text += " WHERE 1=1 "
+    update_text += "   AND t1.apl_id = '"+apl_id+"' "
+    print("::_FROM_service20_vw_nanum_license::")
+    print(update_text) 
+    cursor = connection.cursor()
+    query_result = cursor.execute(update_text)  
+
+    # -- 자격증 종료
+    
     update_text = " update service20_mpgm a "
     update_text += " SET a.cnt_apl = (select count(*) from service20_mp_mtr where mp_id = '"+mp_id+"' and status = '10') "
     update_text += " WHERE 1=1 "
