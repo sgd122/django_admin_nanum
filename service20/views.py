@@ -237,10 +237,10 @@ def login_login(request):
                             query += "     ,CASE WHEN '"+str(l_frexm_nm)+"' =  'None' THEN ' ' ELSE '"+str(l_frexm_nm)+"' END       /* 외국어시험명 */"
                             query += "     ,CASE WHEN '"+str(l_score)+"' =  'None' THEN '0' ELSE '"+str(l_score)+"' END          /* 시험점수 */"
                             query += "     ,CASE WHEN '"+str(l_grade)+"' =  'None' THEN '0' ELSE '"+str(l_grade)+"' END          /* 시험등급 */"
-                            query += "     , '"+str(id)+"' AS ins_id     /* 입력자id */ "
-                            query += "     , '"+str(client_ip)+"' AS ins_ip     /* 입력자ip */ "
-                            query += "     , NOW()     AS ins_dt     /* 입력일시 */ "
-                            query += "     , 'LOGIN'   AS ins_pgm    /* 입력프로그램id */ "
+                            query += "     , '"+str(id)+"'  "
+                            query += "     , '"+str(client_ip)+"' "
+                            query += "     , NOW()      "
+                            query += "     , 'LOGIN'   "
                             query += ")"
                             cursor3 = connection.cursor()
                             query_result = cursor3.execute(query)    
