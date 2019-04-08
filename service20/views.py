@@ -8503,6 +8503,7 @@ class MP0104M_list_Serializer(serializers.ModelSerializer):
     sum_exp_amt = serializers.SerializerMethodField()
     cum_appr_tm = serializers.SerializerMethodField()
     att_ym = serializers.SerializerMethodField()
+    att_sdt = serializers.SerializerMethodField()
     
     
     # mgr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
@@ -8512,7 +8513,7 @@ class MP0104M_list_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = mp_mtr
-        fields = ('mp_id','apl_no','mntr_id','indv_div','team_id','apl_id','apl_nm','apl_nm_e','unv_cd','unv_nm','cllg_cd','cllg_nm','dept_cd','dept_nm','brth_dt','gen','yr','term_div','sch_yr','mob_no','tel_no','tel_no_g','h_addr','post_no','email_addr','bank_acct','bank_cd','bank_nm','bank_dpsr','cnt_mp_a','cnt_mp_p','cnt_mp_c','cnt_mp_g','apl_dt','status','doc_cncl_dt','doc_cncl_rsn','tot_doc','score1','score2','score3','score4','score5','score6','cscore1','cscore2','cscore3','cscore4','cscore5','cscore6','doc_rank','doc_rslt','intv_team','intv_dt','intv_part_pl','intv_np_rsn_pl','intv_part_pl_dt','intv_part_ac','intv_np_rsn_ac','intv_part_ac_dt','intv_tot','intv_rslt','ms_trn_yn','fnl_rslt','mntr_dt','sms_send_no','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','sum_elap_tm','sum_appr_tm','sum_exp_amt','cum_appr_tm', 'att_ym')
+        fields = '__all__'
     
     def get_apl_no(self,obj):
         return obj.apl_no
@@ -8526,6 +8527,8 @@ class MP0104M_list_Serializer(serializers.ModelSerializer):
         return obj.cum_appr_tm
     def get_att_ym(self,obj):
         return obj.att_ym
+    def get_att_sdt(self,obj):
+        return obj.att_sdt
 
 
 class MP0104M_list(generics.ListAPIView):
@@ -8608,6 +8611,7 @@ class MP0104M_list(generics.ListAPIView):
         query += " , t1.bank_nm         /* 은행 명*/ "
         query += " , t1.bank_acct       /* 은행 계좌 번호*/ "
         query += " , t1.apl_id "
+        query += " , substring(t2.att_sdt,1, 7) as att_sdt "
         query += " from service20_mp_mtr t1     /* 프로그램 출석부(멘토)*/ "
         query += " left join service20_mp_att t2 on (t2.mp_id    = t1.mp_id "
         query += " and t2.apl_no   = t1.apl_no  "
