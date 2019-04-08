@@ -9715,7 +9715,7 @@ def MP01041M_req(request):
     l_mp_div = request.POST.get('u_mp_div', "")
     l_att_div = request.POST.get('u_att_div', "")
     l_mtr_desc = request.POST.get('u_mtr_desc', "")
-    l_mtr_pic = request.POST.get('u_mtr_pic', "")
+    # l_mtr_pic[i] = request.POST.get('u_mtr_pic' + str(i), "")
     l_att_saddr = request.POST.get('u_att_saddr', "")
     l_att_eaddr = request.POST.get('u_att_eaddr', "")
     l_att_sdt = request.POST.get('u_att_sdt', "")
@@ -9741,7 +9741,7 @@ def MP01041M_req(request):
     upd_pgm = request.POST.get('upd_pgm', "")
 
     client_ip = request.META['REMOTE_ADDR']
-    
+
     # 출석 소명 수정
     query = "/* 출석 소명 수정 */"
     query += " update service20_mp_att_req"
@@ -9751,7 +9751,11 @@ def MP01041M_req(request):
     query += "     , t_elap_tm = concat('" + str(l_elap_tm) + "', ':00')"
     query += "     , t_appr_tm = '" + str(l_appr_tm) + "'"
     query += "     , t_mtr_desc = '" + str(l_mtr_desc) + "'"
-    query += "     , t_mtr_pic = '" + str(l_mtr_pic) + "'"
+    # if i > 0:
+    #     if not l_mtr_pic[i]:
+    #         query += "     , t_mtr_pic = '" + str(i+1) + str(l_mtr_pic[i]) + "'"
+    # else:
+    #     query += "     , t_mtr_pic = '" + str(l_mtr_pic[i]) + "'"
     query += "     , upd_id = '" + str(upd_id) + "'"
     query += "     , upd_ip = '" + str(client_ip) + "'"
     query += "     , upd_dt = now()"
@@ -9760,6 +9764,7 @@ def MP01041M_req(request):
     query += "   and apl_no = '" + str(l_apl_no) + "'"
     query += "   and req_no = '" + str(l_req_no) + "'"
 
+    print(query)
     cursor = connection.cursor()
     query_result = cursor.execute(query)
 
@@ -9771,12 +9776,17 @@ def MP01041M_req(request):
     query += "     , elap_tm = concat('" + str(l_elap_tm) + "', ':00')"
     query += "     , appr_tm = '" + str(l_appr_tm) + "'"
     query += "     , mtr_desc = '" + str(l_mtr_desc) + "'"
-    query += "     , mtr_pic = '" + str(l_mtr_pic) + "'"
+    # if i > 0:
+    #     if not l_mtr_pic[i]:
+    #         query += "     , mtr_pic = '" + str(i+1) + str(l_mtr_pic[i]) + "'"
+    # else:
+    #     query += "     , mtr_pic = '" + str(l_mtr_pic[i]) + "'"
     query += "     , expl_yn = 'Y'"
     query += " where mp_id = '" + str(l_mp_id) + "'"
     query += "   and apl_no = '" + str(l_apl_no) + "'"
     query += "   and att_no = '" + str(l_att_no) + "'"
 
+    print(query)
     cursor = connection.cursor()
     query_result = cursor.execute(query)
 
@@ -9852,51 +9862,61 @@ def MP01041M_upload(request):
         print(l_att_no)
         print(l_user_id)
 
-        file = request.FILES['mtr_pic']
-        print(file)
-        filename = file._name
-        n_filename = str(l_user_id) + '_' + str(l_mp_id) + '_' + str(l_apl_no) + '_' + l_att_no + '_' + l_req_no + os.path.splitext(filename)[1]
-        print(n_filename)
-        print (UPLOAD_DIR)
+        pic_num = 0
+        for i in range(0,5):
+            try:
+                file = request.FILES['mtr_pic' + str(i)]
+            except MultiValueDictKeyError:
+                file = False
+
+            if file != False:
+                print(file)
+                filename = file._name
+                n_filename = str(l_user_id) + str(l_mp_id) + str(l_apl_no) + str(l_att_no) + str(l_req_no) + str((i+1)) + os.path.splitext(filename)[1]
+                print(n_filename)
+                print (UPLOAD_DIR)
+                
+                fp = open('%s/%s' % (UPLOAD_DIR, n_filename) , 'wb')
+
+                for chunk in file.chunks():
+                    fp.write(chunk)
+                fp.close()
+
+                cursor = connection.cursor()
+                fullFile = str(UPLOAD_DIR) + str(n_filename)
+                fullFile = "/img/mp_attend/"+ str(n_filename)
+
+                if i == 0:
+                    pic_num = ""
+                else:
+                    pic_num = (i+1)
+
+                query = " update service20_mp_att"
+                query += "   set mtr_pic" + str(pic_num) + " = '" + str(fullFile) + "'"
+                query += " where mp_id = '" + str(l_mp_id) + "'"
+                query += "   and apl_no = '" + str(l_apl_no) + "'"
+                query += "   and (('" + str(l_req_no_yn) + "' = 'N' and att_no in ( select * from (select max(att_no)"
+                query += "                                                                 from service20_mp_att"
+                query += "                                                                where mp_id = '" + str(l_mp_id) + "'"
+                query += "                                                                  and apl_no = '" + str(l_apl_no) + "') as att_no))"
+                query += "       or ('" + str(l_req_no_yn) + "' = 'Y' and att_no = '" + str(l_att_no) + "'))"
+
+                print(query)
+                cursor.execute(query)
+
+                query = " update service20_mp_att_req"
+                query += " set t_mtr_pic" + str(pic_num) + " = '" + str(fullFile) + "'"
+                query += " where mp_id = '" + str(l_mp_id) + "'"
+                query += "  and apl_no = '" + str(l_apl_no) + "'"
+                query += "  and (('" + str(l_req_no_yn) + "' = 'N' and req_no in ( select * from (select max(req_no)"
+                query += "                                                    from service20_mp_att_req"
+                query += "                                                   where mp_id = '" + str(l_mp_id) + "'"
+                query += "                                                     and apl_no = '" + str(l_apl_no) + "') as req_no))"
+                query += "      or ('" + str(l_req_no_yn) + "' = 'Y' and req_no = '" + str(l_req_no) + "'))"
+
+                print(query)
+                cursor.execute(query)
         
-        fp = open('%s/%s' % (UPLOAD_DIR, n_filename) , 'wb')
-
-        for chunk in file.chunks():
-            fp.write(chunk)
-        fp.close()
-
-        cursor = connection.cursor()
-        fullFile = str(UPLOAD_DIR) + str(n_filename)
-        fullFile = "/img/mp_attend/"+ str(n_filename)
-
-        query = " update service20_mp_att"
-        query += "   set mtr_pic = '" + str(fullFile) + "'"
-        query += " where mp_id = '" + str(l_mp_id) + "'"
-        query += "   and apl_no = '" + str(l_apl_no) + "'"
-        query += "   and (('" + str(l_req_no_yn) + "' = 'N' and att_no in ( select * from (select max(att_no)"
-        query += "                                                                 from service20_mp_att"
-        query += "                                                                where mp_id = '" + str(l_mp_id) + "'"
-        query += "                                                                  and apl_no = '" + str(l_apl_no) + "') as att_no))"
-        query += "       or ('" + str(l_req_no_yn) + "' = 'Y' and att_no = '" + str(l_att_no) + "'))"
-
-        print(query)
-        cursor.execute(query)
-
-        query = " update service20_mp_att_req"
-        query += " set t_mtr_pic = '" + str(fullFile) + "'"
-        query += " where mp_id = '" + str(l_mp_id) + "'"
-        query += "  and apl_no = '" + str(l_apl_no) + "'"
-        query += "  and (('" + str(l_req_no_yn) + "' = 'N' and req_no in ( select * from (select max(req_no)"
-        query += "                                                    from service20_mp_att_req"
-        query += "                                                   where mp_id = '" + str(l_mp_id) + "'"
-        query += "                                                     and apl_no = '" + str(l_apl_no) + "') as req_no))"
-        query += "      or ('" + str(l_req_no_yn) + "' = 'Y' and req_no = '" + str(l_req_no) + "'))"
-
-        print(query)
-        cursor.execute(query)
-        
-        
-
         return HttpResponse('File Uploaded')
 
 
