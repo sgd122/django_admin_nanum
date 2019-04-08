@@ -8618,6 +8618,7 @@ class MP0104M_list(generics.ListAPIView):
         query += " and t1.term_div    = '" + l_term_div + "'    /* 학기 */ "        
         query += " and t1.mp_id    = '" + l_mp_id + "'    /* 멘토링 프로그램id */ "
         query += " and t1.apl_id   = trim('" + l_apl_id + "')   "
+        query += " and (t2.att_sdt >= CONCAT('" + l_yr + "-" + l_month1 + "', '-01') AND t2.att_sdt < ADDDATE(LAST_DAY(CONCAT('" + l_yr + "-" + l_month2 + "', '-01')), 1))"
         # query += " and t2.appr_div   = '" + l_appr_yn + "'   "
         # query += " and t2.mgr_div   = '" + l_mgr_yn + "'   "
         # query += " and (('" + l_appr_yn + "' = 'Y' and t1.appr_dt IS NOT NULL) OR ('" + l_appr_yn + "' <> 'Y' and t1.appr_dt IS NULL))"
@@ -8710,13 +8711,13 @@ class MP0104M_Detail(generics.ListAPIView):
 
         queryset = self.get_queryset()
 
-        query = " select t1.id,t1.mp_id     /* 멘토링 프로그램id */  "
+        query = " select distinct t1.id,t1.mp_id     /* 멘토링 프로그램id */  "
         query += " , t1.apl_no    /* 멘토 지원 no */  "
         query += " , t1.att_no    /* 출석순서(seq) */  "
         query += " , t1.mp_div    /* 교육구분(mp0059) */  "
         query += " , c1.std_detl_code_nm   as mp_div_nm "
         query += " , t2.mnte_id     /* 멘티id */  "
-        query += " , t2.mnte_no     /* 멘티지원No */  "
+        query += " , t5.mnte_no     /* 멘티지원No */  "
         query += " , t2.mnte_nm     /* 멘티명 */  "
         query += " , substring(t1.att_sdt, 1, 10) as att_sdt   /* 출석일시(교육시작일시) */  "
         query += " , substring(t1.att_sdt, 12, 5) as att_stm   /* 출석일시(교육시작일시) */  "
@@ -8734,7 +8735,8 @@ class MP0104M_Detail(generics.ListAPIView):
         query += " , t1.exp_amt   /* 지급 활동비 */  "
         query += " , t3.apl_id /* 학번 */ "
         query += " from service20_mp_att t1     /* 프로그램 출석부(멘토) */ "
-        query += " left join service20_mp_mte t2  on (t2.mp_id  = t1.mp_id and t2.apl_no = t1.apl_no)  "
+        query += " left join service20_mp_att_mte t5 on (t5.mp_id = t1.mp_id and t5.apl_no = t1.apl_no and t5.att_no = t1.att_no)  "
+        query += " left join service20_mp_mte t2  on (t2.mp_id  = t1.mp_id and t2.apl_no = t1.apl_no and t2.mnte_no = t5.mnte_no)  "
         query += " left join service20_mp_mtr t3 on (t3.mp_id    = t1.mp_id and t3.apl_no   = t1.apl_no) "
         query += " left join service20_mpgm   t4 on (t4.mp_id    = t1.mp_id) "
         query += " left join service20_com_cdd c1 on (c1.std_grp_code  = 'mp0059' and c1.std_detl_code = t1.mp_div) "
@@ -8750,6 +8752,8 @@ class MP0104M_Detail(generics.ListAPIView):
         query += " and (t1.att_sdt >= CONCAT('" + l_yr + "-" + l_month1 + "', '-01') AND t1.att_sdt < ADDDATE(LAST_DAY(CONCAT('" + l_yr + "-" + l_month2 + "', '-01')), 1))"
         query += " order by t1.att_no DESC    /* 출석순서(seq) */ "
         
+        print(query)
+
         queryset = mp_att.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
