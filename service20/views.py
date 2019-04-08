@@ -351,6 +351,71 @@ def login_login(request):
                         # 봉사 - 종료
                         ########################################################################
 
+                        ########################################################################
+                        # 자격증 - 시작
+                        ########################################################################
+                        query = "select t3.apl_id         /* 학번 */"
+                        query += "     , t3.apl_nm         /* 성명 */"
+                        query += "     , t3.license_large_cd  "
+                        query += "     , t3.license_large_nm  "
+                        query += "     , t3.license_small_cd  "
+                        query += "     , t3.license_small_nm  "
+                        query += "     , t3.license_cd  "
+                        query += "     , t3.license_nm  "                        
+                        query += "  from vw_nanum_license t3     "
+                        query += " where 1=1"
+                        query += " and t3.apl_id='"+v_userid+"'" 
+                        conn = pymssql.connect(server='192.168.2.124', user='nanum', password='n@num*!@', database='hakjuk', port='1221')
+                        cursor = conn.cursor()   
+                        cursor.execute(query)  
+                        row = cursor.fetchone()  
+
+                        # 삭제 (자격증)
+                        delete_query = " delete from service20_vw_nanum_license where apl_id = '"+v_userid+"' "
+                        cursor_delete = connection.cursor()
+                        delete_query_result = cursor_delete.execute(delete_query)                       
+                        # 삭제 (자격증)
+
+                        while row:
+                        # for val in row:    
+                            l_apl_id = str(row[0])
+                            l_apl_nm = str(row[1])
+                            l_license_large_cd = str(row[2])
+                            l_license_large_nm = str(row[3])
+                            l_license_small_cd = str(row[4])
+                            l_license_small_nm = str(row[5])
+                            l_license_cd = str(row[6])
+                            l_license_nm = str(row[7])
+                            
+                            # insert(자격증)
+                            query = "insert into service20_vw_nanum_license     "
+                            query += "   ( apl_id         /* 학번 */"
+                            query += "     , apl_nm         /* 성명 */"
+                            query += "     , license_large_cd  "
+                            query += "     , license_large_nm  "
+                            query += "     , license_small_cd  "
+                            query += "     , license_small_nm  "
+                            query += "     , license_cd  "
+                            query += "     , license_nm  "          
+                            query += ")"
+                            query += "values"
+                            query += "     ( CASE WHEN '"+str(l_apl_id)+"' =  'None' THEN NULL ELSE '"+str(l_apl_id)+"' END         /* 학번 */"
+                            query += "     ,CASE WHEN '"+str(l_apl_nm)+"' =  'None' THEN NULL ELSE '"+str(l_apl_nm)+"' END         /* 성명 */"
+                            query += "     ,CASE WHEN '"+str(l_license_large_cd)+"' =  'None' THEN ' ' ELSE '"+str(l_license_large_cd)+"' END   "
+                            query += "     ,CASE WHEN '"+str(l_license_large_nm)+"' =  'None' THEN ' ' ELSE '"+str(l_license_large_nm)+"' END   "
+                            query += "     ,CASE WHEN '"+str(l_license_small_cd)+"' =  'None' THEN ' ' ELSE '"+str(l_license_small_cd)+"' END   "
+                            query += "     ,CASE WHEN '"+str(l_license_small_nm)+"' =  'None' THEN ' ' ELSE '"+str(l_license_small_nm)+"' END   "
+                            query += "     ,CASE WHEN '"+str(l_license_cd)+"' =  'None' THEN ' ' ELSE '"+str(l_license_cd)+"' END   "
+                            query += "     ,CASE WHEN '"+str(l_license_nm)+"' =  'None' THEN ' ' ELSE '"+str(l_license_nm)+"' END   "
+                            query += ")"
+                            cursor3 = connection.cursor()
+                            query_result = cursor3.execute(query)    
+                            # insert(자격증)
+                            row = cursor.fetchone()  
+                        ########################################################################
+                        # 자격증 - 종료
+                        ########################################################################
+
                         # 로그인처리 - 시작                
                         query = "select t3.apl_id      /* 학번 */ "
                         query += "     , t3.apl_nm      /* 성명 */ "
