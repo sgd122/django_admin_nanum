@@ -330,10 +330,10 @@ def login_login(request):
                             query += "     , CASE WHEN '"+str(l_end_date)+"' =  'None' THEN ' ' ELSE '"+str(l_end_date)+"' END        /* 종료일자 */"
                             query += "     , CASE WHEN '"+str(l_end_time)+"' =  'None' THEN ' ' ELSE  '"+str(l_end_time)+"' END       /* 종료시간 */"
                             query += "     , CASE WHEN '"+str(l_tot_time)+"' =  'None' THEN ' ' ELSE '"+str(l_tot_time)+"' END        /* 총시간 */"
-                            query += "     , '"+str(id)+"' AS ins_id     /* 입력자id */ "
-                            query += "     , '"+str(client_ip)+"' AS ins_ip     /* 입력자ip */ "
-                            query += "     , NOW()     AS ins_dt     /* 입력일시 */ "
-                            query += "     , 'LOGIN'   AS ins_pgm    /* 입력프로그램id */ "
+                            query += "     , '"+str(id)+"'     "
+                            query += "     , '"+str(client_ip)+"'  "
+                            query += "     , NOW()       "
+                            query += "     , 'LOGIN'     "
                             query += ")"
                             cursor4 = connection.cursor()
                             query_result = cursor4.execute(query)    
@@ -403,10 +403,10 @@ def login_login(request):
                             query += "     ,CASE WHEN '"+str(l_license_small_nm)+"' =  'None' THEN ' ' ELSE '"+str(l_license_small_nm)+"' END   "
                             query += "     ,CASE WHEN '"+str(l_license_cd)+"' =  'None' THEN ' ' ELSE '"+str(l_license_cd)+"' END   "
                             query += "     ,CASE WHEN '"+str(l_license_nm)+"' =  'None' THEN ' ' ELSE '"+str(l_license_nm)+"' END   "
-                            query += "     , '"+str(id)+"' AS ins_id     /* 입력자id */ "
-                            query += "     , '"+str(client_ip)+"' AS ins_ip     /* 입력자ip */ "
-                            query += "     , NOW()     AS ins_dt     /* 입력일시 */ "
-                            query += "     , 'LOGIN'   AS ins_pgm    /* 입력프로그램id */ "
+                            query += "     , '"+str(id)+"' "
+                            query += "     , '"+str(client_ip)+"'  "
+                            query += "     , NOW()     "
+                            query += "     , 'LOGIN'   "
                             query += ")"
                             cursor3 = connection.cursor()
                             query_result = cursor3.execute(query)    
