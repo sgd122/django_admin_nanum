@@ -479,6 +479,8 @@ def login_login(request):
                                 cursor_delete = connection.cursor()
                                 delete_query_result = cursor_delete.execute(delete_query)                       
                                 # 삭제
+                                 
+                                # 편입생 임시처리 
                                 l_score03 = str(row[37])
                                 if str(row[0]) == "201714544 ":
                                     l_score03 = "3.43"
@@ -486,7 +488,8 @@ def login_login(request):
                                     l_score03 = "3.81"
                                 elif str(row[0]) == "201705230 ":
                                     l_score03 = "3.76"
-
+                                # 편입생 임시처리
+                                
                                 # insert
                                 insert_query = " insert into service20_vw_nanum_stdt (apl_id      /* 학번 */ "
                                 insert_query += " , apl_nm      /* 성명 */ "
