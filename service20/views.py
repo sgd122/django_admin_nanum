@@ -5475,6 +5475,8 @@ class MP0101M_list_all_Serializer(serializers.ModelSerializer):
     apl_no = serializers.SerializerMethodField()
     apl_id = serializers.SerializerMethodField()
     cert_en = serializers.SerializerMethodField()
+    apl_status = serializers.SerializerMethodField()
+    apl_status_nm = serializers.SerializerMethodField()
 
     apl_fr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     apl_to_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
@@ -5483,7 +5485,34 @@ class MP0101M_list_all_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = mpgm
-        fields = '__all__'
+        fields = (
+            'mp_id',
+            'mp_name',
+            'status',
+            'statusCode',
+            'yr',
+            'yr_seq',
+            'sup_org',
+            'mng_org',
+            'applyFlag',
+            'applyStatus',
+            'apl_fr_dt',
+            'apl_to_dt',
+            'mnt_fr_dt',
+            'mnt_to_dt',
+            'cnt_trn',
+            'status',
+            'status_nm',
+            'applyFlagNm',
+            'sup_org_nm',
+            'mng_org_nm',
+            'mgr_nm',
+            'apl_no',
+            'apl_id',
+            'cert_en',
+            'apl_status',
+            'apl_status_nm',
+        )
 
     def get_applyFlag(self, obj):
         return obj.applyFlag    
@@ -5520,9 +5549,13 @@ class MP0101M_list_all_Serializer(serializers.ModelSerializer):
 
     def get_apl_id(self, obj):
         return obj.apl_id
-
     def get_cert_en(self, obj):
         return obj.cert_en
+    def get_apl_status(self, obj):
+        return obj.apl_status
+    def get_apl_status_nm(self, obj):
+        return obj.apl_status_nm                
+
 
 class MP0101M_list_all(generics.ListAPIView):
     queryset = mpgm.objects.all()
@@ -5534,7 +5567,6 @@ class MP0101M_list_all(generics.ListAPIView):
         
         # 멘토만 조회가능.
         query = " select apl_to_dt,  "
-        query += " B.cert_en   AS cert_en,"
         query += "        IF(A.status = '10'  "
         query += "           AND Now() > A.apl_to_dt, 'xx', A.status) AS statusCode,  "
         query += "        IF(A.status = '10'  "
@@ -5556,6 +5588,9 @@ class MP0101M_list_all(generics.ListAPIView):
         query += " c1.std_detl_code_nm   AS sup_org_nm, "
         query += " c2.std_detl_code_nm   AS mng_org_nm, "
         query += " B.apl_no   AS apl_no, B.apl_id AS apl_id, "
+        query += " B.cert_en   AS cert_en,"
+        query += " B.status    as apl_status,"
+        query += " (select std_detl_code_nm from service20_com_cdd where B.status = std_detl_code and std_grp_code = 'MP0053') as apl_status_nm,"
         query += "        A.*  "
         query += " FROM   service20_mpgm A  "
         query += "        LEFT JOIN service20_mp_mtr B  "
@@ -5568,8 +5603,7 @@ class MP0101M_list_all(generics.ListAPIView):
         query += " ORDER  BY A.apl_fr_dt DESC,  "
         query += "           A.apl_to_dt DESC  "
 
-        queryset = mpgm.objects.raw(query)
-        
+        queryset = mpgm.objects.raw(query)  
 
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, context={'request': request}, many=True)
