@@ -455,7 +455,7 @@ def login_login(request):
                         query += "     , t3.pr_term_div /* 직전학기코드 */ "
                         query += "     , t3.score01     /* 직전학기 석차 */ "
                         query += "     , t3.score02     /* 직전학기 총원 */ "
-                        query += "     , t3.     /* 직전학기 학점 */ "
+                        query += "     , t3.score03     /* 직전학기 학점 */ "
                         query += "     , t3.score04     /* 봉사점수합계 */ "
                         query += "     , t3.score05     /* 자격증 개수 */ "
                         query += "     , t3.score06     /* 직전학기 이수학점 */ "
