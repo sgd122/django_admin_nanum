@@ -482,12 +482,12 @@ def login_login(request):
                                  
                                 # 편입생 임시처리 
                                 l_score03 = str(row[37])
-                                if str(row[0]) == "201714544 ":
-                                    l_score03 = "3.43"
-                                elif str(row[0]) == "201733176 ":
-                                    l_score03 = "3.81"
-                                elif str(row[0]) == "201705230 ":
-                                    l_score03 = "3.76"
+                                # if str(row[0]) == "201714544 ":
+                                #     l_score03 = "3.43"
+                                # elif str(row[0]) == "201733176 ":
+                                #     l_score03 = "3.81"
+                                # elif str(row[0]) == "201705230 ":
+                                #     l_score03 = "3.76"
                                 # 편입생 임시처리
                                 
                                 # insert
