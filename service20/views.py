@@ -5374,7 +5374,7 @@ class MP0101M_list(generics.ListAPIView):
         query += "                AND std_detl_code = A.status))      AS status_nm,  "
         query += "        Ifnull(B.status, 'N')                       AS applyFlag,  "
         
-        query += " case when now() between DATE(A.apl_fr_dt) and DATE(A.apl_to_dt) then 'Y' else 'N' end dateAplYn, "
+        query += " case when DATE(now()) between DATE(A.apl_fr_dt) and DATE(A.apl_to_dt) then 'Y' else 'N' end dateAplYn, "
 
         query += " E.score03, D.att_val,"
 
@@ -6056,7 +6056,7 @@ def MP0101M_detail(request):
             rows3 = mpgm.objects.filter(mp_id=ms_ida)[0]
             
 
-            query = "select case when now() between DATE(A.apl_fr_dt) and DATE(A.apl_to_dt) then 'Y' else 'N' end dateAplYn "
+            query = "select case when DATE(now()) between DATE(A.apl_fr_dt) and DATE(A.apl_to_dt) then 'Y' else 'N' end dateAplYn "
             query += " from service20_mpgm A where mp_id = '"+ms_ida+"'"
             cursor = connection.cursor()
             query_result = cursor.execute(query)  
