@@ -8777,7 +8777,11 @@ def MP0103M_Approval(request):
         print("query_"+str(i))
         print(query)
         cursor = connection.cursor()
-        query_result = cursor.execute(query) 
+        query_result = cursor.execute(query)
+
+        rep_ym = int(rep_ym) + 1
+        if int(str(rep_ym)[4:]) > 12:
+            rep_ym = str(rep_ym)[:4] + "01"
 
     context = {'message': 'Ok'}
 
