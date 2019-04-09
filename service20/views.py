@@ -12937,13 +12937,13 @@ def com_upload(request):
         l_mp_id = request.POST.get("mp_id")
 
         l_file = request.POST.get("file")
-        l_job_file = request.POST.get("job_file")
+        # l_job_file = request.POST.get("job_file")
         boolean_file = 'N'
         boolean_job_file = 'N'
         if l_file == None:
             boolean_file = 'Y'
-        if l_job_file == None:
-            boolean_job_file = 'Y'
+        # if l_job_file == None:
+        #     boolean_job_file = 'Y'
         
         if boolean_file == 'Y':
             file = request.FILES['file']
@@ -12963,25 +12963,25 @@ def com_upload(request):
             print(insert_sql)
             cursor.execute(insert_sql)
 
-        if boolean_job_file == 'Y':
-            # job
-            job_file = request.FILES['job_file']
-            job_filename = job_file._name
-            n_job_filename = str(l_user_id) + '_' + str(l_mp_id) + '' + os.path.splitext(job_filename)[1]
+        # if boolean_job_file == 'Y':
+        #     # job
+        #     job_file = request.FILES['job_file']
+        #     job_filename = job_file._name
+        #     n_job_filename = str(l_user_id) + '_' + str(l_mp_id) + '' + os.path.splitext(job_filename)[1]
 
-            # job
-            fp = open('%s/%s' % (UPLOAD_DIR_JOB, n_job_filename) , 'wb')
+        #     # job
+        #     fp = open('%s/%s' % (UPLOAD_DIR_JOB, n_job_filename) , 'wb')
 
-            for chunk in job_file.chunks():
-                fp.write(chunk)
-            fp.close()
-            # job
+        #     for chunk in job_file.chunks():
+        #         fp.write(chunk)
+        #     fp.close()
+        #     # job
 
-            cursor = connection.cursor()
-            job_fullFile = "/img/mp_job/"+ str(n_job_filename)
-            insert_sql = "update service20_mp_mtr set  file_job_fav = '" + str(job_fullFile) + "' where mp_id = '"+ str(l_mp_id) + "' and apl_id = '" +  str(l_user_id) +"' "
-            print(insert_sql)
-            cursor.execute(insert_sql)    
+        #     cursor = connection.cursor()
+        #     job_fullFile = "/img/mp_job/"+ str(n_job_filename)
+        #     insert_sql = "update service20_mp_mtr set  file_job_fav = '" + str(job_fullFile) + "' where mp_id = '"+ str(l_mp_id) + "' and apl_id = '" +  str(l_user_id) +"' "
+        #     print(insert_sql)
+        #     cursor.execute(insert_sql)    
         
 
         
