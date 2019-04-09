@@ -10553,13 +10553,16 @@ def MP0105M_update(request,pk):
 class MP0106M_list_Serializer(serializers.ModelSerializer):
 
     bank_acct_mask = serializers.SerializerMethodField()
+    exp_div_nm = serializers.SerializerMethodField()
 
     class Meta:
         model = mp_exp
-        fields = ('mp_id','apl_no','exp_no','exp_mon','exp_div','exp_ttl','exp_dt','bank_dt','elap_tm','unit_price','appr_tm','sum_exp','bank_acct','bank_cd','bank_nm','bank_dpsr','mp_sname','mgr_id','mgr_dt','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','bank_acct_mask')
+        fields = '__all__'
 
     def get_bank_acct_mask(self,obj):
         return obj.bank_acct_mask
+    def get_exp_div_nm(self,obj):
+        return obj.exp_div_nm        
 
 class MP0106M_list(generics.ListAPIView):
     queryset = mp_rep.objects.all()
@@ -10578,6 +10581,7 @@ class MP0106M_list(generics.ListAPIView):
         query += " , t1.exp_no                             /*활동비 no        */ "
         query += " , substring(t1.exp_mon,5,2) as exp_mon  /*활동비 월        */ "
         query += " , t1.exp_div                            /*활동비 구분        */ "
+        query += " , (select std_detl_code_nm from service20_com_cdd where t1.EXP_DIV = std_detl_code and std_grp_code = 'MP0102') as exp_div_nm /*활동비 구분명 */ "
         query += " , t1.exp_ttl                            /*활동비 제목        */ "
         query += " , t1.appr_tm                            /*인정시간 합계        */ "
         query += " , t1.sum_exp                            /*활동비=appr_tm * unit_price*/ "
