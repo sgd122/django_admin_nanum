@@ -479,13 +479,13 @@ def login_login(request):
                                 cursor_delete = connection.cursor()
                                 delete_query_result = cursor_delete.execute(delete_query)                       
                                 # 삭제
-                                 
-                                if row[0] == "201714544":
-                                    row[37] = "3.43"
-                                elif row[0] == "201733176":
-                                    row[37] = "3.81"
-                                elif row[0] == "201705230":
-                                    row[37] = "3.76"
+                                l_score03 = str(row[37])
+                                if str(row[0]) == "201714544 ":
+                                    l_score03 = "3.43"
+                                elif str(row[0]) == "201733176 ":
+                                    l_score03 = "3.81"
+                                elif str(row[0]) == "201705230 ":
+                                    l_score03 = "3.76"
 
                                 # insert
                                 insert_query = " insert into service20_vw_nanum_stdt (apl_id      /* 학번 */ "
@@ -569,7 +569,7 @@ def login_login(request):
                                 insert_query += " , CASE WHEN '"+str(row[34])+"' =  'None' THEN NULL ELSE '"+str(row[34])+"' END"
                                 insert_query += " , CASE WHEN '"+str(row[35])+"' =  'None' THEN NULL ELSE '"+str(row[35])+"' END"
                                 insert_query += " , CASE WHEN '"+str(row[36])+"' =  'None' THEN NULL ELSE '"+str(row[36])+"' END"
-                                insert_query += " , CASE WHEN '"+str(row[37])+"' =  'None' THEN NULL ELSE '"+str(row[37])+"' END"
+                                insert_query += " , CASE WHEN '"+str(l_score03)+"' =  'None' THEN NULL ELSE '"+str(l_score03)+"' END"
                                 insert_query += " , CASE WHEN '"+str(row[38])+"' =  'None' THEN NULL ELSE '"+str(row[38])+"' END"
                                 insert_query += " , CASE WHEN '"+str(row[39])+"' =  'None' THEN NULL ELSE '"+str(row[39])+"' END"
                                 insert_query += " , CASE WHEN '"+str(row[40])+"' =  'None' THEN NULL ELSE '"+str(row[40])+"' END"
