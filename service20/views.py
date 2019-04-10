@@ -10479,11 +10479,9 @@ def MP0105M_update(request,pk):
     mgr_dt    = request.POST.get('mgr_dt', "")
     status    = request.POST.get('status', "")
     ins_id    = request.POST.get('ins_id', "")
-    ins_ip    = request.POST.get('ins_ip', "")
     ins_dt    = request.POST.get('ins_dt', "")
     ins_pgm   = request.POST.get('ins_pgm', "")
     upd_id    = request.POST.get('upd_id', "")
-    upd_ip    = request.POST.get('upd_ip', "")
     upd_dt    = request.POST.get('upd_dt', "")
     upd_pgm   = request.POST.get('upd_pgm', "")
 
@@ -10496,8 +10494,6 @@ def MP0105M_update(request,pk):
     appr_id  = request.POST.get('appr_id', "")
     appr_nm  = request.POST.get('appr_nm', "")
     mgr_id   = request.POST.get('mgr_id', "")
-    grd_id   = request.POST.get('grd_id', "")
-    grd_nm   = request.POST.get('grd_nm', "")
     client_ip = request.META['REMOTE_ADDR']
 
     update_text = ""
@@ -10515,10 +10511,6 @@ def MP0105M_update(request,pk):
         update_text += " , appr_id     = '" +str(appr_id)+"'       "
         update_text += " , appr_nm     = '" +str(appr_nm)+"'       "
         update_text += " , mgr_id      = '" +str(mgr_id)+"'        "
-
-        update_text += " , grd_id      = '" +str(grd_id)+"'      /*주보호자id*/"
-        update_text += " , grd_nm      = '" +str(grd_nm)+"'      /*보호자명*/"
-
         update_text += " , rep_dt      = now()    /*보고서작성일*/     "    
         update_text += " , upd_id      = '"+str(upd_id)   +"'    /*수정자id*/         "    
         update_text += " , upd_ip      = '"+str(client_ip)   +"'    /*수정자ip*/         "    
@@ -10549,10 +10541,6 @@ def MP0105M_update(request,pk):
         update_text += " , appr_id     = '" +str(appr_id)+"'       "
         update_text += " , appr_nm     = '" +str(appr_nm)+"'       "
         update_text += " , mgr_id      = '" +str(mgr_id)+"'        "
-
-        update_text += " , grd_id      = '" +str(grd_id)+"'      /*주보호자id*/"
-        update_text += " , grd_nm      = '" +str(grd_nm)+"'      /*보호자명*/"
-
         update_text += " , req_dt      = now()    /*승인요청일*/       "
         update_text += " , upd_id      = '"+str(upd_id)   +"'    /*수정자id*/         "    
         update_text += " , upd_ip      = '"+str(client_ip)   +"'    /*수정자ip*/         "    
