@@ -7359,6 +7359,7 @@ class MP0101M_admin_service_atc(generics.ListAPIView):
         query += "  from service20_mp_mtr_atc "
         query += " where mp_id = '" + l_mp_id + "' "
         query += "   and apl_no = '" + l_apl_no + "' "
+        query += "   and atc_cdh = 'MP0086' "
         query += " order by atc_seq "
 
 
