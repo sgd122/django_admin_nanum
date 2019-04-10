@@ -7520,7 +7520,7 @@ def MP0101M_upload_update(request):
                 fullFile = "/img/atc/"+ str(n_filename)
 
                 # atc_flag = mp_mtr_atc.objects.filter(mp_id=l_mp_id,apl_no=l_apl_no,atc_cdd=l_att_cdd[i]).exists()
-                query = " select * from service20_mp_mtr_atc where mp_id = '" + str(l_mp_id) + "' and apl_no = '" + str(l_apl_no) + "' and atc_cdd = '" + str(l_att_cdd[i]) + "'"
+                query = " select * from service20_mp_mtr_atc where mp_id = '" + str(l_mp_id) + "' and apl_no = '" + str(l_apl_no) + "' and atc_cdh = '" + str(l_att_cdh[i]) + "' and atc_cdd = '" + str(l_att_cdd[i]) + "'"
 
                 query_result = cursor.execute(query)  
 
