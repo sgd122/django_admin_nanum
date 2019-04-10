@@ -6060,7 +6060,7 @@ def MP0101M_save(request):
             #     #print(html)
             #     soup = bs(html, 'html.parser')
 
-        context = {'message': 'Ok'}
+        context = {'message': 'Ok','apl_no':str(apl_no)}
 
 
     #return HttpResponse(json.dumps(context), content_type="application/json")
