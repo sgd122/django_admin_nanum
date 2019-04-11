@@ -86,6 +86,8 @@ urlpatterns = [
     path('com/combo/spcProgram/', com_combo_spcProgram.as_view(), name='com_combo_spcProgram'),
     # 학습외 모집상태 콤보박스
     path('com/combo/spc/status/', com_combo_spc_status.as_view(), name='com_combo_spc_status'),
+    # 프로그램 찾기 (introduce테이블 프로그램)
+    path('com/combo/programIntroduce/', com_combo_programIntroduce.as_view(), name='com_combo_programIntroduce'),
     ########################################################################################
     # 공통(com)
     #

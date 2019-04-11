@@ -1303,7 +1303,7 @@ class com_datacenter(generics.ListAPIView):
 
     def list(self, request):   
         # queryset = self.get_queryset()
-        query = " select * from service20_bbs2  order by id desc "
+        query = "select * from service20_bbs2 where mp_id like Ifnull(Nullif('"+str(mp_id)+"', ''), '%%') order by id desc; "
 
         queryset = bbs1.objects.raw(query)
 
@@ -12808,7 +12808,44 @@ class com_combo_spc_status(generics.ListAPIView):
 ###############################################################
 
 
+# 프로그램 찾기 (introduce테이블 프로그램)
+class com_combo_programIntroduce_Serializer(serializers.ModelSerializer):
 
+    class Meta:
+        model = mpgm_introduce
+        fields = '__all__'
+
+class com_combo_programIntroduce(generics.ListAPIView):
+    queryset = mpgm_introduce.objects.all()
+    serializer_class = com_combo_programIntroduce_Serializer
+
+    def list(self, request):
+               
+        queryset = self.get_queryset()
+        
+        query  = "select '0' id"
+        query += "     , '' mp_id "
+        query += "     , '-------전체-------' subject "
+        query += "union "
+        query += "select id "
+        query += "     , mp_id "
+        query += "     , subject "
+        query += "  from service20_mpgm_introduce "
+        query += " order by subject   "
+
+
+        queryset = mpgm_introduce.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data) 
+        
 class mpmgListSerializer(serializers.ModelSerializer):
 
     testField = serializers.SerializerMethodField()
