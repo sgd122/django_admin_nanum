@@ -1403,6 +1403,36 @@ class com_notice_detail(generics.ListAPIView):
 
         return Response(serializer.data)
 
+#멘토링 소개(리스트)
+class com_mentoHistory_list_Serializer(serializers.ModelSerializer):
+    
+    ins_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+
+    class Meta:
+        model = mpgm_introduce
+        fields = '__all__'
+
+class com_mentoHistory_list(generics.ListAPIView):
+    queryset = mpgm_introduce.objects.all()
+    serializer_class = com_mentoHistory_list_Serializer
+
+    def list(self, request):   
+        l_mp_id = request.GET.get('mp_id', "")
+
+        queryset = self.get_queryset()
+        
+        queryset = mpgm_introduce.objects.all()
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)        
+
+
 #멘토링 소개
 class com_mentoHistory_Serializer(serializers.ModelSerializer):
     
