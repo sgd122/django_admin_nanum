@@ -1302,6 +1302,7 @@ class com_datacenter(generics.ListAPIView):
     serializer_class = com_datacenter_Serializer
 
     def list(self, request):   
+        mp_id = request.GET.get('mp_id', "")
         # queryset = self.get_queryset()
         query = "select * from service20_bbs2 where mp_id like Ifnull(Nullif('"+str(mp_id)+"', ''), '%%') order by id desc; "
 
@@ -12845,7 +12846,7 @@ class com_combo_programIntroduce(generics.ListAPIView):
             return self.get_paginated_response(serializer.data)
 
         return Response(serializer.data) 
-        
+
 class mpmgListSerializer(serializers.ModelSerializer):
 
     testField = serializers.SerializerMethodField()
