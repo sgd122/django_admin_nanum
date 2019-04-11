@@ -2445,7 +2445,7 @@ class bbs2(models.Model):
   subject = models.CharField(max_length=255, null=True, blank=True, verbose_name='타이틀' )
   name = models.CharField(max_length=50, null=True, blank=True, verbose_name='작성자' )
   html = RichTextUploadingField()
-  mp_id = models.CharField(max_length=10, null=False, verbose_name='멘토링프로그램ID' )
+  mp_id = models.CharField(max_length=10, null=False, choices=(('P190001','거점중학교육성사업대학생멘토링'),('P190002','기장희망꿈나무멘토링'),('P190003','글로벌브릿지효원레인보우국악오케스트라멘토링'),('P190004','꿈사다리장학생멘토링'),('P190005','3-DAYS프로그램 멘토링'),('P190006','부산대와함께하는금정지역멘토링'),('P190007','Hi-효원멘토링'),('P190008','마음건강멘토링'),('P190009','HUGTOGETHER멘토링'),('P190010','재능봉사캠프멘토링'),('P190011','다꿈멘토링'),('P190012','부산시교육청부산대주관다문화및탈북학생대학생멘토링'),('P190013','부산대해외봉사단'),('P190014','한국장학재단다문화및탈북학생멘토링')), verbose_name='멘토링 프로그램ID')
   file = models.FileField(upload_to='files',null=True,blank=True,verbose_name='파일')
   file2 = models.FileField(upload_to='files',null=True,blank=True,verbose_name='파일2')
   file3 = models.FileField(upload_to='files',null=True,blank=True,verbose_name='파일3')
@@ -2473,9 +2473,10 @@ class bbs2(models.Model):
 class mpgm_introduce(models.Model):
   subject = models.CharField(max_length=255, null=True, blank=True, verbose_name='타이틀' )
   name = models.CharField(max_length=50, null=True, blank=True, verbose_name='작성자' )
-  mp_id = models.CharField(max_length=10, null=False, choices=(('P190001','거점중학교육성사업대학생멘토링'),('P190002','기장희망꿈나무멘토링'),('P190003','글로벌브릿지효원레인보우국악오케스트라멘토링'),('P190004','꿈사다리장학생멘토링'),('P190005','3-DAYS프로그램 멘토링'),('P190006','부산대와함께하는금정지역멘토링'),('P190007','Hi-효원멘토링'),('P190008','마음건강멘토링'),('P190009','HUGTOGETHER멘토링'),('P190010','재능봉사캠프멘토링'),('P190011','다꿈멘토링'),('P190012','부산시교육청부산대주관다문화및탈북학생대학생멘토링'),('P190013','부산대해외봉사단'),('P190014','한국장학재단다문화및탈북학생멘토링')), verbose_name='첫 지원 멘토링 프로그램ID' )
+  mp_id = models.CharField(max_length=10, null=False, choices=(('01','거점중학교육성사업대학생멘토링'),('02','기장희망꿈나무멘토링'),('03','글로벌브릿지효원레인보우국악오케스트라멘토링'),('04','꿈사다리장학생멘토링'),('05','3-DAYS프로그램 멘토링'),('06','부산대와함께하는금정지역멘토링'),('07','Hi-효원멘토링'),('08','마음건강멘토링'),('09','HUGTOGETHER멘토링'),('10','재능봉사캠프멘토링'),('11','다꿈멘토링'),('12','부산시교육청부산대주관다문화및탈북학생대학생멘토링'),('13','부산대해외봉사단'),('14','한국장학재단다문화및탈북학생멘토링')), verbose_name='멘토링 프로그램' )
   html = RichTextUploadingField()
   file = models.FileField(upload_to='files',null=True,blank=True,verbose_name='파일')
+  img = models.FileField(upload_to='files',null=True,blank=True,verbose_name='이미지소개') 
   hits = models.IntegerField(max_length=50, null=True, blank=True, verbose_name='작성자' )
   ins_id = models.CharField(max_length=10, null=True, blank=True, verbose_name='입력자ID' )
   ins_ip = models.CharField(max_length=20, null=True, blank=True, verbose_name='입력자IP' )
@@ -2487,6 +2488,8 @@ class mpgm_introduce(models.Model):
   upd_pgm = models.CharField(max_length=20, null=True, blank=True, verbose_name='수정프로그램ID' )
   class Meta:
     verbose_name = '멘토링 프로그램 소개' 
+
+
 
 class com_evt(models.Model):
 
