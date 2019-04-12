@@ -10535,7 +10535,7 @@ class MP0105M_listMento(generics.ListAPIView):
             return self.get_paginated_response(serializer.data)
 
         return Response(serializer.data)      
-        
+
 # 보고서 현황 save
 @csrf_exempt
 def MP0105M_update(request,pk):
@@ -10707,6 +10707,7 @@ class MP0105M_listBtn(generics.ListAPIView):
         query += "    where sub_t1.mp_id = '"+l_mp_id+"' "    
         query += ") "    
         query += "and t3.mpgm_month <= date_format(now(), '%%Y-%%m') "       
+        query += "and t3.mpgm_month2 <> '201903' " ## 201903은 첫시작단계라 월별보고서 제외. 추후 필요하다고 하면 삭제하면 됨.
 
         queryset = mpgm.objects.raw(query)
 
