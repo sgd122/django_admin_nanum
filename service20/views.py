@@ -10695,6 +10695,7 @@ class MP0105M_listBtn(generics.ListAPIView):
         query += "    ) date_table, service20_mpgm b "    
         query += "    where date(date_table.date) between date(b.mnt_fr_dt) and date(b.mnt_to_dt) "    
         query += "    and b.mp_id = '"+l_mp_id+"'     "    
+        query += "    and b.status = '60'     "  
         query += "    group by date_format(date_table.date,'%%Y-%%m') "    
         query += ") as t3 "    
         query += "where t3.mpgm_month2 not in ( "    
