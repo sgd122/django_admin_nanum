@@ -10598,6 +10598,169 @@ def MP0105M_update(request,pk):
 
     return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 
+# 보고서 생성 버튼 ###################################################
+class MP0105M_listBtn_Serializer(serializers.ModelSerializer):
+
+    mpgm_month  = serializers.SerializerMethodField()  
+    mpgm_month2 = serializers.SerializerMethodField()  
+
+    class Meta:
+        model = mpgm
+        fields = '__all__'
+    
+    def get_mpgm_month(self,obj):
+        return obj.mpgm_month  
+    def get_mpgm_month2(self,obj):
+        return obj.mpgm_month2          
+
+class MP0105M_listBtn(generics.ListAPIView):
+    queryset = mpgm.objects.all()
+    serializer_class = MP0105M_listBtn_Serializer
+
+
+    def list(self, request):
+        
+        l_mp_id = request.GET.get('mp_id', "")
+        l_apl_no = request.GET.get('apl_no', "")
+
+        queryset = self.get_queryset()
+
+        query  = "select t3.* from ( "    
+        query += "    select date_format(date_table.date,'%%Y-%%m') as mpgm_month "   
+        query += "         , date_format(date_table.date,'%%Y%%m') as mpgm_month2 " 
+        query += "         , 'id' as mp_id "  
+        query += "    from ( "    
+        query += "        select sub_a.mnt_to_dt - interval (a.a + (10 * b.a) + (100 * c.a)) day as date "    
+        query += "        from service20_mpgm sub_a,(select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as a "    
+        query += "        cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as b "    
+        query += "        cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as c "    
+        query += "        where sub_a.mp_id = '"+l_mp_id+"' "    
+        query += "    ) date_table, service20_mpgm b "    
+        query += "    where date(date_table.date) between date(b.mnt_fr_dt) and date(b.mnt_to_dt) "    
+        query += "    and b.mp_id = '"+l_mp_id+"'     "    
+        query += "    group by date_format(date_table.date,'%%Y-%%m') "    
+        query += ") as t3 "    
+        query += "where t3.mpgm_month2 not in ( "    
+        query += "    select ifnull(sub_t2.rep_ym,'') "    
+        query += "      from service20_mpgm as sub_t1 left join (select * "    
+        query += "                                                  from service20_mp_rep "    
+        query += "                                                 where mp_id = '"+l_mp_id+"' "    
+        query += "                                                   and apl_no = '"+l_apl_no+"' "    
+        query += "                                               ) as sub_t2 on (sub_t1.mp_id = sub_t2.mp_id) "    
+        query += "    where sub_t1.mp_id = '"+l_mp_id+"' "    
+        query += ") "    
+        query += "and t3.mpgm_month <= date_format(now(), '%%Y-%%m') "       
+
+        queryset = mpgm.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)  
+
+# 보고서 생성
+@csrf_exempt
+def MP0105M_insert(request):
+
+    mp_id    = request.POST.get('mp_id', "")
+    apl_no    = request.POST.get('apl_no', "")
+    rep_ym    = request.POST.get('rep_ym', "")
+
+    upd_id    = request.POST.get('upd_id', "")
+    upd_dt    = request.POST.get('upd_dt', "")
+    upd_pgm   = request.POST.get('upd_pgm', "")
+
+    client_ip = request.META['REMOTE_ADDR']
+
+    update_text = ""
+    update_text += "insert into service20_mp_rep     /* 프로그램 보고서 */ "    
+    update_text += "     ( mp_id     /* 멘토링 프로그램id */ "    
+    update_text += "     , apl_no    /* 멘토 지원 no */ "    
+    update_text += "     , rep_no    /* 보고서 no */ "    
+    update_text += "     , rep_div   /* 보고서 구분(mp0062) */ "    
+    update_text += "     , rep_ym    /* 보고서 연월(월보고) */ "    
+    update_text += "     , mnte_id   /* 담당멘티id */ "    
+    update_text += "     , mnte_nm   /* 담당멘티명 */ "    
+    update_text += "     , tchr_id   /* 담당교사id */ "    
+    update_text += "     , tchr_nm   /* 담당교사명 */ "    
+    update_text += "     , sch_nm    /* 학교명 */ "    
+    update_text += "     , mtr_sub   /* 지도과목 */ "    
+    update_text += "     , att_desc  /* 출석현황 */ "    
+    update_text += "     , rep_ttl   /* 보고서 제목 */ "    
+    update_text += "     , mtr_obj   /* 학습목표 */ "    
+    update_text += "     , rep_dt    /* 보고서작성일 */ "    
+    update_text += "     , req_dt    /* 승인요청일 */ "    
+    update_text += "     , mtr_desc  /* 학습내용 */ "    
+    update_text += "     , coatching /* 학습외 지도(상담) */ "    
+    update_text += "     , spcl_note /* 특이사항 */ "    
+    update_text += "     , mtr_revw  /* 소감문 */ "    
+    update_text += "     , appr_id   /* 승인자id */ "    
+    update_text += "     , appr_nm   /* 승인자명 */ "    
+    update_text += "     , appr_dt   /* 보호자 승인일시 */ "    
+    update_text += "     , mgr_id    /* 관리자id */ "    
+    update_text += "     , mgr_dt    /* 관리자 승인일시 */ "    
+    update_text += "     , status    /* 상태(mp0070) */ "    
+    update_text += "     , ins_id    /* 입력자id */ "    
+    update_text += "     , ins_ip    /* 입력자ip */ "    
+    update_text += "     , ins_dt    /* 입력일시 */ "    
+    update_text += "     , ins_pgm   /* 입력프로그램id */ "    
+    update_text += "     , upd_id    /* 수정자id */ "    
+    update_text += "     , upd_ip    /* 수정자ip */ "    
+    update_text += "     , upd_dt    /* 수정일시 */ "    
+    update_text += "     , upd_pgm   /* 수정프로그램id */ "    
+    update_text += ") "    
+    update_text += "select a.mp_id     /* 멘토링 프로그램id */ "    
+    update_text += "     , a.apl_no    /* 멘토 지원 no */ "    
+    update_text += "     , (select ifnull(max(rep_no),0)+1 from service20_mp_rep where mp_id = a.mp_id and apl_no = a.apl_no) rep_no "    
+    update_text += "     , 'M'   /* 보고서 구분(mp0062) */ "    
+    update_text += "     , '"+str(rep_ym)+"'    /* 보고서 연월(월보고) */ "    
+    update_text += "     , null   /* 담당멘티id */ "    
+    update_text += "     , null   /* 담당멘티명 */ "    
+    update_text += "     , null   /* 담당교사id */ "    
+    update_text += "     , null   /* 담당교사명 */ "    
+    update_text += "     , null    /* 학교명 */ "    
+    update_text += "     , null   /* 지도과목 */ "    
+    update_text += "     , null  /* 출석현황 */ "    
+    update_text += "     , concat(SUBSTRING('"+str(rep_ym)+"',1,4),'년 ',SUBSTRING('"+str(rep_ym)+"',5,2),'월 보고서')   /* 보고서 제목 */ "    
+    update_text += "     , null   /* 학습목표 */ "    
+    update_text += "     , null    /* 보고서작성일 */ "    
+    update_text += "     , null    /* 승인요청일 */ "    
+    update_text += "     , null  /* 학습내용 */ "    
+    update_text += "     , null /* 학습외 지도(상담) */ "    
+    update_text += "     , null /* 특이사항 */ "    
+    update_text += "     , null  /* 소감문 */ "    
+    update_text += "     , null   /* 승인자id */ "    
+    update_text += "     , null   /* 승인자명 */ "    
+    update_text += "     , null   /* 보호자 승인일시 */ "    
+    update_text += "     , null    /* 관리자id */ "    
+    update_text += "     , null    /* 관리자 승인일시 */ "    
+    update_text += "     , '00'    /* 상태(mp0070) */ "    
+    update_text += "     , '"+str(upd_id)   +"'     /* 입력자id */ "    
+    update_text += "     , '"+str(client_ip)   +"'    /* 입력자ip */ "    
+    update_text += "     , now()    /* 입력일시 */ "    
+    update_text += "     , '"+str(upd_pgm)   +"'   /* 입력프로그램id */ "    
+    update_text += "     , '"+str(upd_id)   +"'     /* 수정자id */ "    
+    update_text += "     , '"+str(client_ip)   +"'    /* 수정자ip */ "    
+    update_text += "     , now()    /* 수정일시 */ "    
+    update_text += "     , '"+str(upd_pgm)   +"'   /* 수정프로그램id */ "    
+    update_text += "  from service20_mp_plnh a "    
+    update_text += " where 1=1 "    
+    update_text += "   and a.mp_id = '"+str(mp_id)+"' "    
+    update_text += "   and a.apl_no = '"+str(apl_no)+"' "    
+    
+    print(update_text)
+    cursor = connection.cursor()
+    query_result = cursor.execute(update_text)
+ 
+        
+    context = {'message': 'Ok'}
+
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True})
 #####################################################################################
 # MP0105M - END
 #####################################################################################
