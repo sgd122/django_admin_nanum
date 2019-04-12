@@ -10284,13 +10284,14 @@ class MP0105M_detail_2_Serializer(serializers.ModelSerializer):
     aaa = serializers.SerializerMethodField()
     grd_id = serializers.SerializerMethodField()
     grd_nm = serializers.SerializerMethodField()
+    att = serializers.SerializerMethodField()
 
     req_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     appr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     mgr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     class Meta:
         model = mp_rep
-        fields = ('mp_id','apl_no','rep_no','rep_div','rep_ttl','mtr_obj','rep_dt','req_dt','mtr_desc','coatching','spcl_note','mtr_revw','appr_id','appr_nm','appr_dt','mgr_id','mgr_dt','status','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','rep_ym','sch_yr','rep_div_nm','apl_m','tchr_id','tchr_nm','mnte_id','mnte_nm','mtr_sub','att_desc','status_nm','apl_id','teacher','mte_nm','obj_sub','aaa','mgr_nm','grd_id','grd_nm')
+        fields = '__all__'
     
     def get_mp_id(self,obj):
         return obj.mp_id
@@ -10354,6 +10355,8 @@ class MP0105M_detail_2_Serializer(serializers.ModelSerializer):
         return obj.grd_id       
     def get_grd_nm(self,obj):
         return obj.grd_nm
+    def get_att(self,obj):
+        return obj.att        
 
 class MP0105M_detail_2(generics.ListAPIView):
     queryset = mp_rep.objects.all()
@@ -10404,11 +10407,11 @@ class MP0105M_detail_2(generics.ListAPIView):
         query += "     , t2.status "
         query += "     , c1.std_detl_code_nm as status_nm     "
         query += "     , t2.mtr_obj "
-        query += "     , fn_mp_att_select_01(t1.mp_id, t1.apl_id, t2.rep_ym ) as mtr_desc ";
-        query += "     , '' as coatching "
-        query += "     , '' as spcl_note "
-        query += "     , '' as mtr_revw    "
-        query += "     "
+        query += "     , t2.mtr_desc as mtr_desc ";
+        query += "     , t2.coatching as coatching "
+        query += "     , t2.spcl_note as spcl_note "
+        query += "     , t2.mtr_revw as mtr_revw    "
+        query += "     , fn_mp_att_select_01(t1.mp_id, t1.apl_id, t2.rep_ym ) AS att "
         query += "     , t1.apl_no "
         query += "     , t1.apl_id "
         query += "     , t2.rep_no "
@@ -10477,7 +10480,7 @@ class MP0105M_detail_2(generics.ListAPIView):
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
 
-        return Response(serializer.data)        
+        return Response(serializer.data)      
 
 # 보고서 현황 save
 @csrf_exempt
