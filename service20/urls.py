@@ -358,10 +358,12 @@ urlpatterns = [
     path('MP0105M/combo/1/', MP0105M_combo_1.as_view(), name='MP0105M_combo_1'),   
     # 보고서 현황 save
     path('MP0105M/update/<int:pk>/', MP0105M_update, name='MP0105M_update'),
+    # 보고서 멘토 정보 조회
+    path('MP0105M/listMento/', MP0105M_listMento.as_view(), name='MP0105M_listMento'),   
     # 보고서 생성 버튼 조회 
     path('MP0105M/listBtn/', MP0105M_listBtn.as_view(), name='MP0105M_listBtn'),      
     # 보고서 생성
-    path('MP0105M/rprtCrea/', MP0105M_insert, name='MP0105M_insert'),
+    path('MP0105M/rprtCrea/', MP0105M_insert, name='MP0105M_insert'),         
     ########################################################################################
     # 보고서 현황(MP0105M - END )
     #

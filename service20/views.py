@@ -10106,7 +10106,7 @@ class MP0105M_list(generics.ListAPIView):
         query += " left join service20_com_cdd c2 on (c2.std_grp_code  = 'MP0062'  /* 보고서 구분(mp0062) */ "
         query += " and c2.std_detl_code = t1.rep_div) "
         query += " where 1=1 "
-        query += " and date_format(now(),'%%Y%%m') > t1.rep_ym "
+        query += " and t1.rep_ym    <= date_format(now(), '%%Y%%m') "
         query += " and t1.mp_id     = '"+l_mp_id+"'     /* 멘토링 프로그램id */ "
         # query += " and t1.rep_div   = 'M' "
         # query += " and t1.status    =  '20' /* 제출, 40 완료 */ "
@@ -10123,7 +10123,7 @@ class MP0105M_list(generics.ListAPIView):
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
 
-        return Response(serializer.data)      
+        return Response(serializer.data)  
 
 class MP0105M_detail_Serializer(serializers.ModelSerializer):
 
@@ -10142,13 +10142,14 @@ class MP0105M_detail_Serializer(serializers.ModelSerializer):
     mgr_nm = serializers.SerializerMethodField()
     tchr_id = serializers.SerializerMethodField()
     mnte_id = serializers.SerializerMethodField()
+    appr_yn = serializers.SerializerMethodField()
 
     req_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     appr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     mgr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     class Meta:
         model = mp_rep
-        fields = ('mp_id','apl_no','rep_no','rep_div','rep_ttl','mtr_obj','rep_dt','req_dt','mtr_desc','coatching','spcl_note','mtr_revw','appr_id','appr_nm','appr_dt','mgr_id','mgr_dt','status','ins_id','ins_ip','ins_dt','ins_pgm','upd_id','upd_ip','upd_dt','upd_pgm','rep_div_nm','apl_m','teacher','mte_nm','sch_yr','obj_sub','aaa','status_nm','unv_nm','cllg_nm','dept_nm','mgr_nm','tchr_id','mnte_id')
+        fields = '__all__'
     
     def get_rep_div_nm(self,obj):
         return obj.rep_div_nm   
@@ -10178,6 +10179,8 @@ class MP0105M_detail_Serializer(serializers.ModelSerializer):
         return obj.tchr_id
     def get_mnte_id(self,obj):    
         return obj.mnte_id    
+    def get_appr_yn(self,obj):    
+        return obj.appr_yn  
 
 class MP0105M_detail(generics.ListAPIView):
     queryset = mp_rep.objects.all()
@@ -10229,6 +10232,7 @@ class MP0105M_detail(generics.ListAPIView):
         query += " , t1.rep_div                                       /* 보고서 구분(mp0062) */ "
         query += " , t1.rep_ttl                                       /* 보고서 제목         */ "
         query += " , t1.appr_id                                       /* 승인자id            */ "
+        query += " , (case when date_format(last_day(concat(t1.rep_ym,'01')),'%%Y%%m%%d') > date_format(now(),'%%Y%%m%%d') then 'N' else 'Y' end) as appr_yn "        
         query += " from service20_mp_rep t1                              /* 프로그램 보고서      */ "
         query += " left join service20_mp_mtr t2  on (t2.mp_id   = t1.mp_id and t2.apl_no = t1.apl_no) "
         query += " left join service20_com_cdd c1 on (c1.std_grp_code  = 'MP0070'  and c1.std_detl_code = t1.status)  "
@@ -10285,6 +10289,7 @@ class MP0105M_detail_2_Serializer(serializers.ModelSerializer):
     grd_id = serializers.SerializerMethodField()
     grd_nm = serializers.SerializerMethodField()
     att = serializers.SerializerMethodField()
+    appr_yn = serializers.SerializerMethodField()
 
     req_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     appr_dt = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
@@ -10357,6 +10362,8 @@ class MP0105M_detail_2_Serializer(serializers.ModelSerializer):
         return obj.grd_nm
     def get_att(self,obj):
         return obj.att        
+    def get_appr_yn(self,obj):
+        return obj.appr_yn  
 
 class MP0105M_detail_2(generics.ListAPIView):
     queryset = mp_rep.objects.all()
@@ -10418,6 +10425,7 @@ class MP0105M_detail_2(generics.ListAPIView):
         query += "     , t2.rep_ym "
         query += "     , t3.grd_id    /*주보호자id*/";
         query += "     , t3.grd_nm    /*보호자명*/";
+        query += "     , (case when date_format(last_day(concat(t2.rep_ym,'01')),'%%Y%%m%%d') > date_format(now(),'%%Y%%m%%d') then 'N' else 'Y' end) as appr_yn "
         query += "  from service20_mp_mtr t1 "
         query += "   left join service20_mp_rep t2 "
         query += "       on ("
@@ -10480,7 +10488,7 @@ class MP0105M_detail_2(generics.ListAPIView):
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
 
-        return Response(serializer.data)      
+        return Response(serializer.data)         
 
 # 보고서 현황 save
 @csrf_exempt
