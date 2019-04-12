@@ -10490,6 +10490,44 @@ class MP0105M_detail_2(generics.ListAPIView):
 
         return Response(serializer.data)         
 
+# 보고서 멘토 정보 조회 ###################################################
+class MP0105M_listMento_Serializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = mp_mtr
+        fields = '__all__'
+
+
+class MP0105M_listMento(generics.ListAPIView):
+    queryset = mp_mtr.objects.all()
+    serializer_class = MP0105M_listMento_Serializer
+
+
+    def list(self, request):
+        l_mp_id = request.GET.get('mp_id', "")
+        l_user_id = request.GET.get('user_id', "")
+
+
+        queryset = self.get_queryset()
+
+        query  = "select * "
+        query += "  from service20_mp_mtr "
+        query += " where mp_id = '"+l_mp_id+"' "
+        query += "   and apl_id = '"+l_user_id+"' "
+
+        
+        queryset = mp_mtr.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)      
+        
 # 보고서 현황 save
 @csrf_exempt
 def MP0105M_update(request,pk):
@@ -10672,7 +10710,7 @@ class MP0105M_listBtn(generics.ListAPIView):
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
 
-        return Response(serializer.data)  
+        return Response(serializer.data)   
 
 # 보고서 생성
 @csrf_exempt
