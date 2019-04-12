@@ -10482,7 +10482,7 @@ class MP0105M_detail_2(generics.ListAPIView):
         query += "       ) "
         query += " where t1.mp_id = '"+str(mp_id)+"' "
         query += "   and t1.apl_id = '"+str(apl_id)+"' "
-        query += "   and t2.status = '00' "
+        # query += "   and t2.status = '00' "
         query += "   and t2.rep_ym = '"+str(rep_ym)+"'"
 
 
