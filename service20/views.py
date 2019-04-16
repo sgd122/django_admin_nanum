@@ -8580,6 +8580,46 @@ class MP0101M_service_team_combo(generics.ListAPIView):
             return self.get_paginated_response(serializer.data)
 
         return Response(serializer.data)
+# 멘토링 프로그램 질문유형 가져오기
+class MP0101M_team_quest_Serializer(serializers.ModelSerializer):
+
+    std_detl_code_nm = serializers.SerializerMethodField()
+    std_detl_code = serializers.SerializerMethodField()
+    rmrk = serializers.SerializerMethodField()
+    class Meta:
+        model = mp_sub
+        fields = ('id','mp_id','att_id','att_seq','att_cdh','att_cdd','att_val','use_yn','sort_seq','std_detl_code','std_detl_code_nm','rmrk')
+
+        
+    def get_std_detl_code(self,obj):
+        return obj.std_detl_code
+        
+    def get_std_detl_code_nm(self,obj):
+        return obj.std_detl_code_nm
+
+    def get_rmrk(self,obj):
+        return obj.rmrk    
+
+# 멘토링 프로그램 질문유형 가져오기
+class MP0101M_team_quest(generics.ListAPIView):
+    queryset = com_cdd.objects.all()
+    serializer_class = MP0101M_team_quest_Serializer
+    def list(self, request):
+        #mp_sub 테이블에서 질문내역 조회
+        key1 = request.GET.get('mp_id', None)           
+        
+        query = "select B.std_detl_code,B.std_detl_code_nm,B.rmrk,A.* from service20_mp_sub A left outer join service20_com_cdd B on (A.att_id = B.std_grp_code and A.att_cdd = B.std_detl_code) where A.att_id='MS0026' and B.use_indc = 'Y' and A.mp_id = '"+key1+"'"
+        queryset = mp_sub.objects.raw(query)
+
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
 #팀단위 추가!!!
 #####################################################################################
 # MP0101M - END 
@@ -9233,30 +9273,33 @@ class MP0103M_Detail_v2(generics.ListAPIView):
         l_mp_id = request.GET.get('mp_id', "")
         # apl_id = request.GET.get('apl_id', "")
         apl_no = request.GET.get('apl_no', "")
-        
 
         queryset = self.get_queryset()
-        
+    
+        query = " /* 프로그램 수행계획서 작성 폼 데이터 */ "
+        query += " select t1.id as id "
+        query += "      , t4.apl_id as apl_id "
+        query += "      , t4.apl_nm as apl_nm "
+        query += "      , t3.tchr_nm as tchr_nm "
+        query += "      , t3.sch_nm as sch_nm "
+        query += "      , t1.mtr_sub as mtr_sub "
+        query += "      , t5.att_val as pln_time "
+        query += "      , t1.appr_nm as appr_nm "
+        query += "      , date_format(t1.appr_dt, '%%y-%%m-%%d %%h:%%i:%%s') as appr_dt "
+        query += "      , t2.mgr_nm as mgr_nm "
+        query += "      , date_format(t1.mgr_dt, '%%y-%%m-%%d %%h:%%i:%%s') as mgr_dt "
+        query += "      , t1.status as status "
+        query += "   from service20_mp_plnh t1 "
+        query += "   left join service20_mpgm t2 on (t2.mp_id = t1.mp_id) "
+        query += "   left join service20_mp_mte t3 on (t3.mp_id = t1.mp_id and t3.apl_no = t1.apl_no) "
+        query += "   left join service20_mp_mtr t4 on (t4.mp_id = t1.mp_id and t4.apl_no = t1.apl_no) "
+        query += "   left join service20_mp_sub t5 on (t5.mp_id = t1.mp_id and t5.att_id = 'MP0007' and att_cdh = 'MP0007' and att_cdd = '10') "
+        query += "  where t1.mp_id = '" + l_mp_id + "' "
+        query += "    and t1.apl_no = '" + apl_no + "' "
 
-        # /* 프로그램 수행계획서 작성 폼 데이터 */
-        select_text = "select d.id "
-        select_text += ", d.apl_id AS apl_id, d.apl_nm AS apl_nm, c.tchr_nm AS tchr_nm, c.sch_nm AS sch_nm, a.mtr_sub AS mtr_sub, '60' AS pln_time"
-        select_text += ", a.appr_nm AS appr_nm, date_format(a.appr_dt, '%%Y-%%m-%%d %%H:%%i:%%s') AS appr_dt, b.mgr_nm AS mgr_nm, date_format(a.mgr_dt, '%%Y-%%m-%%d %%H:%%i:%%s') AS mgr_dt "
-        select_text += ", a.status AS status "
-        select_text += " from service20_mp_plnh a, service20_mpgm b, service20_mp_mte c"
-        select_text += ", (SELECT id,mp_id, apl_no, apl_id, apl_nm"
-        select_text += " FROM service20_mp_mtr"
-        select_text += " WHERE apl_no = '"+apl_no+"') d"
-        select_text += " WHERE a.mp_id = b.mp_id"
-        select_text += " AND a.mp_id = c.mp_id"
-        select_text += " AND a.mp_id = d.mp_id"
-        select_text += " AND a.apl_no = d.apl_no"
-        select_text += " AND d.apl_no = c.apl_no"
-        select_text += " AND a.mp_id = '"+l_mp_id+"'"
+        print(query)
 
-        print(select_text)
-
-        queryset = mp_mtr.objects.raw(select_text)
+        queryset = mp_mtr.objects.raw(query)
 
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(queryset, many=True)

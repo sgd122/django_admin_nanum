@@ -256,7 +256,8 @@ urlpatterns = [
     # 멘토링 프로그램 - 해외봉사활동 프로그램 (콤보)
     path('MP0101M/service/combo/', MP0101M_service_combo.as_view(), name='MP0101M_service_combo'),
 
-
+    # 멘토링 프로그램 팀단위 질문유형 가져오기
+    path('MP0101M/team/quest/', MP0101M_team_quest.as_view(), name='MP0101M_team_quest'), 
     # 멘토링 프로그램 - 해외봉사활동 프로그램 (카운트)
     path('MP0101M/service/team/cnt/', MP0101M_service_team_cnt.as_view(), name='MP0101M_service_team_cnt'),
     # 멘토링 프로그램 - 해외봉사활동 프로그램 (희망도시 콤보)
