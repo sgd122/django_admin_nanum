@@ -5731,12 +5731,15 @@ def MP0101M_save(request):
         apl_no = apl_no + 1
 
     
-    query = "select ifnull(max(apl_no),0) as apl_no from service20_mp_mtr where mp_id = '"+mp_id+"'"  
+    query = "select ifnull(max(apl_no),0) as apl_no,ifnull(max(team_id),0) as team_no from service20_mp_mtr where mp_id = '"+mp_id+"'"  
     cursor = connection.cursor()
     cursor.execute(query)    
     results = namedtuplefetchall(cursor)    
     apl_no = results[0].apl_no
     apl_no = apl_no+1
+
+    team_no = results[0].team_no
+    team_no = team_no+1
 
     print("::apl_no::")
     print(apl_no)
@@ -6091,7 +6094,7 @@ def MP0101M_save(request):
             #     #print(html)
             #     soup = bs(html, 'html.parser')
 
-        context = {'message': 'Ok','apl_no':str(apl_no)}
+        context = {'message': 'Ok','apl_no':str(apl_no),'team_no':str(team_no)}
 
 
     #return HttpResponse(json.dumps(context), content_type="application/json")
@@ -8002,8 +8005,8 @@ def MP0101M_service_team_insert(request):
     for i in range(0,int(l_length)):
         query = " insert "
         query += "    into "
-        query += "        service20_mp_chc(mp_id "
-        query += "        , apl_no "
+        query += "        service20_mp_team_chc(mp_id "
+        query += "        , team_no "
         query += "        , chc_no "
         query += "        , att_id "
         query += "        , att_cdh "
@@ -8023,7 +8026,7 @@ def MP0101M_service_team_insert(request):
         query += "    values ( "
         query += "    '" + str(l_mp_id) + "'"
         query += "    , '" + str(l_apl_no) + "'"
-        query += "    , (select ifnull(max(t1.chc_no), 0) + 1 from service20_mp_chc t1 where t1.mp_id = '" + str(l_mp_id) + "' and t1.apl_no = '" + str(l_apl_no) + "')"
+        query += "    , (select ifnull(max(t1.chc_no), 0) + 1 from service20_mp_team_chc t1 where t1.mp_id = '" + str(l_mp_id) + "' and t1.team_no = '" + str(l_apl_no) + "')"
         query += "    , 'MP0090' "
         query += "    , '" + str(l_att_cdh[i]) + "'"
         query += "    , '" + str(l_att_cdd[i]) + "'"
@@ -8031,7 +8034,7 @@ def MP0101M_service_team_insert(request):
         query += "    , (select t2.att_val  /* 선택형 답변 가능수      */ "
         query += "          from service20_mp_sub t2 "
         query += "         where t2.mp_id   = '" + str(l_mp_id) + "'"
-        query += "           and t2.att_id  = 'MP0090' /* 선택형 질문             */ "
+        query += "           and t2.att_id  = 'MP0111' /* 선택형 질문             */ "
         query += "           and t2.att_cdh = '" + str(l_att_cdh[i]) + "' /* 선택형 질문 유형        */ "
         query += "           and t2.att_cdd = '" + str(l_att_cdd[i]) + "'"
         query += "           and t2.use_yn  = 'Y') "
@@ -8039,7 +8042,7 @@ def MP0101M_service_team_insert(request):
         query += "    , (select t3.sort_seq  /* 답변 NO      */ "
         query += "          from service20_mp_sub t3 "
         query += "         where t3.mp_id   = '" + str(l_mp_id) + "'"
-        query += "           and t3.att_id  = 'MP0090' /* 선택형 질문             */ "
+        query += "           and t3.att_id  = 'MP0111' /* 선택형 질문             */ "
         query += "           and t3.att_cdh = '" + str(l_att_cdh[i]) + "' /* 선택형 질문 유형        */ "
         query += "           and t3.att_cdd = '" + str(l_att_cdd[i]) + "'"
         query += "           and t3.use_yn  = 'Y') "
@@ -8119,9 +8122,9 @@ def MP0101M_team_upload(request):
                 fullFile = str(UPLOAD_DIR) + str(n_filename)
                 fullFile = "/img/atc/"+ str(n_filename)
 
-                query = " insert into service20_mp_mtr_atc ( "
+                query = " insert into service20_mp_team_atc ( "
                 query += "    mp_id "
-                query += "    , apl_no "
+                query += "    , team_no "
                 query += "    , atc_seq "
                 query += "    , atc_cdh "
                 query += "    , atc_cdd "
@@ -8140,7 +8143,7 @@ def MP0101M_team_upload(request):
                 query += " values ( "
                 query += "    '" + str(l_mp_id) + "'"
                 query += "    , '" + str(l_apl_no) + "'"
-                query += "    , (select ifnull(max(t1.atc_seq), 0) + 1 from service20_mp_mtr_atc t1 where t1.mp_id = '" + str(l_mp_id) + "' and t1.apl_no = '" + str(l_apl_no) + "') "
+                query += "    , (select ifnull(max(t1.atc_seq), 0) + 1 from service20_mp_team_atc t1 where t1.mp_id = '" + str(l_mp_id) + "' and t1.team_no = '" + str(l_apl_no) + "') "
                 query += "    , '" + str(l_att_cdh[i]) + "'"
                 query += "    , '" + str(l_att_cdd[i]) + "'"
                 query += "    , (select std_detl_code_nm from service20_com_cdd where std_grp_code = '" + str(l_att_cdh[i]) + "' and std_detl_code = '" + str(l_att_cdd[i]) + "')"
@@ -8178,7 +8181,7 @@ class MP0101M_admin_service_team_chc(generics.ListAPIView):
 
         query = " select id as id "
         query += "     , mp_id as mp_id "
-        query += "     , apl_no as apl_no "
+        query += "     , team_no as apl_no "
         query += "     , chc_no as chc_no "
         query += "     , att_id as att_id "
         query += "     , att_cdh as att_cdh "
@@ -8187,9 +8190,9 @@ class MP0101M_admin_service_team_chc(generics.ListAPIView):
         query += "     , chc_val as chc_val "
         query += "     , chc_seq as chc_seq "
         query += "     , ques_no as ques_no "
-        query += "  from service20_mp_chc "
+        query += "  from service20_mp_team_chc "
         query += " where mp_id = '" + l_mp_id + "' "
-        query += "   and apl_no = '"+ l_apl_no + "'"
+        query += "   and team_no = '"+ l_apl_no + "'"
         query += " order by chc_no, chc_seq "
 
         queryset = mp_chc.objects.raw(query)
@@ -8222,17 +8225,17 @@ class MP0101M_admin_service_team_atc(generics.ListAPIView):
 
         query = " select id as id "
         query += "     , mp_id as mp_id "
-        query += "     , apl_no as apl_no "
+        query += "     , team_no as apl_no "
         query += "     , atc_seq as atc_seq "
         query += "     , atc_cdh as atc_cdh "
         query += "     , atc_cdd as atc_cdd "
         query += "     , atc_nm as atc_nm "
         query += "     , atc_file_nm as atc_file_nm "
         query += "     , atc_file_url as atc_file_url "
-        query += "  from service20_mp_mtr_atc "
+        query += "  from service20_mp_team_atc "
         query += " where mp_id = '" + l_mp_id + "' "
-        query += "   and apl_no = '" + l_apl_no + "' "
-        query += "   and atc_cdh = 'MP0086' "
+        query += "   and team_no = '" + l_apl_no + "' "
+        query += "   and atc_cdh = 'MP0105' "
         query += " order by atc_seq "
 
 
@@ -8300,12 +8303,12 @@ def MP0101M_service_team_update(request):
     client_ip = request.META['REMOTE_ADDR']
     
     for i in range(0,int(l_length)):
-        query = "  update service20_mp_chc "
+        query = "  update service20_mp_team_chc "
         query += "     set att_cdd = '" + str(l_att_cdd[i]) + "' "
         query += "       , chc_val = (select t1.att_val  "
         query += "                      from service20_mp_sub t1 "
         query += "                     where t1.mp_id = '" + str(l_mp_id) + "' "
-        query += "                       and t1.att_id = 'MP0090' "
+        query += "                       and t1.att_id = 'MP0111' "
         query += "                       and t1.att_cdh = '" + str(l_att_cdh[i]) + "' "
         query += "                       and t1.att_cdd = '" + str(l_att_cdd[i]) + "' "
         query += "                       and t1.use_yn = 'Y') "
@@ -8313,7 +8316,7 @@ def MP0101M_service_team_update(request):
         query += "       , ques_no = (select t2.sort_seq  "
         query += "                      from service20_mp_sub t2 "
         query += "                     where t2.mp_id = '" + str(l_mp_id) + "' "
-        query += "                       and t2.att_id = 'MP0090' "
+        query += "                       and t2.att_id = 'MP0111' "
         query += "                       and t2.att_cdh = '" + str(l_att_cdh[i]) + "' "
         query += "                       and t2.att_cdd = '" + str(l_att_cdd[i]) + "' "
         query += "                       and t2.use_yn = 'Y') "
@@ -8322,7 +8325,7 @@ def MP0101M_service_team_update(request):
         query += "       , upd_dt = now() "
         query += "       , upd_pgm = '" + str(upd_pgm) + "' "
         query += "   where mp_id = '" + str(l_mp_id) + "' "
-        query += "     and apl_no = '" + str(l_apl_no) + "' "
+        query += "     and team_no = '" + str(l_apl_no) + "' "
         query += "     and chc_no = '" + str(l_chc_no[i]) + "' "
         
         cursor = connection.cursor()
@@ -8393,14 +8396,14 @@ def MP0101M_team_upload_update(request):
                 fullFile = "/img/atc/"+ str(n_filename)
 
                 # atc_flag = mp_mtr_atc.objects.filter(mp_id=l_mp_id,apl_no=l_apl_no,atc_cdd=l_att_cdd[i]).exists()
-                query = " select * from service20_mp_mtr_atc where mp_id = '" + str(l_mp_id) + "' and apl_no = '" + str(l_apl_no) + "' and atc_cdh = '" + str(l_att_cdh[i]) + "' and atc_cdd = '" + str(l_att_cdd[i]) + "'"
+                query = " select * from service20_mp_team_atc where mp_id = '" + str(l_mp_id) + "' and team_no = '" + str(l_apl_no) + "' and atc_cdh = '" + str(l_att_cdh[i]) + "' and atc_cdd = '" + str(l_att_cdd[i]) + "'"
 
                 query_result = cursor.execute(query)  
 
                 if query_result == 0:
-                    query = " insert into service20_mp_mtr_atc ( "
+                    query = " insert into service20_mp_team_atc ( "
                     query += "    mp_id "
-                    query += "    , apl_no "
+                    query += "    , team_no "
                     query += "    , atc_seq "
                     query += "    , atc_cdh "
                     query += "    , atc_cdd "
@@ -8419,7 +8422,7 @@ def MP0101M_team_upload_update(request):
                     query += " values ( "
                     query += "    '" + str(l_mp_id) + "'"
                     query += "    , '" + str(l_apl_no) + "'"
-                    query += "    , (select ifnull(max(t1.atc_seq), 0) + 1 from service20_mp_mtr_atc t1 where t1.mp_id = '" + str(l_mp_id) + "' and t1.apl_no = '" + str(l_apl_no) + "') "
+                    query += "    , (select ifnull(max(t1.atc_seq), 0) + 1 from service20_mp_team_atc t1 where t1.mp_id = '" + str(l_mp_id) + "' and t1.team_no = '" + str(l_apl_no) + "') "
                     query += "    , '" + str(l_att_cdh[i]) + "'"
                     query += "    , '" + str(l_att_cdd[i]) + "'"
                     query += "    , (select std_detl_code_nm from service20_com_cdd where std_grp_code = '" + str(l_att_cdh[i]) + "' and std_detl_code = '" + str(l_att_cdd[i]) + "')"
@@ -8438,7 +8441,7 @@ def MP0101M_team_upload_update(request):
                     print(query)
                     cursor.execute(query)
                 else:
-                    query = " update service20_mp_mtr_atc "
+                    query = " update service20_mp_team_atc "
                     query += "    set atc_cdd = '" + str(l_att_cdd[i]) + "' "
                     query += "      , atc_nm = (select std_detl_code_nm from service20_com_cdd where std_grp_code = '" + str(l_att_cdh[i]) + "' and std_detl_code = '" + str(l_att_cdd[i]) + "') "
                     query += "      , atc_file_nm = '" + str(filename) + "' "
@@ -8448,7 +8451,7 @@ def MP0101M_team_upload_update(request):
                     query += "      , upd_dt = now()"
                     query += "      , upd_pgm = '" + upd_pgm + "'"
                     query += "  where mp_id = '" + str(l_mp_id) + "' "
-                    query += "    and apl_no = '" + str(l_apl_no) + "' "
+                    query += "    and team_no = '" + str(l_apl_no) + "' "
                     query += "    and atc_seq = '" + str(l_atc_seq[i]) + "' "
 
                     print(query)
@@ -8486,7 +8489,7 @@ class MP0101M_service_team_report_chc(generics.ListAPIView):
         query += "  left join service20_com_cdh t2 on (t2.std_grp_code = t1.att_cdh) "
         query += "  left join service20_mp_mtr  t3 on (t3.mp_id        = t1.mp_id) "
         query += " where t1.mp_id   = '" + l_mp_id + "' "
-        query += "   and t1.att_id  = 'MP0089' "
+        query += "   and t1.att_id  = 'MP0110' "
         query += "   and t1.att_cdd = '2' "
         query += "   and t3.apl_no  = '" + l_apl_no + "' ; "
 
@@ -8560,7 +8563,7 @@ class MP0101M_service_team_combo(generics.ListAPIView):
         query += "     , t1.att_val as std_detl_code_nm  /* 선택형 답변 가능수      */ "
         query += "  from service20_mp_sub t1 "
         query += " where t1.mp_id   = '" + str(l_mp_id) + "' "
-        query += "   and t1.att_id  = 'MP0090' /* 선택형 질문             */ "
+        query += "   and t1.att_id  = 'MP0111' /* 선택형 질문             */ "
         query += "   and t1.att_cdh = '" + l_att_cdh + "' /* 선택형 질문 유형        */ "
         query += "   and t1.use_yn  = 'Y' "
         query += " order by t1.sort_seq"
