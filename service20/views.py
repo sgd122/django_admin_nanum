@@ -6191,6 +6191,8 @@ def MP0101M_detail(request):
                         'ms_id' : rows3.mp_id,
                         'ms_name' : rows3.mp_name,
                         'dateAplYn' : v_dateAplYn,
+                        'indv_div' : row3.indv_div,
+                        'mem_cnt' : row3.mem_cnt,
                         }
         
 
@@ -7735,6 +7737,847 @@ class MP0101M_service_combo(generics.ListAPIView):
             return self.get_paginated_response(serializer.data)
 
         return Response(serializer.data)
+
+#팀단위 추가!!!
+# 멘토링 프로그램 - 해외봉사활동 프로그램 (카운트) ###################################################
+class MP0101M_service_team_cnt_Serializer(serializers.ModelSerializer):
+    
+    std_grp_code_nm = serializers.SerializerMethodField()
+    chc_tp = serializers.SerializerMethodField()
+    chc_cnt = serializers.SerializerMethodField()
+    chc_unit = serializers.SerializerMethodField()
+
+    class Meta:
+        model = mp_sub
+        fields = '__all__'
+
+    def get_std_grp_code_nm(self,obj):
+        return obj.std_grp_code_nm
+    def get_chc_tp(self,obj):
+        return obj.chc_tp
+    def get_chc_cnt(self,obj):
+        return obj.chc_cnt
+    def get_chc_unit(self,obj):
+        return obj.chc_unit
+
+
+class MP0101M_service_team_cnt(generics.ListAPIView):
+    queryset = mp_sub.objects.all()
+    serializer_class = MP0101M_service_team_cnt_Serializer
+    
+    def list(self, request):
+        l_mp_id = request.GET.get('mp_id', "")
+
+        query = "/* 1.선택형 질문 리스트 */"
+        query += " select t1.id, t1.att_cdh "
+        query += "     , t2.std_grp_code_nm "
+        query += "     , max(case t1.att_cdd when '1' then t1.att_val end) as chc_tp   /* 선택 유형 : 1 콤보, 2 라디오, 3 체크 */ "
+        query += "     , max(case t1.att_cdd when '2' then t1.att_val end) as chc_cnt  /* 선택 가능 갯수                       */ "
+        query += "     , max(case t1.att_cdd when '2' then ifnull(t1.att_unit, '') end) as chc_unit  /* 지망, 비지망 구분       */ "
+        query += "  from service20_mp_sub t1 "
+        query += "  left join service20_com_cdh t2 on (t2.std_grp_code = t1.att_cdh) "
+        query += " where t1.mp_id   = '" + str(l_mp_id) + "'"
+        query += "   and t1.att_id  = 'MP0089' /* 선택형 질문             */ "
+        query += "   and t1.use_yn  = 'Y' "
+        query += " group by t1.att_cdh "
+
+        print(query)
+        queryset = mp_sub.objects.raw(query)
+        
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+
+# 멘토링 프로그램 - 해외봉사활동 프로그램 (희망도시 콤보) ###################################################
+class MP0101M_service_team_combo_city_Serializer(serializers.ModelSerializer):
+    std_detl_code = serializers.SerializerMethodField()
+    std_detl_code_nm = serializers.SerializerMethodField()
+
+    class Meta:
+        model = mp_sub
+        fields = '__all__'
+
+    def get_std_detl_code(self,obj):
+        return obj.std_detl_code
+
+    def get_std_detl_code_nm(self,obj):
+        return obj.std_detl_code_nm
+
+class MP0101M_service_team_combo_city(generics.ListAPIView):
+    queryset = mp_sub.objects.all()
+    serializer_class = MP0101M_service_team_combo_city_Serializer
+    
+    def list(self, request):
+        l_mp_id = request.GET.get('mp_id', "")
+
+        query = "/* 2.질문리스트의 선택 콤보에 들어갈 항목 리스트 조회 */"
+        query += " select t1.id, t1.att_cdd as std_detl_code  /* 선택형 답변 가능수 code */ "
+        query += "     , t1.att_val as std_detl_code_nm  /* 선택형 답변 가능수      */ "
+        query += "  from service20_mp_sub t1 "
+        query += " where t1.mp_id   = '" + str(l_mp_id) + "' "
+        query += "   and t1.att_id  = 'MP0090' /* 선택형 질문             */ "
+        query += "   and t1.att_cdh = 'MP0092' /* 선택형 질문 유형        */ "
+        query += "   and t1.use_yn  = 'Y' "
+        query += " order by t1.sort_seq"
+
+        print(query)
+        queryset = mp_sub.objects.raw(query)
+        
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+# 멘토링 프로그램 - 해외봉사활동 프로그램 (분야 콤보) ###################################################
+class MP0101M_service_team_combo_field_Serializer(serializers.ModelSerializer):
+    std_detl_code = serializers.SerializerMethodField()
+    std_detl_code_nm = serializers.SerializerMethodField()
+
+    class Meta:
+        model = mp_sub
+        fields = '__all__'
+
+    def get_std_detl_code(self,obj):
+        return obj.std_detl_code
+
+    def get_std_detl_code_nm(self,obj):
+        return obj.std_detl_code_nm
+
+class MP0101M_service_team_combo_field(generics.ListAPIView):
+    queryset = mp_sub.objects.all()
+    serializer_class = MP0101M_service_team_combo_field_Serializer
+    
+    def list(self, request):
+        l_mp_id = request.GET.get('mp_id', None)
+
+        query = "/* 질문리스트의 선택 콤보에 들어갈 항목 리스트 조회 */"
+        query += " select t1.id, t1.att_cdd as std_detl_code /* 선택형 답변 가능수 code */ "
+        query += "     , t1.att_val as std_detl_code_nm  /* 선택형 답변 가능수      */ "
+        query += "  from service20_mp_sub t1 "
+        query += " where t1.mp_id   = '" + l_mp_id + "' "
+        query += "   and t1.att_id  = 'MP0090' /* 선택형 질문             */ "
+        query += "   and t1.att_cdh = 'MP0093' /* 선택형 질문 유형        */ "
+        query += "   and t1.use_yn  = 'Y' "
+        query += " order by t1.sort_seq"
+
+        queryset = mp_sub.objects.raw(query)
+        
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+
+# 멘토링 프로그램 - 해외봉사활동 프로그램 (업로드 카운트) ###################################################
+class MP0101M_service_team_upload_cnt_Serializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = mp_sub
+        fields = '__all__'
+
+class MP0101M_service_team_upload_cnt(generics.ListAPIView):
+    queryset = mp_sub.objects.all()
+    serializer_class = MP0101M_service_team_upload_cnt_Serializer
+    
+    def list(self, request):
+        l_mp_id = request.GET.get('mp_id', "")
+
+        query = " select t1.id, t1.mp_id    /* 멘토링프로그램id     */ "
+        query += "     , t1.att_cdh  /* 첨부파일 code header */ "
+        query += "     , t1.att_cdd  /* 첨부파일 code        */ "
+        query += "     , t1.att_val  /* 첨부파일 종류        */ "
+        query += "  from service20_mp_sub t1 "
+        query += " where mp_id   ='" + l_mp_id + "'  "
+        query += "   and att_cdh = 'MP0086' "
+        query += "   and use_yn  = 'Y' "
+        query += " order by sort_seq; "
+
+        queryset = mp_sub.objects.raw(query)
+        
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+# 멘토링 프로그램 - 해외봉사활동 프로그램 (apl_no 가져오기) ###################################################
+class MP0101M_service_team_apl_no_Serializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = mp_mtr
+        fields = '__all__'
+
+class MP0101M_service_team_apl_no(generics.ListAPIView):
+    queryset = mp_mtr.objects.all()
+    serializer_class = MP0101M_service_team_apl_no_Serializer
+    
+    def list(self, request):
+        l_mp_id = request.GET.get('mp_id', "")
+
+        query = " select id, mp_id, max(apl_no) as apl_no from service20_mp_mtr where mp_id = '" + l_mp_id + "'"
+
+        print(query)
+        queryset = mp_mtr.objects.raw(query)
+        
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+        
+# 멘토링 프로그램 - 해외봉사활동 프로그램 (insert) ###################################################
+@csrf_exempt
+def MP0101M_service_team_insert(request):
+    l_mp_id = request.POST.get('mp_id', "")    
+    l_apl_no = request.POST.get('apl_no', "")
+    l_length = request.POST.get('over_service_length', "")
+    l_att_cdd = list()
+    l_att_cdh = list()
+    l_chc_tp = list()
+    l_seq = list()
+
+    print("apl_no====" + l_apl_no)
+    print("length==" + l_length)
+
+    com_cnt = 0
+    sel_cnt = 0
+    chk_cnt = 0
+    for i in range(0,int(l_length)):
+        # l_att_cdd.append(request.POST.get('select_'+str(i), ""))
+        l_att_cdh.append(request.POST.get('att_cdh'+str(i), ""))
+        l_chc_tp.append(request.POST.get('chc_tp'+str(i), ""))
+        l_seq.append(request.POST.get('seq'+str(i), ""))
+
+        if l_chc_tp[i] == '1':
+            l_att_cdd.append(request.POST.get('service_combo'+str(com_cnt), ""))
+            com_cnt = com_cnt + 1
+        elif l_chc_tp[i] == '3':
+            l_att_cdd.append(request.POST.get('service_chkbox'+str(chk_cnt), ""))
+            chk_cnt = chk_cnt + 1
+        else:
+            l_att_cdd.append(request.POST.get('service_select'+str(sel_cnt), ""))
+            sel_cnt = sel_cnt + 1
+    
+        print("l_att_cdd===" + l_att_cdd[i])
+        print("l_att_cdh===" + l_att_cdh[i])
+        print("l_chc_tp===" + l_chc_tp[i])
+        print("l_seq===" + l_seq[i])
+
+    ins_id = request.POST.get('ins_id', "")
+    ins_ip = request.POST.get('ins_ip', "")
+    ins_dt = request.POST.get('ins_dt', "")
+    ins_pgm = request.POST.get('ins_pgm', "")
+    upd_id = request.POST.get('upd_id', "")
+    upd_ip = request.POST.get('upd_ip', "")
+    upd_dt = request.POST.get('upd_dt', "")
+    upd_pgm = request.POST.get('upd_pgm', "")
+
+    client_ip = request.META['REMOTE_ADDR']
+    
+    for i in range(0,int(l_length)):
+        query = " insert "
+        query += "    into "
+        query += "        service20_mp_chc(mp_id "
+        query += "        , apl_no "
+        query += "        , chc_no "
+        query += "        , att_id "
+        query += "        , att_cdh "
+        query += "        , att_cdd "
+        query += "        , chc_tp "
+        query += "        , chc_val "
+        query += "        , chc_seq "
+        query += "        , ques_no "
+        query += "        , ins_id "
+        query += "        , ins_ip "
+        query += "        , ins_dt "
+        query += "        , ins_pgm "
+        query += "        , upd_id "
+        query += "        , upd_ip "
+        query += "        , upd_dt "
+        query += "        , upd_pgm) "
+        query += "    values ( "
+        query += "    '" + str(l_mp_id) + "'"
+        query += "    , '" + str(l_apl_no) + "'"
+        query += "    , (select ifnull(max(t1.chc_no), 0) + 1 from service20_mp_chc t1 where t1.mp_id = '" + str(l_mp_id) + "' and t1.apl_no = '" + str(l_apl_no) + "')"
+        query += "    , 'MP0090' "
+        query += "    , '" + str(l_att_cdh[i]) + "'"
+        query += "    , '" + str(l_att_cdd[i]) + "'"
+        query += "    , '" + str(l_chc_tp[i]) + "'"
+        query += "    , (select t2.att_val  /* 선택형 답변 가능수      */ "
+        query += "          from service20_mp_sub t2 "
+        query += "         where t2.mp_id   = '" + str(l_mp_id) + "'"
+        query += "           and t2.att_id  = 'MP0090' /* 선택형 질문             */ "
+        query += "           and t2.att_cdh = '" + str(l_att_cdh[i]) + "' /* 선택형 질문 유형        */ "
+        query += "           and t2.att_cdd = '" + str(l_att_cdd[i]) + "'"
+        query += "           and t2.use_yn  = 'Y') "
+        query += "    , '" + str(l_seq[i]) + "' "
+        query += "    , (select t3.sort_seq  /* 답변 NO      */ "
+        query += "          from service20_mp_sub t3 "
+        query += "         where t3.mp_id   = '" + str(l_mp_id) + "'"
+        query += "           and t3.att_id  = 'MP0090' /* 선택형 질문             */ "
+        query += "           and t3.att_cdh = '" + str(l_att_cdh[i]) + "' /* 선택형 질문 유형        */ "
+        query += "           and t3.att_cdd = '" + str(l_att_cdd[i]) + "'"
+        query += "           and t3.use_yn  = 'Y') "
+        query += "    , '" + str(ins_id) + "'"
+        query += "    , '" + str(client_ip) + "'"
+        query += "    , now() "
+        query += "    , '" + str(ins_pgm) + "'"
+        query += "    , '" + str(upd_id) + "'"
+        query += "    , '" + str(client_ip) + "'"
+        query += "    , now() "
+        query += "    , '" + str(upd_pgm) + "'"
+        query += " ) "
+
+        print(query)
+        cursor = connection.cursor()
+        query_result = cursor.execute(query) 
+
+    context = {'message': 'Ok'}
+
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True}) 
+
+# 멘토링 프로그램 - 해외봉사활동 프로그램 파일 업로드(insert) ###################################################
+@csrf_exempt
+def MP0101M_team_upload(request):
+    req = request
+    DIR = os.getcwd()
+    UPLOAD_DIR = str(DIR) + '/media/MP0101M/'
+    UPLOAD_DIR = '/NANUM/www/img/atc/'
+    # UPLOAD_DIR = 'img'
+    
+    if request.method == 'POST':
+        l_mp_id = request.POST.get("mp_id")
+        l_apl_no = request.POST.get("apl_no")
+        l_apl_id = request.POST.get("apl_id") 
+        l_length = request.POST.get("upload_length")
+        ins_id = request.POST.get('ins_id', "")
+        ins_ip = request.POST.get('ins_ip', "")
+        ins_dt = request.POST.get('ins_dt', "")
+        ins_pgm = request.POST.get('ins_pgm', "")
+        upd_id = request.POST.get('upd_id', "")
+        upd_ip = request.POST.get('upd_ip', "")
+        upd_dt = request.POST.get('upd_dt', "")
+        upd_pgm = request.POST.get('upd_pgm', "")
+
+        client_ip = request.META['REMOTE_ADDR']
+
+        l_att_cdd = list()
+        l_att_cdh = list()
+        l_service_upload_text = list()
+        l_service_upload = list()
+        l_upload_no = list()
+
+
+        for i in range(0,int(l_length)):
+            l_att_cdd.append(request.POST.get('att_cdd_up'+str(i), ""))
+            l_service_upload_text.append(request.POST.get('service_upload_text'+str(i), ""))
+            l_service_upload.append(request.POST.get('service_upload'+str(i), ""))
+            l_att_cdh.append(request.POST.get('att_cdh_up'+str(i), ""))
+            l_upload_no.append(request.POST.get('upload_no'+str(i), ""))
+
+            print("l_upload=====" + str(l_upload_no[i]) + "    i=====" + str(i))
+
+            if(str(l_upload_no[i]) == str(i)):
+                file = request.FILES['service_upload' + str(i)]
+                print(file)
+                filename = file._name
+                n_filename = str(l_mp_id) + str(l_apl_id) + str(l_att_cdh[i]) + str(l_att_cdd[i]) + os.path.splitext(filename)[1]
+                print(n_filename)
+                print (UPLOAD_DIR)
+                
+                fp = open('%s/%s' % (UPLOAD_DIR, n_filename) , 'wb')
+                for chunk in file.chunks():
+                    fp.write(chunk)
+                fp.close()
+
+                cursor = connection.cursor()
+                fullFile = str(UPLOAD_DIR) + str(n_filename)
+                fullFile = "/img/atc/"+ str(n_filename)
+
+                query = " insert into service20_mp_mtr_atc ( "
+                query += "    mp_id "
+                query += "    , apl_no "
+                query += "    , atc_seq "
+                query += "    , atc_cdh "
+                query += "    , atc_cdd "
+                query += "    , atc_nm "
+                query += "    , atc_file_nm "
+                query += "    , atc_file_url "
+                query += "    , ins_id "
+                query += "    , ins_ip "
+                query += "    , ins_dt "
+                query += "    , ins_pgm "
+                query += "    , upd_id "
+                query += "    , upd_ip "
+                query += "    , upd_dt "
+                query += "    , upd_pgm "
+                query += " ) "
+                query += " values ( "
+                query += "    '" + str(l_mp_id) + "'"
+                query += "    , '" + str(l_apl_no) + "'"
+                query += "    , (select ifnull(max(t1.atc_seq), 0) + 1 from service20_mp_mtr_atc t1 where t1.mp_id = '" + str(l_mp_id) + "' and t1.apl_no = '" + str(l_apl_no) + "') "
+                query += "    , '" + str(l_att_cdh[i]) + "'"
+                query += "    , '" + str(l_att_cdd[i]) + "'"
+                query += "    , (select std_detl_code_nm from service20_com_cdd where std_grp_code = '" + str(l_att_cdh[i]) + "' and std_detl_code = '" + str(l_att_cdd[i]) + "')"
+                query += "    , '" + str(filename) + "'"
+                query += "    , '" + str(fullFile) + "'"
+                query += "    , '" + str(ins_id) + "'"
+                query += "    , '" + str(client_ip) + "'"
+                query += "    , now() "
+                query += "    , '" + str(ins_pgm) + "'"
+                query += "    , '" + str(upd_id) + "'"
+                query += "    , '" + str(client_ip) + "'"
+                query += "    , now() "
+                query += "    , '" + str(upd_pgm) + "'"
+                query += " ) "
+
+                cursor.execute(query)
+
+
+        return HttpResponse('File Uploaded')
+
+# 멘토링 프로그램(관리자) - 해외봉사활동 프로그램 (데이터) ###################################################
+class MP0101M_admin_service_team_chc_Serializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = mp_chc
+        fields = '__all__'
+
+class MP0101M_admin_service_team_chc(generics.ListAPIView):
+    queryset = mp_chc.objects.all()
+    serializer_class = MP0101M_admin_service_team_chc_Serializer
+    
+    def list(self, request):
+        l_mp_id = request.GET.get('mp_id', "")
+        l_apl_no = request.GET.get('apl_no', "")
+
+        query = " select id as id "
+        query += "     , mp_id as mp_id "
+        query += "     , apl_no as apl_no "
+        query += "     , chc_no as chc_no "
+        query += "     , att_id as att_id "
+        query += "     , att_cdh as att_cdh "
+        query += "     , att_cdd as att_cdd "
+        query += "     , chc_tp as chc_tp "
+        query += "     , chc_val as chc_val "
+        query += "     , chc_seq as chc_seq "
+        query += "     , ques_no as ques_no "
+        query += "  from service20_mp_chc "
+        query += " where mp_id = '" + l_mp_id + "' "
+        query += "   and apl_no = '"+ l_apl_no + "'"
+        query += " order by chc_no, chc_seq "
+
+        queryset = mp_chc.objects.raw(query)
+        
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+
+# 멘토링 프로그램(관리자) - 해외봉사활동 프로그램 (첨부데이터) ###################################################
+class MP0101M_admin_service_team_atc_Serializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = mp_mtr_atc
+        fields = '__all__'
+
+class MP0101M_admin_service_team_atc(generics.ListAPIView):
+    queryset = mp_mtr_atc.objects.all()
+    serializer_class = MP0101M_admin_service_team_atc_Serializer
+    
+    def list(self, request):
+        l_mp_id = request.GET.get('mp_id', "")
+        l_apl_no = request.GET.get('apl_no', "")
+
+        query = " select id as id "
+        query += "     , mp_id as mp_id "
+        query += "     , apl_no as apl_no "
+        query += "     , atc_seq as atc_seq "
+        query += "     , atc_cdh as atc_cdh "
+        query += "     , atc_cdd as atc_cdd "
+        query += "     , atc_nm as atc_nm "
+        query += "     , atc_file_nm as atc_file_nm "
+        query += "     , atc_file_url as atc_file_url "
+        query += "  from service20_mp_mtr_atc "
+        query += " where mp_id = '" + l_mp_id + "' "
+        query += "   and apl_no = '" + l_apl_no + "' "
+        query += "   and atc_cdh = 'MP0086' "
+        query += " order by atc_seq "
+
+
+        queryset = mp_mtr_atc.objects.raw(query)
+        
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+# 멘토링 프로그램 - 해외봉사활동 프로그램 (update) ###################################################
+@csrf_exempt
+def MP0101M_service_team_update(request):
+    l_mp_id = request.POST.get('mp_id', "")    
+    l_apl_no = request.POST.get('apl_no', "")
+    l_length = request.POST.get('over_service_length', "")
+    l_att_cdd = list()
+    l_att_cdh = list()
+    l_chc_tp = list()
+    l_chc_no = list()
+    l_seq = list()
+
+    print("apl_no====" + l_apl_no)
+    print("length==" + l_length)
+    com_cnt = 0
+    sel_cnt = 0
+    chk_cnt = 0
+    for i in range(0,int(l_length)):
+        # l_att_cdd.append(request.POST.get('select_'+str(i), ""))
+        l_att_cdh.append(request.POST.get('att_cdh'+str(i), ""))
+        l_chc_tp.append(request.POST.get('chc_tp'+str(i), ""))
+        l_chc_no.append(request.POST.get('chc_no'+str(i), ""))
+        l_seq.append(request.POST.get('seq'+str(i), ""))
+
+        if l_chc_tp[i] == '1':
+            l_att_cdd.append(request.POST.get('service_combo'+str(com_cnt), ""))
+            com_cnt = com_cnt + 1
+        elif l_chc_tp[i] == '3':
+            l_att_cdd.append(request.POST.get('service_chkbox'+str(chk_cnt), ""))
+            chk_cnt = chk_cnt + 1
+        else:
+            l_att_cdd.append(request.POST.get('service_select'+str(sel_cnt), ""))
+            sel_cnt = sel_cnt + 1
+    
+        print("l_att_cdd===" + l_att_cdd[i])
+        print("l_att_cdh===" + l_att_cdh[i])
+        print("l_chc_tp===" + l_chc_tp[i])
+        print("l_seq===" + l_seq[i])
+        print("l_chc_no===" + l_chc_no[i])
+
+    ins_id = request.POST.get('ins_id', "")
+    ins_ip = request.POST.get('ins_ip', "")
+    ins_dt = request.POST.get('ins_dt', "")
+    ins_pgm = request.POST.get('ins_pgm', "")
+    upd_id = request.POST.get('upd_id', "")
+    upd_ip = request.POST.get('upd_ip', "")
+    upd_dt = request.POST.get('upd_dt', "")
+    upd_pgm = request.POST.get('upd_pgm', "")
+
+    client_ip = request.META['REMOTE_ADDR']
+    
+    for i in range(0,int(l_length)):
+        query = "  update service20_mp_chc "
+        query += "     set att_cdd = '" + str(l_att_cdd[i]) + "' "
+        query += "       , chc_val = (select t1.att_val  "
+        query += "                      from service20_mp_sub t1 "
+        query += "                     where t1.mp_id = '" + str(l_mp_id) + "' "
+        query += "                       and t1.att_id = 'MP0090' "
+        query += "                       and t1.att_cdh = '" + str(l_att_cdh[i]) + "' "
+        query += "                       and t1.att_cdd = '" + str(l_att_cdd[i]) + "' "
+        query += "                       and t1.use_yn = 'Y') "
+        query += "       , chc_seq = '" + l_seq[i] + "' "
+        query += "       , ques_no = (select t2.sort_seq  "
+        query += "                      from service20_mp_sub t2 "
+        query += "                     where t2.mp_id = '" + str(l_mp_id) + "' "
+        query += "                       and t2.att_id = 'MP0090' "
+        query += "                       and t2.att_cdh = '" + str(l_att_cdh[i]) + "' "
+        query += "                       and t2.att_cdd = '" + str(l_att_cdd[i]) + "' "
+        query += "                       and t2.use_yn = 'Y') "
+        query += "       , upd_id = '" + str(upd_id) + "' "
+        query += "       , upd_ip = '" + str(client_ip) + "' "
+        query += "       , upd_dt = now() "
+        query += "       , upd_pgm = '" + str(upd_pgm) + "' "
+        query += "   where mp_id = '" + str(l_mp_id) + "' "
+        query += "     and apl_no = '" + str(l_apl_no) + "' "
+        query += "     and chc_no = '" + str(l_chc_no[i]) + "' "
+        
+        cursor = connection.cursor()
+        query_result = cursor.execute(query) 
+
+    context = {'message': 'Ok'}
+
+    return JsonResponse(context,json_dumps_params={'ensure_ascii': True}) 
+
+
+# 멘토링 프로그램 - 해외봉사활동 프로그램 파일 업로드(update) ###################################################
+@csrf_exempt
+def MP0101M_team_upload_update(request):
+    req = request
+    DIR = os.getcwd()
+    UPLOAD_DIR = str(DIR) + '/media/MP0101M/'
+    UPLOAD_DIR = '/NANUM/www/img/atc/'
+    # UPLOAD_DIR = 'img'
+    
+    if request.method == 'POST':
+        l_mp_id = request.POST.get("mp_id")
+        l_apl_no = request.POST.get("apl_no")
+        l_apl_id = request.POST.get("apl_id") 
+        l_length = request.POST.get("upload_length")
+        ins_id = request.POST.get('ins_id', "")
+        ins_ip = request.POST.get('ins_ip', "")
+        ins_dt = request.POST.get('ins_dt', "")
+        ins_pgm = request.POST.get('ins_pgm', "")
+        upd_id = request.POST.get('upd_id', "")
+        upd_ip = request.POST.get('upd_ip', "")
+        upd_dt = request.POST.get('upd_dt', "")
+        upd_pgm = request.POST.get('upd_pgm', "")
+
+        client_ip = request.META['REMOTE_ADDR']
+
+        l_att_cdd = list()
+        l_att_cdh = list()
+        l_service_upload_text = list()
+        l_service_upload = list()
+        l_atc_seq = list()
+        l_upload_no = list()
+
+        for i in range(0,int(l_length)):
+            l_att_cdd.append(request.POST.get('att_cdd_up'+str(i), ""))
+            l_service_upload_text.append(request.POST.get('service_upload_text'+str(i), ""))
+            l_service_upload.append(request.POST.get('service_upload'+str(i), ""))
+            l_att_cdh.append(request.POST.get('att_cdh_up'+str(i), ""))
+            l_atc_seq.append(request.POST.get('atc_seq'+str(i), ""))
+            l_upload_no.append(request.POST.get('upload_no'+str(i), ""))
+
+            print("l_upload=====" + str(l_upload_no[i]) + "    i=====" + str(i))
+
+            if(str(l_upload_no[i]) == str(i)):
+                file = request.FILES['service_upload' + str(i)]
+                print(file)
+                filename = file._name
+                n_filename = str(l_mp_id) + str(l_apl_id) + str(l_att_cdh[i]) + str(l_att_cdd[i]) + os.path.splitext(filename)[1]
+                print(n_filename)
+                print (UPLOAD_DIR)
+            
+                fp = open('%s/%s' % (UPLOAD_DIR, n_filename) , 'wb')
+                for chunk in file.chunks():
+                    fp.write(chunk)
+                fp.close()
+
+                cursor = connection.cursor()
+                fullFile = str(UPLOAD_DIR) + str(n_filename)
+                fullFile = "/img/atc/"+ str(n_filename)
+
+                # atc_flag = mp_mtr_atc.objects.filter(mp_id=l_mp_id,apl_no=l_apl_no,atc_cdd=l_att_cdd[i]).exists()
+                query = " select * from service20_mp_mtr_atc where mp_id = '" + str(l_mp_id) + "' and apl_no = '" + str(l_apl_no) + "' and atc_cdh = '" + str(l_att_cdh[i]) + "' and atc_cdd = '" + str(l_att_cdd[i]) + "'"
+
+                query_result = cursor.execute(query)  
+
+                if query_result == 0:
+                    query = " insert into service20_mp_mtr_atc ( "
+                    query += "    mp_id "
+                    query += "    , apl_no "
+                    query += "    , atc_seq "
+                    query += "    , atc_cdh "
+                    query += "    , atc_cdd "
+                    query += "    , atc_nm "
+                    query += "    , atc_file_nm "
+                    query += "    , atc_file_url "
+                    query += "    , ins_id "
+                    query += "    , ins_ip "
+                    query += "    , ins_dt "
+                    query += "    , ins_pgm "
+                    query += "    , upd_id "
+                    query += "    , upd_ip "
+                    query += "    , upd_dt "
+                    query += "    , upd_pgm "
+                    query += " ) "
+                    query += " values ( "
+                    query += "    '" + str(l_mp_id) + "'"
+                    query += "    , '" + str(l_apl_no) + "'"
+                    query += "    , (select ifnull(max(t1.atc_seq), 0) + 1 from service20_mp_mtr_atc t1 where t1.mp_id = '" + str(l_mp_id) + "' and t1.apl_no = '" + str(l_apl_no) + "') "
+                    query += "    , '" + str(l_att_cdh[i]) + "'"
+                    query += "    , '" + str(l_att_cdd[i]) + "'"
+                    query += "    , (select std_detl_code_nm from service20_com_cdd where std_grp_code = '" + str(l_att_cdh[i]) + "' and std_detl_code = '" + str(l_att_cdd[i]) + "')"
+                    query += "    , '" + str(filename) + "'"
+                    query += "    , '" + str(fullFile) + "'"
+                    query += "    , '" + str(ins_id) + "'"
+                    query += "    , '" + str(client_ip) + "'"
+                    query += "    , now() "
+                    query += "    , '" + str(ins_pgm) + "'"
+                    query += "    , '" + str(upd_id) + "'"
+                    query += "    , '" + str(client_ip) + "'"
+                    query += "    , now() "
+                    query += "    , '" + str(upd_pgm) + "'"
+                    query += " ) "
+
+                    print(query)
+                    cursor.execute(query)
+                else:
+                    query = " update service20_mp_mtr_atc "
+                    query += "    set atc_cdd = '" + str(l_att_cdd[i]) + "' "
+                    query += "      , atc_nm = (select std_detl_code_nm from service20_com_cdd where std_grp_code = '" + str(l_att_cdh[i]) + "' and std_detl_code = '" + str(l_att_cdd[i]) + "') "
+                    query += "      , atc_file_nm = '" + str(filename) + "' "
+                    query += "      , atc_file_url = '" + str(fullFile) + "' "
+                    query += "      , upd_id = '" + upd_id + "'"
+                    query += "      , upd_ip = '" + client_ip + "'"
+                    query += "      , upd_dt = now()"
+                    query += "      , upd_pgm = '" + upd_pgm + "'"
+                    query += "  where mp_id = '" + str(l_mp_id) + "' "
+                    query += "    and apl_no = '" + str(l_apl_no) + "' "
+                    query += "    and atc_seq = '" + str(l_atc_seq[i]) + "' "
+
+                    print(query)
+                    cursor.execute(query)
+
+        return HttpResponse('File Uploaded')
+
+# 멘토링 프로그램 - 해외봉사활동 프로그램 (apl_no 가져오기) ###################################################
+class MP0101M_service_team_report_chc_Serializer(serializers.ModelSerializer):
+    std_grp_code_nm = serializers.SerializerMethodField()
+    chc_val = serializers.SerializerMethodField()
+
+    class Meta:
+        model = mp_sub
+        fields = '__all__'
+
+    def get_std_grp_code_nm(self,obj):
+        return obj.std_grp_code_nm
+    def get_chc_val(self,obj):
+        return obj.chc_val
+
+class MP0101M_service_team_report_chc(generics.ListAPIView):
+    queryset = mp_sub.objects.all()
+    serializer_class = MP0101M_service_team_report_chc_Serializer
+    
+    def list(self, request):
+        l_mp_id = request.GET.get('mp_id', "")
+        l_apl_no = request.GET.get('apl_no', "")
+
+        query = "/* 선택한 리스트 조회 */ "
+        query += "select t1.id, t1.att_cdh "
+        query += "     , t2.std_grp_code_nm "
+        query += "     , fn_mp_chc_select_01('" + l_mp_id + "', t3.apl_no, t1.att_cdh) as chc_val "
+        query += "  from service20_mp_sub t1 "
+        query += "  left join service20_com_cdh t2 on (t2.std_grp_code = t1.att_cdh) "
+        query += "  left join service20_mp_mtr  t3 on (t3.mp_id        = t1.mp_id) "
+        query += " where t1.mp_id   = '" + l_mp_id + "' "
+        query += "   and t1.att_id  = 'MP0089' "
+        query += "   and t1.att_cdd = '2' "
+        query += "   and t3.apl_no  = '" + l_apl_no + "' ; "
+
+        print(query)
+        queryset = mp_sub.objects.raw(query)
+        
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+# 멘토링 프로그램 - 해외봉사활동 프로그램 (mp_sub 코드) ###################################################
+class MP0101M_service_team_sub_Serializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = mp_sub
+        fields = '__all__'
+
+
+class MP0101M_service_team_sub(generics.ListAPIView):
+    queryset = mp_sub.objects.all()
+    serializer_class = MP0101M_service_team_sub_Serializer
+    
+    def list(self, request):
+        l_mp_id = request.GET.get('mp_id', "")
+
+        query = " select id, att_id from service20_mp_sub where mp_id = '" + l_mp_id + "' group by att_id "
+
+        print(query)
+        queryset = mp_sub.objects.raw(query)
+        
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+
+# 멘토링 프로그램 - 해외봉사활동 프로그램 (콤보) ###################################################
+class MP0101M_service_team_combo_Serializer(serializers.ModelSerializer):
+    std_detl_code = serializers.SerializerMethodField()
+    std_detl_code_nm = serializers.SerializerMethodField()
+
+    class Meta:
+        model = mp_sub
+        fields = '__all__'
+
+    def get_std_detl_code(self,obj):
+        return obj.std_detl_code
+
+    def get_std_detl_code_nm(self,obj):
+        return obj.std_detl_code_nm
+
+class MP0101M_service_team_combo(generics.ListAPIView):
+    queryset = mp_sub.objects.all()
+    serializer_class = MP0101M_service_team_combo_Serializer
+    
+    def list(self, request):
+        l_mp_id = request.GET.get('mp_id', "")
+        l_att_cdh = request.GET.get('att_cdh', "")
+
+        query = "/* 2.질문리스트의 선택 콤보에 들어갈 항목 리스트 조회 */"
+        query += " select t1.id, t1.att_cdd as std_detl_code  /* 선택형 답변 가능수 code */ "
+        query += "     , t1.att_val as std_detl_code_nm  /* 선택형 답변 가능수      */ "
+        query += "  from service20_mp_sub t1 "
+        query += " where t1.mp_id   = '" + str(l_mp_id) + "' "
+        query += "   and t1.att_id  = 'MP0090' /* 선택형 질문             */ "
+        query += "   and t1.att_cdh = '" + l_att_cdh + "' /* 선택형 질문 유형        */ "
+        query += "   and t1.use_yn  = 'Y' "
+        query += " order by t1.sort_seq"
+
+        print(query)
+        queryset = mp_sub.objects.raw(query)
+        
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        return Response(serializer.data)
+#팀단위 추가!!!
 #####################################################################################
 # MP0101M - END 
 #####################################################################################

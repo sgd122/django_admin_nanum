@@ -255,6 +255,36 @@ urlpatterns = [
     path('MP0101M/service/sub/', MP0101M_service_sub.as_view(), name='MP0101M_service_sub'),
     # 멘토링 프로그램 - 해외봉사활동 프로그램 (콤보)
     path('MP0101M/service/combo/', MP0101M_service_combo.as_view(), name='MP0101M_service_combo'),
+
+
+    # 멘토링 프로그램 - 해외봉사활동 프로그램 (카운트)
+    path('MP0101M/service/team/cnt/', MP0101M_service_team_cnt.as_view(), name='MP0101M_service_team_cnt'),
+    # 멘토링 프로그램 - 해외봉사활동 프로그램 (희망도시 콤보)
+    path('MP0101M/service/team/combo/city/', MP0101M_service_team_combo_city.as_view(), name='MP0101M_service_team_combo_city'),
+    # 멘토링 프로그램 - 해외봉사활동 프로그램 (분야 콤보)
+    path('MP0101M/service/team/combo/field/', MP0101M_service_team_combo_field.as_view(), name='MP0101M_service_team_combo_field'),
+    # 멘토링 프로그램 - 해외봉사활동 프로그램 (첨부파일 카운트)
+    path('MP0101M/service/team/upload/cnt/', MP0101M_service_team_upload_cnt.as_view(), name='MP0101M_service_team_upload_cnt'),
+    # 멘토링 프로그램 - 해외봉사활동 프로그램 (apl_no 가져오기)
+    path('MP0101M/service/team/apl_no/', MP0101M_service_team_apl_no.as_view(), name='MP0101M_service_team_apl_no'),
+    # 멘토링 프로그램 - 해외봉사활동 프로그램 (insert)
+    path('MP0101M/service/team/insert/', MP0101M_service_team_insert, name='MP0101M_service_team_insert'), 
+    # 멘토링 프로그램 - 해외봉사활동 프로그램 파일 업로드(insert)
+    path('MP0101M/service/team/upload/', MP0101M_team_upload, name='MP0101M_team_upload'),
+    # 멘토링 프로그램(관리자) - 해외봉사활동 프로그램 (데이터)
+    path('MP0101M/admin/service/team/chc/', MP0101M_admin_service_team_chc.as_view(), name='MP0101M_admin_service_team_chc'),    
+    # 멘토링 프로그램(관리자) - 해외봉사활동 프로그램 (첨부데이터)
+    path('MP0101M/admin/service/team/atc/', MP0101M_admin_service_team_atc.as_view(), name='MP0101M_admin_service_team_atc'), 
+    # 멘토링 프로그램(관리자) - 해외봉사활동 프로그램 (update)
+    path('MP0101M/service/team/update/', MP0101M_service_team_update, name='MP0101M_service_team_update'), 
+    # 멘토링 프로그램(관리자) - 해외봉사활동 프로그램 파일 업로드(update)
+    path('MP0101M/service/team/upload/update/', MP0101M_team_upload_update, name='MP0101M_team_upload_update'),
+    # 멘토링 프로그램(레포트) - 해외봉사활동 프로그램 (데이터)
+    path('MP0101M/service/team/report/chc/', MP0101M_service_team_report_chc.as_view(), name='MP0101M_service_team_report_chc'),
+    # 멘토링 프로그램 - mp_sub 코드 (sub_code)
+    path('MP0101M/service/team/sub/', MP0101M_service_team_sub.as_view(), name='MP0101M_service_team_sub'),
+    # 멘토링 프로그램 - 해외봉사활동 프로그램 (콤보)
+    path('MP0101M/service/team/combo/', MP0101M_service_team_combo.as_view(), name='MP0101M_service_team_combo'),
     ########################################################################################
     # 멘토링 프로그램(MP0101M - END )
     #
