@@ -6191,8 +6191,8 @@ def MP0101M_detail(request):
                         'ms_id' : rows3.mp_id,
                         'ms_name' : rows3.mp_name,
                         'dateAplYn' : v_dateAplYn,
-                        'indv_div' : row3.indv_div,
-                        'mem_cnt' : row3.mem_cnt,
+                        'indv_div' : rows3.indv_div,
+                        'mem_cnt' : rows3.mem_cnt,
                         }
         
 
