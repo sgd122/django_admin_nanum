@@ -5735,10 +5735,10 @@ def MP0101M_save(request):
     cursor = connection.cursor()
     cursor.execute(query)    
     results = namedtuplefetchall(cursor)    
-    apl_no = results[0].apl_no
+    apl_no = int(results[0].apl_no)
     apl_no = apl_no+1
 
-    team_no = results[0].team_no
+    team_no = int(results[0].team_no)
     team_no = team_no+1
 
     print("::apl_no::")
